@@ -299,14 +299,65 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Equipment Grid
 -------------------------------------------------- */
-.equipment-grid{display:grid; gap:2rem; grid-template-columns:repeat(auto-fit,minmax(260px,1fr));}
-.equipment-item{background:#fff; border:1px solid var(--border); border-radius:12px; padding:1rem; text-align:center; box-shadow:var(--shadow-sm); transition:.3s;}
-.equipment-item:hover{transform:translateY(-5px);}
-.equipment-image{width:100%; max-height:180px; object-fit:contain; margin-bottom:.8rem;}
-.equipment-title{font-size:1.1rem; font-weight:700; color:var(--text); margin:.5rem 0;}
-.equipment-description{font-size:.95rem; color:var(--muted); margin-bottom:1rem;}
-.btn-buy{background:var(--primary); color:#fff; padding:.5rem 1rem; border-radius:8px; font-weight:600; display:inline-block; transition:.3s;}
-.btn-buy:hover{background:var(--primary-dark);}
+.recipe-equipment {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: #fffefc;
+  border-top: 2px solid #f0f0f0;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.recipe-equipment h3 {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.equipment-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.equipment-item {
+  flex: 1 1 220px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  text-align: center;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+}
+
+.equipment-item img {
+  max-width: 100%;
+  height: 160px;
+  object-fit: contain;
+  margin-bottom: 0.75rem;
+  border-radius: 6px;
+}
+
+.equipment-item p {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.btn-buy {
+  display: inline-block;
+  padding: 6px 10px;
+  background-color: #27ae60;
+  color: #fff;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.btn-buy:hover {
+  background-color: #1e8449;
+}
 
 
 
