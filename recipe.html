@@ -49,78 +49,45 @@
 
 
  <!-- Recipe Content -->
-  <main class="container recipe-page">
-  <h1 id="recipe-title">Loading...</h1>
-  <p id="recipe-description" class="description"></p>
+  <section class="recipe-page">
+  <h1 id="recipe-title">Recipe Title</h1>
+
+  <div class="recipe-meta">
+    <span>⏱️ <strong>Prep:</strong> <span id="prep-time">10 mins</span></span>
+    <span>🍳 <strong>Cook:</strong> <span id="cook-time">20 mins</span></span>
+    <span>🍽️ <strong>Serves:</strong> <span id="servings">2</span></span>
+  </div>
+
+  <p class="description" id="recipe-description">A short, tempting description of the recipe...</p>
 
   <div class="recipe-layout">
     <div class="recipe-left">
-      <h3>🧂 Ingredients</h3>
-      <ul id="recipe-ingredients"></ul>
+      <h3>📝 Ingredients</h3>
+      <ul id="ingredients-list"></ul>
 
       <h3>👨‍🍳 Method</h3>
-      <ol id="recipe-method"></ol>
+      <ol id="method-list"></ol>
 
+      <div class="tags-container" id="tags"></div>
 
-      <h3>⏱️ Prep Time</h3>
-      <p id="prep-time"></p>
-      
-      <h3>🍳 Cook Time</h3>
-      <p id="cook-time"></p>     
-      
-      <h3>🍽️ Servings</h3>
-      <p id="servings"></p>
-
-      
-
-      <div class="print-btn">
-        <a onclick="window.print()" class="btn-secondary"><i class="fas fa-print"></i> Print Recipe</a>
-      </div>
+      <button class="btn-print" onclick="window.print()">
+        🖨️ Print Recipe
+      </button>
     </div>
 
     <div class="recipe-video">
       <div class="video-wrapper">
-        <iframe id="recipe-video" allowfullscreen></iframe>
-      </div>
-
-      <div class="recipe-meta-extra">
-        <h3>📋 Tags</h3>
-        <p id="tags" class="tags-container"></p>
-
-        <h3>🌍 Cuisine</h3>
-        <p id="cuisine"></p>
-
-        <h3>📁 Category</h3>
-        <p id="category"></p>
-
-        <h3>🧠 Notes</h3>
-        <p id="notes"></p>
-
-        <h3>💡 Interesting Facts</h3>
-        <p id="facts"></p>
-
-        <h3>🧪 Nutrition</h3>
-        <div id="nutrition"></div>
+        <iframe id="recipe-video" src="" allowfullscreen></iframe>
       </div>
     </div>
   </div>
-</main>
 
-<section class="recipe-equipment">
-  <h3>🍳 Recommended Equipment</h3>
-  <div class="equipment-list">
-    <div class="equipment-item">
-      <img src="https://m.media-amazon.com/images/I/71KeumiSfTL._AC_SY879_.jpg" alt="Non-stick Frying Pan">
-      <p>Non-stick Frying Pan</p>
-      <a class="btn-buy" href="https://www.amazon.com/your-affiliate-link" target="_blank">🔗 Buy on Amazon</a>
+  <section class="recipe-equipment">
+    <h3>🍳 Recommended Equipment</h3>
+    <div class="equipment-list" id="equipment-list">
+      <!-- Equipment dynamically added here -->
     </div>
-
-    <div class="equipment-item">
-      <img src="https://m.media-amazon.com/images/I/61kFL7HU2jL._AC_SL1500_.jpg" alt="Rolling Board and Pin">
-      <p>Rolling Board & Pin</p>
-      <a class="btn-buy" href="https://www.amazon.com/your-affiliate-link" target="_blank">🔗 Buy on Amazon</a>
-    </div>
-  </div>
+  </section>
 </section>
 
 
