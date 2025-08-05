@@ -84,31 +84,4 @@ function renderRecipe(recipe) {
   document.getElementById('recipe-video').src = embedUrl || '';
 }
 
-const equipmentIds = recipe.equipment_ids || [];
-
-    if (equipmentIds.length === 0) {
-      renderRelatedEquipment([]);
-      return;
-    }
-
-    // Fetch related equipment only
-    const { data: equipmentData, error: equipError } = await supabase
-      .from('equipment_db')
-      .select('*')
-      .in('id', equipmentIds);
-
-    if (equipError) {
-      console.error('Error loading related equipment:', equipError.message);
-      renderRelatedEquipment([]);
-      return;
-    }
-
-    renderRelatedEquipment(equipmentData || []);
-  } catch (err) {
-    console.error(err);
-    document.getElementById('recipe-title').textContent = 'Recipe not found';
-  }
-}
-
-// Initialize on page load
 fetchAndRenderRecipe();
