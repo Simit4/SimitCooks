@@ -55,13 +55,17 @@ function renderRecipe(recipe) {
     ingredientsList.appendChild(li);
   });
 
-  const methodList = document.getElementById('method-list');
-  methodList.innerHTML = '';
-  recipe.method?.forEach(step => {
-    const li = document.createElement('li');
-    li.textContent = step;
-    methodList.appendChild(li);
-  });
+const methodList = document.getElementById('method-list');
+methodList.innerHTML = '';
+
+recipe.method.forEach(step => {
+  // Remove any accidental numbers from step
+  const cleaned = step.replace(/^\d+\.\s*/, '');
+  const li = document.createElement('li');
+  li.textContent = cleaned;
+  methodList.appendChild(li);
+});
+
 
   const nutrition = recipe.nutritional_info;
   if (nutrition) {
