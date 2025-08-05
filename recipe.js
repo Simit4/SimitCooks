@@ -84,4 +84,34 @@ function renderRecipe(recipe) {
   document.getElementById('recipe-video').src = embedUrl || '';
 }
 
+
+
+async function fetchAndRenderEquipment(ids) {
+  const { data, error } = await supabase
+    .from('equipment_db')
+    .select('*')
+    .in('id', ids);
+
+  if (error) {
+    console.error('Error fetching equipment:', error.message);
+    return;
+  }
+
+  const container = document.getElementById('equipment-container');
+  container.innerHTML = '';
+
+  data.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'equipment-item';
+    div.innerHTML = `
+      <img src="${item.image_url}" alt="${item.name}" class="equipment-image" />
+      <h3 class="equipment-title">${item.name}</h3>
+      <p class="equipment-description">${item.description || ''}</p>
+      <a class="btn-buy" href="${item.affiliate_link}" target="_blank" rel="noopener noreferrer">Buy Now</a>
+    `;
+    container.appendChild(div);
+  });
+}
+
+
 fetchAndRenderRecipe();
