@@ -84,32 +84,29 @@ function renderRecipe(recipe) {
   document.getElementById('recipe-video').src = embedUrl || '';
 }
 
-function renderEquipment(equipmentData) {
-  const container = document.getElementById('equipment-container');
-  container.innerHTML = '';
+const equipmentIds = recipe.equipment_ids || [];
 
-  equipmentData.forEach(item => {
-    const div = document.createElement('div');
-    div.className = 'equipment-item';
-    div.innerHTML = `
-      <img class="equipment-image" src="${item.image_url}" alt="${item.name}" />
-      <h3 class="equipment-title">${item.name}</h3>
-      <p class="equipment-description">${item.description || ''}</p>
-      <a class="btn-buy" href="${item.affiliate_link}" target="_blank" rel="noopener noreferrer" aria-label="Buy ${item.name}">
-        Buy Now
-      </a>
-    `;
-    container.appendChild(div);
-  });
-}
+    if (equipmentIds.length === 0) {
+      renderRelatedEquipment([]);
+      return;
+    }
 
-function safeParseArray(value) {
-  if (!value) return [];
-  if (Array.isArray(value)) return value;
-  try {
-    return JSON.parse(value);
-  } catch {
-    return [];
+    // Fetch related equipment only
+    const { data: equipmentData, error: equipError } = await supabase
+      .from('equipment_db')
+      .select('*')
+      .in('id', equipmentIds);
+
+    if (equipError) {
+      console.error('Error loading related equipment:', equipError.message);
+      renderRelatedEquipment([]);
+      return;
+    }
+
+    renderRelatedEquipment(equipmentData || []);
+  } catch (err) {
+    console.error(err);
+    document.getElementById('recipe-title').textContent = 'Recipe not found';
   }
 }
 
