@@ -83,9 +83,31 @@ function renderRecipe(recipe) {
   const embedUrl = convertToEmbedUrl(recipe.video_url);
   document.getElementById('recipe-video').src = embedUrl || '';
 
-  // ✅ Fetch and render related equipment (1, 3, etc.)
-  if (recipe.equipment_ids?.length) {
-    fetchEquipmentByIds(recipe.equipment_ids.map(id => Number(id)));
+async function fetchEquipmentByIds(ids) {
+  const { data, error } = await supabase
+    .from('equipment_db')
+    .select('*')
+    .in('id', ids);
+
+  const container = document.getElementById('equipment-container');
+  container.innerHTML = '';
+
+  if (error || !data.length) {
+    container.innerHTML = '<p>No equipment found.</p>';
+    console.error(error);
+    return;
   }
+
+  data.forEach(item => {
+    container.innerHTML += `
+      <div class="equipment-item">
+        <img src="${item.image_url}" alt="${item.name}" class="equipment-image" />
+        <h3 class="equipment-title">${item.name}</h3>
+        <p class="equipment-description">${item.description || ''}</p>
+        <a href="${item.affiliate_link}" class="btn-buy" target="_blank">Buy Now</a>
+      </div>
+    `;
+  });
 }
+
 fetchAndRenderRecipe();
