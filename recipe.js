@@ -86,22 +86,30 @@ function renderRecipe(recipe) {
 
 
 
-function renderEquipment(equipmentArray) {
-  const container = document.getElementById('equipment-container');
-  container.innerHTML = ''; // clear previous
+async function fetchEquipmentByIds(ids) {
+  const { data, error } = await supabase
+    .from('equipment_db')
+    .select('*')
+    .in('id', ids);
 
-  equipmentArray.forEach(item => {
-    const html = `
+  const container = document.getElementById('equipment-container');
+  container.innerHTML = '';
+
+  if (error || !data.length) {
+    container.innerHTML = '<p>No equipment found.</p>';
+    return;
+  }
+
+  data.forEach(item => {
+    container.innerHTML += `
       <div class="equipment-item">
         <img src="${item.image_url}" alt="${item.name}" class="equipment-image" />
-        <h3>${item.name}</h3>
-        <p>${item.description || ''}</p>
-        <a href="${item.affiliate_link}" target="_blank" rel="noopener noreferrer" class="btn-buy">Buy Now</a>
+        <h3 class="equipment-title">${item.name}</h3>
+        <p class="equipment-description">${item.description}</p>
+        <a href="${item.affiliate_link}" class="btn-buy" target="_blank" rel="noopener noreferrer">Buy Now</a>
       </div>
     `;
-    container.insertAdjacentHTML('beforeend', html);
   });
 }
-
 
 fetchAndRenderRecipe();
