@@ -49,7 +49,8 @@
 
 
  <!-- Recipe Content -->
-  <section class="recipe-page">
+ <section class="recipe-page container">
+
   <h1 id="recipe-title">Recipe Title</h1>
 
   <div class="recipe-meta">
@@ -58,7 +59,7 @@
     <span>🍽️ <strong>Serves:</strong> <span id="servings">2</span></span>
   </div>
 
-  <p class="description" id="recipe-description">A short, tempting description of the recipe...</p>
+  <p class="description" id="recipe-description">Short tempting description...</p>
 
   <div class="recipe-layout">
     <div class="recipe-left">
@@ -68,39 +69,27 @@
       <h3>👨‍🍳 Method</h3>
       <ol id="method-list"></ol>
 
-      <h3>🍽️ Nutrition</h3>
-      <div id="nutrition"></div>
+      <div class="tags-container" id="tags"></div>
 
-      <div><strong>Tags:</strong> <span id="tags"></span></div>
-      <div><strong>Cuisine:</strong> <span id="cuisine"></span></div>
-      <div><strong>Category:</strong> <span id="category"></span></div>
-
-      <h3>📝 Notes</h3>
-      <p id="notes"></p>
-
-      <h3>📚 Fun Fact</h3>
-      <p id="facts"></p>
-
-      <button class="btn-print" onclick="window.print()">
-        🖨️ Print Recipe
-      </button>
+      <button class="btn-print" onclick="window.print()">🖨️ Print Recipe</button>
     </div>
 
-<div class="recipe-video">
-  <iframe id="recipe-video" src="" allowfullscreen title="Recipe Video"></iframe>
-</div>
-    
+    <div class="recipe-video">
+      <div class="video-wrapper">
+        <iframe id="recipe-video" src="" allowfullscreen></iframe>
+      </div>
+    </div>
   </div>
+
+  <section class="equipment-section">
+    <h2>Recommended Kitchen Equipment</h2>
+    <div id="related-equipment-container" class="equipment-grid"></div>
+  </section>
+
 </section>
 
-<section class="container equipment-page">
-  <h2 class="section-title">Recommended Kitchen Equipment</h2>
-  <p class="section-subtitle">Tools that help you cook smarter, faster, and better.</p>
-  <div id="equipment-container" class="equipment-grid">
-    <!-- Items will be loaded here -->
-  </div>
-</section>
 
+  
 <footer class="main-footer">
   <div class="footer-container">
     <div class="footer-column brand">
