@@ -80,8 +80,14 @@ function renderRecipe(recipe) {
   document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
   document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
 
-  const embedUrl = convertToEmbedUrl(recipe.video_url);
-  document.getElementById('recipe-video').src = embedUrl || '';
+const embedUrl = convertToEmbedUrl(recipe.video_url);
+const videoElement = document.getElementById('recipe-video');
+
+if (videoElement && embedUrl) {
+  videoElement.src = embedUrl;
+} else if (videoElement) {
+  videoElement.style.display = 'none'; // hides video if no valid URL
+}
 }
 
 fetchAndRenderRecipe();
