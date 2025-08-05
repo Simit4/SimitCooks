@@ -180,20 +180,37 @@ h1, h2, h3, h4, h5 {
   border-radius:8px; transition:.3s;}
 .view-btn:hover,.btn-secondary:hover{background:var(--primary-dark);}
 
+
+
+
 /* -------------------------------------------------
-   Recipe Detail Page
+   Recipe and Equipment Page
 -------------------------------------------------- */
 .recipe-page h1 {
   font-size: 2.5rem;
-  margin-bottom: 1rem;
   color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.recipe-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: #555;
+}
+
+.description {
+  font-style: italic;
+  color: #666;
+  margin-bottom: 2rem;
 }
 
 .recipe-layout {
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
-  margin-top: 2rem;
 }
 
 .recipe-left, .recipe-video {
@@ -201,44 +218,41 @@ h1, h2, h3, h4, h5 {
   min-width: 300px;
 }
 
-.recipe-left h3, .recipe-video h3 {
-  margin: 1.5rem 0 0.5rem;
+.recipe-left h3 {
   color: #27ae60;
+  margin-bottom: 0.5rem;
 }
 
-.recipe-video iframe {
-  width: 100%;
-  height: 320px;
-  border: none;
-  border-radius: 12px;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+ul, ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-
-.description {
-  font-style: italic;
-  color: #666;
+ul li, ol li {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 .tags-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 0.5rem;
 }
 
-.tags-container span, #tags {
+.tags-container span {
   background: #27ae60;
   color: #fff;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 0.9rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .video-wrapper {
   position: relative;
   width: 100%;
-  /* 56.25% keeps perfect 16:9   */
-  padding-top: 56.25%;
+  padding-top: 56.25%; /* 16:9 ratio */
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0,0,0,.08);
@@ -246,59 +260,32 @@ h1, h2, h3, h4, h5 {
 
 .video-wrapper iframe {
   position: absolute;
-  inset: 0;           /* shorthand for top/right/bottom/left:0 */
+  inset: 0;
   width: 100%;
   height: 100%;
   border: none;
-  border-radius: inherit;
-}
-
-/* On larger screens make the video taller for a cinematic feel */
-@media (min-width: 1024px) {
-  .video-wrapper {
-    padding-top: 52%;      /* slightly taller */
-  }
 }
 
 .btn-print {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 1.75rem;
-  padding: 0.75rem 1.5rem;
-  font-weight: 700;
-  font-size: 1rem;
-  color: #fff;
+  margin-top: 2rem;
+  padding: 10px 20px;
   background: linear-gradient(135deg, #27ae60, #1e8449);
+  color: white;
   border: none;
-  border-radius: 50px;     /* pill shape */
-  box-shadow: 0 4px 14px rgba(0,0,0,.12);
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
-  transition: transform .25s, box-shadow .25s;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
 }
-
-.btn-print i { font-size: 1.1rem; }
 
 .btn-print:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0,0,0,.18);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
-.btn-print:active {
-  transform: translateY(0);
-  box-shadow: 0 3px 12px rgba(0,0,0,.16);
-}
-
-/* Hide button when printing */
-@media print {
-  .btn-print { display: none !important; }
-}
-
-
-
-/* -------------------------------------------------
-   Equipment Grid
--------------------------------------------------- */
+/* Equipment Section */
 .recipe-equipment {
   margin-top: 3rem;
   padding: 2rem;
@@ -358,6 +345,14 @@ h1, h2, h3, h4, h5 {
 .btn-buy:hover {
   background-color: #1e8449;
 }
+
+/* Hide print button in print view */
+@media print {
+  .btn-print, .recipe-equipment, .recipe-video {
+    display: none !important;
+  }
+}
+
 
 
 
