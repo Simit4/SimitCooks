@@ -4,7 +4,6 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Helper to convert YouTube link to embed format
 function convertToEmbedUrl(url) {
   if (!url) return '';
   const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
@@ -31,15 +30,13 @@ async function fetchAndRenderRecipe() {
     return;
   }
 
-// ✅ Increment views
-if (recipe && recipe.id) {
-  await supabase
-    .from('recipe_db')
-    .update({ views: (recipe.views || 0) + 1 })
-    .eq('id', recipe.id);
-}
+  if (recipe.id) {
+    await supabase
+      .from('recipe_db')
+      .update({ views: (recipe.views || 0) + 1 })
+      .eq('id', recipe.id);
+  }
 
-  
   renderRecipe(recipe);
 }
 
@@ -50,25 +47,22 @@ function renderRecipe(recipe) {
   document.getElementById('cook-time').innerText = recipe.cook_time;
   document.getElementById('servings').innerText = recipe.servings;
 
-  // Ingredients
-  const ingredientsList = document.getElementById('recipe-ingredients');
+  const ingredientsList = document.getElementById('ingredients-list');
   ingredientsList.innerHTML = '';
-  recipe.ingredients.forEach(item => {
+  recipe.ingredients?.forEach(item => {
     const li = document.createElement('li');
     li.textContent = item;
     ingredientsList.appendChild(li);
   });
 
-  // Method
-  const methodList = document.getElementById('recipe-method');
+  const methodList = document.getElementById('method-list');
   methodList.innerHTML = '';
-  recipe.method.forEach(step => {
+  recipe.method?.forEach(step => {
     const li = document.createElement('li');
     li.textContent = step;
     methodList.appendChild(li);
   });
 
-  // Nutrition
   const nutrition = recipe.nutritional_info;
   if (nutrition) {
     document.getElementById('nutrition').innerHTML = `
@@ -80,17 +74,12 @@ function renderRecipe(recipe) {
     `;
   }
 
-  // Tags / Cuisine / Category
-document.getElementById('tags').textContent = recipe.tags?.join(', ') || 'Not available';
-document.getElementById('cuisine').textContent = recipe.cuisine?.join(', ') || 'Not available';
-document.getElementById('category').textContent = recipe.category?.join(', ') || 'Not available';
-  
+  document.getElementById('tags').textContent = recipe.tags?.join(', ') || 'Not available';
+  document.getElementById('cuisine').textContent = recipe.cuisine?.join(', ') || 'Not available';
+  document.getElementById('category').textContent = recipe.category?.join(', ') || 'Not available';
+  document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
+  document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
 
-  // Notes & Facts
-document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
-document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
-
-  // Video
   const embedUrl = convertToEmbedUrl(recipe.video_url);
   document.getElementById('recipe-video').src = embedUrl || '';
 }
