@@ -83,6 +83,15 @@ function renderRecipe(recipe) {
   const embedUrl = convertToEmbedUrl(recipe.video_url);
   document.getElementById('recipe-video').src = embedUrl || '';
 
+  
+// 🛠 Fetch and show dedicated equipment
+  if (recipe.equipment_ids && recipe.equipment_ids.length > 0) {
+    const equipmentIds = recipe.equipment_ids.map(Number); // Make sure they're integers
+    fetchEquipmentByIds(equipmentIds);
+  }
+}
+
+// Fetch equipment items by their IDs
 async function fetchEquipmentByIds(ids) {
   const { data, error } = await supabase
     .from('equipment_db')
@@ -92,9 +101,9 @@ async function fetchEquipmentByIds(ids) {
   const container = document.getElementById('equipment-container');
   container.innerHTML = '';
 
-  if (error || !data.length) {
+  if (error || !data?.length) {
+    console.error('Error fetching equipment:', error);
     container.innerHTML = '<p>No equipment found.</p>';
-    console.error(error);
     return;
   }
 
@@ -104,10 +113,11 @@ async function fetchEquipmentByIds(ids) {
         <img src="${item.image_url}" alt="${item.name}" class="equipment-image" />
         <h3 class="equipment-title">${item.name}</h3>
         <p class="equipment-description">${item.description || ''}</p>
-        <a href="${item.affiliate_link}" class="btn-buy" target="_blank">Buy Now</a>
+        <a href="${item.affiliate_link}" class="btn-buy" target="_blank" rel="noopener noreferrer">Buy Now</a>
       </div>
     `;
   });
 }
 
+// Init
 fetchAndRenderRecipe();
