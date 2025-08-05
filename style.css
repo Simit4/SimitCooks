@@ -382,32 +382,34 @@ h1, h2, h3, h4, h5 {
 /* Recipe Video */
 .recipe-video {
   width: 100%;
-  max-width: 720px;              /* Ideal max width for readability */
-  aspect-ratio: 16 / 9;          /* Maintain perfect widescreen ratio */
-  margin: 2.5rem auto;           /* Center horizontally with vertical space */
-  border-radius: 14px;           /* Gentle, elegant rounding */
+  max-width: 720px;               /* Perfect max width for desktop */
+  aspect-ratio: 16 / 9;           /* Maintain perfect 16:9 ratio */
+  margin: 2.5rem auto;            /* Center with vertical spacing */
+  background-color: #000;         /* Solid black background to prevent color bleed */
+  border-radius: 16px;            /* Elegant, subtle rounding */
+  overflow: hidden;               /* Hide any overflow */
   box-shadow:
-    0 12px 24px rgba(0, 0, 0, 0.12),
-    0 4px 8px rgba(0, 0, 0, 0.06); /* Soft layered shadows */
-  overflow: hidden;
-  transition: box-shadow 0.35s ease, transform 0.3s ease;
-  background-color: #000;        /* fallback background for video */
+    0 16px 32px rgba(0, 0, 0, 0.18),
+    0 6px 12px rgba(0, 0, 0, 0.08);  /* Sophisticated layered shadows */
+  transition: box-shadow 0.4s ease, transform 0.35s ease;
+  will-change: transform;
 }
 
 .recipe-video:hover,
 .recipe-video:focus-within {
   box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.18),
-    0 6px 12px rgba(0, 0, 0, 0.10);
-  transform: translateY(-4px);
+    0 24px 48px rgba(0, 0, 0, 0.26),
+    0 8px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
 }
 
 .recipe-video iframe {
   width: 100%;
   height: 100%;
   border: none;
-  border-radius: 14px;
   display: block;
+  border-radius: 16px;           /* Match container rounding for seamless edges */
+  background-color: transparent; /* No background to avoid color layering issues */
 }
 
 
