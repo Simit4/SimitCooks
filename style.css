@@ -186,92 +186,199 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Recipe
 -------------------------------------------------- */
+
 .recipe-page {
-  padding: 2rem 0;
   background: #fff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem 3rem;
   margin: 2rem auto;
-  border-radius: 10px;
+  max-width: 1100px;
+  font-family: 'Inter', sans-serif;
+  color: #2a2a3a;
+  line-height: 1.6;
+  transition: box-shadow 0.3s ease;
 }
 
+.recipe-page:hover {
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+}
+
+/* Title */
+#recipe-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 900;
+  font-size: 2.8rem;
+  margin-bottom: 0.3rem;
+  color: #ef5b25;
+  letter-spacing: 1px;
+}
+
+/* Meta info */
 .recipe-meta {
   display: flex;
-  gap: 1.5rem;
+  gap: 1.8rem;
+  font-size: 1.05rem;
+  color: #7a7a8c;
   margin-bottom: 1rem;
-  font-size: 0.95rem;
-  color: #666;
 }
 
+.recipe-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 600;
+}
+
+/* Description */
 .description {
-  margin-bottom: 1.5rem;
   font-style: italic;
-  color: #555;
+  font-size: 1.15rem;
+  color: #555768;
+  margin-bottom: 2rem;
+  max-width: 850px;
 }
 
+/* Layout Grid for main content and video */
 .recipe-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 1rem;
+  gap: 3.5rem;
 }
 
+@media (max-width: 860px) {
+  .recipe-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Headings inside left content */
 .recipe-left h3 {
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
+  color: #33334d;
+  border-bottom: 2px solid #ef5b25;
+  padding-bottom: 0.3rem;
 }
 
+/* Lists styling for ingredients and method */
 #ingredients-list li,
 #method-list li {
-  margin-bottom: 0.5rem;
-  padding-left: 1rem;
   position: relative;
+  padding-left: 1.6rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+  color: #40405a;
+  user-select: text;
+  cursor: default;
 }
 
-#ingredients-list li::before,
-#method-list li::before {
-  content: "•";
+#ingredients-list li::before {
+  content: '•';
   position: absolute;
   left: 0;
-  color: #ff5722;
+  color: #ef5b25;
+  font-weight: 900;
+  font-size: 1.4rem;
+  top: 0;
+  line-height: 1;
+}
+
+#method-list li::before {
+  content: counter(step-counter) '.';
+  counter-increment: step-counter;
+  position: absolute;
+  left: 0;
+  color: #ef5b25;
+  font-weight: 900;
+  font-size: 1.2rem;
+  top: 0;
+  line-height: 1;
+}
+
+#method-list {
+  counter-reset: step-counter;
+}
+
+/* Info blocks: nutrition, tags, notes, facts */
+#nutrition,
+#notes,
+#facts {
+  background: #fff4e6;
+  border-left: 6px solid #ef5b25;
+  padding: 1rem 1.3rem;
+  border-radius: 6px;
+  margin-top: 1.8rem;
+  font-size: 1rem;
+  color: #5a4d3a;
+  box-shadow: 0 3px 8px rgba(239, 91, 37, 0.25);
+  line-height: 1.5;
+  user-select: text;
+}
+
+/* Tags, Cuisine, Category as inline colored text */
+#tags,
+#cuisine,
+#category {
+  display: inline-block;
+  margin-top: 0.8rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ef5b25;
+  user-select: text;
+}
+
+/* Notes & Facts paragraphs */
+#notes,
+#facts {
+  margin-top: 0.3rem;
+  font-style: italic;
+  color: #7f6e58;
+}
+
+/* Print Button */
+.btn-print {
+  margin-top: 2rem;
+  padding: 0.85rem 2rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  border-radius: 35px;
+  border: none;
+  background: #ef5b25;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(239, 91, 37, 0.5);
+  transition: background 0.35s ease, box-shadow 0.35s ease;
+  user-select: none;
+}
+
+.btn-print:hover,
+.btn-print:focus {
+  background: #d94a0f;
+  box-shadow: 0 8px 22px rgba(217, 74, 15, 0.7);
+  outline: none;
+}
+
+/* Recipe Video */
+.recipe-video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
 }
 
 .recipe-video iframe {
   width: 100%;
-  height: 315px;
+  height: 100%;
   border: none;
-  border-radius: 8px;
+  border-radius: 14px;
+  display: block;
 }
 
-.tags-container,
-#nutrition,
-#cuisine,
-#category,
-#notes,
-#facts {
-  margin-top: 1rem;
-  background: #f9f9f9;
-  padding: 1rem;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.btn-print {
-  display: inline-block;
-  margin-top: 1.5rem;
-  padding: 0.6rem 1.2rem;
-  background: #ff5722;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s ease;
-}
-
-.btn-print:hover {
-  background: #e64a19;
-}
 
 /* Equipment Section */
 
