@@ -86,11 +86,14 @@ function renderRecipe(recipe) {
 
 
 
-async function fetchAndRenderEquipment(equipment_ids) {
+async function fetchAndRenderEquipment(equipmentIds) {
+  // Convert IDs to numbers (handle if stored as strings)
+  const numericIds = equipmentIds.map(id => Number(id));
+
   const { data: equipment, error } = await supabase
     .from('equipment_db')
     .select('*')
-    .in('id', equipment_ids);
+    .in('id', numericIds);
 
   if (error) {
     console.error('Error fetching equipment:', error.message);
@@ -117,4 +120,6 @@ async function fetchAndRenderEquipment(equipment_ids) {
     container.appendChild(div);
   });
 }
+
+
 fetchAndRenderRecipe();
