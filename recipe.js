@@ -86,11 +86,11 @@ function renderRecipe(recipe) {
 
 
 
-async function fetchAndRenderEquipment(equipmentIds) {
+async function fetchAndRenderEquipment(equipment_ids) {
   const { data: equipment, error } = await supabase
     .from('equipment_db')
     .select('*')
-    .in('id', equipmentIds);
+    .in('id', equipment_ids);
 
   if (error) {
     console.error('Error fetching equipment:', error.message);
