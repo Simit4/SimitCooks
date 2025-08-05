@@ -498,29 +498,44 @@ h1, h2, h3, h4, h5 {
 /* Buy Button */
 .btn-buy {
   display: inline-block;
-  padding: 0.7rem 1.8rem;
-  background: #ef5b25;           /* Brand orange */
-  color: #fff;
+  padding: 0.85rem 2.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  font-size: 1rem;
+  color: #fff;
+  background-color: #ef5b25;       /* Brand vibrant orange */
   border: none;
-  border-radius: 30px;
+  border-radius: 12px;             /* Balanced, not too round */
+  box-shadow:
+    0 8px 20px rgba(239, 91, 37, 0.45);
   cursor: pointer;
-  box-shadow: 0 6px 15px rgba(239, 91, 37, 0.5);
-  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
   user-select: none;
   text-align: center;
-  text-decoration: none;
+  transition:
+    background-color 0.35s ease,
+    box-shadow 0.35s ease,
+    transform 0.25s ease;
+  letter-spacing: 0.03em;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-decoration: none;           /* for <a> tags */
 }
 
 .btn-buy:hover,
 .btn-buy:focus {
-  background: #d94a0f;
-  box-shadow: 0 8px 22px rgba(217, 74, 15, 0.7);
-  transform: translateY(-2px);
+  background-color: #d94a0f;
+  box-shadow:
+    0 12px 32px rgba(217, 74, 15, 0.7);
+  transform: translateY(-3px);
   outline: none;
 }
 
+/* Accessibility: focus visible */
+.btn-buy:focus-visible {
+  outline: 3px solid #ffb169;
+  outline-offset: 3px;
+}
 
 
 
