@@ -275,32 +275,7 @@ h1, h2, h3, h4, h5 {
   cursor: default;
 }
 
-#ingredients-list li::before {
-  content: '•';
-  position: absolute;
-  left: 0;
-  color: #ef5b25;
-  font-weight: 900;
-  font-size: 1.4rem;
-  top: 0;
-  line-height: 1;
-}
 
-#method-list li::before {
-  content: counter(step-counter) '.';
-  counter-increment: step-counter;
-  position: absolute;
-  left: 0;
-  color: #ef5b25;
-  font-weight: 900;
-  font-size: 1.2rem;
-  top: 0;
-  line-height: 1;
-}
-
-#method-list {
-  counter-reset: step-counter;
-}
 
 /* Info blocks: nutrition, tags, notes, facts */
 #nutrition,
