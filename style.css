@@ -382,18 +382,20 @@ h1, h2, h3, h4, h5 {
 /* Recipe Video */
 .recipe-video {
   width: 100%;
-  max-width: 720px;               /* Large enough for great viewing */
-  aspect-ratio: 16 / 9;           /* Perfect widescreen ratio */
-  margin: 2.5rem auto;            /* Center horizontally with spacing */
-  border-radius: 14px;            /* Gentle, sophisticated rounding */
+  max-width: 720px;              /* Ideal max width for readability */
+  aspect-ratio: 16 / 9;          /* Maintain perfect widescreen ratio */
+  margin: 2.5rem auto;           /* Center horizontally with vertical space */
+  border-radius: 14px;           /* Gentle, elegant rounding */
   box-shadow:
     0 12px 24px rgba(0, 0, 0, 0.12),
-    0 4px 8px rgba(0, 0, 0, 0.06);  /* Soft layered shadows */
+    0 4px 8px rgba(0, 0, 0, 0.06); /* Soft layered shadows */
   overflow: hidden;
   transition: box-shadow 0.35s ease, transform 0.3s ease;
+  background-color: #000;        /* fallback background for video */
 }
 
-.recipe-video:hover {
+.recipe-video:hover,
+.recipe-video:focus-within {
   box-shadow:
     0 20px 40px rgba(0, 0, 0, 0.18),
     0 6px 12px rgba(0, 0, 0, 0.10);
@@ -406,7 +408,6 @@ h1, h2, h3, h4, h5 {
   border: none;
   border-radius: 14px;
   display: block;
-  background: #000; /* fallback for video */
 }
 
 
