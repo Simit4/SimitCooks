@@ -86,11 +86,13 @@ function renderRecipe(recipe) {
 
 
 
-async function fetchAndRenderEquipment(ids) {
-  const { data, error } = await supabase
+async function fetchAndRenderEquipment(equipmentIds) {
+  if (!Array.isArray(equipmentIds) || equipmentIds.length === 0) return;
+
+  const { data: equipment, error } = await supabase
     .from('equipment_db')
     .select('*')
-    .in('id', ids);
+    .in('id', equipmentIds);
 
   if (error) {
     console.error('Error fetching equipment:', error.message);
@@ -100,7 +102,12 @@ async function fetchAndRenderEquipment(ids) {
   const container = document.getElementById('equipment-container');
   container.innerHTML = '';
 
-  data.forEach(item => {
+  if (equipment.length === 0) {
+    container.innerHTML = '<p>No equipment found for this recipe.</p>';
+    return;
+  }
+
+  equipment.forEach(item => {
     const div = document.createElement('div');
     div.className = 'equipment-item';
     div.innerHTML = `
