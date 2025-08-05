@@ -380,29 +380,91 @@ h1, h2, h3, h4, h5 {
 }
 
 
-/* Equipment Section */
+/* Equipment Section Container */
 
 .equipment-page {
-  padding: 3rem 0;
+  margin-top: 4rem;
+  padding: 3rem 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.07);
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+/* Section Title and Subtitle */
 .section-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 2.3rem;
   text-align: center;
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  color: #ef5b25;
+  margin-bottom: 0.5rem;
 }
 
 .section-subtitle {
   text-align: center;
-  color: #777;
+  color: #7a7a8c;
+  font-weight: 600;
   margin-bottom: 2rem;
+  font-size: 1.1rem;
 }
 
+/* Equipment Grid */
 .equipment-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.8rem;
 }
+
+/* Individual Equipment Item Card */
+.equipment-item {
+  background: #fff8f1;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(239, 91, 37, 0.15);
+  padding: 1.5rem 1.2rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.equipment-item:hover,
+.equipment-item:focus {
+  box-shadow: 0 10px 28px rgba(239, 91, 37, 0.3);
+  transform: translateY(-5px);
+  outline: none;
+}
+
+/* Equipment Item Image */
+.equipment-item img {
+  max-width: 120px;
+  height: auto;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+}
+
+/* Equipment Item Title */
+.equipment-item h4 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: #ef5b25;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Equipment Item Description */
+.equipment-item p {
+  font-size: 1rem;
+  color: #555768;
+  line-height: 1.4;
+  user-select: text;
+  margin-bottom: 0;
+}
+
 
 
 /* =======================
