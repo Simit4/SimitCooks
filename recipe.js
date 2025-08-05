@@ -86,38 +86,20 @@ function renderRecipe(recipe) {
 
 
 
-async function fetchAndRenderEquipment(equipmentIds) {
-  // Convert IDs to numbers (handle if stored as strings)
-  const numericIds = equipmentIds.map(id => Number(id));
-
-  const { data: equipment, error } = await supabase
-    .from('equipment_db')
-    .select('*')
-    .in('id', numericIds);
-
-  if (error) {
-    console.error('Error fetching equipment:', error.message);
-    return;
-  }
-
+function renderEquipment(equipmentArray) {
   const container = document.getElementById('equipment-container');
-  container.innerHTML = '';
+  container.innerHTML = ''; // clear previous
 
-  if (!equipment.length) {
-    container.innerHTML = '<p>No equipment found for this recipe.</p>';
-    return;
-  }
-
-  equipment.forEach(item => {
-    const div = document.createElement('div');
-    div.className = 'equipment-item';
-    div.innerHTML = `
-      <img src="${item.image_url}" alt="${item.name}" class="equipment-image" />
-      <h3 class="equipment-title">${item.name}</h3>
-      <p class="equipment-description">${item.description || ''}</p>
-      <a class="btn-buy" href="${item.affiliate_link}" target="_blank" rel="noopener noreferrer">Buy Now</a>
+  equipmentArray.forEach(item => {
+    const html = `
+      <div class="equipment-item">
+        <img src="${item.image_url}" alt="${item.name}" class="equipment-image" />
+        <h3>${item.name}</h3>
+        <p>${item.description || ''}</p>
+        <a href="${item.affiliate_link}" target="_blank" rel="noopener noreferrer" class="btn-buy">Buy Now</a>
+      </div>
     `;
-    container.appendChild(div);
+    container.insertAdjacentHTML('beforeend', html);
   });
 }
 
