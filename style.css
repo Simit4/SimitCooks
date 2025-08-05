@@ -184,176 +184,118 @@ h1, h2, h3, h4, h5 {
 
 
 /* -------------------------------------------------
-   Recipe and Equipment Page
+   Recipe
 -------------------------------------------------- */
-.recipe-page h1 {
-  font-size: 2.5rem;
-  color: #2c3e50;
-  margin-bottom: 0.5rem;
+.recipe-page {
+  padding: 2rem 0;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  margin: 2rem auto;
+  border-radius: 10px;
 }
 
 .recipe-meta {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-  color: #555;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  color: #666;
 }
 
 .description {
+  margin-bottom: 1.5rem;
   font-style: italic;
-  color: #666;
-  margin-bottom: 2rem;
+  color: #555;
 }
 
 .recipe-layout {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
-}
-
-.recipe-left, .recipe-video {
-  flex: 1;
-  min-width: 300px;
+  margin-top: 1rem;
 }
 
 .recipe-left h3 {
-  color: #27ae60;
+  margin-top: 1rem;
   margin-bottom: 0.5rem;
 }
 
-ul, ol {
-  padding-left: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-ul li, ol li {
+#ingredients-list li,
+#method-list li {
   margin-bottom: 0.5rem;
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-.tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.tags-container span {
-  background: #27ae60;
-  color: #fff;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.video-wrapper {
+  padding-left: 1rem;
   position: relative;
-  width: 100%;
-  padding-top: 56.25%; /* 16:9 ratio */
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0,0,0,.08);
 }
 
-.video-wrapper iframe {
+#ingredients-list li::before,
+#method-list li::before {
+  content: "•";
   position: absolute;
-  inset: 0;
+  left: 0;
+  color: #ff5722;
+}
+
+.recipe-video iframe {
   width: 100%;
-  height: 100%;
+  height: 315px;
   border: none;
+  border-radius: 8px;
+}
+
+.tags-container,
+#nutrition,
+#cuisine,
+#category,
+#notes,
+#facts {
+  margin-top: 1rem;
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .btn-print {
-  margin-top: 2rem;
-  padding: 10px 20px;
-  background: linear-gradient(135deg, #27ae60, #1e8449);
-  color: white;
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.2rem;
+  background: #ff5722;
+  color: #fff;
   border: none;
-  border-radius: 50px;
-  font-weight: bold;
-  font-size: 1rem;
+  border-radius: 5px;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
-  transition: 0.3s;
+  font-weight: 600;
+  transition: background 0.3s ease;
 }
 
 .btn-print:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  background: #e64a19;
 }
 
 /* Equipment Section */
-.recipe-equipment {
-  margin-top: 3rem;
-  padding: 2rem;
-  background: #fffefc;
-  border-top: 2px solid #f0f0f0;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+
+.equipment-page {
+  padding: 3rem 0;
 }
 
-.recipe-equipment h3 {
-  color: #2c3e50;
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
-.equipment-list {
-  display: flex;
-  flex-wrap: wrap;
+.section-subtitle {
+  text-align: center;
+  color: #777;
+  margin-bottom: 2rem;
+}
+
+.equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
 }
-
-.equipment-item {
-  flex: 1 1 220px;
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  text-align: center;
-  padding: 1rem;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.04);
-}
-
-.equipment-item img {
-  max-width: 100%;
-  height: 160px;
-  object-fit: contain;
-  margin-bottom: 0.75rem;
-  border-radius: 6px;
-}
-
-.equipment-item p {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.btn-buy {
-  display: inline-block;
-  padding: 6px 10px;
-  background-color: #27ae60;
-  color: #fff;
-  font-size: 0.95rem;
-  border: none;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: background-color 0.3s;
-}
-
-.btn-buy:hover {
-  background-color: #1e8449;
-}
-
-/* Hide print button in print view */
-@media print {
-  .btn-print, .recipe-equipment, .recipe-video {
-    display: none !important;
-  }
-}
-
-
 
 
 /* =======================
