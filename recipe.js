@@ -11,8 +11,10 @@ function convertToEmbedUrl(url) {
 }
 
 async function fetchAndRenderRecipe() {
-  const params = new URLSearchParams(window.location.search);
-  const slug = params.get('slug');
+  
+const path = window.location.pathname; // e.g. "/recipe/simple-egg-roll"
+const slug = path.split('/').pop();   // "simple-egg-roll"
+
 
   if (!slug) {
     document.getElementById('recipe-title').innerText = 'Recipe not found';
