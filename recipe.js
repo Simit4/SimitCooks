@@ -12,8 +12,8 @@ function convertToEmbedUrl(url) {
 
 async function fetchAndRenderRecipe() {
   
-const path = window.location.pathname; // e.g. "/recipe/simple-egg-roll"
-const slug = path.split('/').pop();   // "simple-egg-roll"
+const params = new URLSearchParams(window.location.search);
+const slug = params.get('slug');
 
 
   if (!slug) {
