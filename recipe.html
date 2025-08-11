@@ -3,138 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Recipe | Simit's Swaad</title>
+  <!-- Dynamic title will be set by JavaScript -->
+  <title>Loading Recipe... | Simit's Swaad</title>
 
   <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Open+Sans&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Step-by-step instructions for making this delicious recipe from Simit's Swaad. Perfect for home cooks!" />
-  <meta name="keywords" content="Nepali recipe, home cooking, step by step, curry, chowmein" />
+  <!-- Dynamic SEO Meta Tags -->
+  <meta id="meta-description" name="description" content="Delicious recipe loading..." />
+  <meta id="meta-keywords" name="keywords" content="recipe, cooking" />
   <meta name="author" content="Simit's Swaad" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Recipe | Simit's Swaad" />
-  <meta property="og:description" content="Learn how to make this authentic dish with Simit's Swaad’s easy recipe guide." />
-  <meta property="og:image" content="https://yourwebsite.com/recipe-thumbnail.jpg" />
-  <meta property="og:url" content="https://yourwebsite.com/recipe.html" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <!-- Dynamic Open Graph -->
+  <meta id="og-title" property="og:title" content="Loading Recipe | Simit's Swaad" />
+  <meta id="og-description" property="og:description" content="Delicious recipe loading..." />
+  <meta id="og-image" property="og:image" content="" />
+  <meta id="og-url" property="og:url" content="" />
 </head>
 
-
-
 <body>
-
-
-<header class="main-header">
-  
-<div class="container header-wrapper"><div class="logo" aria-label="Simit's Swaad">
-  <span class="logo-modern">Simit’s</span>
-  <span class="logo-traditional">Swaad</span>
-</div> 
-    
-    <nav class="navbar">
-      <ul class="nav-links">
-        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-        <li><a href="recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
-        <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
-        <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
-
-
- <!-- Recipe Content -->
- <section class="recipe-page">
-  <h1 id="recipe-title">Recipe Title</h1>
-
-  <div class="recipe-meta">
-    <span>⏱️ <strong>Prep:</strong> <span id="prep-time"></span></span>
-    <span>🍳 <strong>Cook:</strong> <span id="cook-time"></span></span>
-    <span>🍽️ <strong>Serves:</strong> <span id="servings"></span></span>
-  </div>
-
-  <p class="description" id="recipe-description">A short, tempting description of the recipe...</p>
-
-  <div class="recipe-layout">
-    <div class="recipe-left">
-      <h3>📝 Ingredients</h3>
-      <ul id="ingredients-list"></ul>
-
-      <h3>👨‍🍳 Method</h3>
-      <ol id="method-list"></ol>
-
-      <h3>🍽️ Nutrition</h3>
-      <div id="nutrition"></div>
-
-      <div><strong>Tags:</strong> <span id="tags"></span></div>
-      <div><strong>Cuisine:</strong> <span id="cuisine"></span></div>
-      <div><strong>Category:</strong> <span id="category"></span></div>
-
-      <h3>📝 Notes</h3>
-      <p id="notes"></p>
-
-      <h3>📚 Fun Fact</h3>
-      <p id="facts"></p>
-
-      <button class="btn-print" onclick="window.print()">
-        🖨️ Print Recipe
-      </button>
+  <header class="main-header">
+    <div class="container header-wrapper">
+      <div class="logo" aria-label="Simit's Swaad">
+        <span class="logo-modern">Simit’s</span>
+        <span class="logo-traditional">Swaad</span>
+      </div> 
+      
+      <nav class="navbar">
+        <ul class="nav-links">
+          <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="/recipes"><i class="fas fa-book"></i> Recipes</a></li>
+          <li><a href="/equipment"><i class="fas fa-blender"></i> Equipment</a></li>
+          <li><a href="/about"><i class="fas fa-address-card"></i> About</a></li>
+        </ul>
+      </nav>
     </div>
+  </header>
 
-    <div class="recipe-video">
-        <iframe id="recipe-video" src="" allowfullscreen></iframe>
-    </div>
-  </div>
-</section>
-
-<section class="equipment-section container">
-  <h2 class="section-title">Recommended Kitchen Equipment</h2>
-  <p class="section-subtitle">Tools that help you cook smarter, faster, and better.</p>
-  <div id="equipment-container" class="equipment-grid">
-    <!-- Equipment items loaded dynamically here -->
-  </div>
-</section>
-
-
-  
-<footer class="main-footer">
-  <div class="footer-container">
-    <div class="footer-column brand">
-      <h2>Simit’s <span>Swaad</span></h2>
-      <p>Bringing bold Nepali flavors to modern kitchens — one delicious recipe at a time.</p>
-    </div>
-
-    <div class="footer-column links">
-      <h4>Explore</h4>
-      <ul>
-        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-        <li><a href="recipes.html"><i class="fas fa-utensils"></i> Recipes</a></li>
-        <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
-        <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-column social">
-      <h4>Follow Us</h4>
-      <div class="social-icons">
-        <a href="https://www.youtube.com/@SimitsSwaad" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+  <!-- Recipe Content Section -->
+  <main class="recipe-page container">
+    <article id="recipe-content">
+      <!-- All content will be dynamically loaded here -->
+      <h1 id="recipe-title">Loading recipe...</h1>
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
       </div>
-    </div>
-  </div>
+    </article>
+  </main>
 
-  <div class="footer-bottom">
-    <p>&copy; 2025 <strong>Simit’s Swaad</strong>. All rights reserved.</p>
-  </div>
-</footer>
+  <!-- Equipment Section -->
+  <section class="equipment-section container" id="equipment-section" style="display:none;">
+    <h2 class="section-title">Recommended Kitchen Equipment</h2>
+    <div id="equipment-container" class="equipment-grid"></div>
+  </section>
 
-  
-<script type="module" src="recipe.js"></script>
+  <footer class="main-footer">
+    <!-- Your existing footer -->
+  </footer>
 
-
-
+  <!-- Important: Use this script tag -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="recipe.js"></script>
 </body>
 </html>
