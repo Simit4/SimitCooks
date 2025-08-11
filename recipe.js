@@ -11,21 +11,24 @@ function convertToEmbedUrl(url) {
 }
 
 async function fetchAndRenderRecipe() {
-  
-const params = new URLSearchParams(window.location.search);
-const slug = params.get('slug');
-
+  // Get slug from URL path (e.g., /recipes/simple-egg-roll)
+  const pathSegments = window.location.pathname.split('/');
+  const slug = pathSegments[pathSegments.length - 1]; // Last segment is the slug
 
   if (!slug) {
     document.getElementById('recipe-title').innerText = 'Recipe not found';
     return;
   }
 
+  // Rest of your existing fetch/render logic remains the same
   const { data: recipe, error } = await supabase
     .from('recipe_db')
     .select('*')
     .eq('slug', slug)
     .single();
+
+  // ... keep all your existing render/update logic ...
+}
 
   if (error || !recipe) {
     document.getElementById('recipe-title').innerText = 'Recipe not found';
