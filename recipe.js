@@ -1,3 +1,7 @@
+console.log("Script loaded successfully"); 
+console.log("Supabase URL:", supabaseUrl); // Should show your actual URL
+console.log("Current path:", window.location.pathname);
+
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 // Initialize Supabase
@@ -8,29 +12,34 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Get slug from clean URL (/recipes/slug) or fallback to query param
 function getCurrentSlug() {
-  const pathParts = window.location.pathname.split('/');
+  // Get the full path
+  const path = window.location.pathname;
   
-  // Handle both /recipes/slug and /slug formats
-  const slug = pathParts.length > 2 ? pathParts[2] : pathParts[1];
+  // Handle both:
+  // - /recipes/slug
+  // - /slug
+  const parts = path.split('/').filter(part => part !== '');
   
-  // Fallback to query param for backward compatibility
-  if (!slug || slug === 'recipes') {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('slug');
-  }
-  return slug;
+  // If URL is /recipes/slug → return slug
+  // If URL is /slug → return slug
+  // If URL is /recipe.html?slug=xxx → return xxx (fallback)
+  return parts.length > 1 ? parts[1] : 
+         parts.length === 1 ? parts[0] : 
+         new URLSearchParams(window.location.search).get('slug');
 }
+
 
 // Main function to load and display recipe
 async function loadRecipe() {
-  const slug = getCurrentSlug();
-  
-  if (!slug) {
-    window.location.href = '/recipes';
-    return;
-  }
-
   try {
+    const slug = getCurrentSlug();
+    console.log("Extracted slug:", slug); // Debug
+    
+    if (!slug) {
+      window.location.href = '/recipes';
+      return;
+    }
+
     // Show loading state
     document.getElementById('recipe-content').innerHTML = `
       <div class="loading-spinner">
@@ -38,35 +47,30 @@ async function loadRecipe() {
       </div>
     `;
 
-    // Fetch recipe from Supabase
+    // DEBUG: Log before Supabase call
+    console.log("Making Supabase request for slug:", slug);
+    
     const { data: recipe, error } = await supabase
       .from('recipe_db')
       .select('*')
       .eq('slug', slug)
       .single();
 
-    if (error || !recipe) {
-      throw new Error('Recipe not found');
-    }
+    // DEBUG: Log response
+    console.log("Supabase response:", { data: recipe, error });
 
-    // Update view count
-    await supabase
-      .from('recipe_db')
-      .update({ views: (recipe.views || 0) + 1 })
-      .eq('id', recipe.id);
+    if (error) throw error;
+    if (!recipe) throw new Error("Recipe not found");
 
-    // Render the recipe
     renderRecipe(recipe);
-    
-    // Update SEO meta tags
     updateMetaTags(recipe);
 
   } catch (error) {
-    console.error('Error loading recipe:', error);
+    console.error("Full error:", error);
     document.getElementById('recipe-content').innerHTML = `
       <div class="error-message">
-        <h2>Recipe Not Found</h2>
-        <p>We couldn't find the recipe you're looking for.</p>
+        <h2>Error Loading Recipe</h2>
+        <p>${error.message}</p>
         <a href="/recipes" class="btn">Browse All Recipes</a>
       </div>
     `;
