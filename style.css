@@ -306,45 +306,120 @@ h1, h2, h3, h4, h5 {
    Recipe Page
 -------------------------------------------------- */
 .recipe-page {
-  background: var(--bg);            /* Use same background as main pages */
-  color: var(--text);               /* Use main text color */
+  background: #fff;
   border-radius: 14px;
-  box-shadow: var(--shadow-sm);    /* lighter shadow to blend with other pages */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   padding: 2.5rem 3rem;
   margin: 2rem auto;
   max-width: 1100px;
   font-family: 'Inter', sans-serif;
+  color: #2a2a3a;
   line-height: 1.6;
   transition: box-shadow 0.3s ease;
 }
 
 .recipe-page:hover {
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
 }
 
 #recipe-title {
-  color: var(--primary-dark);     /* keep primary color for headings */
-}
-
-/* Keep other text elements consistent */
-.description {
-  color: var(--text);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 900;
+  font-size: 2.8rem;
+  margin-bottom: 0.3rem;
+  color: #ef5b25;
+  letter-spacing: 1px;
 }
 
 .recipe-meta {
-  color: var(--muted);
+  display: flex;
+  gap: 1.8rem;
+  font-size: 1.05rem;
+  color: #7a7a8c;
+  margin-bottom: 1rem;
 }
 
-/* Adjust info blocks background */
+.recipe-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 600;
+}
+
+.description {
+  font-style: italic;
+  font-size: 1.15rem;
+  color: #555768;
+  margin-bottom: 2rem;
+  max-width: 850px;
+}
+
+.recipe-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.5rem;
+}
+
+@media (max-width: 860px) {
+  .recipe-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.recipe-left h3 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
+  color: #33334d;
+  border-bottom: 2px solid #ef5b25;
+  padding-bottom: 0.3rem;
+}
+
+#ingredients-list li,
+#method-list li {
+  position: relative;
+  padding-left: 1.6rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+  color: #40405a;
+  user-select: text;
+  cursor: default;
+}
+
+/* Info blocks: nutrition, tags, notes, facts */
 #nutrition,
 #notes,
 #facts {
-  background: var(--section-bg); /* subtle block background consistent with other pages */
-  border-left-color: var(--primary);
-  color: var(--text);
-  box-shadow: none;              /* remove strong shadow */
+  background: #fff4e6;
+  border-left: 6px solid #ef5b25;
+  padding: 1rem 1.3rem;
+  border-radius: 6px;
+  margin-top: 1.8rem;
+  font-size: 1rem;
+  color: #5a4d3a;
+  box-shadow: 0 3px 8px rgba(239, 91, 37, 0.25);
+  line-height: 1.5;
+  user-select: text;
 }
 
+#tags,
+#cuisine,
+#category {
+  display: inline-block;
+  margin-top: 0.8rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ef5b25;
+  user-select: text;
+}
+
+#notes,
+#facts {
+  margin-top: 0.3rem;
+  font-style: italic;
+  color: #7f6e58;
+}
 
 /* -------------------------------------------------
    Print Button
@@ -456,15 +531,13 @@ h1, h2, h3, h4, h5 {
    Equipment Section Container
 -------------------------------------------------- */
 .equipment-page {
-  background: var(--bg);          /* same as other pages */
-  color: var(--text);
   margin: 3rem auto;
   padding: 3rem 2rem;
+  background: #fff;
   border-radius: 12px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.07);
   max-width: 1100px;
 }
-
 
 /* Section Title and Subtitle */
 .section-title {
@@ -493,18 +566,21 @@ h1, h2, h3, h4, h5 {
 
 /* Individual Equipment Item Card */
 .equipment-item {
-  background: var(--section-bg); /* subtle card background consistent with other sections */
-  box-shadow: none;
-  color: var(--text);
-  transition: transform 0.3s ease;
+  background: #fff8f1;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(239, 91, 37, 0.15);
+  padding: 1.5rem 1.2rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
+  user-select: none;
 }
-
 
 .equipment-item:hover,
 .equipment-item:focus {
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 10px 28px rgba(239, 91, 37, 0.3);
   transform: translateY(-5px);
+  outline: none;
 }
 
 /* Equipment Item Image */
@@ -521,14 +597,15 @@ h1, h2, h3, h4, h5 {
 .equipment-item h4 {
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
- color: var(--primary-dark);  font-size: 1.25rem;
+  color: #ef5b25;
+  font-size: 1.25rem;
   margin-bottom: 0.5rem;
 }
 
 /* Equipment Item Description */
 .equipment-item p {
   font-size: 1rem;
-  color: var(--text);
+  color: #555768;
   line-height: 1.4;
   user-select: text;
   margin-bottom: 0;
@@ -541,7 +618,7 @@ h1, h2, h3, h4, h5 {
   font-size: 1.1rem;
   font-weight: 700;
   color: #fff;
-  background-color: var(--primary);
+  background-color: #ef5b25;
   border: none;
   border-radius: 10px;
   box-shadow: 0 8px 20px rgba(239, 91, 37, 0.4);
@@ -560,7 +637,7 @@ h1, h2, h3, h4, h5 {
 
 .btn-buy:hover,
 .btn-buy:focus {
-  background-color: var(--primary-dark);
+  background-color: #d94a0f;
   box-shadow: 0 12px 28px rgba(217, 74, 15, 0.6);
   transform: translateY(-3px);
   outline: none;
