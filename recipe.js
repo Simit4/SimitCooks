@@ -1,7 +1,3 @@
-console.log("Script loaded successfully"); 
-console.log("Supabase URL:", supabaseUrl); // Should show your actual URL
-console.log("Current path:", window.location.pathname);
-
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 // Initialize Supabase
