@@ -324,6 +324,7 @@ h1, h2, h3, h4, h5 {
 
 #recipe-title {
   font-family: 'Poppins', sans-serif;
+  text-align: center;
   font-weight: 900;
   font-size: 2.8rem;
   margin-bottom: 0.3rem;
@@ -448,7 +449,7 @@ h1, h2, h3, h4, h5 {
 
 .btn-print:hover,
 .btn-print:focus {
-  background-color: #d94a0f;
+  background: var(--primary-dark);
   box-shadow: 0 12px 28px rgba(217, 74, 15, 0.6);
   transform: translateY(-3px);
   outline: none;
@@ -637,7 +638,7 @@ h1, h2, h3, h4, h5 {
 
 .btn-buy:hover,
 .btn-buy:focus {
-  background-color: #d94a0f;
+  background: var(--primary-dark);
   box-shadow: 0 12px 28px rgba(217, 74, 15, 0.6);
   transform: translateY(-3px);
   outline: none;
