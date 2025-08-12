@@ -411,7 +411,8 @@ h1, h2, h3, h4, h5 {
   font-weight: 700;
   font-size: 1.4rem;
   margin-bottom: 0.8rem;
-  color: #33334d;
+  color: #fff;
+
   border-bottom: 2px solid #ef5b25;
   padding-bottom: 0.3rem;
 }
@@ -582,6 +583,8 @@ h1, h2, h3, h4, h5 {
 /* Section Title and Subtitle */
 .section-title {
   font-family: 'Poppins', sans-serif;
+     color: #fff;
+
   font-weight: 800;
   font-size: 2.3rem;
   text-align: center;
