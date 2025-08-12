@@ -217,21 +217,40 @@ h1, h2, h3, h4, h5 {
 
 .btn-hero {
   display: inline-block;
-  padding: 0.75rem 2rem;
+  padding: 0.65rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
   background: var(--primary);
-  color: var(--light);
-  font-weight: 600;
-  border-radius: 12px;
-  transition: 0.3s;
-  box-shadow: var(--shadow-sm);
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(239, 91, 37, 0.4);
+  cursor: pointer;
+  user-select: none;
   text-align: center;
-
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-family: 'Poppins', sans-serif;
+  transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-decoration: none;
+  margin-top: 1.5rem;
 }
 
-.btn-hero:hover {
+.btn-hero:hover,
+..btn-hero:focus {
   background: var(--primary-dark);
-  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(217, 74, 15, 0.6);
+  transform: translateY(-3px);
+  outline: none;
 }
+
+.btn-hero::focus-visible {
+  outline: 2px solid #ffb169;
+  outline-offset: 3px;
+}
+
 
 /* -------------------------------------------------
    Featured & General Recipe Cards
