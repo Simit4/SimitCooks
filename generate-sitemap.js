@@ -8,9 +8,8 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 async function generateSitemap() {
-  // Fetch all recipe slugs
-  const { data: recipes, error } = await supabase
-    .from('recipes')
+  let { data: recipes, error } = await supabase
+    .from('recipe_db')   // <-- your table name
     .select('slug');
 
   if (error) {
@@ -18,7 +17,8 @@ async function generateSitemap() {
     return;
   }
 
-  // Build XML
+  console.log('Recipes fetched:', recipes);
+
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
   xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
@@ -32,7 +32,6 @@ async function generateSitemap() {
 
   xml += `</urlset>`;
 
-  // Save to public folder
   fs.writeFileSync('public/sitemap.xml', xml);
   console.log('Sitemap generated!');
 }
