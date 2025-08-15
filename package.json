@@ -1,0 +1,29 @@
+{
+  "name": "simitswaad",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "equipment.js",
+  "scripts": {
+    "generate-sitemap": "node generate-sitemap.js",
+    "precommit": "npm run generate-sitemap",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Simit4/SimitSwaad.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Simit4/SimitSwaad/issues"
+  },
+  "homepage": "https://github.com/Simit4/SimitSwaad#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.55.0"
+  },
+  "devDependencies": {
+    "husky": "^8.0.3"
+  }
+}
