@@ -5,155 +5,122 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+function convertToEmbedUrl(url) {
+  if (!url) return '';
+  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  return match ? `https://www.youtube.com/embed/${match[1]}` : '';
+}
+
 async function fetchAndRenderRecipe() {
-  let slug;
-  const params = new URLSearchParams(window.location.search);
-  slug = params.get('slug');
-  if (!slug) {
-    const path = window.location.pathname;
-    slug = path.split('/').pop();
-  }
-  console.log('Extracted slug:', slug);
-  console.log('URL:', window.location.href);
+  
+const params = new URLSearchParams(window.location.search);
+const slug = params.get('slug');
+
+
   if (!slug) {
     document.getElementById('recipe-title').innerText = 'Recipe not found';
-    document.getElementById('recipe-description').innerText = 'No recipe slug provided.';
     return;
   }
 
-  try {
-    const { data: recipe, error } = await supabase
-      .from('recipe_db')
-      .select('*')
-      .eq('slug', slug)
-      .single();
-    console.log('Supabase recipe response:', { data: recipe, error });
-    if (error) throw error;
-    if (!recipe) {
-      document.getElementById('recipe-title').innerText = 'Recipe not found';
-      document.getElementById('recipe-description').innerText = 'This recipe does not exist.';
-      return;
-    }
+  const { data: recipe, error } = await supabase
+    .from('recipe_db')
+    .select('*')
+    .eq('slug', slug)
+    .single();
 
-    if (recipe.id) {
-      const { error: updateError } = await supabase
-        .from('recipe_db')
-        .update({ views: (recipe.views || 0) + 1 })
-        .eq('id', recipe.id);
-      if (updateError) console.error('Error updating views:', updateError);
-    }
-
-    renderRecipe(recipe);
-  } catch (e) {
-    console.error('Error fetching recipe:', e);
+  if (error || !recipe) {
     document.getElementById('recipe-title').innerText = 'Recipe not found';
-    document.getElementById('recipe-description').innerText = 'Error loading recipe: ' + e.message;
+    return;
   }
-}
 
-async function fetchEquipment(equipmentIds) {
-  if (!equipmentIds || equipmentIds.length === 0) return [];
-  try {
-    const { data, error } = await supabase
-      .from('equipment_db')
-      .select('*')
-      .in('id', equipmentIds.map(Number));
-    console.log('Supabase equipment response:', { data, error });
-    if (error) throw error;
-    return data || [];
-  } catch (e) {
-    console.error('Error fetching equipment:', e);
-    return [];
+  if (recipe.id) {
+    await supabase
+      .from('recipe_db')
+      .update({ views: (recipe.views || 0) + 1 })
+      .eq('id', recipe.id);
   }
+
+  renderRecipe(recipe);
 }
 
 function renderRecipe(recipe) {
-  console.log('Rendering recipe:', recipe);
+  document.getElementById('recipe-title').innerText = recipe.title;
+  document.getElementById('recipe-description').innerText = recipe.description;
+  document.getElementById('prep-time').innerText = recipe.prep_time;
+  document.getElementById('cook-time').innerText = recipe.cook_time;
+  document.getElementById('servings').innerText = recipe.servings;
 
-  // Update meta tags for SEO
-  document.querySelector('meta[name="description"]').setAttribute('content', recipe.description || 'Delicious recipe from Simit’s Swaad');
-  document.querySelector('meta[name="keywords"]').setAttribute('content', recipe.tags?.join(', ') || 'Nepali recipe, home cooking');
-  document.querySelector('meta[property="og:title"]').setAttribute('content', recipe.title || 'Recipe | Simit’s Swaad');
-  document.querySelector('meta[property="og:description"]').setAttribute('content', recipe.description || 'Delicious recipe from Simit’s Swaad');
-  document.querySelector('meta[property="og:image"]').setAttribute('content', recipe.thumbnail_url || 'https://simitswaad.netlify.app/recipe-thumbnail.jpg');
-  document.querySelector('meta[property="og:url"]').setAttribute('content', `https://simitswaad.netlify.app/recipes/${recipe.slug}`);
-
-  // Render recipe details
-  document.getElementById('recipe-title').innerText = recipe.title || 'Recipe';
-  document.getElementById('recipe-description').innerText = recipe.description || 'No description available.';
-  document.getElementById('prep-time').innerText = recipe.prep_time || 'N/A';
-  document.getElementById('cook-time').innerText = recipe.cook_time || 'N/A';
-  document.getElementById('servings').innerText = recipe.servings || 'N/A';
-
-  // Ingredients
   const ingredientsList = document.getElementById('ingredients-list');
-  if (ingredientsList && recipe.ingredients?.length) {
-    ingredientsList.innerHTML = recipe.ingredients.map(item => `<li>${item}</li>`).join('');
-  } else {
-    ingredientsList.innerHTML = '<li>No ingredients listed.</li>';
-  }
+  ingredientsList.innerHTML = '';
+  recipe.ingredients?.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = item;
+    ingredientsList.appendChild(li);
+  });
 
-  // Method
   const methodList = document.getElementById('method-list');
-  if (methodList && recipe.method?.length) {
-    methodList.innerHTML = recipe.method.map(step => `<li>${step}</li>`).join('');
-  } else {
-    methodList.innerHTML = '<li>No method provided.</li>';
-  }
+  methodList.innerHTML = '';
+  recipe.method?.forEach(step => {
+    const li = document.createElement('li');
+    li.textContent = step;
+    methodList.appendChild(li);
+  });
 
-  // Nutrition
-  const nutritionDiv = document.getElementById('nutrition');
-  if (nutritionDiv && recipe.nutritional_info) {
-    nutritionDiv.innerHTML = `
-      <p>Calories: ${recipe.nutritional_info.calories || 'N/A'}</p>
-      <p>Protein: ${recipe.nutritional_info.protein || 'N/A'}</p>
-      <p>Carbohydrates: ${recipe.nutritional_info.carbohydrates || 'N/A'}</p>
-      <p>Fiber: ${recipe.nutritional_info.fiber || 'N/A'}</p>
-      <p>Fat: ${recipe.nutritional_info.fat || 'N/A'}</p>
+  const nutrition = recipe.nutritional_info;
+  if (nutrition) {
+    document.getElementById('nutrition').innerHTML = `
+      <strong>Calories:</strong> ${nutrition.calories}<br>
+      <strong>Protein:</strong> ${nutrition.protein}<br>
+      <strong>Carbohydrates:</strong> ${nutrition.carbohydrates}<br>
+      <strong>Fiber:</strong> ${nutrition.fiber}<br>
+      <strong>Fat:</strong> ${nutrition.fat}
     `;
-  } else {
-    nutritionDiv.innerHTML = '<p>No nutritional information available.</p>';
   }
 
-  // Tags, Cuisine, Category
-  document.getElementById('tags').innerText = recipe.tags?.join(', ') || 'None';
-  document.getElementById('cuisine').innerText = recipe.cuisine?.join(', ') || 'None';
-  document.getElementById('category').innerText = recipe.category?.join(', ') || 'None';
+  document.getElementById('tags').textContent = recipe.tags?.join(', ') || 'Not available';
+  document.getElementById('cuisine').textContent = recipe.cuisine?.join(', ') || 'Not available';
+  document.getElementById('category').textContent = recipe.category?.join(', ') || 'Not available';
+  document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
+  document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
 
-  // Notes and Facts
-  document.getElementById('notes').innerText = recipe.notes || 'No additional notes.';
-  document.getElementById('facts').innerText = recipe.facts || 'No fun facts available.';
+  const embedUrl = convertToEmbedUrl(recipe.video_url);
+  document.getElementById('recipe-video').src = embedUrl || '';
 
-  // Video
-  const videoContainer = document.getElementById('recipe-video');
-  if (videoContainer && recipe.video_url) {
-    const videoId = recipe.video_url.split('v=')[1]?.split('&')[0];
-    if (videoId) {
-      videoContainer.innerHTML = `<iframe width="100%" height="300" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-    } else {
-      videoContainer.innerHTML = '<p>No video available.</p>';
-    }
-  } else {
-    videoContainer.innerHTML = '<p>No video available.</p>';
+  
+// 🛠 Fetch and show dedicated equipment
+  if (recipe.equipment_ids && recipe.equipment_ids.length > 0) {
+    const equipmentIds = recipe.equipment_ids.map(Number); // Make sure they're integers
+    fetchEquipmentByIds(equipmentIds);
+  }
+}
+
+// Fetch equipment items by their IDs
+async function fetchEquipmentByIds(ids) {
+  const { data, error } = await supabase
+    .from('equipment_db')
+    .select('*')
+    .in('id', ids);
+
+  const container = document.getElementById('equipment-container');
+  container.innerHTML = '';
+
+  if (error || !data?.length) {
+    console.error('Error fetching equipment:', error);
+    container.innerHTML = '<p>No equipment found.</p>';
+    return;
   }
 
-  // Equipment
-  fetchEquipment(recipe.equipment_ids || []).then(equipment => {
-    const equipmentSection = document.getElementById('equipment-section');
-    if (equipmentSection && equipment.length) {
-      equipmentSection.innerHTML = equipment.map(item => `
-        <div class="equipment-item">
-          <h3>${item.name || 'Equipment'}</h3>
-          ${item.image_url ? `<img src="${item.image_url}" alt="${item.name}" style="max-width: 100px;">` : ''}
-          <p>${item.description || 'No description.'}</p>
-          ${item.affiliate_link ? `<a href="${item.affiliate_link}" target="_blank">Buy Now</a>` : ''}
-        </div>
-      `).join('');
-    } else {
-      equipmentSection.innerHTML = '<p>No equipment listed.</p>';
-    }
+  data.forEach(item => {
+    container.innerHTML += `
+      <div class="equipment-item">
+        <img src="${item.image_url}" alt="${item.name}" class="equipment-image" />
+        <h3 class="equipment-title">${item.name}</h3>
+        <p class="equipment-description">${item.description || ''}</p>
+        <a href="${item.affiliate_link}" class="btn-buy" target="_blank" rel="noopener noreferrer">Buy Now</a>
+      </div>
+    `;
   });
 }
 
-// Initialize
+// Init
 fetchAndRenderRecipe();
