@@ -1,1 +1,2 @@
 /recipes/:slug  /recipe.html?slug=:slug  200
+/recipe.html?slug=:slug  /recipes/:slug  301
