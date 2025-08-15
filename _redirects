@@ -1,5 +1,5 @@
-/recipes       /recipes.html       200
-/equipment     /equipment.html     200
-/about         /about.html         200
-/recipe/:slug/ /recipe.html?slug=:slug 200
+/recipes      /recipes.html      200
+/equipment    /equipment.html    200
+/about        /about.html        200
+/recipe/*     /recipe.html       200
 
