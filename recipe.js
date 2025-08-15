@@ -6,202 +6,129 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'
 );
 
-// DOM Elements Cache
-const elements = {
-  title: document.getElementById('recipe-title'),
-  description: document.getElementById('recipe-description'),
-  prepTime: document.getElementById('prep-time'),
-  cookTime: document.getElementById('cook-time'),
-  servings: document.getElementById('servings'),
-  ingredients: document.getElementById('ingredients-list'),
-  method: document.getElementById('method-list'),
-  nutrition: document.getElementById('nutrition'),
-  tags: document.getElementById('tags'),
-  cuisine: document.getElementById('cuisine'),
-  category: document.getElementById('category'),
-  notes: document.getElementById('notes'),
-  facts: document.getElementById('facts'),
-  video: document.getElementById('recipe-video'),
-  equipment: document.getElementById('equipment-container')
-};
+// Get recipe identifier from clean URL (/recipe/recipe-name)
+function getRecipeIdFromUrl() {
+  const path = window.location.pathname;
+  // Extract "recipe-name" from "/recipe/recipe-name"
+  return path.split('/recipe/')[1] || null;
+}
 
-// Utility Functions
-const utils = {
-  getSlug: () => {
-    const path = window.location.pathname;
-    // Handle both /recipe/slug and /slug formats
-    return path.startsWith('/recipe/') 
-      ? path.split('/recipe/')[1] 
-      : path.split('/').filter(Boolean).pop();
-  },
+// Main function to load and display recipe
+async function loadRecipe() {
+  const recipeId = getRecipeIdFromUrl();
   
-  youtubeEmbed: (url) => {
-    if (!url) return '';
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.match(regExp);
-    return match && match[2].length === 11 
-      ? `https://www.youtube.com/embed/${match[2]}` 
-      : '';
-  },
-
-  safeRender: (element, content, fallback = '') => {
-    if (!element) return;
-    element.textContent = content || fallback;
+  if (!recipeId) {
+    showError('Recipe URL is invalid');
+    return;
   }
-};
 
-// Recipe Functions
-const recipeHandler = {
-  fetchRecipe: async (slug) => {
-    try {
-      const { data, error } = await supabase
-        .from('recipe_db')
-        .select('*')
-        .eq('slug', slug)
-        .single();
+  try {
+    // Fetch recipe from Supabase
+    const { data: recipe, error } = await supabase
+      .from('recipes')  // Changed from 'recipe_db' to match your table
+      .select('*')
+      .eq('url_id', recipeId)  // Using url_id instead of slug
+      .single();
 
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      console.error('Fetch error:', error);
-      return null;
+    if (error) throw error;
+    if (!recipe) throw new Error('Recipe not found');
+
+    // Render the recipe
+    renderRecipe(recipe);
+
+    // Load recommended equipment
+    if (recipe.equipment_ids?.length) {
+      await loadEquipment(recipe.equipment_ids);
     }
-  },
 
-  incrementViews: async (recipeId) => {
-    try {
-      await supabase
-        .from('recipe_db')
-        .update({ views: supabase.rpc('increment') })
-        .eq('id', recipeId);
-    } catch (error) {
-      console.error('View increment failed:', error);
-    }
-  },
+    // Update view count
+    await supabase
+      .from('recipes')
+      .update({ views: (recipe.views || 0) + 1 })
+      .eq('id', recipe.id);
 
-  render: (recipe) => {
-    if (!recipe) return;
-
-    // Basic Information
-    utils.safeRender(elements.title, recipe.title, 'Recipe not found');
-    utils.safeRender(elements.description, recipe.description);
-    utils.safeRender(elements.prepTime, recipe.prep_time);
-    utils.safeRender(elements.cookTime, recipe.cook_time);
-    utils.safeRender(elements.servings, recipe.servings);
-
-    // Ingredients and Method
-    elements.ingredients.innerHTML = recipe.ingredients?.map(item => 
-      `<li>${item}</li>`
-    ).join('') || '<li>No ingredients listed</li>';
-
-    elements.method.innerHTML = recipe.method?.map((step, i) => 
-      `<li><strong>Step ${i + 1}:</strong> ${step}</li>`
-    ).join('') || '<li>No method provided</li>';
-
-    // Nutrition Information
-    const nutrition = recipe.nutritional_info || {};
-    elements.nutrition.innerHTML = `
-      <div class="nutrition-item"><span>Calories:</span> ${nutrition.calories || 'N/A'}</div>
-      <div class="nutrition-item"><span>Protein:</span> ${nutrition.protein || 'N/A'}</div>
-      <div class="nutrition-item"><span>Carbs:</span> ${nutrition.carbohydrates || 'N/A'}</div>
-      <div class="nutrition-item"><span>Fiber:</span> ${nutrition.fiber || 'N/A'}</div>
-      <div class="nutrition-item"><span>Fat:</span> ${nutrition.fat || 'N/A'}</div>
-    `;
-
-    // Metadata
-    utils.safeRender(elements.tags, recipe.tags?.join(', '), 'No tags');
-    utils.safeRender(elements.cuisine, recipe.cuisine?.join(', '), 'Not specified');
-    utils.safeRender(elements.category, recipe.category?.join(', '), 'Uncategorized');
-
-    // Additional Content
-    utils.safeRender(elements.notes, recipe.notes, 'No additional notes');
-    utils.safeRender(elements.facts, recipe.facts, 'No fun facts available');
-
-    // Video Embed
-    elements.video.src = utils.youtubeEmbed(recipe.video_url);
-    elements.video.style.display = recipe.video_url ? 'block' : 'none';
+  } catch (error) {
+    console.error('Failed to load recipe:', error);
+    showError('Failed to load recipe');
   }
-};
+}
 
-// Equipment Functions
-const equipmentHandler = {
-  fetchEquipment: async (equipmentIds) => {
-    if (!equipmentIds?.length) return null;
-    
-    try {
-      const { data, error } = await supabase
-        .from('equipment_db')
-        .select('*')
-        .in('id', equipmentIds.map(Number));
+// Render recipe to the page
+function renderRecipe(recipe) {
+  // Basic Info
+  document.getElementById('recipe-title').textContent = recipe.title;
+  document.getElementById('recipe-description').textContent = recipe.description || '';
+  
+  // Times
+  document.getElementById('prep-time').textContent = recipe.prep_time || 'N/A';
+  document.getElementById('cook-time').textContent = recipe.cook_time || 'N/A';
+  document.getElementById('servings').textContent = recipe.servings || 'N/A';
 
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      console.error('Equipment fetch error:', error);
-      return null;
-    }
-  },
+  // Ingredients
+  const ingredientsList = document.getElementById('ingredients-list');
+  ingredientsList.innerHTML = recipe.ingredients?.map(item => 
+    `<li>${item}</li>`
+  ).join('') || '<li>No ingredients listed</li>';
 
-  render: (equipmentItems) => {
-    if (!elements.equipment) return;
+  // Method
+  const methodList = document.getElementById('method-list');
+  methodList.innerHTML = recipe.method?.map((step, i) => 
+    `<li><strong>Step ${i+1}:</strong> ${step}</li>`
+  ).join('') || '<li>No instructions available</li>';
 
-    if (!equipmentItems?.length) {
-      elements.equipment.innerHTML = '<p class="no-equipment">No special equipment needed for this recipe</p>';
-      return;
-    }
+  // Nutrition
+  const nutrition = recipe.nutritional_info || {};
+  document.getElementById('nutrition').innerHTML = `
+    <p><strong>Calories:</strong> ${nutrition.calories || 'N/A'}</p>
+    <p><strong>Protein:</strong> ${nutrition.protein || 'N/A'}</p>
+    <p><strong>Carbs:</strong> ${nutrition.carbs || 'N/A'}</p>
+    <p><strong>Fat:</strong> ${nutrition.fat || 'N/A'}</p>
+  `;
 
-    elements.equipment.innerHTML = equipmentItems.map(item => `
+  // Video
+  const videoEmbed = document.getElementById('recipe-video');
+  if (recipe.video_url) {
+    const videoId = recipe.video_url.match(/(?:v=|\/)([a-zA-Z0-9_-]+)/)?.[1];
+    videoEmbed.src = `https://www.youtube.com/embed/${videoId}`;
+    videoEmbed.style.display = 'block';
+  } else {
+    videoEmbed.style.display = 'none';
+  }
+}
+
+// Load recommended equipment
+async function loadEquipment(equipmentIds) {
+  try {
+    const { data: equipment, error } = await supabase
+      .from('equipment')
+      .select('*')
+      .in('id', equipmentIds);
+
+    if (error) throw error;
+
+    const container = document.getElementById('equipment-container');
+    container.innerHTML = equipment?.map(item => `
       <div class="equipment-card">
-        <img src="${item.image_url}" alt="${item.name}" loading="lazy" class="equipment-image">
-        <div class="equipment-info">
-          <h3>${item.name}</h3>
-          ${item.description ? `<p>${item.description}</p>` : ''}
-          <a href="${item.affiliate_link}" target="_blank" rel="noopener" class="btn-buy">
-            <i class="fas fa-shopping-cart"></i> Buy Now
-          </a>
-        </div>
+        <img src="${item.image_url}" alt="${item.name}" loading="lazy">
+        <h3>${item.name}</h3>
+        <p>${item.description || ''}</p>
+        <a href="${item.purchase_link}" target="_blank" class="btn-buy">
+          Buy Now
+        </a>
       </div>
-    `).join('');
+    `).join('') || '<p>No equipment recommendations</p>';
+
+  } catch (error) {
+    console.error('Failed to load equipment:', error);
+    document.getElementById('equipment-container').innerHTML = 
+      '<p>Could not load equipment recommendations</p>';
   }
-};
+}
 
-// Main Application Flow
-document.addEventListener('DOMContentLoaded', async () => {
-  console.log('Recipe page initialized');
-  
-  const slug = utils.getSlug();
-  console.log('Slug extracted:', slug);
+// Show error message
+function showError(message) {
+  document.getElementById('recipe-title').textContent = message;
+}
 
-  if (!slug) {
-    utils.safeRender(elements.title, 'Invalid recipe URL');
-    return;
-  }
-
-  const recipe = await recipeHandler.fetchRecipe(slug);
-  
-  if (!recipe) {
-    utils.safeRender(elements.title, 'Recipe not found');
-    return;
-  }
-
-  console.log('Recipe loaded:', recipe.title);
-  
-  // Render the recipe
-  recipeHandler.render(recipe);
-  
-  // Update view count
-  if (recipe.id) {
-    await recipeHandler.incrementViews(recipe.id);
-  }
-
-  // Load equipment if available
-  if (recipe.equipment_ids?.length) {
-    const equipment = await equipmentHandler.fetchEquipment(recipe.equipment_ids);
-    equipmentHandler.render(equipment);
-  }
-});
-
-// Print Button Handler
-document.querySelector('.btn-print')?.addEventListener('click', () => {
-  window.print();
-});
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', loadRecipe);
