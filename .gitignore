@@ -1,1 +1,4 @@
 /public/sitemap.xml
+
+# Local Netlify folder
+.netlify
