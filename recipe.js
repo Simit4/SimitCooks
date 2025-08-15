@@ -1,134 +1,158 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// Supabase Client Configuration
-const supabase = createClient(
-  'https://ozdwocrbrojtyogolqxn.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'
-);
-
-// Get recipe identifier from clean URL (/recipe/recipe-name)
-function getRecipeIdFromUrl() {
-  const path = window.location.pathname;
-  // Extract "recipe-name" from "/recipe/recipe-name"
-  return path.split('/recipe/')[1] || null;
+// Debug mode - set to false in production
+const DEBUG = true;
+function debugLog(message, data) {
+  if (DEBUG) console.log(`[DEBUG] ${message}`, data || '');
 }
 
-// Main function to load and display recipe
-async function loadRecipe() {
-  const recipeId = getRecipeIdFromUrl();
+
+// Check if DOM elements exist
+function verifyDomElements() {
+  const requiredElements = [
+    'recipe-title', 'recipe-description', 'ingredients-list',
+    'method-list', 'equipment-container'
+  ];
   
+  requiredElements.forEach(id => {
+    if (!document.getElementById(id)) {
+      debugLog(`Missing DOM element:`, id);
+    }
+  });
+}
+
+// Get recipe ID from URL
+function getRecipeIdFromUrl() {
+  const path = window.location.pathname;
+  const recipeId = path.split('/recipe/')[1];
+  debugLog('Extracted recipe ID from URL:', recipeId);
+  return recipeId;
+}
+
+// Main function
+async function loadRecipe() {
+  debugLog('Starting recipe load...');
+  verifyDomElements();
+  
+  const recipeId = getRecipeIdFromUrl();
   if (!recipeId) {
-    showError('Recipe URL is invalid');
+    showError('Invalid recipe URL');
     return;
   }
 
   try {
-    // Fetch recipe from Supabase
+    debugLog('Fetching recipe from Supabase...');
     const { data: recipe, error } = await supabase
-      .from('recipes')  // Changed from 'recipe_db' to match your table
+      .from('recipe_db')
       .select('*')
-      .eq('url_id', recipeId)  // Using url_id instead of slug
+      .eq('slug', recipeId)  // or .eq('url_id', recipeId)
       .single();
 
     if (error) throw error;
     if (!recipe) throw new Error('Recipe not found');
+    debugLog('Recipe found:', recipe.title);
 
-    // Render the recipe
     renderRecipe(recipe);
-
-    // Load recommended equipment
-    if (recipe.equipment_ids?.length) {
-      await loadEquipment(recipe.equipment_ids);
-    }
-
-    // Update view count
-    await supabase
-      .from('recipes')
-      .update({ views: (recipe.views || 0) + 1 })
-      .eq('id', recipe.id);
+    await updateViewCount(recipe.id);
+    await loadEquipment(recipe.equipment_ids);
 
   } catch (error) {
-    console.error('Failed to load recipe:', error);
-    showError('Failed to load recipe');
+    debugLog('Error loading recipe:', error);
+    showError('Failed to load recipe. Please try again.');
   }
 }
 
-// Render recipe to the page
+// Render functions
 function renderRecipe(recipe) {
+  debugLog('Rendering recipe...');
+  
   // Basic Info
-  document.getElementById('recipe-title').textContent = recipe.title;
-  document.getElementById('recipe-description').textContent = recipe.description || '';
+  setElementContent('recipe-title', recipe.title);
+  setElementContent('recipe-description', recipe.description);
   
   // Times
-  document.getElementById('prep-time').textContent = recipe.prep_time || 'N/A';
-  document.getElementById('cook-time').textContent = recipe.cook_time || 'N/A';
-  document.getElementById('servings').textContent = recipe.servings || 'N/A';
+  setElementContent('prep-time', recipe.prep_time);
+  setElementContent('cook-time', recipe.cook_time);
+  setElementContent('servings', recipe.servings);
 
   // Ingredients
-  const ingredientsList = document.getElementById('ingredients-list');
-  ingredientsList.innerHTML = recipe.ingredients?.map(item => 
-    `<li>${item}</li>`
-  ).join('') || '<li>No ingredients listed</li>';
-
+  renderList('ingredients-list', recipe.ingredients, 'No ingredients listed');
+  
   // Method
-  const methodList = document.getElementById('method-list');
-  methodList.innerHTML = recipe.method?.map((step, i) => 
-    `<li><strong>Step ${i+1}:</strong> ${step}</li>`
-  ).join('') || '<li>No instructions available</li>';
+  renderList('method-list', recipe.method?.map((step, i) => `Step ${i+1}: ${step}`), 'No instructions available');
 
   // Nutrition
-  const nutrition = recipe.nutritional_info || {};
-  document.getElementById('nutrition').innerHTML = `
-    <p><strong>Calories:</strong> ${nutrition.calories || 'N/A'}</p>
-    <p><strong>Protein:</strong> ${nutrition.protein || 'N/A'}</p>
-    <p><strong>Carbs:</strong> ${nutrition.carbs || 'N/A'}</p>
-    <p><strong>Fat:</strong> ${nutrition.fat || 'N/A'}</p>
-  `;
-
-  // Video
-  const videoEmbed = document.getElementById('recipe-video');
-  if (recipe.video_url) {
-    const videoId = recipe.video_url.match(/(?:v=|\/)([a-zA-Z0-9_-]+)/)?.[1];
-    videoEmbed.src = `https://www.youtube.com/embed/${videoId}`;
-    videoEmbed.style.display = 'block';
-  } else {
-    videoEmbed.style.display = 'none';
+  if (recipe.nutritional_info) {
+    const nutr = recipe.nutritional_info;
+    document.getElementById('nutrition').innerHTML = `
+      <p><strong>Calories:</strong> ${nutr.calories || 'N/A'}</p>
+      <p><strong>Protein:</strong> ${nutr.protein || 'N/A'}</p>
+      <p><strong>Carbs:</strong> ${nutr.carbs || 'N/A'}</p>
+      <p><strong>Fat:</strong> ${nutr.fat || 'N/A'}</p>
+    `;
   }
 }
 
-// Load recommended equipment
-async function loadEquipment(equipmentIds) {
+// Helper functions
+function setElementContent(id, content, fallback = '') {
+  const el = document.getElementById(id);
+  if (el) el.textContent = content || fallback;
+}
+
+function renderList(id, items, emptyMessage) {
+  const container = document.getElementById(id);
+  if (!container) return;
+  
+  container.innerHTML = items?.length 
+    ? items.map(item => `<li>${item}</li>`).join('')
+    : `<li>${emptyMessage}</li>`;
+}
+
+async function updateViewCount(recipeId) {
   try {
-    const { data: equipment, error } = await supabase
-      .from('equipment')
+    await supabase
+      .from('recipe_db')
+      .update({ views: supabase.rpc('increment') })
+      .eq('id', recipeId);
+  } catch (error) {
+    debugLog('Failed to update view count:', error);
+  }
+}
+
+async function loadEquipment(equipmentIds) {
+  if (!equipmentIds?.length) return;
+  
+  try {
+    const { data, error } = await supabase
+      .from('equipment_db')
       .select('*')
       .in('id', equipmentIds);
 
     if (error) throw error;
-
+    
     const container = document.getElementById('equipment-container');
-    container.innerHTML = equipment?.map(item => `
-      <div class="equipment-card">
-        <img src="${item.image_url}" alt="${item.name}" loading="lazy">
-        <h3>${item.name}</h3>
-        <p>${item.description || ''}</p>
-        <a href="${item.purchase_link}" target="_blank" class="btn-buy">
-          Buy Now
-        </a>
-      </div>
-    `).join('') || '<p>No equipment recommendations</p>';
-
+    if (container) {
+      container.innerHTML = data?.map(item => `
+        <div class="equipment-item">
+          <img src="${item.image_url}" alt="${item.name}" loading="lazy">
+          <h3>${item.name}</h3>
+          <p>${item.description || ''}</p>
+          <a href="${item.purchase_link}" target="_blank">Buy Now</a>
+        </div>
+      `).join('') || '<p>No equipment recommendations</p>';
+    }
   } catch (error) {
-    console.error('Failed to load equipment:', error);
-    document.getElementById('equipment-container').innerHTML = 
-      '<p>Could not load equipment recommendations</p>';
+    debugLog('Equipment load error:', error);
   }
 }
 
-// Show error message
 function showError(message) {
-  document.getElementById('recipe-title').textContent = message;
+  const titleEl = document.getElementById('recipe-title');
+  if (titleEl) titleEl.textContent = message;
 }
 
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', loadRecipe);
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  debugLog('DOM fully loaded');
+  loadRecipe();
+});
