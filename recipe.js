@@ -12,16 +12,16 @@ function convertToEmbedUrl(url) {
 }
 
 async function fetchAndRenderRecipe() {
-  
-const params = new URLSearchParams(window.location.search);
-const slug = params.get('slug');
+  // Extract slug from URL like /recipe/easy-veg-chowmein
+  const path = window.location.pathname; // e.g., "/recipe/easy-veg-chowmein"
+  const slug = path.split('/').pop(); // "easy-veg-chowmein"
 
-
-  if (!slug) {
+  if (!slug || slug === 'recipe.html') {
     document.getElementById('recipe-title').innerText = 'Recipe not found';
     return;
   }
 
+  // Rest of your existing Supabase fetch code...
   const { data: recipe, error } = await supabase
     .from('recipe_db')
     .select('*')
@@ -31,13 +31,6 @@ const slug = params.get('slug');
   if (error || !recipe) {
     document.getElementById('recipe-title').innerText = 'Recipe not found';
     return;
-  }
-
-  if (recipe.id) {
-    await supabase
-      .from('recipe_db')
-      .update({ views: (recipe.views || 0) + 1 })
-      .eq('id', recipe.id);
   }
 
   renderRecipe(recipe);
