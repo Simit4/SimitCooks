@@ -2,7 +2,7 @@ import fs from "fs";
 import { createClient } from "@supabase/supabase-js";
 
 // 🔹 Replace with your Supabase details
-const supabaseUrl = "YOUR_SUPABASE_URL";
+const supabaseUrl = "https://ozdwocrbrojtyogolqxn.supabase.co";
 const supabaseKey = "YOUR_SUPABASE_ANON_KEY";
 
 const supabase = createClient(supabaseUrl, supabaseKey);
