@@ -68,5 +68,4 @@ ${recipeUrls.join("\n")}
   }
 }
 
-// Run the generator
 generateSitemap();
