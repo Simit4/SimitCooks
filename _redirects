@@ -1,1 +1,1 @@
-/recipe/* /recipe.html 200
+/recipe/:slug  /recipe.html?slug=:slug  200
