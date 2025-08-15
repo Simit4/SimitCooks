@@ -47,7 +47,7 @@ async function fetchAndRenderRecipe() {
   } catch (e) {
     console.error('Error fetching recipe:', e);
     document.getElementById('recipe-title').innerText = 'Recipe not found';
-    document.getElementById('recipe-description').innerText = 'Error loading recipe. Please try again later.';
+    document.getElementById('recipe-description').innerText = 'Error loading recipe: ' + e.message;
   }
 }
 
