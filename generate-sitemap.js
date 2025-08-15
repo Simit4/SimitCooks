@@ -32,7 +32,7 @@ async function generateSitemap() {
 
   xml += `</urlset>`;
 
-  fs.writeFileSync('public/sitemap.xml', xml);
+  fs.writeFileSync('sitemap.xml', xml);
   console.log('Sitemap generated!');
 }
 

@@ -1,0 +1,4 @@
+/recipes     /recipes.html    200
+/equipment   /equipment.html  200
+/about       /about.html      200
+/recipe/*    /recipe.html     200
