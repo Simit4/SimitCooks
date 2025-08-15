@@ -1,1 +1,1 @@
-/recipe/:slug  /recipe.html?slug=:slug  200
+/recipe/*  /recipe.html?slug=:splat  200
