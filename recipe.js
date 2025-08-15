@@ -7,6 +7,14 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 // Convert YouTube URL to embed URL
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+// Initialize Supabase
+const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
+const supabaseKey = 'HdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Convert YouTube URL to embed URL
 function convertToEmbedUrl(url) {
   if (!url) return '';
   const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
@@ -136,3 +144,4 @@ async function fetchEquipmentByIds(ids) {
 
 // Init
 fetchAndRenderRecipe();
+
