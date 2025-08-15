@@ -12,16 +12,10 @@ function convertToEmbedUrl(url) {
 }
 
 async function fetchAndRenderRecipe() {
-  let slug;
-  // Check query parameter first (for backward compatibility)
-  const params = new URLSearchParams(window.location.search);
-  slug = params.get('slug');
+  
+const params = new URLSearchParams(window.location.search);
+const slug = params.get('slug');
 
-  // If no query parameter, check the path
-  if (!slug) {
-    const path = window.location.pathname;
-    slug = path.split('/').pop();
-  }
 
   if (!slug) {
     document.getElementById('recipe-title').innerText = 'Recipe not found';
@@ -92,16 +86,11 @@ function renderRecipe(recipe) {
   const embedUrl = convertToEmbedUrl(recipe.video_url);
   document.getElementById('recipe-video').src = embedUrl || '';
 
-  // Update Open Graph URL for SEO
-  const ogUrlMeta = document.querySelector('meta[property="og:url"]');
-  ogUrlMeta.setAttribute('content', `https://simitswaad.netlify.app/recipes/${recipe.slug}`);
-
-  // 🛠 Fetch and show dedicated equipment
+  
+// 🛠 Fetch and show dedicated equipment
   if (recipe.equipment_ids && recipe.equipment_ids.length > 0) {
     const equipmentIds = recipe.equipment_ids.map(Number); // Make sure they're integers
     fetchEquipmentByIds(equipmentIds);
-  } else {
-    document.getElementById('equipment-container').innerHTML = '<p>No equipment recommended for this recipe.</p>';
   }
 }
 
