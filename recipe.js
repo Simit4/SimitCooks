@@ -13,47 +13,45 @@ function convertToEmbedUrl(url) {
 
 async function fetchAndRenderRecipe() {
   let slug;
-  // Check query parameter first (for backward compatibility)
   const params = new URLSearchParams(window.location.search);
   slug = params.get('slug');
-
-  // If no query parameter, check the path
   if (!slug) {
     const path = window.location.pathname;
     slug = path.split('/').pop();
   }
-
+  console.log('Extracted slug:', slug);
+  console.log('URL:', window.location.href);
   if (!slug) {
     document.getElementById('recipe-title').innerText = 'Recipe not found';
     return;
   }
-
   try {
     const { data: recipe, error } = await supabase
       .from('recipe_db')
       .select('*')
       .eq('slug', slug)
       .single();
-
+    console.log('Supabase response:', { data: recipe, error });
     if (error) throw error;
     if (!recipe) {
       document.getElementById('recipe-title').innerText = 'Recipe not found';
       return;
     }
-
     if (recipe.id) {
       await supabase
         .from('recipe_db')
         .update({ views: (recipe.views || 0) + 1 })
         .eq('id', recipe.id);
     }
-
     renderRecipe(recipe);
   } catch (e) {
     console.error('Error fetching recipe:', e);
     document.getElementById('recipe-title').innerText = 'Recipe not found';
   }
 }
+
+
+
 function renderRecipe(recipe) {
   document.getElementById('recipe-title').innerText = recipe.title;
   document.getElementById('recipe-description').innerText = recipe.description;
