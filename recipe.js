@@ -1,158 +1,126 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// Debug mode - set to false in production
-const DEBUG = true;
-function debugLog(message, data) {
-  if (DEBUG) console.log(`[DEBUG] ${message}`, data || '');
+// Initialize Supabase
+const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+function convertToEmbedUrl(url) {
+  if (!url) return '';
+  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  return match ? `https://www.youtube.com/embed/${match[1]}` : '';
 }
 
-
-// Check if DOM elements exist
-function verifyDomElements() {
-  const requiredElements = [
-    'recipe-title', 'recipe-description', 'ingredients-list',
-    'method-list', 'equipment-container'
-  ];
+async function fetchAndRenderRecipe() {
   
-  requiredElements.forEach(id => {
-    if (!document.getElementById(id)) {
-      debugLog(`Missing DOM element:`, id);
-    }
-  });
-}
+const params = new URLSearchParams(window.location.search);
+const slug = params.get('slug');
 
-// Get recipe ID from URL
-function getRecipeIdFromUrl() {
-  const path = window.location.pathname;
-  const recipeId = path.split('/recipe/')[1];
-  debugLog('Extracted recipe ID from URL:', recipeId);
-  return recipeId;
-}
 
-// Main function
-async function loadRecipe() {
-  debugLog('Starting recipe load...');
-  verifyDomElements();
-  
-  const recipeId = getRecipeIdFromUrl();
-  if (!recipeId) {
-    showError('Invalid recipe URL');
+  if (!slug) {
+    document.getElementById('recipe-title').innerText = 'Recipe not found';
     return;
   }
 
-  try {
-    debugLog('Fetching recipe from Supabase...');
-    const { data: recipe, error } = await supabase
-      .from('recipe_db')
-      .select('*')
-      .eq('slug', recipeId)  // or .eq('url_id', recipeId)
-      .single();
+  const { data: recipe, error } = await supabase
+    .from('recipe_db')
+    .select('*')
+    .eq('slug', slug)
+    .single();
 
-    if (error) throw error;
-    if (!recipe) throw new Error('Recipe not found');
-    debugLog('Recipe found:', recipe.title);
-
-    renderRecipe(recipe);
-    await updateViewCount(recipe.id);
-    await loadEquipment(recipe.equipment_ids);
-
-  } catch (error) {
-    debugLog('Error loading recipe:', error);
-    showError('Failed to load recipe. Please try again.');
+  if (error || !recipe) {
+    document.getElementById('recipe-title').innerText = 'Recipe not found';
+    return;
   }
-}
 
-// Render functions
-function renderRecipe(recipe) {
-  debugLog('Rendering recipe...');
-  
-  // Basic Info
-  setElementContent('recipe-title', recipe.title);
-  setElementContent('recipe-description', recipe.description);
-  
-  // Times
-  setElementContent('prep-time', recipe.prep_time);
-  setElementContent('cook-time', recipe.cook_time);
-  setElementContent('servings', recipe.servings);
-
-  // Ingredients
-  renderList('ingredients-list', recipe.ingredients, 'No ingredients listed');
-  
-  // Method
-  renderList('method-list', recipe.method?.map((step, i) => `Step ${i+1}: ${step}`), 'No instructions available');
-
-  // Nutrition
-  if (recipe.nutritional_info) {
-    const nutr = recipe.nutritional_info;
-    document.getElementById('nutrition').innerHTML = `
-      <p><strong>Calories:</strong> ${nutr.calories || 'N/A'}</p>
-      <p><strong>Protein:</strong> ${nutr.protein || 'N/A'}</p>
-      <p><strong>Carbs:</strong> ${nutr.carbs || 'N/A'}</p>
-      <p><strong>Fat:</strong> ${nutr.fat || 'N/A'}</p>
-    `;
-  }
-}
-
-// Helper functions
-function setElementContent(id, content, fallback = '') {
-  const el = document.getElementById(id);
-  if (el) el.textContent = content || fallback;
-}
-
-function renderList(id, items, emptyMessage) {
-  const container = document.getElementById(id);
-  if (!container) return;
-  
-  container.innerHTML = items?.length 
-    ? items.map(item => `<li>${item}</li>`).join('')
-    : `<li>${emptyMessage}</li>`;
-}
-
-async function updateViewCount(recipeId) {
-  try {
+  if (recipe.id) {
     await supabase
       .from('recipe_db')
-      .update({ views: supabase.rpc('increment') })
-      .eq('id', recipeId);
-  } catch (error) {
-    debugLog('Failed to update view count:', error);
+      .update({ views: (recipe.views || 0) + 1 })
+      .eq('id', recipe.id);
   }
+
+  renderRecipe(recipe);
 }
 
-async function loadEquipment(equipmentIds) {
-  if (!equipmentIds?.length) return;
+function renderRecipe(recipe) {
+  document.getElementById('recipe-title').innerText = recipe.title;
+  document.getElementById('recipe-description').innerText = recipe.description;
+  document.getElementById('prep-time').innerText = recipe.prep_time;
+  document.getElementById('cook-time').innerText = recipe.cook_time;
+  document.getElementById('servings').innerText = recipe.servings;
+
+  const ingredientsList = document.getElementById('ingredients-list');
+  ingredientsList.innerHTML = '';
+  recipe.ingredients?.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = item;
+    ingredientsList.appendChild(li);
+  });
+
+  const methodList = document.getElementById('method-list');
+  methodList.innerHTML = '';
+  recipe.method?.forEach(step => {
+    const li = document.createElement('li');
+    li.textContent = step;
+    methodList.appendChild(li);
+  });
+
+  const nutrition = recipe.nutritional_info;
+  if (nutrition) {
+    document.getElementById('nutrition').innerHTML = `
+      <strong>Calories:</strong> ${nutrition.calories}<br>
+      <strong>Protein:</strong> ${nutrition.protein}<br>
+      <strong>Carbohydrates:</strong> ${nutrition.carbohydrates}<br>
+      <strong>Fiber:</strong> ${nutrition.fiber}<br>
+      <strong>Fat:</strong> ${nutrition.fat}
+    `;
+  }
+
+  document.getElementById('tags').textContent = recipe.tags?.join(', ') || 'Not available';
+  document.getElementById('cuisine').textContent = recipe.cuisine?.join(', ') || 'Not available';
+  document.getElementById('category').textContent = recipe.category?.join(', ') || 'Not available';
+  document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
+  document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
+
+  const embedUrl = convertToEmbedUrl(recipe.video_url);
+  document.getElementById('recipe-video').src = embedUrl || '';
+
   
-  try {
-    const { data, error } = await supabase
-      .from('equipment_db')
-      .select('*')
-      .in('id', equipmentIds);
-
-    if (error) throw error;
-    
-    const container = document.getElementById('equipment-container');
-    if (container) {
-      container.innerHTML = data?.map(item => `
-        <div class="equipment-item">
-          <img src="${item.image_url}" alt="${item.name}" loading="lazy">
-          <h3>${item.name}</h3>
-          <p>${item.description || ''}</p>
-          <a href="${item.purchase_link}" target="_blank">Buy Now</a>
-        </div>
-      `).join('') || '<p>No equipment recommendations</p>';
-    }
-  } catch (error) {
-    debugLog('Equipment load error:', error);
+// 🛠 Fetch and show dedicated equipment
+  if (recipe.equipment_ids && recipe.equipment_ids.length > 0) {
+    const equipmentIds = recipe.equipment_ids.map(Number); // Make sure they're integers
+    fetchEquipmentByIds(equipmentIds);
   }
 }
 
-function showError(message) {
-  const titleEl = document.getElementById('recipe-title');
-  if (titleEl) titleEl.textContent = message;
+// Fetch equipment items by their IDs
+async function fetchEquipmentByIds(ids) {
+  const { data, error } = await supabase
+    .from('equipment_db')
+    .select('*')
+    .in('id', ids);
+
+  const container = document.getElementById('equipment-container');
+  container.innerHTML = '';
+
+  if (error || !data?.length) {
+    console.error('Error fetching equipment:', error);
+    container.innerHTML = '<p>No equipment found.</p>';
+    return;
+  }
+
+  data.forEach(item => {
+    container.innerHTML += `
+      <div class="equipment-item">
+        <img src="${item.image_url}" alt="${item.name}" class="equipment-image" />
+        <h3 class="equipment-title">${item.name}</h3>
+        <p class="equipment-description">${item.description || ''}</p>
+        <a href="${item.affiliate_link}" class="btn-buy" target="_blank" rel="noopener noreferrer">Buy Now</a>
+      </div>
+    `;
+  });
 }
 
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-  debugLog('DOM fully loaded');
-  loadRecipe();
-});
+// Init
+fetchAndRenderRecipe();
