@@ -28,27 +28,32 @@ async function fetchAndRenderRecipe() {
     return;
   }
 
-  const { data: recipe, error } = await supabase
-    .from('recipe_db')
-    .select('*')
-    .eq('slug', slug)
-    .single();
-
-  if (error || !recipe) {
-    document.getElementById('recipe-title').innerText = 'Recipe not found';
-    return;
-  }
-
-  if (recipe.id) {
-    await supabase
+  try {
+    const { data: recipe, error } = await supabase
       .from('recipe_db')
-      .update({ views: (recipe.views || 0) + 1 })
-      .eq('id', recipe.id);
+      .select('*')
+      .eq('slug', slug)
+      .single();
+
+    if (error) throw error;
+    if (!recipe) {
+      document.getElementById('recipe-title').innerText = 'Recipe not found';
+      return;
+    }
+
+    if (recipe.id) {
+      await supabase
+        .from('recipe_db')
+        .update({ views: (recipe.views || 0) + 1 })
+        .eq('id', recipe.id);
+    }
+
+    renderRecipe(recipe);
+  } catch (e) {
+    console.error('Error fetching recipe:', e);
+    document.getElementById('recipe-title').innerText = 'Recipe not found';
   }
-
-  renderRecipe(recipe);
 }
-
 function renderRecipe(recipe) {
   document.getElementById('recipe-title').innerText = recipe.title;
   document.getElementById('recipe-description').innerText = recipe.description;
