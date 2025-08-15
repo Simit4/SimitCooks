@@ -1,4 +1,11 @@
-"scripts": {
-  "build-sitemap": "node generate-sitemap.js",
-  "build": "npm run build-sitemap && your-existing-build-command"
+{
+  "name": "simitswaad",
+  "version": "1.0.0",
+  "scripts": {
+    "build-sitemap": "node generate-sitemap.js",
+    "build": "npm run build-sitemap"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0"
+  }
 }
