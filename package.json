@@ -2,8 +2,7 @@
   "name": "simitswaad",
   "version": "1.0.0",
   "scripts": {
-    "build-sitemap": "node generate-sitemap.js",
-    "build": "npm run build-sitemap"
+    "build": "node generate-sitemap.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.0.0"
