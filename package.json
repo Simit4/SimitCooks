@@ -5,6 +5,7 @@
   "description": "",
   "main": "equipment.js",
   "scripts": {
+    "build": "node generate-sitemap.js",
     "generate-sitemap": "node generate-sitemap.js",
     "precommit": "npm run generate-sitemap",
     "test": "echo \"Error: no test specified\" && exit 1"
