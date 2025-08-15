@@ -7,28 +7,22 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 // Convert YouTube URL to embed URL
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-// Initialize Supabase
-const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
-const supabaseKey = 'HdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-// Convert YouTube URL to embed URL
 function convertToEmbedUrl(url) {
   if (!url) return '';
   const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
   return match ? `https://www.youtube.com/embed/${match[1]}` : '';
 }
 
-// Get slug from clean URL path
+// Get slug from path for clean URLs
 function getSlugFromPath() {
   const path = window.location.pathname; // e.g., "/recipe/simple-egg-roll/"
   const parts = path.split("/").filter(Boolean); // ["recipe", "simple-egg-roll"]
-  return parts[1] || null;
+  const slug = parts[1] || null;
+  console.log("Detected slug:", slug); // Debugging
+  return slug;
 }
 
-// Fetch recipe from Supabase and render
+// Fetch and render recipe
 async function fetchAndRenderRecipe() {
   const slug = getSlugFromPath();
 
@@ -37,6 +31,8 @@ async function fetchAndRenderRecipe() {
     return;
   }
 
+  console.log("Fetching recipe for slug:", slug);
+
   const { data: recipe, error } = await supabase
     .from('recipe_db')
     .select('*')
@@ -44,6 +40,7 @@ async function fetchAndRenderRecipe() {
     .single();
 
   if (error || !recipe) {
+    console.error("Supabase fetch error:", error);
     document.getElementById('recipe-title').innerText = 'Recipe not found';
     return;
   }
@@ -59,7 +56,7 @@ async function fetchAndRenderRecipe() {
   renderRecipe(recipe);
 }
 
-// Render recipe details on page
+// Render recipe details
 function renderRecipe(recipe) {
   document.getElementById('recipe-title').innerText = recipe.title;
   document.getElementById('recipe-description').innerText = recipe.description;
@@ -97,9 +94,12 @@ function renderRecipe(recipe) {
     `;
   }
 
+  // Tags, cuisine, category
   document.getElementById('tags').textContent = recipe.tags?.join(', ') || 'Not available';
   document.getElementById('cuisine').textContent = recipe.cuisine?.join(', ') || 'Not available';
   document.getElementById('category').textContent = recipe.category?.join(', ') || 'Not available';
+
+  // Notes and facts
   document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
   document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
 
@@ -114,7 +114,7 @@ function renderRecipe(recipe) {
   }
 }
 
-// Fetch equipment items by their IDs
+// Fetch equipment by IDs
 async function fetchEquipmentByIds(ids) {
   const { data, error } = await supabase
     .from('equipment_db')
@@ -142,6 +142,5 @@ async function fetchEquipmentByIds(ids) {
   });
 }
 
-// Init
+// Initialize
 fetchAndRenderRecipe();
-
