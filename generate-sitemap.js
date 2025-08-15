@@ -8,7 +8,6 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function generateSitemap() {
-  // Fetch all recipes
   const { data: recipes, error } = await supabase
     .from("recipes")
     .select("slug, updated_at");
@@ -18,7 +17,6 @@ async function generateSitemap() {
     return;
   }
 
-  // Generate URL entries for recipes
   const recipeUrls = recipes.map(r => `
   <url>
     <loc>https://simitswaad.netlify.app/recipe.html?slug=${r.slug}</loc>
@@ -26,7 +24,6 @@ async function generateSitemap() {
     <priority>0.8</priority>
   </url>`);
 
-  // Add static pages
   const staticUrls = `
   <url>
     <loc>https://simitswaad.netlify.app/</loc>
@@ -55,7 +52,6 @@ ${staticUrls}
 ${recipeUrls.join("\n")}
 </urlset>`;
 
-  // Save to public folder
   fs.writeFileSync("public/sitemap.xml", sitemap);
   console.log("✅ Sitemap generated successfully!");
 }
