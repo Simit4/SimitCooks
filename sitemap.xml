@@ -1,28 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://simitswaad.netlify.app/recipe.html?slug=nepali-nimkin</loc>
-    <lastmod>2025-08-16T00:39:35.086Z</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://simitswaad.netlify.app/recipe.html?slug=cauliflower-potato-curry</loc>
-    <lastmod>2025-08-16T00:39:35.087Z</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://simitswaad.netlify.app/recipe.html?slug=simple-egg-roll</loc>
-    <lastmod>2025-08-16T00:39:35.087Z</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://simitswaad.netlify.app/recipe.html?slug=easy-veg-chowmein</loc>
-    <lastmod>2025-08-16T00:39:35.087Z</lastmod>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://simitswaad.netlify.app/recipe.html?slug=val-papdi-curry</loc>
-    <lastmod>2025-08-16T00:39:35.087Z</lastmod>
-    <priority>0.80</priority>
-  </url>
+<url>
+<loc>https://simitswaad.netlify.app/</loc>
+<lastmod>2025-08-16T02:58:25.407Z</lastmod>
+<priority>1</priority>
+</url>
+<url>
+<loc>https://simitswaad.netlify.app/recipes</loc>
+<lastmod>2025-08-16T02:58:25.407Z</lastmod>
+<priority>0.9</priority>
+</url>
+<url>
+<loc>https://simitswaad.netlify.app/equipment</loc>
+<lastmod>2025-08-16T02:58:25.407Z</lastmod>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://simitswaad.netlify.app/about</loc>
+<lastmod>2025-08-16T02:58:25.407Z</lastmod>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://simitswaad.netlify.app/recipe/nepali-nimkin</loc>
+<lastmod>2025-08-16T02:58:25.407Z</lastmod>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://simitswaad.netlify.app/recipe/cauliflower-potato-curry</loc>
+<lastmod>2025-08-16T02:58:25.407Z</lastmod>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://simitswaad.netlify.app/recipe/simple-egg-roll</loc>
+<lastmod>2025-08-16T02:58:25.407Z</lastmod>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://simitswaad.netlify.app/recipe/easy-veg-chowmein</loc>
+<lastmod>2025-08-16T02:58:25.407Z</lastmod>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://simitswaad.netlify.app/recipe/val-papdi-curry</loc>
+<lastmod>2025-08-16T02:58:25.407Z</lastmod>
+<priority>0.8</priority>
+</url>
 </urlset>
