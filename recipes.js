@@ -33,7 +33,8 @@ function renderRecipes(recipes) {
       </div>
       <h3>${recipe.title}</h3>
       <p>${recipe.description}</p>
-      <a href="recipe.html?slug=${recipe.slug}" class="view-btn">View Recipe</a>
+      <!-- Clean URL -->
+      <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
     `;
     container.appendChild(card);
   });
@@ -46,9 +47,7 @@ function getThumbnail(url) {
     : 'assets/default-thumbnail.jpg';
 }
 
-fetchRecipes();
-
-// Optional: Add search bar functionality
+// Search functionality
 document.getElementById('search-input')?.addEventListener('input', (e) => {
   const term = e.target.value.toLowerCase();
   const cards = document.querySelectorAll('.recipe-card');
@@ -57,3 +56,5 @@ document.getElementById('search-input')?.addEventListener('input', (e) => {
     card.style.display = title.includes(term) ? 'block' : 'none';
   });
 });
+
+fetchRecipes();
