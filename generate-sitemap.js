@@ -8,8 +8,8 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 async function generateSitemap() {
-  let { data: recipes, error } = await supabase
-    .from('recipe_db')   // <-- your table name
+  const { data: recipes, error } = await supabase
+    .from('recipe_db')
     .select('slug');
 
   if (error) {
@@ -24,7 +24,7 @@ async function generateSitemap() {
 
   recipes.forEach(recipe => {
     xml += `  <url>\n`;
-    xml += `    <loc>https://simitswaad.netlify.app/recipe.html?slug=${recipe.slug}</loc>\n`;
+    xml += `    <loc>https://simitswaad.netlify.app/recipe/${recipe.slug}</loc>\n`; // <-- clean URL
     xml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
     xml += `    <priority>0.80</priority>\n`;
     xml += `  </url>\n`;
@@ -33,7 +33,7 @@ async function generateSitemap() {
   xml += `</urlset>`;
 
   fs.writeFileSync('sitemap.xml', xml);
-  console.log('Sitemap generated!');
+  console.log('✅ Sitemap generated with clean URLs!');
 }
 
 generateSitemap();
