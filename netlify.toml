@@ -4,3 +4,10 @@
 
 [build.environment]
   NODE_VERSION = "22.18.0"
+
+# Redirect /sitemap.xml to the Netlify function
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/.netlify/functions/sitemap"
+  status = 200
+  force = true
