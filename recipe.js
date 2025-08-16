@@ -13,8 +13,16 @@ function convertToEmbedUrl(url) {
 
 async function fetchAndRenderRecipe() {
   
-const params = new URLSearchParams(window.location.search);
-const slug = params.get('slug');
+// Get slug from URL path for clean URLs
+let slug;
+const pathParts = window.location.pathname.split('/');
+if (pathParts.includes('recipe')) {
+  slug = pathParts[pathParts.length - 1]; // last segment after /recipe/
+} else {
+  // fallback to query string
+  const params = new URLSearchParams(window.location.search);
+  slug = params.get('slug');
+}
 
 
   if (!slug) {
