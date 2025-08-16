@@ -12,18 +12,17 @@ function convertToEmbedUrl(url) {
 }
 
 async function fetchAndRenderRecipe() {
-  
-// Get slug from URL path for clean URLs
-let slug;
-const pathParts = window.location.pathname.split('/');
-if (pathParts.includes('recipe')) {
-  slug = pathParts[pathParts.length - 1]; // last segment after /recipe/
-} else {
-  // fallback to query string
-  const params = new URLSearchParams(window.location.search);
-  slug = params.get('slug');
-}
+  let slug;
 
+  // Clean URL handling: /recipe/<slug>
+  const pathParts = window.location.pathname.split('/').filter(Boolean);
+  if (pathParts[0] === 'recipe' && pathParts[1]) {
+    slug = pathParts[1];
+  } else {
+    // fallback to query string: ?slug=<slug>
+    const params = new URLSearchParams(window.location.search);
+    slug = params.get('slug');
+  }
 
   if (!slug) {
     document.getElementById('recipe-title').innerText = 'Recipe not found';
@@ -41,6 +40,7 @@ if (pathParts.includes('recipe')) {
     return;
   }
 
+  // Update views
   if (recipe.id) {
     await supabase
       .from('recipe_db')
@@ -94,15 +94,12 @@ function renderRecipe(recipe) {
   const embedUrl = convertToEmbedUrl(recipe.video_url);
   document.getElementById('recipe-video').src = embedUrl || '';
 
-  
-// 🛠 Fetch and show dedicated equipment
-  if (recipe.equipment_ids && recipe.equipment_ids.length > 0) {
-    const equipmentIds = recipe.equipment_ids.map(Number); // Make sure they're integers
-    fetchEquipmentByIds(equipmentIds);
+  // Equipment
+  if (recipe.equipment_ids?.length) {
+    fetchEquipmentByIds(recipe.equipment_ids.map(Number));
   }
 }
 
-// Fetch equipment items by their IDs
 async function fetchEquipmentByIds(ids) {
   const { data, error } = await supabase
     .from('equipment_db')
@@ -113,7 +110,6 @@ async function fetchEquipmentByIds(ids) {
   container.innerHTML = '';
 
   if (error || !data?.length) {
-    console.error('Error fetching equipment:', error);
     container.innerHTML = '<p>No equipment found.</p>';
     return;
   }
@@ -130,5 +126,5 @@ async function fetchEquipmentByIds(ids) {
   });
 }
 
-// Init
+// Initialize
 fetchAndRenderRecipe();
