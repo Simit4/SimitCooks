@@ -35,7 +35,7 @@ function renderFeaturedRecipes(recipes) {
       </div>
       <h3>${recipe.title}</h3>
       <p>${recipe.description}</p>
-      <a href="recipe.html?slug=${recipe.slug}" class="view-btn">View Recipe</a>
+      <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
     `;
     container.appendChild(card);
   });
@@ -48,4 +48,5 @@ function getThumbnail(url) {
     : 'assets/default-thumbnail.jpg';
 }
 
+// Initialize
 fetchFeaturedRecipes();
