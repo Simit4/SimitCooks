@@ -1,5 +1,0 @@
-. "$(dirname -- "$0")/_/husky.sh"
-
-npm run generate-sitemap
-npm run generate-sitemap
-npm run generate-sitemap
