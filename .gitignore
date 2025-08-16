@@ -1,6 +1,14 @@
+# Node.js dependencies
 node_modules/
+
+# macOS files
 .DS_Store
-/public/sitemap.xml
 
 # Local Netlify folder
-.netlify
+.netlify/
+
+# Generated sitemap
+/public/sitemap.xml
+
+# Environment or secret files
+.env
