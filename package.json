@@ -5,10 +5,10 @@
   "description": "",
   "main": "equipment.js",
   "scripts": {
-    "build": "node sitemap.js",
-    "generate-sitemap": "node sitemap.js",
-    "precommit": "npm run generate-sitemap",
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "build": "node netlify/functions/sitemap.js",
+  "generate-sitemap": "node netlify/functions/sitemap.js",
+  "precommit": "npm run generate-sitemap",
+  "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
