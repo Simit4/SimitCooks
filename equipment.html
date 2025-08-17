@@ -27,28 +27,36 @@
 
 <body>
 
-<!-- Header & Navigation -->
-<header>
-  <nav class="navbar">
+<header class="main-header">
+  <div class="header-wrapper">
+    <!-- Logo -->
     <div class="logo">
-      <a href="index.html">Simit’s Swaad</a>
+      <span class="logo-modern">Simit’s</span>
+      <span class="logo-traditional">Swaad</span>
     </div>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li class="dropdown">
-        <a href="recipes.html">Recipes ▼</a>
-        <ul class="dropdown-menu" id="category-menu">
-          <!-- Categories will populate dynamically -->
-        </ul>
-      </li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="contact.html">Contact</a></li>
-    </ul>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li class="dropdown">
+          <a href="recipes.html">Recipes ▼</a>
+          <ul class="dropdown-menu" id="category-menu">
+            <!-- Categories populated dynamically -->
+          </ul>
+        </li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Search -->
     <div class="search-container">
       <input type="text" id="recipe-search" placeholder="Search recipes...">
     </div>
-  </nav>
+  </div>
 </header>
+
 
 
 
