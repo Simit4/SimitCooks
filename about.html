@@ -27,22 +27,27 @@
 
 <body>
 
-<header class="main-header">
-  <div class="container header-wrapper">
-
-<div class="logo" aria-label="Simit's Swaad">
-  <span class="logo-modern">Simit’s</span>
-  <span class="logo-traditional">Swaad</span>
-</div> 
-    
-    <nav class="navbar">
-      <ul class="nav-links">
-        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-        <li><a href="recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
-        <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
-      </ul>
-    </nav>
-  </div>
+<!-- Header & Navigation -->
+<header>
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html">Simit’s Swaad</a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li class="dropdown">
+        <a href="recipes.html">Recipes ▼</a>
+        <ul class="dropdown-menu" id="category-menu">
+          <!-- Categories will populate dynamically -->
+        </ul>
+      </li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="search-container">
+      <input type="text" id="recipe-search" placeholder="Search recipes...">
+    </div>
+  </nav>
 </header>
 
 
