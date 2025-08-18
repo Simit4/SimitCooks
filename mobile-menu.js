@@ -1,6 +1,5 @@
-// mobile-menu.js
 const hamburger = document.querySelector('.hamburger');
-const navLinks = document.querySelector('.nav-links');
+const navLinks = document.querySelector('.navbar ul.nav-links');
 
 hamburger.addEventListener('click', () => {
   hamburger.classList.toggle('active');
