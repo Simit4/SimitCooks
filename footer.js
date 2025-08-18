@@ -17,7 +17,6 @@ export function renderFooter() {
         <a href="/recipes">Recipes</a>
         <a href="/equipment">Equipment</a>
         <a href="/about">About</a>
-        <a href="/contact">Contact</a>
       </nav>
 
       <div class="footer-social">
@@ -29,7 +28,7 @@ export function renderFooter() {
     </div>
 
     <div class="footer-bottom">
-      &copy; ${new Date().getFullYear()} Simi's Swaad. All rights reserved.
+      &copy; ${new Date().getFullYear()} Simit's Swaad. All rights reserved.
     </div>
   `;
 
