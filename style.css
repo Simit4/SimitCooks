@@ -1,5 +1,5 @@
 /* -------------------------------------------------
-   Global Variables – easy theming
+   Global Variables â€“ easy theming
 -------------------------------------------------- */
 :root {
   --primary:      #27ae60;   /* fresh green */
@@ -248,23 +248,38 @@ h1, h2, h3, h4, h5 {
   background: var(--primary);
   border: none;
   border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(239, 91, 37, 0.4);
   cursor: pointer;
+  user-select: none;
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   font-family: 'Poppins', sans-serif;
   transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-decoration: none;
+  margin-top: 1.5rem;
 }
 
-.btn-hero:hover {
+.btn-hero:hover,
+.btn-hero:focus {
   background: var(--primary-dark);
   box-shadow: 0 12px 28px rgba(217, 74, 15, 0.6);
   transform: translateY(-3px);
+  outline: none;
 }
 
+
 /* -------------------------------------------------
-   Recipe Cards
+   Featured & General Recipe Cards
 -------------------------------------------------- */
+.section-title {
+  font-size: 2.3rem;
+  text-align: center;
+  margin: 1rem 0 2rem;
+}
+
 .recipes-grid {
   display: grid;
   gap: 2rem;
@@ -281,11 +296,24 @@ h1, h2, h3, h4, h5 {
   display: flex;
   flex-direction: column;
   text-align: center;
+
 }
 
 .recipe-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
+}
+
+.thumbnail-wrapper {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+
+.recipe-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .recipe-card h3 {
@@ -298,7 +326,7 @@ h1, h2, h3, h4, h5 {
   color: var(--muted);
   font-size: 0.95rem;
 }
-
+  
 .view-btn,
 .btn-secondary  {
   display: inline-block;
@@ -309,53 +337,69 @@ h1, h2, h3, h4, h5 {
   background: var(--primary);
   border: none;
   border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(239, 91, 37, 0.4);
   cursor: pointer;
+  user-select: none;
+  text-align: center;
   text-transform: uppercase;
+  letter-spacing: 0.03em;
   font-family: 'Poppins', sans-serif;
   transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-decoration: none;
   margin-top: 1.5rem;
 }
 
 .view-btn:hover,
-.btn-secondary:hover {
+.btn-secondary:hover,
+.view-btn:focus,
+.btn-secondary:focus{
   background: var(--primary-dark);
   box-shadow: 0 12px 28px rgba(217, 74, 15, 0.6);
   transform: translateY(-3px);
+  outline: none;
 }
+
+
 
 /* -------------------------------------------------
    Recipe Page
 -------------------------------------------------- */
 .recipe-page {
-  background: var(--bg);
+  background: #fff;
   border-radius: 14px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   padding: 2.5rem 3rem;
   margin: 2rem auto;
   max-width: 1100px;
   font-family: 'Inter', sans-serif;
-  color: var(--text);
+  color: #2a2a3a;
   line-height: 1.6;
   transition: box-shadow 0.3s ease;
 }
 
 .recipe-page:hover {
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
 }
 
 #recipe-title {
   font-family: 'Poppins', sans-serif;
+ color: #fff;
+
+  text-align: center;
   font-weight: 900;
   font-size: 2.8rem;
   margin-bottom: 0.3rem;
-  color: var(--primary-dark);
+  background: var(--primary);
+  letter-spacing: 1px;
 }
 
 .recipe-meta {
   display: flex;
   gap: 1.8rem;
   font-size: 1.05rem;
-  color: var(--muted);
+  color: #7a7a8c;
   margin-bottom: 1rem;
 }
 
@@ -369,7 +413,7 @@ h1, h2, h3, h4, h5 {
 .description {
   font-style: italic;
   font-size: 1.15rem;
-  color: var(--text);
+  color: #555768;
   margin-bottom: 2rem;
   max-width: 850px;
 }
@@ -387,10 +431,12 @@ h1, h2, h3, h4, h5 {
 }
 
 .recipe-left h3 {
+  font-family: 'Poppins', sans-serif;
   font-weight: 700;
   font-size: 1.4rem;
   margin-bottom: 0.8rem;
-  color: #33334d;
+  color: #ef5b25;
+
   border-bottom: 2px solid #ef5b25;
   padding-bottom: 0.3rem;
 }
@@ -403,19 +449,21 @@ h1, h2, h3, h4, h5 {
   font-size: 1.1rem;
   color: #40405a;
   user-select: text;
+  cursor: default;
 }
 
-/* Info blocks */
+/* Info blocks: nutrition, tags, notes, facts */
 #nutrition,
 #notes,
 #facts {
-  background: var(--section-bg);
-  border-left-color: var(--primary);
+  background: #fff4e6;
+  border-left: 6px solid #ef5b25;
   padding: 1rem 1.3rem;
   border-radius: 6px;
   margin-top: 1.8rem;
   font-size: 1rem;
-  color: var(--text);
+  color: #5a4d3a;
+  box-shadow: 0 3px 8px rgba(239, 91, 37, 0.25);
   line-height: 1.5;
   user-select: text;
 }
@@ -428,6 +476,14 @@ h1, h2, h3, h4, h5 {
   font-size: 1.05rem;
   font-weight: 700;
   color: #ef5b25;
+  user-select: text;
+}
+
+#notes,
+#facts {
+  margin-top: 0.3rem;
+  font-style: italic;
+  color: #7f6e58;
 }
 
 /* -------------------------------------------------
@@ -440,68 +496,418 @@ h1, h2, h3, h4, h5 {
   font-size: 1.1rem;
   font-weight: 700;
   color: #fff;
-  background-color: #ef5b25;
+  background: var(--primary);
   border: none;
   border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(239, 91, 37, 0.4);
   cursor: pointer;
+  user-select: none;
+  text-align: center;
   text-transform: uppercase;
+  letter-spacing: 0.03em;
   font-family: 'Poppins', sans-serif;
   transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
+  box-sizing: border-box;
+  white-space: nowrap;
 }
 
-.btn-print:hover {
-  background-color: #d94a0f;
-  box-shadow: 0 12px 28px rgba(217,74,15,0.6);
+.btn-print:hover,
+.btn-print:focus {
+  background: var(--primary-dark);
+  box-shadow: 0 12px 28px rgba(217, 74, 15, 0.6);
   transform: translateY(-3px);
+  outline: none;
+}
+
+.btn-print:focus-visible {
+  outline: 2px solid #ffb169;
+  outline-offset: 3px;
 }
 
 /* -------------------------------------------------
-   Footer
+   Recipe Video
 -------------------------------------------------- */
-.site-footer {
-  background: var(--primary-dark);
-  color: #fff;
-  padding: 2rem 1rem;
-  margin-top: 3rem;
+.recipe-video {
+  width: 100%;
+  max-width: 720px;
+  aspect-ratio: 16 / 9;
+  margin: 2.5rem auto;
+  background-color: #000;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 16px 32px rgba(0, 0, 0, 0.18),
+    0 6px 12px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.4s ease, transform 0.35s ease;
+  will-change: transform;
 }
 
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
+.recipe-video:hover,
+.recipe-video:focus-within {
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.26),
+    0 8px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
 }
 
-.footer-nav a {
-  margin: 0 0.8rem;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 500;
+.recipe-video iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  border-radius: 16px;
+  background-color: transparent;
 }
 
-.footer-nav a:hover {
-  color: var(--accent);
-}
-
-.footer-social a {
-  margin: 0 0.5rem;
-  color: #fff;
+/* -------------------------------------------------
+   Loading Spinner
+-------------------------------------------------- */
+.loading-spinner {
+  text-align: center;
+  padding: 2rem;
   font-size: 1.2rem;
 }
 
-.footer-social a:hover {
-  color: var(--accent);
+.loading-spinner .fa-spinner {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* -------------------------------------------------
+   Error Message
+-------------------------------------------------- */
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  color: #d32f2f;
+}
+
+.error-message a.btn {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: #d32f2f;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+/* -------------------------------------------------
+   Equipment Section Container
+-------------------------------------------------- */
+.equipment-page {
+  margin: 3rem auto;
+  padding: 3rem 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.07);
+  max-width: 1100px;
+}
+
+/* Section Title and Subtitle */
+.section-title {
+  font-family: 'Poppins', sans-serif;
+     color: #fff;
+
+  font-weight: 800;
+  font-size: 2.3rem;
+  text-align: center;
+  background: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: #7a7a8c;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+/* Equipment Grid */
+.equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.8rem;
+}
+
+/* Individual Equipment Item Card */
+.equipment-item {
+  background: #fff8f1;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(239, 91, 37, 0.15);
+  padding: 1.5rem 1.2rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.equipment-item:hover,
+.equipment-item:focus {
+  box-shadow: 0 10px 28px rgba(239, 91, 37, 0.3);
+  transform: translateY(-5px);
+  outline: none;
+}
+
+/* Equipment Item Image */
+.equipment-item img {
+  max-width: 120px;
+  height: auto;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+}
+
+/* Equipment Item Title */
+.equipment-item h4 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: #ef5b25;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Equipment Item Description */
+.equipment-item p {
+  font-size: 1rem;
+  color: #555768;
+  line-height: 1.4;
+  user-select: text;
+  margin-bottom: 0;
+}
+
+/* Buy Button */
+.btn-buy {
+  display: inline-block;
+  padding: 0.65rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--primary);
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(239, 91, 37, 0.4);
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-family: 'Poppins', sans-serif;
+  transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-decoration: none;
+  margin-top: 1.5rem;
+}
+
+.btn-buy:hover,
+.btn-buy:focus {
+  background: var(--primary-dark);
+  box-shadow: 0 12px 28px rgba(217, 74, 15, 0.6);
+  transform: translateY(-3px);
+  outline: none;
+}
+
+.btn-buy:focus-visible {
+  outline: 2px solid #ffb169;
+  outline-offset: 3px;
+}
+
+/* -------------------------------------------------
+   Footer - Modern & Professional
+-------------------------------------------------- */
+.main-footer {
+  background: #ffffff;
+  color: #2c3e50;
+  padding: 3rem 1.5rem 2rem;
+  border-top: 4px solid #27ae60;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+  font-family: 'Open Sans', sans-serif;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.footer-column h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  font-family: 'Unbounded', sans-serif;
+  color: #27ae60;
+}
+
+.footer-column h2 span {
+  color: #e67e22;
+}
+
+.footer-column p {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: #555;
+  max-width: 360px;
+  line-height: 1.6;
+}
+
+.footer-column h4 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #1e8449;
+  font-weight: 700;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 12px;
+}
+
+.footer-column ul li a {
+  color: #2c3e50;
+  text-decoration: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.footer-column ul li a:hover {
+  color: #e67e22;
+  transform: translateX(5px);
+}
+
+.social-icons a {
+  font-size: 1.6rem;
+  margin-right: 14px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.social-icons a:hover {
+  transform: scale(1.2);
+}
+
+/* Brand-specific social colors */
+.fa-youtube {
+  color: #FF0000;
 }
 
 .footer-bottom {
   text-align: center;
-  margin-top: 1rem;
+  margin-top: 3rem;
   font-size: 0.9rem;
-  opacity: 0.8;
+  color: #888;
+  border-top: 1px solid #ddd;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    text-align: center;
+  }
+
+  .social-icons a {
+    margin: 0 10px;
+  }
 }
 
 /* -------------------------------------------------
-   Mobile Hero, About, Equipment etc remain same
+   Search Bar
 -------------------------------------------------- */
-/* Add responsive tweaks below as needed */
+#search-input {
+  width: 100%;
+  max-width: 260px;
+  padding: 0.6rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.3s;
+  font-size: 1rem;
+}
+
+#search-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 5px rgba(39,174,96,0.3);
+}
+
+/* -------------------------------------------------
+   Print Styles
+-------------------------------------------------- */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 12pt;
+  }
+
+  header,
+  footer,
+  .btn-hero,
+  .print-btn,
+  .social-icons {
+    display: none !important;
+  }
+
+  .recipe-layout {
+    display: block;
+  }
+
+  .recipe-video iframe {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------
+   About Page
+-------------------------------------------------- */
+.about-section {
+  background-color: var(--section-bg);
+  padding: 3rem 1.5rem;
+  border-radius: 12px;
+  max-width: 800px;
+  margin: 2rem auto;
+  box-shadow: var(--shadow-sm);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+.about-section h2 {
+  font-size: 2.2rem;
+  text-align: center;
+  color: var(--primary-dark);
+  margin-bottom: 1.5rem;
+}
+
+.about-section p {
+  margin-bottom: 1.2rem;
+}
+
+.about-section strong {
+  color: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+  .about-section {
+    padding: 2rem 1rem;
+    font-size: 1rem;
+  }
+
+  .about-section h2 {
+    font-size: 1.8rem;
+  }
+}
