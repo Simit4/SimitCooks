@@ -29,3 +29,7 @@ export function renderFooter() {
 
   document.body.appendChild(footer);
 }
+
+import { renderFooter } from './footer.js';
+renderFooter();
+
