@@ -846,43 +846,7 @@ h1, h2, h3, h4, h5 {
 
 
 
-/* Header */
-.main-header {
-  background: #fff;
-  border-bottom: 1px solid #eee;
-  position: sticky;
-  top: 0;
-  z-index: 1100;
-}
-.main-header .container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.8rem 1rem;
-  max-width: 1200px;
-  margin: auto;
-}
-.logo {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #222;
-  text-decoration: none;
-}
 
-/* Desktop nav */
-.desktop-nav .nav-links {
-  display: flex;
-  gap: 1.5rem;
-  list-style: none;
-}
-.desktop-nav .nav-links a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
-}
-.desktop-nav .nav-links a:hover {
-  color: #ff5722;
-}
 
 /* Hamburger */
 .hamburger {
