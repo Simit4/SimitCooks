@@ -270,6 +270,49 @@ h1, h2, h3, h4, h5 {
   outline: none;
 }
 
+/* Hero Section - Mobile Responsive */
+@media (max-width: 860px) {
+  .hero {
+    min-height: 50vh;
+    padding: 1.5rem;
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .btn-hero {
+    font-size: 1rem;
+    padding: 0.55rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    min-height: 45vh;
+    padding: 1rem;
+  }
+
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero p {
+    font-size: 0.95rem;
+  }
+
+  .btn-hero {
+    font-size: 0.95rem;
+    padding: 0.5rem 1.3rem;
+  }
+}
+
+
 
 /* -------------------------------------------------
    Featured & General Recipe Cards
