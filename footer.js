@@ -1,4 +1,4 @@
-export function renderFooter() {
+(function renderFooter() {
   const footer = document.createElement('footer');
   footer.classList.add('site-footer');
 
@@ -28,8 +28,4 @@ export function renderFooter() {
   `;
 
   document.body.appendChild(footer);
-}
-
-import { renderFooter } from './footer.js';
-renderFooter();
-
+})();
