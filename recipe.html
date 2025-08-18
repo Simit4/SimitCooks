@@ -32,49 +32,57 @@
 
 <body>
 
-<header class="main-header">
-  <div class="container header-wrapper">
-    <div class="logo" aria-label="Simit's Swaad">
-      <span class="logo-modern">Simit’s</span>
-      <span class="logo-traditional">Swaad</span>
-    </div> 
+<!-- Recipe Content -->
+ <section class="recipe-page">
+  <h1 id="recipe-title"></h1>
 
-<nav class="navbar">
-  <ul class="nav-links">
-    <li><a href="recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
-    <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
-    <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
-  </ul>
-
-  <!-- Hamburger -->
-  <button class="hamburger">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-</nav>
-
+  <div class="recipe-meta">
+    <span>⏱️ <strong>Prep:</strong> <span id="prep-time"></span></span>
+    <span>🍳 <strong>Cook:</strong> <span id="cook-time"></span></span>
+    <span>🍽️ <strong>Serves:</strong> <span id="servings"></span></span>
   </div>
-</header>
 
+  <p class="description" id="recipe-description">A short, tempting description of the recipe...</p>
 
+  <div class="recipe-layout">
+    <div class="recipe-left">
+      <h3>📝 Ingredients</h3>
+      <ul id="ingredients-list"></ul>
 
+      <h3>👨‍🍳 Method</h3>
+      <ol id="method-list"></ol>
 
-  
-<section class="hero">
-  <div class="hero-content container">
-    <h1>Discover Home-Cooked Magic </h1>
-    <p>Authentic, flavorful, and heartwarming recipes from our kitchen to yours. Made with love, for every day and every occasion.</p>
-    <a href="recipes.html" class="btn-hero">Explore Recipes</a>
+      <h3>🍽️ Nutrition</h3>
+      <div id="nutrition"></div>
+
+      <div><strong>Tags:</strong> <span id="tags"></span></div>
+      <div><strong>Cuisine:</strong> <span id="cuisine"></span></div>
+      <div><strong>Category:</strong> <span id="category"></span></div>
+
+      <h3>📝 Notes</h3>
+      <p id="notes"></p>
+
+      <h3>📚 Fun Fact</h3>
+      <p id="facts"></p>
+
+      <button class="btn-print" onclick="window.print()">
+        🖨️ Print Recipe
+      </button>
+    </div>
+
+    <div class="recipe-video">
+        <iframe id="recipe-video" src="" allowfullscreen></iframe>
+    </div>
   </div>
 </section>
 
-
-<section class="featured-recipes container">
-  <h2>Featured Recipes</h2>
-  <div id="featured-container" class="recipes-grid"></div>
+<section class="equipment-section container">
+  <h2 class="section-title">Recommended Kitchen Equipment</h2>
+  <p class="section-subtitle">Tools that help you cook smarter, faster, and better.</p>
+  <div id="equipment-container" class="equipment-grid">
+    <!-- Equipment items loaded dynamically here -->
+  </div>
 </section>
-
 
 
 <script type="module" src="mobile-menu.js"></script>
