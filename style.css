@@ -720,149 +720,110 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Footer
 -------------------------------------------------- */
+/* ----- Footer Base ----- */
 .site-footer {
-  background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
-  color: #eaeaea;
-  padding: 4rem 1.5rem 2rem;
-  font-family: 'Poppins', sans-serif;
-  box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.45);
+  background: #1a1a1a; /* deep charcoal */
+  color: #ddd;
+  padding: 2rem 1rem 1rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 3rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
 }
 
 /* ----- Brand ----- */
-.footer-brand h2 {
-  font-size: 2.2rem;
-  font-weight: 700;
+.footer-brand {
+  flex: 1 1 200px;
+}
+
+.footer-brand .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
   color: #fff;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.5rem;
 }
 
 .footer-brand p {
-  font-size: 1rem;
-  color: #bdbdbd;
-  line-height: 1.6;
-  max-width: 300px;
+  font-size: 0.9rem;
+  color: #aaa;
 }
 
-/* ----- Nav Links ----- */
+/* ----- Horizontal Nav ----- */
 .footer-nav {
+  flex: 2 1 300px;
   display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 
 .footer-nav a {
-  color: #bbb;
-  font-size: 1rem;
+  color: #ccc;
   text-decoration: none;
+  font-size: 1rem;
   transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .footer-nav a:hover {
-  color: #27ae60; /* Green hover */
-  transform: translateX(6px);
+  color: #27ae60;
+  transform: translateY(-3px);
 }
 
-/* ----- Social Icons ----- */
+/* ----- Social Icons (Square, not round) ----- */
 .footer-social {
+  flex: 1 1 150px;
   display: flex;
+  justify-content: flex-end;
   gap: 1rem;
-  align-items: center;
 }
 
 .footer-social a {
-  display: flex;
-  justify-content: center;
+  display: inline-flex;
   align-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #222;
-  color: #ccc;
-  font-size: 1.3rem;
-  transition: all 0.3s ease;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #333;
+  color: #fff;
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.2s ease;
+  border-radius: 6px; /* small curve, not fully round */
 }
 
 .footer-social a:hover {
-  background: #ff0000; /* YouTube red */
-  color: #fff;
-  transform: scale(1.15) rotate(5deg);
+  background: #e50914; /* YouTube red for hover */
+  transform: scale(1.1);
 }
 
-/* ----- Newsletter ----- */
-.footer-newsletter p {
-  font-size: 1rem;
-  color: #ccc;
-  margin-bottom: 1rem;
-}
-
-.footer-newsletter form {
-  display: flex;
-  gap: 0.6rem;
-}
-
-.footer-newsletter input {
-  flex: 1;
-  padding: 0.7rem 1rem;
-  border: none;
-  border-radius: 8px;
-  outline: none;
-  font-size: 1rem;
-}
-
-.footer-newsletter button {
-  background: #27ae60;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 0.7rem 1.2rem;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.footer-newsletter button:hover {
-  background: #1e8449;
-  transform: translateY(-2px);
-}
-
-/* ----- Bottom ----- */
+/* ----- Bottom Bar ----- */
 .footer-bottom {
   text-align: center;
-  margin-top: 3rem;
-  font-size: 0.9rem;
-  color: #999;
-  border-top: 1px solid #2c2c2c;
-  padding-top: 1.5rem;
-  letter-spacing: 0.3px;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  color: #888;
+  border-top: 1px solid #333;
+  padding-top: 1rem;
 }
 
-/* ----- Responsive ----- */
+/* ----- Mobile Responsive ----- */
 @media (max-width: 768px) {
   .footer-content {
+    flex-direction: column;
     text-align: center;
   }
-  .footer-nav {
-    align-items: center;
-  }
+
   .footer-social {
     justify-content: center;
   }
-  .footer-newsletter form {
-    flex-direction: column;
-  }
-  .footer-newsletter button {
-    width: 100%;
-  }
 }
-
 
 
 /* -------------------------------------------------
