@@ -785,13 +785,28 @@ h1, h2, h3, h4, h5 {
 }
 
 .footer-social a {
-   font-size: 1.6rem;
+  font-size: 1.8rem; /* bigger and clean */
+  color: #ff0000; /* YouTube red */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  background: none;   /* remove any background */
+  padding: 0;         /* remove clickable box padding */
+  margin: 0;
+  border: none;
+  outline: none;
 }
 
 .footer-social a:hover {
-  background: #e50914; /* YouTube red for hover */
-  transform: scale(1.1);
+  color: #e60000; /* slightly darker on hover */
 }
+
+.footer-social a:focus {
+  outline: none;   /* remove focus box */
+  box-shadow: none;
+}
+
 
 /* ----- Bottom Bar ----- */
 .footer-bottom {
