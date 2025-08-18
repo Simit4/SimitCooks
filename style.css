@@ -781,13 +781,15 @@ h1, h2, h3, h4, h5 {
   font-size: 1.4rem;
 }
 
-.footer-social a {
-  color: #fff;
-  transition: color 0.3s;
+.footer-social a .fab {
+  font-size: 1.6rem;          /* larger icon */
+  color: #FF0000;             /* official YouTube red */
+  transition: transform 0.3s, color 0.3s;
 }
 
-.footer-social a:hover {
-  color: #a8e6a2;
+.footer-social a:hover .fab {
+  color: #cc0000;
+  transform: scale(1.2);
 }
 
 .footer-bottom {
