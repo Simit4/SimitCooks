@@ -123,13 +123,15 @@ h1, h2, h3, h4, h5 {
   }
 }
 
-/* -------------------------------------------------
-   Navbar
--------------------------------------------------- */
-.navbar {
-  position: relative;
+/* Responsive Logo */
+@media (max-width: 768px) {
+  .logo {
+    font-size: 2.5rem;
+    gap: 0.4rem;
+  }
 }
 
+/* Navbar */
 .navbar ul {
   list-style: none;
   margin: 0;
@@ -159,20 +161,19 @@ h1, h2, h3, h4, h5 {
   width: 100%;
 }
 
-/* Hamburger Icon */
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-}
-
-.hamburger span {
-  width: 25px;
-  height: 3px;
-  background: var(--text);
-  border-radius: 2px;
-  transition: all 0.3s ease;
+/* Responsive Nav */
+@media (max-width: 768px) {
+  .header-wrapper {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .logo {
+    font-size: 1.6rem;
+  }
+  .navbar ul {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 
 /* -------------------------------------------------
@@ -494,7 +495,40 @@ h1, h2, h3, h4, h5 {
 }
 
 /* -------------------------------------------------
-   Equipment Section
+   Loading Spinner
+-------------------------------------------------- */
+.loading-spinner {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+}
+
+.loading-spinner .fa-spinner {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* -------------------------------------------------
+   Error Message
+-------------------------------------------------- */
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  color: #d32f2f;
+}
+
+.error-message a.btn {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: #d32f2f;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+/* -------------------------------------------------
+   Equipment Section Container
 -------------------------------------------------- */
 .equipment-page {
   margin: 3rem auto;
@@ -505,12 +539,32 @@ h1, h2, h3, h4, h5 {
   max-width: 1100px;
 }
 
+/* Section Title and Subtitle */
+.section-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 2.3rem;
+  text-align: center;
+  color: #ef5b25;
+  margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: #7a7a8c;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+/* Equipment Grid */
 .equipment-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
   gap: 1.8rem;
 }
 
+/* Individual Equipment Item Card */
 .equipment-item {
   background: #fff8f1;
   border-radius: 10px;
@@ -529,6 +583,7 @@ h1, h2, h3, h4, h5 {
   outline: none;
 }
 
+/* Equipment Item Image */
 .equipment-item img {
   max-width: 120px;
   height: auto;
@@ -538,6 +593,7 @@ h1, h2, h3, h4, h5 {
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
 }
 
+/* Equipment Item Title */
 .equipment-item h4 {
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
@@ -546,6 +602,7 @@ h1, h2, h3, h4, h5 {
   margin-bottom: 0.5rem;
 }
 
+/* Equipment Item Description */
 .equipment-item p {
   font-size: 1rem;
   color: #555768;
@@ -554,6 +611,7 @@ h1, h2, h3, h4, h5 {
   margin-bottom: 0;
 }
 
+/* Buy Button */
 .btn-buy {
   display: inline-block;
   padding: 0.65rem 2rem;
@@ -591,7 +649,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* -------------------------------------------------
-   Footer
+   Footer - Modern & Professional
 -------------------------------------------------- */
 .main-footer {
   background: #ffffff;
@@ -666,96 +724,123 @@ h1, h2, h3, h4, h5 {
   font-size: 1.6rem;
   margin-right: 14px;
   display: inline-block;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease;
+}
+
+.social-icons a:hover {
+  transform: scale(1.2);
+}
+
+/* Brand-specific social colors */
+.fa-youtube {
+  color: #FF0000;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 3rem;
+  font-size: 0.9rem;
+  color: #888;
+  border-top: 1px solid #ddd;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    text-align: center;
+  }
+
+  .social-icons a {
+    margin: 0 10px;
+  }
 }
 
 /* -------------------------------------------------
-   Mobile Responsive Navbar
+   Search Bar
 -------------------------------------------------- */
-@media (max-width: 768px) {
-  .hamburger {
-    display: flex;
+#search-input {
+  width: 100%;
+  max-width: 260px;
+  padding: 0.6rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.3s;
+  font-size: 1rem;
+}
+
+#search-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 5px rgba(39,174,96,0.3);
+}
+
+/* -------------------------------------------------
+   Print Styles
+-------------------------------------------------- */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 12pt;
   }
 
-  .navbar ul {
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    right: 1rem;
-    background: var(--light);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    box-shadow: var(--shadow-md);
-    padding: 1rem;
-    width: 200px;
-    display: none;
-    z-index: 100;
+  header,
+  footer,
+  .btn-hero,
+  .print-btn,
+  .social-icons {
+    display: none !important;
   }
 
-  .navbar.active ul {
-    display: flex;
-  }
-
-  .navbar li {
-    width: 100%;
-  }
-
-  .navbar a {
+  .recipe-layout {
     display: block;
-    width: 100%;
-    text-align: right;
-    padding: 0.5rem 0;
+  }
+
+  .recipe-video iframe {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------
+   About Page
+-------------------------------------------------- */
+.about-section {
+  background-color: var(--section-bg);
+  padding: 3rem 1.5rem;
+  border-radius: 12px;
+  max-width: 800px;
+  margin: 2rem auto;
+  box-shadow: var(--shadow-sm);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+.about-section h2 {
+  font-size: 2.2rem;
+  text-align: center;
+  color: var(--primary-dark);
+  margin-bottom: 1.5rem;
+}
+
+.about-section p {
+  margin-bottom: 1.2rem;
+}
+
+.about-section strong {
+  color: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+  .about-section {
+    padding: 2rem 1rem;
     font-size: 1rem;
   }
-}
 
-/* Ensure mobile dropdown only affects screens <=768px */
-@media (max-width: 768px) {
-  .navbar ul {
-    display: none;       /* default hidden on mobile */
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    right: 1rem;
-    background: var(--light);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    box-shadow: var(--shadow-md);
-    padding: 1rem;
-    width: 200px;
-    z-index: 100;
-  }
-
-  .navbar.active ul {
-    display: flex;       /* only show on mobile when active */
-  }
-}
-
-/* On desktop, force horizontal menu and ignore .active */
-@media (min-width: 769px) {
-  .navbar ul {
-    display: flex !important;   /* always visible on desktop */
-    position: static;
-    flex-direction: row;
-    gap: 2rem;
-    background: none;
-    border: none;
-    box-shadow: none;
-    width: auto;
-    padding: 0;
-  }
-}
-
-  .navbar li {
-    width: auto;
-  }
-
-  .navbar a {
-    text-align: left;
-    padding: 0;
-  }
-
-  .hamburger {
-    display: none;
+  .about-section h2 {
+    font-size: 1.8rem;
   }
 }
