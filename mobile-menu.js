@@ -1,18 +1,13 @@
-(() => {
-  const hamburger = document.querySelector('.hamburger');
-  const mobileNav = document.querySelector('.mobile-nav');
-  if (!hamburger || !mobileNav) return;
+const hamburger = document.querySelector('.hamburger');
+const mobileNav = document.querySelector('.mobile-nav');
 
-  hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    mobileNav.classList.toggle('active');
-  });
+hamburger.addEventListener('click', () => {
+  mobileNav.classList.toggle('active');
+});
 
-  // Close dropdown when a link is clicked (better UX)
-  document.querySelectorAll('.mobile-nav a').forEach(link => {
-    link.addEventListener('click', () => {
-      hamburger.classList.remove('active');
-      mobileNav.classList.remove('active');
-    });
-  });
-})();
+// Optional: close menu when clicking outside
+document.addEventListener('click', (e) => {
+  if (!hamburger.contains(e.target) && !mobileNav.contains(e.target)) {
+    mobileNav.classList.remove('active');
+  }
+});
