@@ -846,29 +846,30 @@ h1, h2, h3, h4, h5 {
 
 
 
-
-/* ---------------- Hamburger ---------------- */
+/* ===== HAMBURGER ===== */
 .hamburger {
-  display: none; /* hidden on desktop */
+  display: none;
   flex-direction: column;
   justify-content: space-between;
   width: 28px;
-  height: 22px;
-  cursor: pointer;
-  background: transparent;
+  height: 20px;
+  background: none;
   border: none;
+  cursor: pointer;
+  padding: 0;
   z-index: 1100;
 }
 
 .hamburger span {
   display: block;
-  width: 100%;
   height: 3px;
-  background: var(--text);
+  width: 100%;
+  background: #333;
   border-radius: 2px;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in-out;
 }
 
+/* Hamburger animation */
 .hamburger.active span:nth-child(1) {
   transform: rotate(45deg) translate(5px, 5px);
 }
@@ -879,20 +880,28 @@ h1, h2, h3, h4, h5 {
   transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* ---------------- Mobile Styles ---------------- */
+/* ===== MOBILE MENU ===== */
 @media (max-width: 768px) {
-  /* Show hamburger */
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: 70%;
+    background: #fff;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+    transition: right 0.3s ease-in-out;
+  }
+
+  .nav-links.active {
+    right: 0;
+  }
+
   .hamburger {
     display: flex;
-  }
-
-  /* Hide nav links */
-  .nav-links {
-    display: none !important;
-  }
-
-  /* Optional: make header vertically smaller */
-  .header-wrapper {
-    padding: 0.8rem 1.5rem;
   }
 }
