@@ -1,3 +1,6 @@
+# -----------------------------
+# Netlify Build Settings
+# -----------------------------
 [build]
   command = "npm run build"
   publish = "."
@@ -5,9 +8,18 @@
 [build.environment]
   NODE_VERSION = "22.18.0"
 
-# Redirect /sitemap.xml to the Netlify function
+# -----------------------------
+# Redirects
+# -----------------------------
+# Redirect /sitemap.xml to Netlify function
 [[redirects]]
   from = "/sitemap.xml"
   to = "/.netlify/functions/sitemap"
   status = 200
   force = true
+
+# Optional: Redirect all 404s to index.html (for SPA support)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
