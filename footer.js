@@ -6,7 +6,7 @@ export function renderFooter() {
     <div class="footer-content container">
       <div class="footer-brand">
         <h2 class="logo">
-          <span class="logo-modern">Simi's</span>
+          <span class="logo-modern">Simit's</span>
           <span class="logo-traditional">Swaad</span>
         </h2>
         <p>Simple, home-style recipes made with love.</p>
