@@ -123,7 +123,13 @@ h1, h2, h3, h4, h5 {
   }
 }
 
-/* Navbar */
+/* -------------------------------------------------
+   Navbar
+-------------------------------------------------- */
+.navbar {
+  position: relative;
+}
+
 .navbar ul {
   list-style: none;
   margin: 0;
@@ -151,6 +157,22 @@ h1, h2, h3, h4, h5 {
 
 .navbar a:hover::after {
   width: 100%;
+}
+
+/* Hamburger Icon */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all 0.3s ease;
 }
 
 /* -------------------------------------------------
@@ -626,22 +648,4 @@ h1, h2, h3, h4, h5 {
 }
 
 .footer-column ul li a {
-  color: #2c3e50;
-  text-decoration: none;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.3s ease;
-}
-
-.footer-column ul li a:hover {
-  color: #e67e22;
-  transform: translateX(5px);
-}
-
-.social-icons a {
-  font-size: 1.6rem;
-  margin-right: 14px;
-  display: inline-block;
-  transition:
+  color: #2c
