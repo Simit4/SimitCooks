@@ -786,53 +786,39 @@ h1, h2, h3, h4, h5 {
 
 
 
-/* Desktop nav visible, hide hamburger */
-.nav-links {
+/* -----------------------------
+   Header & Navbar
+----------------------------- */
+.header-wrapper {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+/* Desktop nav */
+.nav-links {
+  display: flex;      /* desktop: visible */
   gap: 2rem;
 }
 
+/* Hamburger (hidden on desktop) */
 .hamburger {
-  display: none;
+  display: none;      /* hide on desktop */
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  z-index: 1100;
 }
 
-/* Mobile styles */
-@media (max-width: 768px) {
-  /* Hide desktop menu */
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-
-
-
-   
-  /* Show hamburger */
-  .hamburger {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    z-index: 1100;
-  }
-
-  .hamburger span {
-    width: 28px;
-    height: 3px;
-    background: var(--text);
-    border-radius: 2px;
-    transition: 0.3s;
-  }
-
-  /* Header wrapper: logo left, hamburger right */
-  .header-wrapper {
-    justify-content: space-between;
-    align-items: center;
-  }
+.hamburger span {
+  width: 28px;
+  height: 3px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: 0.3s;
 }
 
 /* Hamburger animation */
@@ -846,7 +832,32 @@ h1, h2, h3, h4, h5 {
   transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* Show nav when active */
-.nav-links.active {
-  display: flex;
+/* -----------------------------
+   Mobile
+----------------------------- */
+@media (max-width: 768px) {
+  /* Hide desktop menu */
+  .nav-links {
+    display: none;          /* hide by default */
+    flex-direction: column; 
+    gap: 1rem;
+    margin-top: 1rem;
+    background: var(--light);
+    position: absolute;
+    top: 100%;
+    right: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Show nav when active */
+  .nav-links.active {
+    display: flex;
+  }
+
+  /* Show hamburger */
+  .hamburger {
+    display: flex;
+  }
 }
