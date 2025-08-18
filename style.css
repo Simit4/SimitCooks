@@ -721,115 +721,113 @@ h1, h2, h3, h4, h5 {
    Footer
 -------------------------------------------------- */
 
+/* Footer Base */
 .site-footer {
-  background: #1a1a1a; /* deep charcoal */
-  color: #ddd;
-  padding: 2rem 1rem 1rem;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #111; /* dark modern look */
+  color: #eee;
+  padding: 2rem 1rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
 .footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
+  flex-wrap: wrap; /* allows mobile stacking */
 }
 
-/* ----- Brand ----- */
+/* Logo & Brand */
 .footer-brand {
-  flex: 1 1 200px;
+  flex: 1 1 220px;
 }
 
 .footer-brand .logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #fff;
+  font-size: 1.4rem;
   margin-bottom: 0.5rem;
 }
 
 .footer-brand p {
-  font-size: 0.9rem;
-  color: #aaa;
+  font-size: 0.85rem;
+  color: #ccc;
 }
 
-/* ----- Horizontal Nav ----- */
+/* Nav Horizontal */
 .footer-nav {
-  flex: 2 1 300px;
   display: flex;
+  flex: 2 1 300px;
   justify-content: center;
-  gap: 2rem;
   flex-wrap: wrap;
+  gap: 1.2rem;
 }
 
 .footer-nav a {
-  color: #ccc;
+  color: #eee;
   text-decoration: none;
-  font-size: 1rem;
-  transition: color 0.3s ease, transform 0.2s ease;
+  transition: color 0.3s;
+  font-size: 0.95rem;
 }
 
 .footer-nav a:hover {
-  color: #27ae60;
-  transform: translateY(-3px);
+  color: #ff0000;
 }
 
-/* ----- Social Icons (Square, not round) ----- */
+/* Social */
 .footer-social {
-  flex: 1 1 150px;
+  flex: 1 1 100px;
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
 }
 
 .footer-social a {
-  font-size: 1.8rem; /* bigger and clean */
+  font-size: 1.6rem;
   color: #ff0000; /* YouTube red */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   text-decoration: none;
-  background: none;   /* remove any background */
-  padding: 0;         /* remove clickable box padding */
+  padding: 0;
   margin: 0;
   border: none;
-  outline: none;
+  background: none;
 }
 
 .footer-social a:hover {
-  color: #e60000; /* slightly darker on hover */
+  color: #e60000;
 }
 
-.footer-social a:focus {
-  outline: none;   /* remove focus box */
-  box-shadow: none;
-}
-
-
-/* ----- Bottom Bar ----- */
+/* Bottom Bar */
 .footer-bottom {
   text-align: center;
-  margin-top: 2rem;
-  font-size: 0.85rem;
-  color: #888;
-  border-top: 1px solid #333;
+  font-size: 0.8rem;
+  color: #aaa;
+  border-top: 1px solid #222;
   padding-top: 1rem;
+  margin-top: 1.5rem;
 }
 
-/* ----- Mobile Responsive ----- */
+/* 📱 Mobile Responsive */
 @media (max-width: 768px) {
   .footer-content {
     flex-direction: column;
+    align-items: center;
     text-align: center;
+    gap: 1.5rem;
+  }
+
+  .footer-nav {
+    justify-content: center;
   }
 
   .footer-social {
     justify-content: center;
   }
-}
 
+  .footer-brand .logo {
+    font-size: 1.2rem;
+  }
+}
 
 /* -------------------------------------------------
    Search Bar
