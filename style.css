@@ -289,13 +289,13 @@ h1, h2, h3, h4, h5 {
 -------------------------------------------------- */
 .recipe-page {
   background: var(--bg);            /* Use same background as main pages */
-  color: var(--text);               /* Use main text color */
   border-radius: 14px;
   box-shadow: var(--shadow-sm);    /* lighter shadow to blend with other pages */
   padding: 2.5rem 3rem;
   margin: 2rem auto;
   max-width: 1100px;
   font-family: 'Inter', sans-serif;
+  color: var(--text);               /* Use main text color */
   line-height: 1.6;
   transition: box-shadow 0.3s ease;
 }
@@ -305,27 +305,105 @@ h1, h2, h3, h4, h5 {
 }
 
 #recipe-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 900;
+  font-size: 2.8rem;
+  margin-bottom: 0.3rem;
   color: var(--primary-dark);     /* keep primary color for headings */
-}
-
-/* Keep other text elements consistent */
-.description {
-  color: var(--text);
+  letter-spacing: 1px;
 }
 
 .recipe-meta {
+  display: flex;
+  gap: 1.8rem;
+  font-size: 1.05rem;
   color: var(--muted);
+  margin-bottom: 1rem;
 }
 
-/* Adjust info blocks background */
+.recipe-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 600;
+}
+
+.description {
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--text);
+  margin-bottom: 2rem;
+  max-width: 850px;
+}
+
+.recipe-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.5rem;
+}
+
+@media (max-width: 860px) {
+  .recipe-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.recipe-left h3 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
+  color: #33334d;
+  border-bottom: 2px solid #ef5b25;
+  padding-bottom: 0.3rem;
+}
+
+#ingredients-list li,
+#method-list li {
+  position: relative;
+  padding-left: 1.6rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+  color: #40405a;
+  user-select: text;
+  cursor: default;
+}
+
+/* Info blocks: nutrition, tags, notes, facts */
 #nutrition,
 #notes,
 #facts {
   background: var(--section-bg); /* subtle block background consistent with other pages */
   border-left-color: var(--primary);
+  padding: 1rem 1.3rem;
+  border-radius: 6px;
+  margin-top: 1.8rem;
+  font-size: 1rem;
   color: var(--text);
   box-shadow: none;              /* remove strong shadow */
+  line-height: 1.5;
+  user-select: text;
 }
+
+#tags,
+#cuisine,
+#category {
+  display: inline-block;
+  margin-top: 0.8rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ef5b25;
+  user-select: text;
+}
+
+#notes,
+#facts {
+  margin-top: 0.3rem;
+  font-style: italic;
+  color: #7f6e58;
+}
+
+
 
 
 /* -------------------------------------------------
@@ -361,6 +439,8 @@ h1, h2, h3, h4, h5 {
   outline: 2px solid #ffb169;
   outline-offset: 3px;
 }
+
+
 
 /* -------------------------------------------------
    Recipe Video
