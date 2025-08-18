@@ -846,61 +846,104 @@ h1, h2, h3, h4, h5 {
 
 
 
-/* ===== HAMBURGER ===== */
+/* Header */
+.main-header {
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+}
+.main-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  max-width: 1200px;
+  margin: auto;
+}
+.logo {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #222;
+  text-decoration: none;
+}
+
+/* Desktop nav */
+.desktop-nav .nav-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+.desktop-nav .nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+.desktop-nav .nav-links a:hover {
+  color: #ff5722;
+}
+
+/* Hamburger */
 .hamburger {
   display: none;
   flex-direction: column;
-  justify-content: space-between;
-  width: 28px;
-  height: 20px;
+  gap: 5px;
+  width: 30px;
+  height: 24px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0;
-  z-index: 1100;
 }
-
 .hamburger span {
-  display: block;
   height: 3px;
   width: 100%;
   background: #333;
   border-radius: 2px;
-  transition: all 0.3s ease-in-out;
+  transition: 0.3s;
 }
-
-/* Hamburger animation */
 .hamburger.active span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
+  transform: rotate(45deg) translateY(8px);
 }
 .hamburger.active span:nth-child(2) {
   opacity: 0;
 }
 .hamburger.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -5px);
+  transform: rotate(-45deg) translateY(-8px);
 }
 
-/* ===== MOBILE MENU ===== */
+/* Mobile nav (hidden by default) */
+.mobile-nav {
+  max-height: 0;
+  overflow: hidden;
+  background: #fff;
+  transition: max-height 0.3s ease;
+  border-bottom: 1px solid #eee;
+}
+.mobile-nav.active {
+  max-height: 300px;
+}
+.mobile-nav .nav-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+.mobile-nav .nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+.mobile-nav .nav-links a:hover {
+  color: #ff5722;
+}
+
+/* Responsive behavior */
 @media (max-width: 768px) {
-  .nav-links {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    height: 100vh;
-    width: 70%;
-    background: #fff;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    box-shadow: -2px 0 8px rgba(0,0,0,0.1);
-    transition: right 0.3s ease-in-out;
+  .desktop-nav {
+    display: none;
   }
-
-  .nav-links.active {
-    right: 0;
-  }
-
   .hamburger {
     display: flex;
   }
