@@ -844,3 +844,103 @@ h1, h2, h3, h4, h5 {
     font-size: 1.8rem;
   }
 }
+
+
+
+
+
+
+/* =========================
+   Mobile Responsive Enhancements
+========================= */
+
+/* Header & Navbar */
+@media (max-width: 768px) {
+  .header-wrapper {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .navbar ul {
+    flex-direction: column;
+    gap: 0.8rem;
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar a {
+    font-size: 1rem;
+  }
+}
+
+/* Hero Section */
+@media (max-width: 768px) {
+  .hero {
+    padding: 2rem 1rem;
+    min-height: 60vh;
+  }
+
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .btn-hero {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Featured Recipes */
+@media (max-width: 768px) {
+  .recipes-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .recipe-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .recipe-card p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Footer */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .social-icons {
+    justify-content: center;
+  }
+}
+
+/* Recipe Page Layout */
+@media (max-width: 860px) {
+  .recipe-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .recipe-page {
+    padding: 2rem 1.5rem;
+  }
+
+  #recipe-title {
+    font-size: 2rem;
+  }
+
+  .recipe-meta {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+}
