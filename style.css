@@ -1089,24 +1089,7 @@ h1, h2, h3, h4, h5 {
   color: #555768;
 }
 
-.btn-about {
-  display: inline-block;
-  padding: 0.65rem 2rem;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #fff;
-  background: var(--primary);
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(239, 91, 37, 0.4);
-  text-decoration: none;
-  transition: 0.3s;
-}
 
-.btn-about:hover {
-  background: var(--primary-dark);
-  box-shadow: 0 12px 28px rgba(217, 74, 15, 0.6);
-  transform: translateY(-2px);
-}
 
 /* Mobile Responsive */
 @media (max-width: 860px) {
