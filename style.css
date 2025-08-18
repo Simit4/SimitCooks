@@ -720,12 +720,12 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Footer
 -------------------------------------------------- */
+
 .site-footer {
-  background-color: #1f1f1f;
-  color: #f5f5f5;
-  padding: 3rem 1rem 1rem;
+  background-color: #166534; /* Deep green, matches logo-modern */
+  color: #fff;
+  padding: 2rem 1rem 1rem;
   font-family: 'Poppins', sans-serif;
-  margin-top: 3rem;
 }
 
 .footer-content {
@@ -733,95 +733,85 @@ h1, h2, h3, h4, h5 {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1.5rem;
+  gap: 2rem;
   max-width: 1100px;
-  margin: auto;
+  margin: 0 auto;
 }
 
-/* Footer Logo */
 .footer-brand .logo {
-  font-size: 2rem;
+  font-size: 1.8rem;
   display: flex;
   gap: 0.4rem;
   align-items: baseline;
-  line-height: 1;
-  user-select: none;
 }
 
 .footer-brand .logo-modern {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  color: #fff; /* white for footer */
+  color: #a8e6a2; /* Light green for pop */
 }
 
 .footer-brand .logo-traditional {
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  color: #f4a261; /* accent color */
+  color: #f4a261; /* Orange accent */
 }
 
-/* Footer Description */
 .footer-brand p {
+  margin-top: 0.5rem;
   font-size: 0.95rem;
-  color: #c1d6b3;
-  margin-top: 0.4rem;
+  color: #e2f0d9;
 }
 
-/* Footer Nav */
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
 .footer-nav a {
-  display: inline-block;
-  margin: 0.5rem 1rem 0.5rem 0;
+  color: #f2f2f2;
   font-weight: 500;
-  color: #f5f5f5;
-  text-decoration: none;
   transition: color 0.3s;
 }
 
 .footer-nav a:hover {
-  color: #f4a261; /* subtle accent on hover */
+  color: #a8e6a2;
 }
 
-/* Social Icons */
-.footer-social a .fab {
-  font-size: 1.6rem;          /* larger icon */
-  color: #ff0000; /* YouTube red stands out */
-  transition: transform 0.3s, color 0.3s;
+.footer-social {
+  display: flex;
+  gap: 1rem;
+  font-size: 1.4rem;
 }
 
-.footer-social a:hover .fab {
-  color: #cc0000;
-  transform: scale(1.2);
+.footer-social a {
+  color: #fff;
+  transition: color 0.3s;
 }
 
+.footer-social a:hover {
+  color: #a8e6a2;
+}
 
-/* Footer Bottom */
 .footer-bottom {
   text-align: center;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   font-size: 0.9rem;
-  opacity: 0.7;
-  border-top: 1px solid rgba(255,255,255,0.2);
-  padding-top: 1rem;
+  color: #cce5c8;
 }
 
-
-/* Mobile */
+/* Responsive */
 @media (max-width: 768px) {
   .footer-content {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    gap: 1.5rem;
   }
-
   .footer-nav {
     justify-content: center;
   }
-
   .footer-social {
     justify-content: center;
   }
 }
-
 
 
 /* -------------------------------------------------
