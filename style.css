@@ -846,6 +846,15 @@ h1, h2, h3, h4, h5 {
 
 
 
+/* Header wrapper - general for all screens */
+.header-wrapper {
+  display: flex;
+  justify-content: space-between; /* logo left, nav right */
+  align-items: center;
+  padding: 1rem;
+  width: 100%;
+}
+
 
 /* Hamburger button - hidden on desktop */
 .hamburger {
