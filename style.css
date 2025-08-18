@@ -709,9 +709,32 @@ h1, h2, h3, h4, h5 {
   }
 }
 
+/* Ensure mobile dropdown only affects screens <=768px */
+@media (max-width: 768px) {
+  .navbar ul {
+    display: none;       /* default hidden on mobile */
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 1rem;
+    background: var(--light);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--shadow-md);
+    padding: 1rem;
+    width: 200px;
+    z-index: 100;
+  }
+
+  .navbar.active ul {
+    display: flex;       /* only show on mobile when active */
+  }
+}
+
+/* On desktop, force horizontal menu and ignore .active */
 @media (min-width: 769px) {
   .navbar ul {
-    display: flex !important;
+    display: flex !important;   /* always visible on desktop */
     position: static;
     flex-direction: row;
     gap: 2rem;
@@ -721,6 +744,7 @@ h1, h2, h3, h4, h5 {
     width: auto;
     padding: 0;
   }
+}
 
   .navbar li {
     width: auto;
