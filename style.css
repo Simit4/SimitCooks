@@ -786,7 +786,6 @@ h1, h2, h3, h4, h5 {
 
 .footer-social a {
    font-size: 1.6rem;
-   transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .footer-social a:hover {
