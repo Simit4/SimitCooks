@@ -798,6 +798,51 @@ h1, h2, h3, h4, h5 {
   outline-offset: 3px;
 }
 
+@media (max-width: 860px) {
+  .equipment-page {
+    padding: 2rem 1rem;
+    margin: 2rem 1rem;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .equipment-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .equipment-item {
+    padding: 1.2rem 1rem;
+  }
+
+  .equipment-item img {
+    max-width: 100px;
+    margin-bottom: 0.8rem;
+  }
+
+  .equipment-item h4 {
+    font-size: 1.1rem;
+  }
+
+  .equipment-item p {
+    font-size: 0.95rem;
+  }
+
+  .btn-buy {
+    font-size: 1rem;
+    padding: 0.55rem 1.5rem;
+    margin-top: 1rem;
+  }
+}
+
 
 
 /* -------------------------------------------------
