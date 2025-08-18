@@ -16,7 +16,7 @@
         <a href="/recipes">Recipes</a>
         <a href="/equipment">Equipment</a>
         <a href="/about">About</a>
-        <a href="/contact">Contact</a>
+
       </nav>
       <div class="footer-social">
         <a href="https://www.youtube.com" target="_blank" aria-label="YouTube">▶️</a>
