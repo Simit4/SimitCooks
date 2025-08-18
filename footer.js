@@ -16,8 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </nav>
 
         <div class="footer-social">
-          <a href="#"><i class="fab fa-facebook"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
           <a href="#"><i class="fab fa-youtube"></i></a>
         </div>
       </div>
