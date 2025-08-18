@@ -1,29 +1,31 @@
-// footer.js
-(function() {
+export function renderFooter() {
   const footer = document.createElement('footer');
   footer.classList.add('site-footer');
 
   footer.innerHTML = `
     <div class="footer-content container">
       <div class="footer-brand">
-        <h2 class="logo logo-modern">The Home Cookery</h2>
+        <h2 class="logo">
+          <span class="logo-modern">Simi's</span>
+          <span class="logo-traditional">Swaad</span>
+        </h2>
+        <p>Simple, home-style recipes made with love.</p>
       </div>
       <nav class="footer-nav">
-        <a href="/recipes.html">Recipes</a>
-        <a href="/equipment.html">Equipment</a>
-        <a href="/about.html">About</a>
-        <a href="/contact.html">Contact</a>
+        <a href="/">Home</a>
+        <a href="/recipes">Recipes</a>
+        <a href="/equipment">Equipment</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
       </nav>
       <div class="footer-social">
-        <a href="https://www.youtube.com" target="_blank" aria-label="YouTube">
-          <i class="fa-brands fa-youtube"></i>
-        </a>
+        <a href="https://www.youtube.com" target="_blank" aria-label="YouTube">▶️</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; ${new Date().getFullYear()} The Home Cookery. All rights reserved.</p>
+      &copy; ${new Date().getFullYear()} Simi's Swaad. All rights reserved.
     </div>
   `;
 
   document.body.appendChild(footer);
-})();
+}
