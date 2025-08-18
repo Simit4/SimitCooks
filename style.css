@@ -720,112 +720,100 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Footer
 -------------------------------------------------- */
-
-/* Footer Base */
+/* ===== Footer Styling ===== */
 .site-footer {
-  background: #111; /* dark modern look */
-  color: #eee;
+  background: #121212;
+  color: #ddd;
   padding: 2rem 1rem;
   font-size: 0.9rem;
-  line-height: 1.4;
 }
 
 .footer-content {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
-  flex-wrap: wrap; /* allows mobile stacking */
-}
-
-/* Logo & Brand */
-.footer-brand {
-  flex: 1 1 220px;
 }
 
 .footer-brand .logo {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   margin-bottom: 0.5rem;
 }
 
 .footer-brand p {
   font-size: 0.85rem;
-  color: #ccc;
+  color: #aaa;
 }
 
-/* Nav Horizontal */
+/* Horizontal nav */
 .footer-nav {
   display: flex;
-  flex: 2 1 300px;
-  justify-content: center;
   flex-wrap: wrap;
-  gap: 1.2rem;
+  gap: 1rem;
 }
 
 .footer-nav a {
-  color: #eee;
+  color: #ddd;
   text-decoration: none;
   transition: color 0.3s;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .footer-nav a:hover {
   color: #ff0000;
 }
 
-/* Social */
-.footer-social {
-  flex: 1 1 100px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-}
-
+/* Social icons */
 .footer-social a {
-  font-size: 1.6rem;
-  color: #ff0000; /* YouTube red */
-  text-decoration: none;
-  padding: 0;
-  margin: 0;
-  border: none;
-  background: none;
+  font-size: 1.3rem;
+  color: #ff0000;
+  transition: opacity 0.3s;
 }
 
 .footer-social a:hover {
-  color: #e60000;
+  opacity: 0.8;
 }
 
-/* Bottom Bar */
 .footer-bottom {
   text-align: center;
-  font-size: 0.8rem;
-  color: #aaa;
-  border-top: 1px solid #222;
   padding-top: 1rem;
   margin-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.8rem;
+  color: #888;
 }
 
-/* 📱 Mobile Responsive */
-@media (max-width: 768px) {
+/* ===== Mobile Adjustments ===== */
+@media (max-width: 600px) {
   .footer-content {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 1.5rem;
-  }
-
-  .footer-nav {
-    justify-content: center;
-  }
-
-  .footer-social {
-    justify-content: center;
+    gap: 1rem;
   }
 
   .footer-brand .logo {
     font-size: 1.2rem;
+  }
+
+  .footer-nav {
+    justify-content: center;
+    gap: 0.8rem;
+  }
+
+  .footer-nav a {
+    font-size: 0.85rem;
+  }
+
+  .footer-social a {
+    font-size: 1.2rem;
+  }
+
+  .site-footer {
+    padding: 1.2rem 0.8rem; /* smaller padding */
   }
 }
 
