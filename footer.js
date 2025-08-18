@@ -19,7 +19,7 @@
 
       </nav>
      <div class="footer-social">
-       <a href="https://www.youtube.com/channel/your-channel" target="_blank" aria-label="YouTube">
+       <a href="https://www.youtube.com/channel/UCSNQHlvnpKrVDuLtiVAzMHQ" target="_blank" aria-label="YouTube">
   <i class="fab fa-youtube"></i>
 </a>
      </div>
