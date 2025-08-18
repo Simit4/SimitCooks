@@ -828,19 +828,29 @@ h1, h2, h3, h4, h5 {
    Search Bar
 -------------------------------------------------- */
 #search-input {
-  width: 100%;
-  max-width: 260px;
+  width: 100%;           /* take full width of parent */
+  max-width: 260px;      /* desktop limit */
   padding: 0.6rem 1rem;
   border: 2px solid var(--border);
   border-radius: 10px;
   outline: none;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s, box-shadow 0.3s;
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
 #search-input:focus {
   border-color: var(--primary);
   box-shadow: 0 0 5px rgba(39,174,96,0.3);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  #search-input {
+    max-width: 100%;       /* use full width on mobile */
+    padding: 0.55rem 0.9rem; /* slightly smaller padding */
+    font-size: 0.95rem;    /* smaller font for small screens */
+  }
 }
 
 /* -------------------------------------------------
