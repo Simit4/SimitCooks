@@ -720,7 +720,7 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Footer
 -------------------------------------------------- */
-/* ----- Footer Base ----- */
+
 .site-footer {
   background: #1a1a1a; /* deep charcoal */
   color: #ddd;
@@ -785,17 +785,8 @@ h1, h2, h3, h4, h5 {
 }
 
 .footer-social a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: #333;
-  color: #fff;
-  font-size: 1.2rem;
-  text-decoration: none;
-  transition: background 0.3s ease, transform 0.2s ease;
-  border-radius: 6px; /* small curve, not fully round */
+   font-size: 1.6rem;
+   transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .footer-social a:hover {
