@@ -721,46 +721,104 @@ h1, h2, h3, h4, h5 {
    Footer
 -------------------------------------------------- */
 .site-footer {
-  background: var(--primary-dark);
+  background-color: #166534; /* deep green */
   color: #fff;
-  padding: 2rem 1rem;
+  padding: 3rem 1rem 1rem;
+  font-family: 'Poppins', sans-serif;
   margin-top: 3rem;
 }
 
 .footer-content {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: auto;
 }
 
+/* Footer Logo */
+.footer-brand .logo {
+  font-size: 2rem;
+  display: flex;
+  gap: 0.4rem;
+  align-items: baseline;
+  line-height: 1;
+  user-select: none;
+}
+
+.footer-brand .logo-modern {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  color: #fff; /* white for footer */
+}
+
+.footer-brand .logo-traditional {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  color: #f4a261; /* accent color */
+}
+
+/* Footer Description */
+.footer-brand p {
+  font-size: 0.95rem;
+  color: #c1d6b3;
+  margin-top: 0.4rem;
+}
+
+/* Footer Nav */
 .footer-nav a {
-  margin: 0 0.8rem;
+  display: inline-block;
+  margin: 0.5rem 1rem 0.5rem 0;
+  font-weight: 500;
   color: #fff;
   text-decoration: none;
-  font-weight: 500;
+  transition: color 0.3s;
 }
 
 .footer-nav a:hover {
-  color: var(--accent);
+  color: #f4a261; /* accent color */
 }
 
+/* Social Icons */
 .footer-social a {
-  margin: 0 0.5rem;
-  color: #fff;
-  font-size: 1.2rem;
+  display: inline-block;
+  margin: 0.5rem 0.5rem 0 0;
+  font-size: 1.3rem;
+  transition: transform 0.3s, color 0.3s;
 }
 
 .footer-social a:hover {
-  color: var(--accent);
+  transform: scale(1.2);
+  color: #f4a261;
 }
 
+/* Footer Bottom */
 .footer-bottom {
   text-align: center;
-  margin-top: 1rem;
+  margin-top: 2rem;
   font-size: 0.9rem;
-  opacity: 0.8;
+  opacity: 0.7;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  padding-top: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .footer-nav {
+    margin-top: 1rem;
+  }
+
+  .footer-social {
+    margin-top: 1rem;
+  }
 }
 
 
