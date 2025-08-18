@@ -32,36 +32,34 @@
 <body>
 
 <header class="main-header">
-  <div class="container">
-    <a href="/" class="logo">Simitswaad</a>
+  <div class="container header-wrapper">
+    <div class="logo" aria-label="Simit's Swaad">
+      <span class="logo-modern">Simit’s</span>
+      <span class="logo-traditional">Swaad</span>
+    </div> 
 
-
-  <!-- Desktop Nav -->
     <nav class="navbar">
-      <ul class="nav-links">
+      <ul class="nav-links desktop-nav">
+        <li><a href="recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
+        <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
+        <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
+      </ul>
+
+      <!-- Hamburger -->
+      <button class="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <!-- Mobile Menu -->
+      <ul class="nav-links mobile-nav">
         <li><a href="recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
         <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
         <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
       </ul>
     </nav>
-
-    <!-- Hamburger (mobile only) -->
-    <button class="hamburger" aria-label="Toggle menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
   </div>
-
-  <!-- Mobile Dropdown -->
-  <nav class="mobile-nav">
-    <ul class="nav-links">
-        <li><a href="/recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
-        <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
-        <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
-    </ul>
-  </nav>
-
 </header>
 
 
