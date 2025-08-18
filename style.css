@@ -720,100 +720,149 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Footer
 -------------------------------------------------- */
-
 .site-footer {
-  background-color: #166534; /* Deep green, matches logo-modern */
-  color: #fff;
-  padding: 2rem 1rem 1rem;
+  background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+  color: #eaeaea;
+  padding: 4rem 1.5rem 2rem;
   font-family: 'Poppins', sans-serif;
+  box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.45);
 }
 
 .footer-content {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 2rem;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 3rem;
 }
 
-.footer-brand .logo {
-  font-size: 1.8rem;
-  display: flex;
-  gap: 0.4rem;
-  align-items: baseline;
-}
-
-.footer-brand .logo-modern {
-  color: #a8e6a2; /* Light green for pop */
-}
-
-.footer-brand .logo-traditional {
-  color: #f4a261; /* Orange accent */
+/* ----- Brand ----- */
+.footer-brand h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.6rem;
 }
 
 .footer-brand p {
-  margin-top: 0.5rem;
-  font-size: 0.95rem;
-  color: #e2f0d9;
+  font-size: 1rem;
+  color: #bdbdbd;
+  line-height: 1.6;
+  max-width: 300px;
 }
 
+/* ----- Nav Links ----- */
 .footer-nav {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
+  flex-direction: column;
+  gap: 0.9rem;
 }
 
 .footer-nav a {
-  color: #f2f2f2;
-  font-weight: 500;
-  transition: color 0.3s;
+  color: #bbb;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .footer-nav a:hover {
-  color: #a8e6a2;
+  color: #27ae60; /* Green hover */
+  transform: translateX(6px);
 }
 
+/* ----- Social Icons ----- */
 .footer-social {
   display: flex;
   gap: 1rem;
-  font-size: 1.4rem;
+  align-items: center;
 }
 
-.footer-social a .fab {
-  font-size: 1.6rem;          /* larger icon */
-  color: #FF0000;             /* official YouTube red */
-  transition: transform 0.3s, color 0.3s;
+.footer-social a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #222;
+  color: #ccc;
+  font-size: 1.3rem;
+  transition: all 0.3s ease;
 }
 
-.footer-social a:hover .fab {
-  color: #cc0000;
-  transform: scale(1.2);
+.footer-social a:hover {
+  background: #ff0000; /* YouTube red */
+  color: #fff;
+  transform: scale(1.15) rotate(5deg);
 }
 
+/* ----- Newsletter ----- */
+.footer-newsletter p {
+  font-size: 1rem;
+  color: #ccc;
+  margin-bottom: 1rem;
+}
+
+.footer-newsletter form {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.footer-newsletter input {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  font-size: 1rem;
+}
+
+.footer-newsletter button {
+  background: #27ae60;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.2rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.footer-newsletter button:hover {
+  background: #1e8449;
+  transform: translateY(-2px);
+}
+
+/* ----- Bottom ----- */
 .footer-bottom {
   text-align: center;
-  margin-top: 1.5rem;
+  margin-top: 3rem;
   font-size: 0.9rem;
-  color: #cce5c8;
+  color: #999;
+  border-top: 1px solid #2c2c2c;
+  padding-top: 1.5rem;
+  letter-spacing: 0.3px;
 }
 
-/* Responsive */
+/* ----- Responsive ----- */
 @media (max-width: 768px) {
   .footer-content {
-    flex-direction: column;
-    align-items: center;
     text-align: center;
-    gap: 1.5rem;
   }
   .footer-nav {
-    justify-content: center;
+    align-items: center;
   }
   .footer-social {
     justify-content: center;
   }
+  .footer-newsletter form {
+    flex-direction: column;
+  }
+  .footer-newsletter button {
+    width: 100%;
+  }
 }
+
 
 
 /* -------------------------------------------------
