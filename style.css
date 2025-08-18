@@ -721,8 +721,8 @@ h1, h2, h3, h4, h5 {
    Footer
 -------------------------------------------------- */
 .site-footer {
-  background-color: #166534; /* deep green */
-  color: #fff;
+  background-color: #1f1f1f;
+  color: #f5f5f5;
   padding: 3rem 1rem 1rem;
   font-family: 'Poppins', sans-serif;
   margin-top: 3rem;
@@ -772,19 +772,19 @@ h1, h2, h3, h4, h5 {
   display: inline-block;
   margin: 0.5rem 1rem 0.5rem 0;
   font-weight: 500;
-  color: #fff;
+  color: #f5f5f5;
   text-decoration: none;
   transition: color 0.3s;
 }
 
 .footer-nav a:hover {
-  color: #f4a261; /* accent color */
+  color: #f4a261; /* subtle accent on hover */
 }
 
 /* Social Icons */
 .footer-social a .fab {
   font-size: 1.6rem;          /* larger icon */
-  color: #FF0000;             /* official YouTube red */
+  color: #ff0000; /* YouTube red stands out */
   transition: transform 0.3s, color 0.3s;
 }
 
