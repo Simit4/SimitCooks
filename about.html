@@ -35,11 +35,21 @@
     </div> 
 
     <nav class="navbar">
+  <!-- Desktop nav -->
       <ul class="nav-links">
         <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
         <li><a href="recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
         <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
       </ul>
+      
+  <!-- Mobile nav dropdown -->
+  <select class="mobile-nav" onchange="if(this.value) window.location.href=this.value">
+    <option value="">Menu</option>
+    <option value="recipes.html">Recipes</option>
+    <option value="equipment.html">Equipment</option>
+    <option value="index.html">Home</option>
+  </select>
+      
     </nav>
   </div>
 </header>
