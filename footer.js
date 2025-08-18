@@ -1,4 +1,3 @@
-// footer.js
 export function renderFooter() {
   const footer = document.createElement('footer');
   footer.classList.add('site-footer');
