@@ -6,7 +6,7 @@
     <div class="footer-content container">
       <div class="footer-brand">
         <h2 class="logo">
-          <span class="logo-modern">Simi's</span>
+          <span class="logo-modern">Simit's</span>
           <span class="logo-traditional">Swaad</span>
         </h2>
         <p>Simple, home-style recipes made with love.</p>
@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      &copy; ${new Date().getFullYear()} Simi's Swaad. All rights reserved.
+      &copy; ${new Date().getFullYear()} Simit's Swaad. All rights reserved.
     </div>
   `;
 
