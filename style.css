@@ -1183,7 +1183,9 @@ text-align: center;
   .timeline-item {
     padding: 1rem 1.2rem 0.5rem 1.2rem; /* top right bottom left */
   }
-
+  .timeline-item * {
+    margin-bottom: 0.3rem; /* reduce margin of inner elements */
+  }
   .timeline-item p:last-child,
   .timeline-item h4:last-child {
     margin-bottom: 0; /* remove extra space at the end */
