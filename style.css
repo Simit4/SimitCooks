@@ -1168,12 +1168,10 @@ text-align: center;
   }
 
   .timeline-item {
-    width: 100%;
-    text-align: center;
-    padding: 0.8rem 1rem; /* reduce padding */
+    padding: 0.6rem 1rem; /* less padding on mobile */
     border-left: none;
     border-top: 6px solid #ef5b25;
-    line-height: 1.4; /* tighter line spacing */
+    text-align: center;
   }
 
   .about-facts h3 {
