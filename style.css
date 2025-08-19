@@ -1173,4 +1173,8 @@ margin-bottom: 1rem;
     width: 100%;
     text-align: center;
   }
+   .about-facts h3 {
+    font-size: 2rem;
+
+ }
 }
