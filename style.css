@@ -1179,7 +1179,7 @@ text-align: center;
 
   .timeline-item * {
     margin-top: 0;
-    margin-bottom: 0.5rem; /* same as desktop */
+    margin-bottom: 0;
   }
 
   .about-facts h3 {
