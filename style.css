@@ -1123,20 +1123,18 @@ text-align: center;
 }
 
 
-
 /* Timeline / Fun Facts */
 .about-facts {
   margin-top: 4rem;
   text-align: center;
+  padding: 0 1rem; /* Add some side padding for small screens */
 }
 
 .about-facts h3 {
-font-family: 'Montserrat', sans-serif; /* Clean, modern, slightly stylish */
-font-size: 2.5rem;
-color: var(--primary);
-margin-bottom: 1rem;
-
-
+  font-family: 'Montserrat', sans-serif; /* Clean, modern, slightly stylish */
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
 }
 
 .timeline {
@@ -1162,19 +1160,33 @@ margin-bottom: 1rem;
   box-shadow: 0 10px 25px rgba(239, 91, 37, 0.25);
 }
 
-
-/* Mobile Responsive */
+/* Responsive adjustments */
 @media (max-width: 860px) {
   .timeline {
     flex-direction: column;
+    gap: 1.5rem; /* Slightly smaller gap on mobile */
   }
 
   .timeline-item {
     width: 100%;
     text-align: center;
+    padding: 1.2rem 1rem; /* Adjust padding for mobile */
+    border-left: none;   /* Remove left border for clean look on mobile */
+    border-top: 6px solid #ef5b25; /* Optional: add top border instead */
   }
-   .about-facts h3 {
-    font-size: 2rem;
 
- }
+  .about-facts h3 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-facts h3 {
+    font-size: 1.7rem;
+  }
+
+  .timeline-item {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
 }
