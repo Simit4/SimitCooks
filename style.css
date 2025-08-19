@@ -1168,16 +1168,18 @@ text-align: center;
     flex-direction: column;
   }
 
-  .timeline-item {
+   .timeline-item {
     width: 100%;
-    text-align: center;
-    padding: 1rem 1.2rem; /* same top & bottom padding */
+    text-align: left;
+    padding: 1rem 1.2rem; /* keep same top & bottom */
+    margin: 0 auto;
+    display: block;       /* ensure it doesn’t stretch like flex */
+    line-height: 1.4;     /* control text spacing */
   }
 
-  /* Reduce extra margins inside timeline items */
   .timeline-item * {
     margin-top: 0;
-    margin-bottom: 0.5rem; /* consistent spacing between elements */
+    margin-bottom: 0.5rem; /* same as desktop */
   }
 
   .about-facts h3 {
