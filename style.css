@@ -1158,13 +1158,6 @@ h1, h2, h3, h4, h5 {
   box-shadow: 0 10px 25px rgba(239, 91, 37, 0.25);
 }
 
-.timeline-year {
-  font-weight: 700;
-  font-size: 1.3rem;
-  color: var(--primary-dark);
-  display: block;
-  margin-bottom: 0.5rem;
-}
 
 /* Mobile Responsive */
 @media (max-width: 860px) {
