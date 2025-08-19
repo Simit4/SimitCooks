@@ -1180,11 +1180,13 @@ text-align: center;
 }
 
 @media (max-width: 480px) {
-  .timeline-item {
-    padding: 0.6rem 0.8rem; /* even smaller padding */
-    font-size: 0.9rem;
-    line-height: 1.3; /* tighter text */
+  .timeline-item * {
+    margin-bottom: 0.5rem; /* reduce bottom margin of all child elements */
   }
+
+  .timeline-item p:last-child,
+  .timeline-item h4:last-child {
+    margin-bottom: 0; /* remove extra space at the end */
 
   .about-facts h3 {
     font-size: 1.7rem;
