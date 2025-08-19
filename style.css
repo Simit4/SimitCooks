@@ -687,6 +687,18 @@ h1, h2, h3, h4, h5 {
   background-color: transparent;
 }
 
+
+.recipes_title{
+  font-family: 'Poppins', sans-serif;
+  color: var(--primary);
+  text-align: center;
+  font-weight: 900;
+  font-size: 2.8rem;
+  margin-bottom: 0.3rem;
+  letter-spacing: 1px;
+  padding: 1rem 0;
+}
+
 /* -------------------------------------------------
    Loading Spinner
 -------------------------------------------------- */
