@@ -1164,15 +1164,16 @@ text-align: center;
 @media (max-width: 860px) {
   .timeline {
     flex-direction: column;
-    gap: 1.5rem; /* Slightly smaller gap on mobile */
+    gap: 1rem; /* smaller gap */
   }
 
   .timeline-item {
     width: 100%;
     text-align: center;
-    padding: 1.2rem 1rem; /* Adjust padding for mobile */
-    border-left: none;   /* Remove left border for clean look on mobile */
-    border-top: 6px solid #ef5b25; /* Optional: add top border instead */
+    padding: 0.8rem 1rem; /* reduce padding */
+    border-left: none;
+    border-top: 6px solid #ef5b25;
+    line-height: 1.4; /* tighter line spacing */
   }
 
   .about-facts h3 {
@@ -1181,12 +1182,13 @@ text-align: center;
 }
 
 @media (max-width: 480px) {
-  .about-facts h3 {
-    font-size: 1.7rem;
+  .timeline-item {
+    padding: 0.6rem 0.8rem; /* even smaller padding */
+    font-size: 0.9rem;
+    line-height: 1.3; /* tighter text */
   }
 
-  .timeline-item {
-    padding: 1rem;
-    font-size: 0.95rem;
+  .about-facts h3 {
+    font-size: 1.7rem;
   }
 }
