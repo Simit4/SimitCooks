@@ -4,7 +4,6 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-
 export async function handler(event, context) {
   try {
     const staticPages = [
@@ -14,18 +13,18 @@ export async function handler(event, context) {
       { loc: '/about', priority: 0.8 },
     ];
 
-    // Fetch recipes
+    // Fetch recipes with updated_at
     const { data: recipes, error } = await supabase
       .from('recipe_db')
-      .select('slug');
+      .select('slug, updated_at');
 
     if (error) throw error;
 
-    const now = new Date().toISOString();
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
     xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
     // Add static pages
+    const now = new Date().toISOString();
     staticPages.forEach(page => {
       xml += `  <url>\n`;
       xml += `    <loc>https://simitswaad.netlify.app${page.loc}</loc>\n`;
@@ -36,9 +35,10 @@ export async function handler(event, context) {
 
     // Add recipe pages
     recipes.forEach(recipe => {
+      const lastMod = recipe.updated_at ? new Date(recipe.updated_at).toISOString() : now;
       xml += `  <url>\n`;
       xml += `    <loc>https://simitswaad.netlify.app/recipe/${recipe.slug}</loc>\n`;
-      xml += `    <lastmod>${now}</lastmod>\n`;
+      xml += `    <lastmod>${lastMod}</lastmod>\n`;
       xml += `    <priority>0.8</priority>\n`;
       xml += `  </url>\n`;
     });
@@ -52,6 +52,10 @@ export async function handler(event, context) {
     };
 
   } catch (err) {
-    return { statusCode: 500, body: `Error generating sitemap: ${err.message}` };
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'text/plain' },
+      body: `Error generating sitemap: ${err.message}`,
+    };
   }
 }
