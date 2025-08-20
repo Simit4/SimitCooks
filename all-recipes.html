@@ -2,91 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>All Recipes | Simi’s Swaad</title>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet" />
-  
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  
-  <!-- Main CSS -->
   <link rel="stylesheet" href="test.css" />
 </head>
-
 <body>
-
-<!-- ================= Header ================= -->
-<header class="main-header">
-  <div class="container header-wrapper">
-    <a href="index.html" class="logo">Simi’s <span>Swaad</span></a>
-    
+  <!-- Header -->
+  <header class="site-header">
     <nav class="navbar">
+      <a href="index.html" class="logo">🍲 Simi’s Swaad</a>
       <ul class="nav-links">
-        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-        
-        <!-- Modern Dropdown -->
-        <li class="dropdown">
-          <button class="dropbtn"><i class="fas fa-utensils"></i> Cook <i class="fas fa-chevron-down"></i></button>
-          <div class="dropdown-content">
-            <a href="all-recipes.html">All Recipes</a>
-            <a href="categories.html">Categories</a>
-            <a href="festivals.html">Festivals</a>
-          </div>
-        </li>
-
-        <li><a href="videos.html"><i class="fas fa-video"></i> Watch</a></li>
-        <li><a href="learn.html"><i class="fas fa-book-open"></i> Learn</a></li>
-        <li><a href="about.html"><i class="fas fa-user"></i> About</a></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="all-recipes.html" class="active">All Recipes</a></li>
+        <li><a href="videos.html">Videos</a></li>
+        <li><a href="equipment.html">Equipment</a></li>
+        <li><a href="about.html">About</a></li>
       </ul>
-
-      <!-- Mobile Menu Button -->
-      <button class="hamburger" aria-label="Toggle Menu">
-        <span></span><span></span><span></span>
-      </button>
     </nav>
-  </div>
-</header>
+  </header>
 
-<!-- ================= Page Title ================= -->
-<section class="page-title container">
-  <h1>All Recipes</h1>
-  <p>Discover authentic Nepali & home-style recipes — from everyday meals to festive delicacies.</p>
-</section>
-
-<!-- ================= Search & Filters ================= -->
-<section class="filters container">
-  <div class="search-box">
-    <i class="fas fa-search"></i>
-    <input type="text" id="search-input" placeholder="Search recipes...">
-  </div>
-
-  <div class="filter-buttons">
-    <button class="filter-btn active">All</button>
-    <button class="filter-btn">Nepali</button>
-    <button class="filter-btn">Snacks</button>
-    <button class="filter-btn">Curry</button>
-    <button class="filter-btn">Festival</button>
-  </div>
-</section>
-
-<!-- ================= Recipes Grid ================= -->
-<main class="container">
-  <section id="recipes-container" class="recipes-grid">
-    <!-- Recipe cards from Supabase -->
+  <!-- Hero -->
+  <section class="hero">
+    <h1>All Recipes</h1>
+    <p>Discover authentic Nepali recipes and more — simple, home-style cooking with love.</p>
   </section>
-</main>
 
-<!-- ================= Footer ================= -->
-<footer class="footer">
-  <div class="container">
-    <p>© 2025 Simi’s Swaad | Authentic Nepali Recipes</p>
-  </div>
-</footer>
+  <!-- Filter Bar -->
+  <section class="filter-bar">
+    <input type="text" id="searchBox" placeholder="🔍 Search recipes..." />
 
-<script type="module" src="recipes.js"></script>
-<script type="module" src="mobile-menu.js"></script>
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="snack">Snacks</button>
+      <button class="filter-btn" data-filter="curry">Curries</button>
+      <button class="filter-btn" data-filter="festival">Festivals</button>
+      <button class="filter-btn" data-filter="breakfast">Breakfast</button>
+      <button class="filter-btn" data-filter="dessert">Desserts</button>
+    </div>
+  </section>
 
+  <!-- Recipes Grid -->
+  <main class="recipes-grid" id="recipesGrid">
+    <!-- Recipes will be injected here dynamically via recipes.js -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>© 2025 Simi’s Swaad | Made with ❤️ in Melbourne</p>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="test.js"></script>
 </body>
 </html>
