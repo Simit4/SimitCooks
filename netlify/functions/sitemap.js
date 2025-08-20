@@ -13,7 +13,6 @@ export async function handler(event, context) {
       { loc: '/about', priority: 0.8 },
     ];
 
-    // Fetch recipes
     const { data: recipes, error } = await supabase
       .from('recipe_db')
       .select('slug, created_at, updated_at');
@@ -25,7 +24,6 @@ export async function handler(event, context) {
 
     const now = new Date().toISOString();
 
-    // Add static pages
     staticPages.forEach(page => {
       xml += `  <url>\n`;
       xml += `    <loc>https://simitswaad.netlify.app${page.loc}</loc>\n`;
@@ -34,17 +32,11 @@ export async function handler(event, context) {
       xml += `  </url>\n`;
     });
 
-    // Add recipes
     recipes.forEach(recipe => {
-      const lastMod = recipe.updated_at
-        ? new Date(recipe.updated_at).toISOString()
-        : recipe.created_at
-        ? new Date(recipe.created_at).toISOString()
-        : now;
-
+      const lastMod = recipe.updated_at || recipe.created_at || now;
       xml += `  <url>\n`;
       xml += `    <loc>https://simitswaad.netlify.app/recipe/${recipe.slug}</loc>\n`;
-      xml += `    <lastmod>${lastMod}</lastmod>\n`;
+      xml += `    <lastmod>${new Date(lastMod).toISOString()}</lastmod>\n`;
       xml += `    <priority>0.8</priority>\n`;
       xml += `  </url>\n`;
     });
@@ -52,12 +44,9 @@ export async function handler(event, context) {
     xml += `</urlset>`;
 
     return {
-return {
-  statusCode: 200,
-  headers: { 'Content-Type': 'application/xml' },
-  body: xml,
-};
-
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/xml' },
+      body: xml,
     };
 
   } catch (err) {
