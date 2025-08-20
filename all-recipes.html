@@ -3,28 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>All Recipes | SimitSwaad</title>
+  <title>All Recipes | Simi’s Swaad</title>
 
-  <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Montserrat:wght@500&family=Open+Sans&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="test.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  
+  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="style.css" />
 
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Explore delicious Nepali and home-style recipes from SimitSwaad — from curry to chowmein, snacks to sweets." />
-  <meta name="keywords" content="Nepali recipes, home cooking, vegetarian recipes, curry, chowmein, roti" />
-  <meta name="author" content="SimitSwaad" />
+  <!-- SEO -->
+  <meta name="description" content="Browse all recipes from Simi’s Swaad – authentic Nepali dishes, snacks, curries, and sweets with step-by-step instructions." />
+  <meta name="keywords" content="Nepali recipes, Indian food, curry, momo, chowmein, snacks, sweets" />
+  <meta name="author" content="Simi’s Swaad" />
 </head>
 
 <body>
 
-<!-- ---------------------- Header ---------------------- -->
+<!-- ================= Header ================= -->
 <header class="main-header">
   <div class="container header-wrapper">
-    <div class="logo" aria-label="SimitSwaad">
-      <span class="logo-modern">SimitSwaad</span>
-    </div> 
-
+    <a href="index.html" class="logo">Simi’s <span>Swaad</span></a>
+    
     <nav class="navbar">
       <ul class="nav-links">
         <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
@@ -32,56 +34,57 @@
           <a href="#"><i class="fas fa-utensils"></i> Cook ▾</a>
           <ul class="dropdown-menu">
             <li><a href="all-recipes.html">All Recipes</a></li>
-            <li><a href="#">Categories</a></li>
-            <li><a href="#">Festivals</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="festivals.html">Festivals</a></li>
           </ul>
         </li>
         <li><a href="videos.html"><i class="fas fa-video"></i> Watch</a></li>
         <li><a href="learn.html"><i class="fas fa-book-open"></i> Learn</a></li>
-        <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
+        <li><a href="about.html"><i class="fas fa-user"></i> About</a></li>
       </ul>
 
-      <!-- Hamburger -->
-      <button class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
+      <!-- Mobile Menu Button -->
+      <button class="hamburger" aria-label="Toggle Menu">
+        <span></span><span></span><span></span>
       </button>
     </nav>
   </div>
 </header>
 
-<!-- ---------------------- Main Content ---------------------- -->
+<!-- ================= Page Title ================= -->
+<section class="page-title container">
+  <h1>All Recipes</h1>
+  <p>Discover authentic Nepali & home-style recipes — from everyday meals to festive delicacies.</p>
+</section>
+
+<!-- ================= Search & Filters ================= -->
+<section class="filters container">
+  <input type="text" id="search-input" placeholder="🔍 Search recipes..." />
+
+  <select id="category-filter">
+    <option value="">All Categories</option>
+  </select>
+
+  <select id="cuisine-filter">
+    <option value="">All Cuisines</option>
+  </select>
+
+  <select id="tags-filter">
+    <option value="">All Tags</option>
+  </select>
+</section>
+
+<!-- ================= Recipes Grid ================= -->
 <main class="container">
-  <section class="recipes-header">
-    <h2 class="section-title">All Recipes</h2>
-    <input type="text" id="search-input" placeholder="Search recipes 🔍" />
-  </section>
-
-  <!-- ---------------------- Filters ---------------------- -->
-  <section class="filters">
-    <select id="category-filter">
-      <option value="">All Categories</option>
-    </select>
-
-    <select id="cuisine-filter">
-      <option value="">All Cuisines</option>
-    </select>
-
-    <select id="tags-filter">
-      <option value="">All Tags</option>
-    </select>
-  </section>
-
-  <!-- ---------------------- Recipes Grid ---------------------- -->
   <section id="recipes-container" class="recipes-grid">
-    <!-- JS will inject recipe cards here -->
+    <!-- Recipe cards will load dynamically from Supabase -->
   </section>
 </main>
 
-<!-- ---------------------- Scripts ---------------------- -->
-<script type="module" src="recipes.js"></script>
-<script type="module" src="footer.js"></script>
+<!-- ================= Footer ================= -->
+
+<!-- ================= Scripts ================= -->
+<script type="module" src="all-recipes.js"></script>
 <script type="module" src="mobile-menu.js"></script>
 
 </body>
