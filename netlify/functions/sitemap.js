@@ -53,7 +53,7 @@ export async function handler(event, context) {
 
     return {
       statusCode: 200,
-      headers: { 'Content-Type': 'application/xml' },
+      headers: { 'Content-Type': 'application/xml' }
       body: xml,
     };
 
