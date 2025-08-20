@@ -16,7 +16,7 @@ const festivalSelect = document.getElementById('festival-select');
 // --- Fetch all recipes ---
 async function fetchRecipes() {
   const { data: recipes, error } = await supabase
-    .from('recipes')
+    .from('recipe_db')
     .select('*')
     .order('title', { ascending: true });
 
