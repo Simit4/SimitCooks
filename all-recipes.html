@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Recipes | SimitSwaad</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="test.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="description" content="Explore all Nepali home recipes from SimitSwaad — with videos and recipe cards.">
+</head>
+<body>
+
+<!-- Header -->
+<header class="main-header">
+  <div class="container header-wrapper">
+    <div class="logo"><span>Simit’s</span> Swaad</div>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+        <li class="dropdown">
+          <a href="#"><i class="fas fa-utensils"></i> Cook ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="all-recipes.html">All Recipes</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="festivals.html">Festivals</a></li>
+          </ul>
+        </li>
+        <li><a href="videos.html"><i class="fas fa-video"></i> Watch</a></li>
+        <li><a href="learn.html"><i class="fas fa-book-open"></i> Learn</a></li>
+        <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
+      </ul>
+      <button class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="container">
+  <section class="recipes-header">
+    <h2 class="section-title">All Recipes</h2>
+    <input type="text" id="search-input" placeholder="Search recipes 🔍">
+  </section>
+
+  <section id="recipes-container" class="recipes-grid">
+    <!-- Recipes will be injected here by JS -->
+  </section>
+</main>
+
+<script type="module" src="test.js"></script>
+<script type="module" src="mobile-menu.js"></script>
+<script type="module" src="footer.js"></script>
+</body>
+</html>
