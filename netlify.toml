@@ -8,7 +8,7 @@
   to = "/.netlify/functions/sitemap"
   status = 200
   force = true
-
+  
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -19,3 +19,4 @@
   for = "/sitemap.xml"
   [headers.values]
     Content-Type = "application/xml"
+
