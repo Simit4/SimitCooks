@@ -7,103 +7,67 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-// --- DOM containers ---
-const allRecipesContainer = document.getElementById('all-recipes-container');
-const videoRecipesContainer = document.getElementById('video-recipes-container');
-const categorySelect = document.getElementById('category-select');
-const festivalSelect = document.getElementById('festival-select');
+const container = document.getElementById('recipe-container');
 
-// --- Fetch all recipes ---
-async function fetchRecipes() {
-  const { data: recipes, error } = await supabase
+// Get slug from URL
+const urlParams = new URLSearchParams(window.location.search);
+const slug = urlParams.get('slug');
+
+async function fetchRecipe() {
+  const { data, error } = await supabase
     .from('recipe_db')
     .select('*')
-    .order('title', { ascending: true });
+    .eq('slug', slug)
+    .single();
 
-  if (error) {
-    console.error('Error fetching recipes:', error);
+  if (error || !data) {
+    container.innerHTML = '<p>Recipe not found.</p>';
     return;
   }
 
-  renderRecipes(recipes);
-  populateFilters(recipes);
+  renderRecipe(data);
 }
 
-// --- Render recipes ---
-function renderRecipes(recipes) {
-  allRecipesContainer.innerHTML = '';
-  videoRecipesContainer.innerHTML = '';
+function renderRecipe(recipe) {
+  const thumbnail = recipe.thumbnail_url || 'placeholder.jpg';
+  const videoSection = recipe.video_url ? `
+    <div class="video">
+      <iframe width="100%" height="360" src="${recipe.video_url.replace("watch?v=", "embed/")}" frameborder="0" allowfullscreen></iframe>
+    </div>` : '';
 
-  recipes.forEach(recipe => {
-    const card = document.createElement('div');
-    card.classList.add('recipe-card');
-
-    // Use placeholder if no image
-    const img = document.createElement('img');
-    img.src = recipe.image_url || 'images/placeholder.jpg';
-    img.alt = recipe.title;
-
-    const title = document.createElement('h3');
-    title.textContent = recipe.title;
-
-    // Recipe link
-    const link = document.createElement('a');
-    link.href = `recipe.html?slug=${recipe.slug}`;
-    link.appendChild(img);
-    link.appendChild(title);
-
-    card.appendChild(link);
-
-    // Append to Video or All Recipes
-    if (recipe.video_url) {
-      videoRecipesContainer.appendChild(card);
-    } else {
-      allRecipesContainer.appendChild(card);
-    }
-  });
+  container.innerHTML = `
+    <h1>${recipe.title}</h1>
+    <p class="description">${recipe.description || ''}</p>
+    <img src="${thumbnail}" alt="${recipe.title}" class="recipe-thumbnail">
+    ${videoSection}
+    <div class="recipe-details">
+      <p><strong>Prep Time:</strong> ${recipe.prep_time || 'N/A'}</p>
+      <p><strong>Cook Time:</strong> ${recipe.cook_time || 'N/A'}</p>
+      <p><strong>Servings:</strong> ${recipe.servings || 'N/A'}</p>
+    </div>
+    <div class="ingredients">
+      <h2>Ingredients</h2>
+      <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
+    </div>
+    <div class="method">
+      <h2>Method</h2>
+      <ol>${recipe.method.map(m => `<li>${m}</li>`).join('')}</ol>
+    </div>
+    ${recipe.notes ? `<div class="notes"><h3>Notes</h3><p>${recipe.notes}</p></div>` : ''}
+    ${recipe.facts ? `<div class="fun-facts"><h3>Fun Facts</h3><p>${recipe.facts}</p></div>` : ''}
+    ${recipe.nutritional_info ? `<div class="nutrition">
+      <h3>Nutritional Info</h3>
+      <ul>
+        ${Object.entries(recipe.nutritional_info).map(([k,v]) => `<li><strong>${k}:</strong> ${v}</li>`).join('')}
+      </ul>
+    </div>` : ''}
+    <div class="tags-categories">
+      ${recipe.tags ? `<p><strong>Tags:</strong> ${recipe.tags.join(', ')}</p>` : ''}
+      ${recipe.category ? `<p><strong>Category:</strong> ${recipe.category.join(', ')}</p>` : ''}
+      ${recipe.cuisine ? `<p><strong>Cuisine:</strong> ${recipe.cuisine.join(', ')}</p>` : ''}
+    </div>
+    <button onclick="window.print()" class="print-btn">Print Recipe 🖨️</button>
+  `;
 }
 
-// --- Populate filters ---
-function populateFilters(recipes) {
-  const categories = [...new Set(recipes.map(r => r.category).filter(Boolean))];
-  const festivals = [...new Set(recipes.map(r => r.festival).filter(Boolean))];
-
-  categories.forEach(cat => {
-    const option = document.createElement('option');
-    option.value = cat;
-    option.textContent = cat;
-    categorySelect.appendChild(option);
-  });
-
-  festivals.forEach(fest => {
-    const option = document.createElement('option');
-    option.value = fest;
-    option.textContent = fest;
-    festivalSelect.appendChild(option);
-  });
-}
-
-// --- Filter logic ---
-function filterRecipes() {
-  const selectedCategory = categorySelect.value;
-  const selectedFestival = festivalSelect.value;
-
-  fetchRecipes().then(() => {
-    const allCards = [...allRecipesContainer.children, ...videoRecipesContainer.children];
-
-    allCards.forEach(card => {
-      const recipeTitle = card.querySelector('h3').textContent.toLowerCase();
-      const matchesCategory = selectedCategory === 'all' || card.dataset.category === selectedCategory;
-      const matchesFestival = selectedFestival === 'all' || card.dataset.festival === selectedFestival;
-
-      card.style.display = matchesCategory && matchesFestival ? 'block' : 'none';
-    });
-  });
-}
-
-// --- Event listeners ---
-categorySelect.addEventListener('change', filterRecipes);
-festivalSelect.addEventListener('change', filterRecipes);
-
-// --- Init ---
-fetchRecipes();
+fetchRecipe();
