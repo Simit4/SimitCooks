@@ -52,9 +52,12 @@ export async function handler(event, context) {
     xml += `</urlset>`;
 
     return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/xml' }
-      body: xml,
+return {
+  statusCode: 200,
+  headers: { 'Content-Type': 'application/xml' },
+  body: xml,
+};
+
     };
 
   } catch (err) {
