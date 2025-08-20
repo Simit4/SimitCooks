@@ -1,34 +1,21 @@
-# -----------------------------
-# Netlify Build Settings
-# -----------------------------
 [build]
   command = "npm run build"
   publish = "."
+  environment = { NODE_VERSION = "22.18.0" }
 
-[build.environment]
-  NODE_VERSION = "22.18.0"
-
-# -----------------------------
-# Redirects
-# -----------------------------
-
-# Redirect /sitemap.xml to Netlify function (must come first!)
 [[redirects]]
   from = "/sitemap.xml"
   to = "/.netlify/functions/sitemap"
   status = 200
   force = true
 
-# Catch-all for SPA (after sitemap redirect)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
   force = false
 
-
-  [[headers]]
+[[headers]]
   for = "/sitemap.xml"
   [headers.values]
     Content-Type = "application/xml"
-
