@@ -6,90 +6,92 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-
-const container = document.getElementById('recipes-container');
-const searchInput = document.getElementById('search-input');
-const categoryFilter = document.getElementById('category-filter');
+// DOM elements
+const recipesGrid = document.getElementById("recipesGrid");
+const searchBox = document.getElementById("searchBox");
+const filterBtns = document.querySelectorAll(".filter-btn");
 
 let allRecipes = [];
 
-// Fetch all recipes
-async function fetchRecipes() {
+// Fetch recipes from Supabase
+async function loadRecipes() {
   const { data, error } = await supabase
-    .from('recipe_db')
-    .select('*')
-    .order('created_at', { ascending: false });
+    .from("recipe_db")
+    .select("slug, title, description, thumbnail_url, category, tags, video_url");
 
   if (error) {
-    container.innerHTML = '<p>Failed to load recipes.</p>';
+    console.error("Error loading recipes:", error);
     return;
   }
 
   allRecipes = data;
-  populateCategoryDropdown();
   renderRecipes(allRecipes);
 }
 
-// Populate category dropdown
-function populateCategoryDropdown() {
-  const categories = new Set();
-  allRecipes.forEach(recipe => {
-    if (recipe.category) {
-      recipe.category.forEach(cat => categories.add(cat));
-    }
-  });
-
-  categories.forEach(cat => {
-    const option = document.createElement('option');
-    option.value = cat;
-    option.textContent = cat;
-    categoryFilter.appendChild(option);
-  });
-}
-
-// Render recipe cards
+// Render recipes into grid
 function renderRecipes(recipes) {
-  if (!recipes.length) {
-    container.innerHTML = '<p>No recipes found.</p>';
+  recipesGrid.innerHTML = "";
+
+  if (recipes.length === 0) {
+    recipesGrid.innerHTML = `<p class="no-results">No recipes found 🍽️</p>`;
     return;
   }
 
-  container.innerHTML = recipes.map(recipe => {
-    const thumbnail = recipe.thumbnail_url || 'placeholder.jpg';
-    const hasVideo = recipe.video_url ? true : false;
+  recipes.forEach(recipe => {
+    const thumb = recipe.thumbnail_url 
+      ? recipe.thumbnail_url 
+      : "assets/default-thumbnail.jpg"; // fallback image
 
-    return `
-      <div class="recipe-card">
-        <a href="recipe.html?slug=${recipe.slug}">
-          <div class="recipe-thumb">
-            <img src="${thumbnail}" alt="${recipe.title}">
-            ${hasVideo ? '<span class="play-icon">▶</span>' : ''}
-          </div>
+    const videoIcon = recipe.video_url ? `<span class="video-icon">▶</span>` : "";
+
+    const recipeCard = `
+      <a href="/recipe/${recipe.slug}/" class="recipe-card">
+        <div class="thumb-wrapper">
+          <img src="${thumb}" alt="${recipe.title}" />
+          ${videoIcon}
+        </div>
+        <div class="recipe-info">
           <h3>${recipe.title}</h3>
-          <p>${recipe.description || ''}</p>
-        </a>
-      </div>
+          <p>${recipe.description ? recipe.description : ""}</p>
+          <div class="tags">
+            ${(recipe.tags || []).map(tag => `<span>#${tag}</span>`).join(" ")}
+          </div>
+        </div>
+      </a>
     `;
-  }).join('');
-}
 
-// Filter recipes by search or category
-function filterRecipes() {
-  const searchTerm = searchInput.value.toLowerCase();
-  const selectedCategory = categoryFilter.value;
-
-  const filtered = allRecipes.filter(recipe => {
-    const matchesSearch = recipe.title.toLowerCase().includes(searchTerm) || (recipe.tags && recipe.tags.some(tag => tag.toLowerCase().includes(searchTerm)));
-    const matchesCategory = selectedCategory ? (recipe.category && recipe.category.includes(selectedCategory)) : true;
-    return matchesSearch && matchesCategory;
+    recipesGrid.innerHTML += recipeCard;
   });
-
-  renderRecipes(filtered);
 }
 
-// Event listeners
-searchInput.addEventListener('input', filterRecipes);
-categoryFilter.addEventListener('change', filterRecipes);
+// Search filter
+searchBox.addEventListener("input", () => {
+  const query = searchBox.value.toLowerCase();
+  const filtered = allRecipes.filter(r =>
+    r.title.toLowerCase().includes(query) ||
+    (r.description && r.description.toLowerCase().includes(query)) ||
+    (r.tags && r.tags.some(tag => tag.toLowerCase().includes(query)))
+  );
+  renderRecipes(filtered);
+});
 
-// Initial fetch
-fetchRecipes();
+// Category filter
+filterBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    filterBtns.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const filter = btn.dataset.filter;
+    if (filter === "all") {
+      renderRecipes(allRecipes);
+    } else {
+      const filtered = allRecipes.filter(r =>
+        (r.category && r.category.includes(filter)) ||
+        (r.tags && r.tags.includes(filter))
+      );
+      renderRecipes(filtered);
+    }
+  });
+});
+
+// Init
