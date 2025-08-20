@@ -7,67 +7,89 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-const container = document.getElementById('recipe-container');
+const container = document.getElementById('recipes-container');
+const searchInput = document.getElementById('search-input');
+const categoryFilter = document.getElementById('category-filter');
 
-// Get slug from URL
-const urlParams = new URLSearchParams(window.location.search);
-const slug = urlParams.get('slug');
+let allRecipes = [];
 
-async function fetchRecipe() {
+// Fetch all recipes
+async function fetchRecipes() {
   const { data, error } = await supabase
     .from('recipe_db')
     .select('*')
-    .eq('slug', slug)
-    .single();
+    .order('created_at', { ascending: false });
 
-  if (error || !data) {
-    container.innerHTML = '<p>Recipe not found.</p>';
+  if (error) {
+    container.innerHTML = '<p>Failed to load recipes.</p>';
     return;
   }
 
-  renderRecipe(data);
+  allRecipes = data;
+  populateCategoryDropdown();
+  renderRecipes(allRecipes);
 }
 
-function renderRecipe(recipe) {
-  const thumbnail = recipe.thumbnail_url || 'placeholder.jpg';
-  const videoSection = recipe.video_url ? `
-    <div class="video">
-      <iframe width="100%" height="360" src="${recipe.video_url.replace("watch?v=", "embed/")}" frameborder="0" allowfullscreen></iframe>
-    </div>` : '';
+// Populate category dropdown
+function populateCategoryDropdown() {
+  const categories = new Set();
+  allRecipes.forEach(recipe => {
+    if (recipe.category) {
+      recipe.category.forEach(cat => categories.add(cat));
+    }
+  });
 
-  container.innerHTML = `
-    <h1>${recipe.title}</h1>
-    <p class="description">${recipe.description || ''}</p>
-    <img src="${thumbnail}" alt="${recipe.title}" class="recipe-thumbnail">
-    ${videoSection}
-    <div class="recipe-details">
-      <p><strong>Prep Time:</strong> ${recipe.prep_time || 'N/A'}</p>
-      <p><strong>Cook Time:</strong> ${recipe.cook_time || 'N/A'}</p>
-      <p><strong>Servings:</strong> ${recipe.servings || 'N/A'}</p>
-    </div>
-    <div class="ingredients">
-      <h2>Ingredients</h2>
-      <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
-    </div>
-    <div class="method">
-      <h2>Method</h2>
-      <ol>${recipe.method.map(m => `<li>${m}</li>`).join('')}</ol>
-    </div>
-    ${recipe.notes ? `<div class="notes"><h3>Notes</h3><p>${recipe.notes}</p></div>` : ''}
-    ${recipe.facts ? `<div class="fun-facts"><h3>Fun Facts</h3><p>${recipe.facts}</p></div>` : ''}
-    ${recipe.nutritional_info ? `<div class="nutrition">
-      <h3>Nutritional Info</h3>
-      <ul>
-        ${Object.entries(recipe.nutritional_info).map(([k,v]) => `<li><strong>${k}:</strong> ${v}</li>`).join('')}
-      </ul>
-    </div>` : ''}
-    <div class="tags-categories">
-      ${recipe.tags ? `<p><strong>Tags:</strong> ${recipe.tags.join(', ')}</p>` : ''}
-      ${recipe.category ? `<p><strong>Category:</strong> ${recipe.category.join(', ')}</p>` : ''}
-      ${recipe.cuisine ? `<p><strong>Cuisine:</strong> ${recipe.cuisine.join(', ')}</p>` : ''}
-    </div>
-    <button onclick="window.print()" class="print-btn">Print Recipe 🖨️</button>
-  `;
+  categories.forEach(cat => {
+    const option = document.createElement('option');
+    option.value = cat;
+    option.textContent = cat;
+    categoryFilter.appendChild(option);
+  });
 }
 
-fetchRecipe();
+// Render recipe cards
+function renderRecipes(recipes) {
+  if (!recipes.length) {
+    container.innerHTML = '<p>No recipes found.</p>';
+    return;
+  }
+
+  container.innerHTML = recipes.map(recipe => {
+    const thumbnail = recipe.thumbnail_url || 'placeholder.jpg';
+    const hasVideo = recipe.video_url ? true : false;
+
+    return `
+      <div class="recipe-card">
+        <a href="recipe.html?slug=${recipe.slug}">
+          <div class="recipe-thumb">
+            <img src="${thumbnail}" alt="${recipe.title}">
+            ${hasVideo ? '<span class="play-icon">▶</span>' : ''}
+          </div>
+          <h3>${recipe.title}</h3>
+          <p>${recipe.description || ''}</p>
+        </a>
+      </div>
+    `;
+  }).join('');
+}
+
+// Filter recipes by search or category
+function filterRecipes() {
+  const searchTerm = searchInput.value.toLowerCase();
+  const selectedCategory = categoryFilter.value;
+
+  const filtered = allRecipes.filter(recipe => {
+    const matchesSearch = recipe.title.toLowerCase().includes(searchTerm) || (recipe.tags && recipe.tags.some(tag => tag.toLowerCase().includes(searchTerm)));
+    const matchesCategory = selectedCategory ? (recipe.category && recipe.category.includes(selectedCategory)) : true;
+    return matchesSearch && matchesCategory;
+  });
+
+  renderRecipes(filtered);
+}
+
+// Event listeners
+searchInput.addEventListener('input', filterRecipes);
+categoryFilter.addEventListener('change', filterRecipes);
+
+// Initial fetch
+fetchRecipes();
