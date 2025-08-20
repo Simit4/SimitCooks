@@ -25,3 +25,10 @@
   to = "/index.html"
   status = 200
   force = false
+
+
+  [[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Content-Type = "application/xml"
+
