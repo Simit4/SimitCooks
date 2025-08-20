@@ -12,12 +12,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
   <!-- Main CSS -->
-  <link rel="stylesheet" href="test.css" />
-
-  <!-- SEO -->
-  <meta name="description" content="Browse all recipes from Simi’s Swaad – authentic Nepali dishes, snacks, curries, and sweets with step-by-step instructions." />
-  <meta name="keywords" content="Nepali recipes, Indian food, curry, momo, chowmein, snacks, sweets" />
-  <meta name="author" content="Simi’s Swaad" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
@@ -30,14 +25,17 @@
     <nav class="navbar">
       <ul class="nav-links">
         <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+        
+        <!-- Modern Dropdown -->
         <li class="dropdown">
-          <a href="#"><i class="fas fa-utensils"></i> Cook ▾</a>
-          <ul class="dropdown-menu">
-            <li><a href="all-recipes.html">All Recipes</a></li>
-            <li><a href="categories.html">Categories</a></li>
-            <li><a href="festivals.html">Festivals</a></li>
-          </ul>
+          <button class="dropbtn"><i class="fas fa-utensils"></i> Cook <i class="fas fa-chevron-down"></i></button>
+          <div class="dropdown-content">
+            <a href="all-recipes.html">All Recipes</a>
+            <a href="categories.html">Categories</a>
+            <a href="festivals.html">Festivals</a>
+          </div>
         </li>
+
         <li><a href="videos.html"><i class="fas fa-video"></i> Watch</a></li>
         <li><a href="learn.html"><i class="fas fa-book-open"></i> Learn</a></li>
         <li><a href="about.html"><i class="fas fa-user"></i> About</a></li>
@@ -59,35 +57,36 @@
 
 <!-- ================= Search & Filters ================= -->
 <section class="filters container">
-  <input type="text" id="search-input" placeholder="🔍 Search recipes..." />
+  <div class="search-box">
+    <i class="fas fa-search"></i>
+    <input type="text" id="search-input" placeholder="Search recipes...">
+  </div>
 
-  <select id="category-filter">
-    <option value="">All Categories</option>
-  </select>
-
-  <select id="cuisine-filter">
-    <option value="">All Cuisines</option>
-  </select>
-
-  <select id="tags-filter">
-    <option value="">All Tags</option>
-  </select>
+  <div class="filter-buttons">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">Nepali</button>
+    <button class="filter-btn">Snacks</button>
+    <button class="filter-btn">Curry</button>
+    <button class="filter-btn">Festival</button>
+  </div>
 </section>
 
 <!-- ================= Recipes Grid ================= -->
 <main class="container">
   <section id="recipes-container" class="recipes-grid">
-    <!-- Recipe cards will load dynamically from Supabase -->
+    <!-- Recipe cards from Supabase -->
   </section>
 </main>
 
 <!-- ================= Footer ================= -->
+<footer class="footer">
+  <div class="container">
+    <p>© 2025 Simi’s Swaad | Authentic Nepali Recipes</p>
+  </div>
+</footer>
 
-<!-- ================= Scripts ================= -->
-<script type="module" src="recipes.js"></script>
+<script type="module" src="all-recipes.js"></script>
 <script type="module" src="mobile-menu.js"></script>
-<script type="module" src="footer.js"></script>
-
 
 </body>
 </html>
