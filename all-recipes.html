@@ -1,65 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>All Recipes | Simit's Swaad</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Open+Sans&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="test.css">
-<meta name="description" content="Explore all Nepali and home-style recipes from Simit's Swaad. Discover recipes with videos and recipe cards for easy cooking.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>All Recipes | SimitSwaad</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Montserrat:wght@500&family=Open+Sans&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="test.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Explore delicious Nepali and home-style recipes from SimitSwaad — from curry to chowmein, snacks to sweets." />
+  <meta name="keywords" content="Nepali recipes, home cooking, vegetarian recipes, curry, chowmein, roti" />
+  <meta name="author" content="SimitSwaad" />
 </head>
+
 <body>
 
-<header>
-<section class="recipes-header">
-  <h2 class="section-title">All Recipes</h2>
-  
-  <!-- Search bar -->
-  <input type="text" id="search-input" placeholder="Search recipes 🔍" />
+<!-- ---------------------- Header ---------------------- -->
+<header class="main-header">
+  <div class="container header-wrapper">
+    <div class="logo" aria-label="SimitSwaad">
+      <span class="logo-modern">SimitSwaad</span>
+    </div> 
 
-  <!-- Dropdown filters -->
-  <div class="filters">
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+        <li class="dropdown">
+          <a href="#"><i class="fas fa-utensils"></i> Cook ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="all-recipes.html">All Recipes</a></li>
+            <li><a href="#">Categories</a></li>
+            <li><a href="#">Festivals</a></li>
+          </ul>
+        </li>
+        <li><a href="videos.html"><i class="fas fa-video"></i> Watch</a></li>
+        <li><a href="learn.html"><i class="fas fa-book-open"></i> Learn</a></li>
+        <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
+      </ul>
+
+      <!-- Hamburger -->
+      <button class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- ---------------------- Main Content ---------------------- -->
+<main class="container">
+  <section class="recipes-header">
+    <h2 class="section-title">All Recipes</h2>
+    <input type="text" id="search-input" placeholder="Search recipes 🔍" />
+  </section>
+
+  <!-- ---------------------- Filters ---------------------- -->
+  <section class="filters">
     <select id="category-filter">
       <option value="">All Categories</option>
-      <option value="snack">Snack</option>
-      <option value="wraps">Wraps</option>
-      <option value="breakfast">Breakfast</option>
-      <!-- Add more categories from your Supabase -->
     </select>
 
     <select id="cuisine-filter">
       <option value="">All Cuisines</option>
-      <option value="Nepali">Nepali</option>
-      <option value="Fusion">Fusion</option>
-      <!-- Add more cuisines -->
     </select>
 
-    <select id="festival-filter">
-      <option value="">All Festivals</option>
-      <option value="Dashain">Dashain</option>
-      <option value="Tihar">Tihar</option>
-      <!-- Add more festivals if needed -->
-    </select>
-  </div>
-</section>
-
-</header>
-
-<main class="container">
-  <section class="recipes-header">
-    <h2 class="section-title">All Recipes</h2>
-    <input type="text" id="search-input" placeholder="Search recipes 🔍">
-    <select id="category-filter">
-      <option value="">All Categories</option>
-      <!-- Categories will be dynamically added -->
+    <select id="tags-filter">
+      <option value="">All Tags</option>
     </select>
   </section>
 
+  <!-- ---------------------- Recipes Grid ---------------------- -->
   <section id="recipes-container" class="recipes-grid">
-    <!-- Recipe cards injected here -->
+    <!-- JS will inject recipe cards here -->
   </section>
 </main>
 
+<!-- ---------------------- Scripts ---------------------- -->
 <script type="module" src="test.js"></script>
 <script type="module" src="footer.js"></script>
 <script type="module" src="mobile-menu.js"></script>
