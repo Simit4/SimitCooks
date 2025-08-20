@@ -13,18 +13,19 @@ export async function handler(event, context) {
       { loc: '/about', priority: 0.8 },
     ];
 
-    // Fetch recipes with updated_at
+    // Fetch recipes
     const { data: recipes, error } = await supabase
       .from('recipe_db')
-      .select('slug, updated_at');
+      .select('slug, created_at, updated_at');
 
     if (error) throw error;
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
     xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
-    // Add static pages
     const now = new Date().toISOString();
+
+    // Add static pages
     staticPages.forEach(page => {
       xml += `  <url>\n`;
       xml += `    <loc>https://simitswaad.netlify.app${page.loc}</loc>\n`;
@@ -33,9 +34,14 @@ export async function handler(event, context) {
       xml += `  </url>\n`;
     });
 
-    // Add recipe pages
+    // Add recipes
     recipes.forEach(recipe => {
-      const lastMod = recipe.updated_at ? new Date(recipe.updated_at).toISOString() : now;
+      const lastMod = recipe.updated_at
+        ? new Date(recipe.updated_at).toISOString()
+        : recipe.created_at
+        ? new Date(recipe.created_at).toISOString()
+        : now;
+
       xml += `  <url>\n`;
       xml += `    <loc>https://simitswaad.netlify.app/recipe/${recipe.slug}</loc>\n`;
       xml += `    <lastmod>${lastMod}</lastmod>\n`;
