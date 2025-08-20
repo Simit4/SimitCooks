@@ -22,6 +22,7 @@
   force = true
 
 
+
 # Optional: Redirect all 404s to index.html (for SPA support)
 [[redirects]]
   from = "/*"
