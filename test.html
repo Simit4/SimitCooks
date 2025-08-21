@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simi’s Swaad Recipes</title>
+  <title>Simi's Swaad Recipes</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <header>
-    <h1>Simi’s Swaad</h1>
+    <h1>Simi's Swaad 🍴</h1>
+    <input type="text" id="search-input" placeholder="Search recipes..." />
   </header>
 
   <section class="filters">
-    <button class="filter-btn" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="main">Main</button>
-    <button class="filter-btn" data-filter="snack">Snack</button>
-    <button class="filter-btn" data-filter="dessert">Dessert</button>
-    <button class="filter-btn" data-filter="video">Video Only</button>
+    <button data-filter="all" class="active">All</button>
+    <button data-filter="main">Main</button>
+    <button data-filter="snack">Snack</button>
+    <button data-filter="dessert">Dessert</button>
+    <button data-filter="video">Video Only</button>
   </section>
 
-  <section id="recipes-container" class="recipes-container">
+  <section id="recipes-container" class="recipes-grid">
     <!-- Recipes will be dynamically inserted here -->
   </section>
 
-  <script type="module" src="test.js"></script>
+  <script type="module" src="recipes.js"></script>
 </body>
 </html>
