@@ -5,7 +5,6 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-// Fetch all recipes
 async function fetchRecipes() {
   const { data, error } = await supabase
     .from('recipe_db')
@@ -25,77 +24,66 @@ function renderRecipes(recipes) {
   container.innerHTML = '';
 
   recipes.forEach(recipe => {
-    // Determine if recipe has a video
-    const hasVideo = recipe.video_url && recipe.video_url.trim() !== '';
-    const thumb = hasVideo
-      ? getThumbnail(recipe.video_url)
-      : 'assets/default-thumbnail.jpg';
-
     const card = document.createElement('div');
     card.className = 'recipe-card';
-    card.dataset.tags = recipe.tags ? recipe.tags.join(',') : '';
-    card.dataset.video = hasVideo ? 'yes' : 'no';
+    card.dataset.tags = recipe.tags?.join(',') || '';
+    card.dataset.video = recipe.video_url || '';
+
+    const thumb = recipe.video_url ? getThumbnail(recipe.video_url) : 'assets/default-thumbnail.jpg';
 
     card.innerHTML = `
       <div class="thumbnail-wrapper">
-        <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb" />
-        ${hasVideo ? '<span class="play-icon">▶</span>' : ''}
+        <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb">
+        ${recipe.video_url ? '<span class="play-icon">&#9658;</span>' : ''}
       </div>
       <h3>${recipe.title}</h3>
-      <p>${recipe.description || ''}</p>
+      <p>${recipe.description}</p>
       <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
     `;
     container.appendChild(card);
   });
 
-  setupFilters();
+  attachFilters();
+  attachSearch();
 }
 
-// YouTube thumbnail extractor
 function getThumbnail(url) {
-  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  return match
-    ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`
-    : 'assets/default-thumbnail.jpg';
+  const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : 'assets/default-thumbnail.jpg';
 }
 
-// -------------------- Filters --------------------
-function setupFilters() {
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const searchInput = document.getElementById('search-input');
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
+function attachFilters() {
+  const buttons = document.querySelectorAll('.filter-btn');
+  buttons.forEach(btn => {
+    btn.onclick = () => {
+      buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      applyFilter();
-    });
+      filterRecipes(btn.dataset.filter);
+    };
   });
-
-  searchInput?.addEventListener('input', applyFilter);
 }
 
-function applyFilter() {
-  const term = document.getElementById('search-input').value.toLowerCase();
-  const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+function filterRecipes(category) {
   const cards = document.querySelectorAll('.recipe-card');
-
   cards.forEach(card => {
-    const title = card.querySelector('h3')?.textContent.toLowerCase();
-    const tags = card.dataset.tags.toLowerCase();
-    const hasVideo = card.dataset.video === 'yes';
+    const tags = card.dataset.tags.split(',');
+    const hasVideo = card.dataset.video && card.dataset.video.trim() !== '';
 
-    let show = title.includes(term);
-
-    if (activeFilter === 'video') {
-      show = show && hasVideo;
-    } else if (activeFilter !== 'all') {
-      show = show && tags.includes(activeFilter);
-    }
-
-    card.style.display = show ? 'block' : 'none';
+    if (category === 'all') card.style.display = 'block';
+    else if (category === 'video') card.style.display = hasVideo ? 'block' : 'none';
+    else card.style.display = tags.includes(category) ? 'block' : 'none';
   });
 }
 
-// -------------------- Init --------------------
+function attachSearch() {
+  const searchInput = document.getElementById('search-input');
+  searchInput.oninput = e => {
+    const term = e.target.value.toLowerCase();
+    document.querySelectorAll('.recipe-card').forEach(card => {
+      const title = card.querySelector('h3')?.textContent.toLowerCase();
+      card.style.display = title.includes(term) ? 'block' : 'none';
+    });
+  };
+}
+
 fetchRecipes();
