@@ -5,7 +5,6 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-
 async function fetchRecipes() {
   const { data, error } = await supabase
     .from('recipe_db')
@@ -26,7 +25,7 @@ function renderRecipes(recipes) {
 
   recipes.forEach(recipe => {
     const hasVideo = !!recipe.video_url;
-    const thumb = hasVideo ? getThumbnail(recipe.video_url) : getPlaceholder(recipe.slug);
+    const thumb = hasVideo ? getThumbnail(recipe.video_url) : createDynamicPlaceholder(recipe);
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
@@ -35,9 +34,7 @@ function renderRecipes(recipes) {
     card.addEventListener('click', () => window.location.href = `/recipe/${recipe.slug}`);
 
     card.innerHTML = `
-      <div class="thumbnail-wrapper">
-        <img src="${thumb}" alt="${recipe.title}" />
-      </div>
+      <div class="thumbnail-wrapper">${thumb}</div>
       <h3>${recipe.title}</h3>
     `;
 
@@ -50,13 +47,15 @@ function renderRecipes(recipes) {
 
 function getThumbnail(url) {
   const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : '';
+  return match ? `<img src="https://img.youtube.com/vi/${match[1]}/hqdefault.jpg" alt="video">` : '';
 }
 
-// Placeholder for recipes without video
-function getPlaceholder(slug) {
-  if (slug.toLowerCase() === 'momo') return '/assets/momo-placeholder.jpg';
-  return '/assets/default-placeholder.jpg';
+// Dynamic placeholder for recipes without video
+function createDynamicPlaceholder(recipe) {
+  const emoji = recipe.slug.toLowerCase() === 'momo' ? '🥟' : '🍲';
+  const colors = ['#FFB347', '#FFCC33', '#FFA07A', '#F4A261'];
+  const gradient = `linear-gradient(135deg, ${colors[Math.floor(Math.random()*colors.length)]}, #fff)`;
+  return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:80px;background:${gradient};">${emoji}</div>`;
 }
 
 // Filters
@@ -76,7 +75,6 @@ function filterRecipes(filter) {
   cards.forEach(card => {
     const hasVideo = card.dataset.hasVideo === 'true';
     const tags = card.dataset.tags.split(',');
-
     if (filter === 'all') card.style.display = 'block';
     else if (filter === 'video') card.style.display = hasVideo ? 'block' : 'none';
     else card.style.display = tags.includes(filter) ? 'block' : 'none';
