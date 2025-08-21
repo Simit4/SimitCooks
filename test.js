@@ -18,7 +18,7 @@ async function fetchRecipes() {
     return;
   }
 
-  allRecipes = data;
+  allRecipes = data || [];
   renderRecipes(allRecipes);
 }
 
@@ -27,13 +27,13 @@ function renderRecipes(recipes) {
   container.innerHTML = '';
 
   recipes.forEach(recipe => {
-    const thumb = recipe.video_url ? getThumbnail(recipe.video_url) : getGraphic(recipe.tags);
+    const thumb = getThumbnail(recipe.video_url);
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
     card.innerHTML = `
       <div class="thumbnail-wrapper">
-        <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb" />
+        <img src="${thumb}" alt="${recipe.title}" />
       </div>
       <h3>${recipe.title}</h3>
       <p>${recipe.description || ''}</p>
@@ -44,39 +44,38 @@ function renderRecipes(recipes) {
 }
 
 function getThumbnail(url) {
-  const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  return match
-    ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`
-    : null;
+  if (url) {
+    const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+    if (match) {
+      return `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
+    }
+  }
+  // fallback graphic (make sure this exists in your assets folder)
+  return "assets/fallback.jpg";
 }
 
-function getGraphic(tags) {
-  tags = (tags || []).map(t => t.toLowerCase());
-  if (tags.includes('momo') || tags.includes('dumpling')) return "https://i.ibb.co/z5JhfyV/momo.png";
-  if (tags.includes('curry')) return "https://i.ibb.co/bBvhc3p/curry.png";
-  if (tags.includes('dessert')) return "https://i.ibb.co/sP3HLjC/dessert.png";
-  return "https://i.ibb.co/FxXW8gL/placeholder-food.png";
-}
-
-/* -------- Search -------- */
+/* ---------------- Search ---------------- */
 document.getElementById('search-input')?.addEventListener('input', (e) => {
   const term = e.target.value.toLowerCase();
-  const filtered = allRecipes.filter(r => r.title.toLowerCase().includes(term));
+  const filtered = allRecipes.filter(r =>
+    r.title.toLowerCase().includes(term)
+  );
   renderRecipes(filtered);
 });
 
-/* -------- Filters -------- */
+/* ---------------- Filter ---------------- */
 document.querySelectorAll('.filters button').forEach(btn => {
   btn.addEventListener('click', () => {
     const filter = btn.dataset.filter;
 
     let filtered = allRecipes;
-    if (filter !== 'all') {
-      if (filter === 'video') {
-        filtered = allRecipes.filter(r => r.video_url);
-      } else {
-        filtered = allRecipes.filter(r => (r.tags || []).map(t => t.toLowerCase()).includes(filter));
-      }
+
+    if (filter === 'video') {
+      filtered = allRecipes.filter(r => r.video_url && r.video_url.trim() !== "");
+    } else if (filter !== 'all') {
+      filtered = allRecipes.filter(r =>
+        r.tags && r.tags.toLowerCase().includes(filter)
+      );
     }
 
     renderRecipes(filtered);
