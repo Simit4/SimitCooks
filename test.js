@@ -6,51 +6,33 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 const container = document.getElementById('recipes-container');
-const searchInput = document.getElementById('search-input');
 const filterButtons = document.querySelectorAll('.filters button');
+const searchInput = document.getElementById('search-input');
 
-let recipesData = [];
-let currentFilter = 'all';
+let allRecipes = [];
 
-// Fetch recipes from Supabase
 async function fetchRecipes() {
   const { data, error } = await supabase
     .from('recipe_db')
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (error) {
-    console.error('Error fetching recipes:', error);
-    return;
-  }
+  if (error) return console.error('Error fetching recipes:', error);
 
-  recipesData = data;
-  renderRecipes();
+  allRecipes = data;
+  renderRecipes(allRecipes);
 }
 
-// Render recipes
-function renderRecipes() {
+function renderRecipes(recipes) {
   container.innerHTML = '';
 
-  let filtered = recipesData;
-
-  // Apply filter
-  if (currentFilter !== 'all') {
-    if (currentFilter === 'video') {
-      filtered = filtered.filter(r => r.video_url && r.video_url.trim() !== '');
-    } else {
-      filtered = filtered.filter(r => r.tags?.includes(currentFilter));
-    }
-  }
-
-  // Apply search
-  const term = searchInput.value.toLowerCase();
-  filtered = filtered.filter(r => r.title.toLowerCase().includes(term));
-
-  filtered.forEach(recipe => {
+  recipes.forEach(recipe => {
     const card = document.createElement('div');
     card.className = 'recipe-card';
+    card.dataset.tags = recipe.tags ? recipe.tags.join(',') : '';
+    card.dataset.hasVideo = recipe.video_url && recipe.video_url.trim() !== '' ? 'yes' : 'no';
 
+    // Thumbnail or placeholder
     const thumbWrapper = document.createElement('div');
     thumbWrapper.className = 'thumbnail-wrapper';
 
@@ -62,42 +44,85 @@ function renderRecipes() {
     } else {
       const placeholder = document.createElement('div');
       placeholder.className = 'placeholder-graphic';
-      placeholder.textContent = '🥟';
+
+      if (recipe.slug === 'momo') {
+        placeholder.style.backgroundImage = "url('assets/momo-placeholder.jpg')";
+      } else {
+        placeholder.style.backgroundImage = "url('assets/recipe-placeholder.jpg')";
+      }
+
       thumbWrapper.appendChild(placeholder);
     }
 
-    const info = document.createElement('div');
-    info.className = 'recipe-info';
-    info.innerHTML = `
-      <h3>${recipe.title}</h3>
-      <p>${recipe.description || ''}</p>
-      <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
-    `;
-
     card.appendChild(thumbWrapper);
-    card.appendChild(info);
+
+    const title = document.createElement('h3');
+    title.textContent = recipe.title;
+    card.appendChild(title);
+
+    const desc = document.createElement('p');
+    desc.textContent = recipe.description || '';
+    card.appendChild(desc);
+
+    const link = document.createElement('a');
+    link.className = 'view-btn';
+    link.href = `/recipe/${recipe.slug}`;
+    link.textContent = 'View Recipe';
+    card.appendChild(link);
+
     container.appendChild(card);
   });
 }
 
 // Get YouTube thumbnail
 function getYoutubeThumbnail(url) {
-  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
   return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : '';
 }
 
-// Search event
-searchInput.addEventListener('input', renderRecipes);
-
-// Filter buttons
+// -------------------- Filters --------------------
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     filterButtons.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    currentFilter = btn.dataset.filter;
-    renderRecipes();
+
+    const filter = btn.dataset.filter;
+
+    let filtered = [...allRecipes];
+
+    if (filter === 'video') {
+      filtered = filtered.filter(r => r.video_url && r.video_url.trim() !== '');
+    } else if (filter !== 'all') {
+      filtered = filtered.filter(r => r.tags?.includes(filter));
+    }
+
+    // Search filter
+    const term = searchInput.value.toLowerCase();
+    if (term) {
+      filtered = filtered.filter(r => r.title.toLowerCase().includes(term));
+    }
+
+    renderRecipes(filtered);
   });
 });
 
-// Initial fetch
+// -------------------- Search --------------------
+searchInput.addEventListener('input', () => {
+  const term = searchInput.value.toLowerCase();
+  let filtered = [...allRecipes];
+
+  const activeFilter = document.querySelector('.filters button.active').dataset.filter;
+  if (activeFilter === 'video') {
+    filtered = filtered.filter(r => r.video_url && r.video_url.trim() !== '');
+  } else if (activeFilter !== 'all') {
+    filtered = filtered.filter(r => r.tags?.includes(activeFilter));
+  }
+
+  if (term) {
+    filtered = filtered.filter(r => r.title.toLowerCase().includes(term));
+  }
+
+  renderRecipes(filtered);
+});
+
 fetchRecipes();
