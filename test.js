@@ -6,24 +6,30 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-/ --- DOM elements ---
+// --- DOM elements ---
 const recipesContainer = document.getElementById("recipes-container");
 const searchInput = document.getElementById("search-input");
 
-// --- Placeholder image ---
-const PLACEHOLDER_IMAGE = "placeholder-image.jpg"; // Add this image in your folder
+// --- Placeholder image for recipes with no thumbnail ---
+const PLACEHOLDER_IMAGE = "placeholder-image.jpg"; // put a default image in your project folder
 
-// --- YouTube thumbnail fetcher ---
-function getYouTubeThumbnail(url) {
-  try {
-    const videoId = new URL(url).searchParams.get("v");
-    return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-  } catch {
-    return PLACEHOLDER_IMAGE;
+// --- Fetch all recipes ---
+async function fetchRecipes() {
+  const { data: recipes, error } = await supabase
+    .from("recipe_db")   // 👈 make sure this matches your table name
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("❌ Error fetching recipes:", error.message);
+    recipesContainer.innerHTML = "<p>Failed to load recipes.</p>";
+    return;
   }
+
+  displayRecipes(recipes);
 }
 
-// --- Render recipes ---
+// --- Render recipes on page ---
 function displayRecipes(recipes) {
   recipesContainer.innerHTML = "";
 
@@ -33,75 +39,47 @@ function displayRecipes(recipes) {
   }
 
   recipes.forEach((recipe) => {
-    let thumbnail = recipe.thumbnail_url;
-
-    if (!thumbnail && recipe.video_url) {
-      thumbnail = getYouTubeThumbnail(recipe.video_url);
-    }
-    if (!thumbnail) {
-      thumbnail = PLACEHOLDER_IMAGE;
-    }
-
     const card = document.createElement("div");
     card.classList.add("recipe-card");
 
+    const thumbnail = recipe.thumbnail_url || PLACEHOLDER_IMAGE;
+
     card.innerHTML = `
-      <a href="/recipe/${recipe.slug}/" class="recipe-link">
-        <div class="recipe-thumb">
-          <img src="${thumbnail}" alt="${recipe.title}" />
-          ${recipe.video_url ? `<div class="video-overlay"><i class="fas fa-play"></i></div>` : ""}
-        </div>
-        <div class="recipe-info">
-          <h3>${recipe.title}</h3>
-          <p class="tags">${recipe.tags ? recipe.tags.join(", ") : ""}</p>
-          <p class="category">${recipe.category ? recipe.category.join(", ") : ""}</p>
-        </div>
-      </a>
+      <div class="recipe-thumb">
+        <img src="${thumbnail}" alt="${recipe.title}" />
+        ${recipe.video_url ? `<a class="video-btn" href="${recipe.video_url}" target="_blank"><i class="fas fa-play"></i></a>` : ""}
+      </div>
+      <div class="recipe-info">
+        <h3>${recipe.title}</h3>
+        <p class="tags">${Array.isArray(recipe.tags) ? recipe.tags.join(", ") : recipe.tags || ""}</p>
+        <p class="category">${Array.isArray(recipe.category) ? recipe.category.join(", ") : recipe.category || ""}</p>
+      </div>
     `;
 
     recipesContainer.appendChild(card);
   });
 }
 
-// --- Cache recipes locally for search ---
-let cachedRecipes = [];
+// --- Search recipes ---
+searchInput.addEventListener("input", async () => {
+  const query = searchInput.value.toLowerCase();
 
-// --- Fetch recipes from Supabase ---
-async function fetchRecipes() {
-  recipesContainer.innerHTML = "<p>Loading recipes...</p>";
-
-  const { data: recipes, error } = await supabase
-    .from("recipe_db")
-    .select("*")
-    .order("created_at", { ascending: false });
-
+  const { data: recipes, error } = await supabase.from("recipe_db").select("*");
   if (error) {
-    console.error("Error fetching recipes:", error);
-    recipesContainer.innerHTML = "<p>Failed to load recipes.</p>";
+    console.error("❌ Error searching recipes:", error.message);
     return;
   }
 
-  cachedRecipes = recipes;
-  displayRecipes(recipes);
-}
-
-// --- Search filter ---
-searchInput.addEventListener("input", () => {
-  const query = searchInput.value.toLowerCase();
-
-  const filtered = cachedRecipes.filter((recipe) => {
+  const filtered = recipes.filter((recipe) => {
     const title = recipe.title?.toLowerCase() || "";
-    const tags = (recipe.tags || []).join(" ").toLowerCase();
-    const category = (recipe.category || []).join(" ").toLowerCase();
-    return (
-      title.includes(query) ||
-      tags.includes(query) ||
-      category.includes(query)
-    );
+    const tags = Array.isArray(recipe.tags) ? recipe.tags.join(" ").toLowerCase() : (recipe.tags || "").toLowerCase();
+    const category = Array.isArray(recipe.category) ? recipe.category.join(" ").toLowerCase() : (recipe.category || "").toLowerCase();
+
+    return title.includes(query) || tags.includes(query) || category.includes(query);
   });
 
   displayRecipes(filtered);
 });
 
-// --- Init ---
+// --- Initial load ---
 fetchRecipes();
