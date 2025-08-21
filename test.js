@@ -5,14 +5,12 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-
 const container = document.getElementById('recipes-container');
 const searchInput = document.getElementById('search-input');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
 let allRecipes = [];
 
-// Fetch recipes from Supabase
 async function fetchRecipes() {
   const { data, error } = await supabase
     .from('recipe_db')
@@ -29,10 +27,8 @@ async function fetchRecipes() {
   renderRecipes(allRecipes);
 }
 
-// Render recipes
 function renderRecipes(recipes) {
   container.innerHTML = '';
-
   if (!recipes || recipes.length === 0) {
     container.innerHTML = '<p>No recipes found.</p>';
     return;
@@ -55,30 +51,21 @@ function renderRecipes(recipes) {
     } else {
       const placeholder = document.createElement('div');
       placeholder.className = 'placeholder-graphic';
-
-      // Emoji based on recipe
       if (recipe.slug.toLowerCase().includes('momo')) placeholder.textContent = '🥟';
       else if (recipe.slug.toLowerCase().includes('curry')) placeholder.textContent = '🍛';
       else placeholder.textContent = '🍲';
-
       thumbWrapper.appendChild(placeholder);
     }
 
     const title = document.createElement('h3');
     title.textContent = recipe.title;
 
-    const desc = document.createElement('p');
-    desc.textContent = recipe.description || '';
-
     card.appendChild(thumbWrapper);
     card.appendChild(title);
-    card.appendChild(desc);
-
     container.appendChild(card);
   });
 }
 
-// Get YouTube thumbnail
 function getYoutubeThumbnail(url) {
   const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
   return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : '';
