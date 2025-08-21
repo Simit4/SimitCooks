@@ -31,18 +31,16 @@ function renderRecipes(recipes) {
     const card = document.createElement('div');
     card.className = 'recipe-card';
     card.dataset.hasVideo = hasVideo;
-    card.dataset.category = recipe.category;
-
-    card.addEventListener('click', () => {
-      window.location.href = `/recipe/${recipe.slug}`;
-    });
+    card.dataset.tags = recipe.tags?.join(',') || '';
+    card.addEventListener('click', () => window.location.href = `/recipe/${recipe.slug}`);
 
     card.innerHTML = `
       <div class="thumbnail-wrapper">
-        <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb" />
+        <img src="${thumb}" alt="${recipe.title}" />
       </div>
       <h3>${recipe.title}</h3>
     `;
+
     container.appendChild(card);
   });
 
@@ -52,45 +50,23 @@ function renderRecipes(recipes) {
 
 function getThumbnail(url) {
   const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  return match
-    ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`
-    : '';
+  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : '';
 }
 
+// Placeholder for recipes without video
 function getPlaceholder(slug) {
-  const emojiMap = {
-    momo: '🥟',
-    default: '🍲'
-  };
-  const emoji = emojiMap[slug.toLowerCase()] || emojiMap.default;
-
-  const canvas = document.createElement('canvas');
-  canvas.width = 500;
-  canvas.height = 300;
-  const ctx = canvas.getContext('2d');
-
-  const grad = ctx.createLinearGradient(0,0,canvas.width,canvas.height);
-  grad.addColorStop(0,'#ffe3b3');
-  grad.addColorStop(1,'#ffd27f');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  ctx.font = '180px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(emoji, canvas.width/2, canvas.height/2);
-
-  return canvas.toDataURL();
+  if (slug.toLowerCase() === 'momo') return '/assets/momo-placeholder.jpg';
+  return '/assets/default-placeholder.jpg';
 }
 
+// Filters
 function setupFilters() {
   const buttons = document.querySelectorAll('.filter-btn');
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
       buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      const filter = btn.dataset.filter;
-      filterRecipes(filter);
+      filterRecipes(btn.dataset.filter);
     });
   });
 }
@@ -99,20 +75,20 @@ function filterRecipes(filter) {
   const cards = document.querySelectorAll('.recipe-card');
   cards.forEach(card => {
     const hasVideo = card.dataset.hasVideo === 'true';
-    const category = card.dataset.category;
+    const tags = card.dataset.tags.split(',');
 
     if (filter === 'all') card.style.display = 'block';
     else if (filter === 'video') card.style.display = hasVideo ? 'block' : 'none';
-    else card.style.display = category === filter ? 'block' : 'none';
+    else card.style.display = tags.includes(filter) ? 'block' : 'none';
   });
 }
 
+// Search
 function setupSearch() {
-  const searchInput = document.getElementById('search-input');
-  searchInput.addEventListener('input', (e) => {
+  const input = document.getElementById('search-input');
+  input.addEventListener('input', e => {
     const term = e.target.value.toLowerCase();
-    const cards = document.querySelectorAll('.recipe-card');
-    cards.forEach(card => {
+    document.querySelectorAll('.recipe-card').forEach(card => {
       const title = card.querySelector('h3').textContent.toLowerCase();
       card.style.display = title.includes(term) ? 'block' : 'none';
     });
