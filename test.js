@@ -45,10 +45,11 @@ function renderRecipes(recipes) {
       const placeholder = document.createElement('div');
       placeholder.className = 'placeholder-graphic';
 
+      // Momo or general placeholder
       if (recipe.slug === 'momo') {
-        placeholder.style.backgroundImage = "url('assets/momo-placeholder.jpg')";
+        placeholder.textContent = '🥟';
       } else {
-        placeholder.style.backgroundImage = "url('assets/recipe-placeholder.jpg')";
+        placeholder.textContent = '🍲';
       }
 
       thumbWrapper.appendChild(placeholder);
@@ -74,7 +75,6 @@ function renderRecipes(recipes) {
   });
 }
 
-// Get YouTube thumbnail
 function getYoutubeThumbnail(url) {
   const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
   return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : '';
@@ -87,7 +87,6 @@ filterButtons.forEach(btn => {
     btn.classList.add('active');
 
     const filter = btn.dataset.filter;
-
     let filtered = [...allRecipes];
 
     if (filter === 'video') {
@@ -96,11 +95,8 @@ filterButtons.forEach(btn => {
       filtered = filtered.filter(r => r.tags?.includes(filter));
     }
 
-    // Search filter
     const term = searchInput.value.toLowerCase();
-    if (term) {
-      filtered = filtered.filter(r => r.title.toLowerCase().includes(term));
-    }
+    if (term) filtered = filtered.filter(r => r.title.toLowerCase().includes(term));
 
     renderRecipes(filtered);
   });
@@ -118,9 +114,7 @@ searchInput.addEventListener('input', () => {
     filtered = filtered.filter(r => r.tags?.includes(activeFilter));
   }
 
-  if (term) {
-    filtered = filtered.filter(r => r.title.toLowerCase().includes(term));
-  }
+  if (term) filtered = filtered.filter(r => r.title.toLowerCase().includes(term));
 
   renderRecipes(filtered);
 });
