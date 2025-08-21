@@ -5,43 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simi's Swaad Recipes</title>
   <link rel="stylesheet" href="test.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+  <header>
+    <h1>Simi's Swaad Recipes</h1>
+    <input type="text" id="search-input" placeholder="Search recipes...">
+  </header>
 
-<header class="main-header">
-  <div class="header-wrapper container">
-    <div class="logo">Simi's <span>Swaad</span></div>
-    <nav>
-      <ul class="nav-links">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Recipes</a></li>
-        <li><a href="#">Equipment</a></li>
-        <li><a href="#">About</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
+  <section class="filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="main">Main</button>
+    <button class="filter-btn" data-filter="snack">Snack</button>
+    <button class="filter-btn" data-filter="dessert">Dessert</button>
+    <button class="filter-btn" data-filter="video">Video Only</button>
+  </section>
 
-<section class="container">
-  <h1 class="section-title text-center">Our Recipes</h1>
+  <section id="recipes-container" class="recipes-grid">
+    <!-- Recipes injected by test.js -->
+  </section>
 
-  <!-- Search & Filters -->
-  <div class="filters-container text-center">
-    <input type="text" id="search-input" placeholder="Search recipes..." />
-    <div class="filters">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="main">Main</button>
-      <button class="filter-btn" data-filter="snack">Snack</button>
-      <button class="filter-btn" data-filter="dessert">Dessert</button>
-      <button class="filter-btn" data-filter="video">With Video</button>
-    </div>
-  </div>
-
-  <!-- Recipes Grid -->
-  <div id="recipes-container" class="recipes-grid"></div>
-</section>
-
-<script type="module" src="test.js"></script>
+  <script type="module" src="test.js"></script>
 </body>
 </html>
