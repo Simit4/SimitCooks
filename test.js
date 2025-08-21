@@ -67,13 +67,15 @@ function filterRecipes(category) {
   const cards = document.querySelectorAll('.recipe-card');
   cards.forEach(card => {
     const tags = card.dataset.tags.split(',');
-    const hasVideo = card.dataset.video && card.dataset.video.trim() !== '';
+    const videoUrl = card.dataset.video;
+    const hasVideo = videoUrl && videoUrl !== 'null' && videoUrl !== 'undefined' && videoUrl.trim() !== '';
 
     if (category === 'all') card.style.display = 'block';
     else if (category === 'video') card.style.display = hasVideo ? 'block' : 'none';
     else card.style.display = tags.includes(category) ? 'block' : 'none';
   });
 }
+
 
 function attachSearch() {
   const searchInput = document.getElementById('search-input');
