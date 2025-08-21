@@ -143,3 +143,17 @@ body {
 .view-btn:hover {
   background: var(--primary-dark);
 }
+
+
+.recipe-thumb.no-video {
+  background-color: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #888;
+  font-size: 2rem;
+}
+
+.recipe-thumb.no-video::after {
+  content: "\1F4F9"; /* 📹 emoji as placeholder */
+}
