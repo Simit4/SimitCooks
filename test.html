@@ -1,49 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Recipes | SimitSwaad</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recipes | Simit's Swaad</title>
 
   <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Open+Sans&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="test.css">
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Explore delicious Nepali and home-style recipes from Simit's Swaad — from curry to chowmein, and everything in between." />
+  <meta name="keywords" content="Nepali recipes, home cooking, vegetarian recipes, curry, chowmein, roti" />
+  <meta name="author" content="Simit's Swaad" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Recipes | Simit's Swaad" />
+  <meta property="og:description" content="Discover authentic and easy-to-make recipes from Simit's Swaad kitchen." />
+  <meta property="og:image" content="https://yourwebsite.com/recipes-thumbnail.jpg" />
+  <meta property="og:url" content="https://yourwebsite.com/recipes.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SL2G2MYTZX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-SL2G2MYTZX');
+</script>
 </head>
+
+
 <body>
 
-  <!-- Header -->
   <header class="main-header">
-    <div class="container header-wrapper">
-      <div class="logo">
-        <span class="logo-modern">SimitSwaad</span>
-      </div>
-      <nav class="navbar">
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="test.html" class="active">All Recipes</a></li>
-          <li><a href="equipment.html">Equipment</a></li>
-          <li><a href="about.html">About</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <div class="container header-wrapper">
+    <div class="logo" aria-label="Simit's Swaad">
+      <span class="logo-modern">Simit’s</span>
+      <span class="logo-traditional">Swaad</span>
+    </div> 
 
-  <!-- Main -->
-  <main class="container">
-    <section class="recipes-header">
-      <h2>All Recipes</h2>
-      <input type="text" id="search-input" placeholder="Search recipes 🔍">
-    </section>
+<nav class="navbar">
+  <ul class="nav-links">
+    <li><a href="index.html"><i class="fas fa-book"></i> Home</a></li>
+    <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
+    <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
+  </ul>
 
-    <section id="recipes-container" class="recipes-grid">
-      <!-- JS injects recipe cards here -->
-    </section>
-  </main>
+  <!-- Hamburger -->
+  <button class="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
 
-  <!-- JS -->
-  <script type="module" src="test.js"></script>
+  </div>
+</header>
+
+<main class="container">
+  <section class="recipes-header">
+  <h2 class="section-title">Authentic Nepali & Home-Style Recipes</h2>
+    <input type="text" id="search-input" placeholder="Search recipes 🔍" />
+  </section>
+
+  <section id="recipes-container" class="recipes-grid">
+    <!-- JS will inject recipe cards here -->
+  </section>
+</main>
+
+
+<script type="module" src="test.js"></script>
+<script type="module" src="footer.js"></script>
+<script type="module" src="mobile-menu.js"></script>
+
+
 </body>
 </html>
