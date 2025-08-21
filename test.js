@@ -5,6 +5,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
+
 async function fetchRecipes() {
   const { data, error } = await supabase
     .from('recipe_db')
@@ -25,12 +26,13 @@ function renderRecipes(recipes) {
 
   recipes.forEach(recipe => {
     const hasVideo = !!recipe.video_url;
-    const thumb = hasVideo ? getThumbnail(recipe.video_url) : getPlaceholder(recipe.category);
+    const thumb = hasVideo ? getThumbnail(recipe.video_url) : getPlaceholder(recipe.slug);
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
-    
-    // Make the entire card clickable
+    card.dataset.hasVideo = hasVideo;
+    card.dataset.category = recipe.category;
+
     card.addEventListener('click', () => {
       window.location.href = `/recipe/${recipe.slug}`;
     });
@@ -40,7 +42,6 @@ function renderRecipes(recipes) {
         <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb" />
       </div>
       <h3>${recipe.title}</h3>
-      <p>${recipe.description}</p>
     `;
     container.appendChild(card);
   });
@@ -56,30 +57,25 @@ function getThumbnail(url) {
     : '';
 }
 
-function getPlaceholder(category) {
-  // You can customize emoji per category
+function getPlaceholder(slug) {
   const emojiMap = {
-    main: '🍲',
-    snack: '🥟',
-    dessert: '🍰',
-    festival: '🪔'
+    momo: '🥟',
+    default: '🍲'
   };
-  // Create a data URL for emoji as image
-  const emoji = emojiMap[category] || '🍛';
+  const emoji = emojiMap[slug.toLowerCase()] || emojiMap.default;
+
   const canvas = document.createElement('canvas');
   canvas.width = 500;
   canvas.height = 300;
   const ctx = canvas.getContext('2d');
 
-  // Gradient background
   const grad = ctx.createLinearGradient(0,0,canvas.width,canvas.height);
-  grad.addColorStop(0,'#f5f0e6');
-  grad.addColorStop(1,'#e0d4c3');
+  grad.addColorStop(0,'#ffe3b3');
+  grad.addColorStop(1,'#ffd27f');
   ctx.fillStyle = grad;
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  // Emoji in center
-  ctx.font = '160px sans-serif';
+  ctx.font = '180px sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(emoji, canvas.width/2, canvas.height/2);
@@ -87,7 +83,6 @@ function getPlaceholder(category) {
   return canvas.toDataURL();
 }
 
-// Filter buttons
 function setupFilters() {
   const buttons = document.querySelectorAll('.filter-btn');
   buttons.forEach(btn => {
@@ -103,17 +98,15 @@ function setupFilters() {
 function filterRecipes(filter) {
   const cards = document.querySelectorAll('.recipe-card');
   cards.forEach(card => {
-    const title = card.querySelector('h3').textContent.toLowerCase();
-    const description = card.querySelector('p').textContent.toLowerCase();
-    const hasVideo = card.querySelector('img').src.includes('youtube') || !card.querySelector('img').src.includes('data:image');
+    const hasVideo = card.dataset.hasVideo === 'true';
+    const category = card.dataset.category;
 
-    if(filter === 'all') card.style.display = 'block';
-    else if(filter === 'video') card.style.display = hasVideo ? 'block' : 'none';
-    else card.style.display = (title.includes(filter) || description.includes(filter)) ? 'block' : 'none';
+    if (filter === 'all') card.style.display = 'block';
+    else if (filter === 'video') card.style.display = hasVideo ? 'block' : 'none';
+    else card.style.display = category === filter ? 'block' : 'none';
   });
 }
 
-// Search input
 function setupSearch() {
   const searchInput = document.getElementById('search-input');
   searchInput.addEventListener('input', (e) => {
@@ -121,8 +114,7 @@ function setupSearch() {
     const cards = document.querySelectorAll('.recipe-card');
     cards.forEach(card => {
       const title = card.querySelector('h3').textContent.toLowerCase();
-      const description = card.querySelector('p').textContent.toLowerCase();
-      card.style.display = (title.includes(term) || description.includes(term)) ? 'block' : 'none';
+      card.style.display = title.includes(term) ? 'block' : 'none';
     });
   });
 }
