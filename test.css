@@ -1,87 +1,98 @@
-/* ---------------- Global ---------------- */
 :root {
   --primary: #27ae60;
   --primary-dark: #1e8449;
-  --accent: #f4a261;
   --bg: #fdfcfb;
   --text: #2c3e50;
-  --card-bg: #fff;
-  --shadow: rgba(0,0,0,0.1);
-  --radius: 12px;
+  --muted: #555;
+  --border: #e0e0e0;
 }
 
-* { box-sizing: border-box; margin:0; padding:0; font-family: 'Segoe UI', sans-serif; }
-
-body { background: var(--bg); color: var(--text); line-height: 1.6; }
-
-header {
-  text-align: center;
-  padding: 2rem 1rem;
-  background: var(--primary);
-  color: #fff;
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg);
+  color: var(--text);
 }
 
-header input {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  border-radius: 25px;
-  border: none;
-  width: 80%;
-  max-width: 400px;
+.container {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: 1rem;
+}
+
+h1.section-title {
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+}
+
+.filters-container {
+  margin-bottom: 2rem;
+}
+
+#search-input {
+  padding: 0.6rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  width: 250px;
+  max-width: 100%;
+  margin-bottom: 10px;
 }
 
 .filters {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 1rem 0;
+  gap: 10px;
 }
 
 .filter-btn {
-  padding: 0.5rem 1rem;
-  border-radius: 25px;
-  border: none;
-  background: var(--accent);
-  color: #fff;
+  padding: 8px 16px;
+  border: 1px solid var(--primary);
+  background: #fff;
+  color: var(--primary);
+  border-radius: 6px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.2s;
 }
 
-.filter-btn.active, .filter-btn:hover {
-  background: var(--primary-dark);
+.filter-btn:hover,
+.filter-btn.active {
+  background: var(--primary);
+  color: #fff;
 }
 
-/* ---------------- Recipes Grid ---------------- */
 .recipes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(250px,1fr));
-  gap: 1.5rem;
-  padding: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
 }
 
 .recipe-card {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: 0 4px 12px var(--shadow);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
   overflow: hidden;
-  transition: transform 0.2s;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.recipe-card:hover { transform: translateY(-5px); }
+.recipe-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
 
-.recipe-image {
+.thumbnail-wrapper {
   position: relative;
   width: 100%;
-  padding-top: 56.25%; /* 16:9 */
+  aspect-ratio: 16/9;
   overflow: hidden;
 }
 
 .recipe-thumb {
-  position: absolute;
-  top:0; left:0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -89,34 +100,40 @@ header input {
 
 .play-icon {
   position: absolute;
-  top:50%;
-  left:50%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 3rem;
+  font-size: 36px;
   color: #fff;
-  text-shadow: 0 0 10px rgba(0,0,0,0.5);
-  pointer-events: none;
+  background: rgba(0,0,0,0.5);
+  border-radius: 50%;
+  padding: 10px;
 }
 
 .recipe-card h3 {
-  margin: 0.5rem 1rem;
+  margin: 12px 0 6px;
+  color: var(--primary-dark);
 }
 
 .recipe-card p {
-  margin: 0 1rem 1rem;
-  flex-grow: 1;
-  color: #555;
+  font-size: 0.95rem;
+  color: var(--muted);
+  margin: 0 12px 10px;
 }
 
 .view-btn {
-  margin: 0 1rem 1rem;
-  padding: 0.5rem;
-  text-align: center;
-  background: var(--primary);
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
   color: #fff;
-  border-radius: var(--radius);
+  background: var(--primary);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
   text-decoration: none;
-  transition: 0.2s;
+  margin-top: 0.8rem;
+  transition: background 0.3s;
 }
 
 .view-btn:hover {
@@ -124,7 +141,9 @@ header input {
 }
 
 /* Responsive */
-@media(max-width: 600px){
-  header input { width: 90%; }
-  .filters { gap: 0.3rem; }
+@media(max-width:768px){
+  .recipes-grid { gap: 15px; }
+  .recipe-card h3 { font-size: 1.1rem; }
+  .recipe-card p { font-size: 0.9rem; }
+  .view-btn { font-size: 0.9rem; }
 }
