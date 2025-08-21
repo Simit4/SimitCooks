@@ -3,38 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recipes</title>
+  <title>Simi’s Swaad Recipes</title>
   <link rel="stylesheet" href="test.css">
 </head>
 <body>
-  <header class="main-header">
-    <div class="container header-wrapper">
-      <h1 class="logo">Simi's Swaad</h1>
-      <nav>
-        <input type="text" id="search-input" placeholder="Search recipes...">
-      </nav>
-    </div>
+
+  <header>
+    <h1>Simi’s Swaad</h1>
   </header>
 
-<div class="filter-bar">
-  <div class="category-filters">
-    <button data-category="all" class="active">All</button>
-    <button data-category="main">Main</button>
-    <button data-category="snack">Snack</button>
-    <button data-category="dessert">Dessert</button>
-  </div>
-  <button id="video-filter">Video Only</button>
-</div>
-
-<input type="text" id="search-input" placeholder="Search recipes..." />
-
-<div id="recipes-container" class="recipe-grid"></div>
-
-
-
-  <section class="recipes-grid container" id="recipes-container">
-    <!-- Recipes will load here dynamically -->
+  <section class="filters">
+    <button class="filter-btn" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="main">Main</button>
+    <button class="filter-btn" data-filter="snack">Snack</button>
+    <button class="filter-btn" data-filter="dessert">Dessert</button>
+    <button class="filter-btn" data-filter="video">Video Only</button>
   </section>
+
+  <section id="recipes-container" class="recipes-container">
+    <!-- Recipes will be dynamically inserted here -->
+  </section>
+
+  <script type="module" src="test.js"></script>
 </body>
-    <script type="module" src="test.js" defer></script>
 </html>
