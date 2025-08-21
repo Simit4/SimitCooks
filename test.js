@@ -6,7 +6,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 async function fetchRecipes() {
-  const { data, error } = await supabase
+  const { data: recipes, error } = await supabase
     .from('recipe_db')
     .select('*')
     .order('created_at', { ascending: false });
@@ -16,7 +16,7 @@ async function fetchRecipes() {
     return;
   }
 
-  renderRecipes(data);
+  renderRecipes(recipes);
 }
 
 function renderRecipes(recipes) {
@@ -24,17 +24,19 @@ function renderRecipes(recipes) {
   container.innerHTML = '';
 
   recipes.forEach(recipe => {
+    // Only set thumbnail if recipe has a valid video URL
+    const thumb = recipe.video_url && recipe.video_url.trim() !== ''
+      ? getThumbnail(recipe.video_url)
+      : '';
+
     const card = document.createElement('div');
     card.className = 'recipe-card';
-    card.dataset.tags = recipe.tags?.join(',') || '';
+    card.dataset.tags = recipe.tags || '';
     card.dataset.video = recipe.video_url || '';
-
-    const thumb = recipe.video_url ? getThumbnail(recipe.video_url) : 'assets/default-thumbnail.jpg';
 
     card.innerHTML = `
       <div class="thumbnail-wrapper">
-        <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb">
-        ${recipe.video_url ? '<span class="play-icon">&#9658;</span>' : ''}
+        ${thumb ? `<img src="${thumb}" alt="${recipe.title}" class="recipe-thumb" />` : `<div class="no-thumb">No Video</div>`}
       </div>
       <h3>${recipe.title}</h3>
       <p>${recipe.description}</p>
@@ -42,26 +44,21 @@ function renderRecipes(recipes) {
     `;
     container.appendChild(card);
   });
-
-  attachFilters();
-  attachSearch();
 }
 
 function getThumbnail(url) {
   const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : 'assets/default-thumbnail.jpg';
+  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : '';
 }
 
-function attachFilters() {
-  const buttons = document.querySelectorAll('.filter-btn');
-  buttons.forEach(btn => {
-    btn.onclick = () => {
-      buttons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      filterRecipes(btn.dataset.filter);
-    };
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterRecipes(btn.dataset.filter);
   });
-}
+});
 
 function filterRecipes(category) {
   const cards = document.querySelectorAll('.recipe-card');
@@ -76,16 +73,14 @@ function filterRecipes(category) {
   });
 }
 
-
-function attachSearch() {
-  const searchInput = document.getElementById('search-input');
-  searchInput.oninput = e => {
-    const term = e.target.value.toLowerCase();
-    document.querySelectorAll('.recipe-card').forEach(card => {
-      const title = card.querySelector('h3')?.textContent.toLowerCase();
-      card.style.display = title.includes(term) ? 'block' : 'none';
-    });
-  };
-}
+// Search functionality
+document.getElementById('search-input')?.addEventListener('input', e => {
+  const term = e.target.value.toLowerCase();
+  const cards = document.querySelectorAll('.recipe-card');
+  cards.forEach(card => {
+    const title = card.querySelector('h3')?.textContent.toLowerCase();
+    card.style.display = title.includes(term) ? 'block' : 'none';
+  });
+});
 
 fetchRecipes();
