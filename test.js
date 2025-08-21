@@ -55,14 +55,20 @@ function displayRecipes(recipes) {
 // Filter recipes
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
+    filterButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
     const filter = btn.dataset.filter;
     let filtered = allRecipes;
 
     if (filter === 'video') filtered = allRecipes.filter(r => r.video);
     else if (filter === 'text') filtered = allRecipes.filter(r => !r.video);
-    else filtered = allRecipes.filter(r => r.tags?.includes(filter) || filter === 'all');
+    else if (filter !== 'all') filtered = allRecipes.filter(r => r.tags && r.tags.includes(filter));
 
     displayRecipes(filtered);
+  });
+});
+
   });
 });
 
