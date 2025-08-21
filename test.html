@@ -3,33 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recipe Gallery</title>
-  <link rel="stylesheet" href="test.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>Recipes</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header>
+    <h1>Delicious Recipes</h1>
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="video">Videos</button>
+      <button class="filter-btn" data-filter="main">Main</button>
+      <button class="filter-btn" data-filter="snack">Snack</button>
+      <button class="filter-btn" data-filter="dessert">Dessert</button>
+      <input type="text" id="search-input" placeholder="Search recipes...">
+    </div>
+  </header>
 
-  <h1 style="text-align:center; margin-bottom:30px;">Simi's Recipes</h1>
+  <main>
+    <div id="recipes-container" class="recipes-grid"></div>
+  </main>
 
-  <!-- Search Bar -->
-  <div style="text-align:center;">
-    <input type="text" id="search-input" placeholder="Search recipes...">
-  </div>
-
-  <!-- Filter Buttons -->
-  <div class="filters">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="video">Videos</button>
-    <button class="filter-btn" data-filter="main">Main</button>
-    <button class="filter-btn" data-filter="snack">Snack</button>
-    <button class="filter-btn" data-filter="dessert">Dessert</button>
-    <button class="filter-btn" data-filter="festival">Festival</button>
-  </div>
-
-  <!-- Recipe Grid -->
-  <div id="recipes-container"></div>
-
-  <!-- JS -->
-  <script type="module" src="test.js"></script>
+  <script type="module" src="recipes.js"></script>
 </body>
 </html>
