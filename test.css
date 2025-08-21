@@ -4,9 +4,9 @@
   --bg: #fdfdfd;
   --card-bg: #ffffff;
   --text: #2c3e50;
-  --shadow: rgba(0,0,0,0.1);
+  --shadow: rgba(0,0,0,0.12);
   --transition: 0.3s;
-  --border-radius: 15px;
+  --border-radius: 18px;
 }
 
 body {
@@ -19,17 +19,19 @@ body {
 .filter-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 15px;
   padding: 20px;
   justify-content: center;
+  align-items: center;
 }
 
 .category-filters button, #video-filter {
   border: none;
-  padding: 10px 20px;
+  padding: 12px 25px;
   border-radius: 50px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 1rem;
   transition: all var(--transition);
   background: var(--primary);
   color: #fff;
@@ -43,10 +45,10 @@ body {
 
 #search-input {
   display: block;
-  margin: 10px auto 20px auto;
+  margin: 15px auto 25px auto;
   width: 90%;
-  max-width: 400px;
-  padding: 12px 15px;
+  max-width: 450px;
+  padding: 14px 18px;
   border-radius: var(--border-radius);
   border: 1px solid #ccc;
   font-size: 1rem;
@@ -55,7 +57,7 @@ body {
 .recipe-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 25px;
+  gap: 28px;
   padding: 20px;
 }
 
@@ -63,7 +65,7 @@ body {
   background: var(--card-bg);
   border-radius: var(--border-radius);
   overflow: hidden;
-  box-shadow: 0 8px 20px var(--shadow);
+  box-shadow: 0 8px 22px var(--shadow);
   transition: transform var(--transition), box-shadow var(--transition);
   cursor: pointer;
   display: flex;
@@ -71,8 +73,8 @@ body {
 }
 
 .recipe-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 25px var(--shadow);
+  transform: translateY(-6px);
+  box-shadow: 0 14px 28px var(--shadow);
 }
 
 .thumbnail-wrapper {
@@ -95,30 +97,26 @@ body {
   transform: scale(1.05);
 }
 
-.play-icon, .no-video-label {
+.play-icon {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   font-size: 3rem;
   pointer-events: none;
-  text-shadow: 0 0 10px rgba(0,0,0,0.6);
+  text-shadow: 0 0 12px rgba(0,0,0,0.6);
   color: #fff;
 }
 
-.no-video-label {
-  font-size: 2rem;
-}
-
 .recipe-content {
-  padding: 15px;
+  padding: 18px;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
 .recipe-content h3 {
-  margin: 0 0 8px 0;
-  font-size: 1.2rem;
+  margin: 0 0 10px 0;
+  font-size: 1.3rem;
   color: var(--text);
 }
 
@@ -132,7 +130,7 @@ body {
   text-align: center;
   background: var(--primary);
   color: #fff;
-  padding: 10px;
+  padding: 12px;
   border-radius: var(--border-radius);
   text-decoration: none;
   font-weight: 600;
