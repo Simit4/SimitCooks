@@ -36,30 +36,26 @@
 
 <body>
 
-  <header class="main-header">
-  <div class="container header-wrapper">
-    <div class="logo" aria-label="Simit's Swaad">
-      <span class="logo-modern">Simit’s</span>
-      <span class="logo-traditional">Swaad</span>
-    </div> 
-
-<nav class="navbar">
-  <ul class="nav-links">
-    <li><a href="index.html"><i class="fas fa-book"></i> Home</a></li>
-    <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
-    <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
-  </ul>
-
-  <!-- Hamburger -->
-  <button class="hamburger">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-</nav>
-
+<section class="recipes-header">
+  <h2 class="section-title">Authentic Nepali & Home-Style Recipes</h2>
+  
+  <div class="filters">
+    <button class="filter-btn" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="video">Video</button>
+    <button class="filter-btn" data-filter="text">Text-Only</button>
+    <button class="filter-btn" data-filter="main">Main</button>
+    <button class="filter-btn" data-filter="snack">Snack</button>
+    <button class="filter-btn" data-filter="dessert">Dessert</button>
+    <button class="filter-btn" data-filter="festival">Festival</button>
   </div>
-</header>
+
+  <input type="text" id="search-input" placeholder="Search recipes 🔍" />
+</section>
+
+<section id="recipes-container" class="recipes-grid">
+  <!-- JS will inject recipe cards here -->
+</section>
+
 
 <main class="container">
   <section class="recipes-header">
