@@ -3,32 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simi’s Swaad - Recipes</title>
+  <title>Simi’s Swaad – Recipes</title>
   <link rel="stylesheet" href="test.css">
 </head>
 <body>
   <header>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/about.html">About</a>
-      <a href="/equipments.html">Equipments</a>
-      <a href="/recipes.html" class="active">Recipes</a>
-    </nav>
+    <h1>Simi’s Swaad 🍴</h1>
+    <div class="filters">
+      <button data-filter="all">All</button>
+      <button data-filter="main">Main</button>
+      <button data-filter="snack">Snack</button>
+      <button data-filter="dessert">Dessert</button>
+      <button data-filter="festival">Festival</button>
+      <button data-filter="video">🎥 Videos Only</button>
+    </div>
+    <input type="text" id="search-input" placeholder="🔍 Search recipes...">
   </header>
 
-  <main class="container">
-    <h1>Our Recipes</h1>
-
-    <div class="filters">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="main">Main</button>
-      <button class="filter-btn" data-filter="snack">Snack</button>
-      <button class="filter-btn" data-filter="dessert">Dessert</button>
-      <button class="filter-btn" data-filter="festival">Festival</button>
-      <button class="filter-btn" data-filter="video">Videos Only</button>
-    </div>
-
-    <div id="recipes-container" class="grid"></div>
+  <main>
+    <div id="recipes-container" class="recipes-grid"></div>
   </main>
 
   <script type="module" src="test.js"></script>
