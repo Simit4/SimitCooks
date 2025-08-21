@@ -5,6 +5,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
+const container = document.getElementById('recipes-container');
 let allRecipes = [];
 
 async function fetchRecipes() {
@@ -15,6 +16,7 @@ async function fetchRecipes() {
 
   if (error) {
     console.error('Error fetching recipes:', error);
+    container.innerHTML = `<p style="text-align:center;color:red;">Error loading recipes</p>`;
     return;
   }
 
@@ -23,21 +25,28 @@ async function fetchRecipes() {
 }
 
 function renderRecipes(recipes) {
-  const container = document.getElementById('recipes-container');
   container.innerHTML = '';
-
+  
   recipes.forEach(recipe => {
-    const thumb = recipe.video_url ? getThumbnail(recipe.video_url) : getGraphic(recipe.tags);
+    const hasVideo = recipe.video_url && recipe.video_url.trim() !== '';
+    const thumbHtml = hasVideo
+      ? `<img src="${getThumbnail(recipe.video_url)}" alt="${recipe.title}" class="recipe-thumb" />
+         <div class="play-icon">&#9658;</div>`
+      : `<div class="no-video">🥟</div>`; // emoji for no video
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
+    card.dataset.tags = recipe.tags ? recipe.tags.join(',') : '';
+
     card.innerHTML = `
       <div class="thumbnail-wrapper">
-        <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb" />
+        ${thumbHtml}
       </div>
-      <h3>${recipe.title}</h3>
-      <p>${recipe.description || ''}</p>
-      <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
+      <div class="recipe-content">
+        <h3>${recipe.title}</h3>
+        <p>${recipe.description}</p>
+        <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
+      </div>
     `;
     container.appendChild(card);
   });
@@ -47,40 +56,34 @@ function getThumbnail(url) {
   const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
   return match
     ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`
-    : null;
+    : 'assets/default-thumbnail.jpg';
 }
 
-function getGraphic(tags) {
-  tags = (tags || []).map(t => t.toLowerCase());
-  if (tags.includes('momo') || tags.includes('dumpling')) return "https://i.ibb.co/z5JhfyV/momo.png";
-  if (tags.includes('curry')) return "https://i.ibb.co/bBvhc3p/curry.png";
-  if (tags.includes('dessert')) return "https://i.ibb.co/sP3HLjC/dessert.png";
-  return "https://i.ibb.co/FxXW8gL/placeholder-food.png";
-}
-
-/* -------- Search -------- */
-document.getElementById('search-input')?.addEventListener('input', (e) => {
-  const term = e.target.value.toLowerCase();
-  const filtered = allRecipes.filter(r => r.title.toLowerCase().includes(term));
-  renderRecipes(filtered);
-});
-
-/* -------- Filters -------- */
-document.querySelectorAll('.filters button').forEach(btn => {
+// FILTER BUTTONS
+document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
     const filter = btn.dataset.filter;
 
     let filtered = allRecipes;
-    if (filter !== 'all') {
-      if (filter === 'video') {
-        filtered = allRecipes.filter(r => r.video_url);
-      } else {
-        filtered = allRecipes.filter(r => (r.tags || []).map(t => t.toLowerCase()).includes(filter));
-      }
+
+    if (filter === 'video') {
+      filtered = allRecipes.filter(r => r.video_url && r.video_url.trim() !== '');
+    } else if (filter !== 'all') {
+      filtered = allRecipes.filter(r => r.tags && r.tags.includes(filter));
     }
 
     renderRecipes(filtered);
   });
+});
+
+// SEARCH INPUT
+document.getElementById('search-input')?.addEventListener('input', (e) => {
+  const term = e.target.value.toLowerCase();
+  const filtered = allRecipes.filter(r => r.title.toLowerCase().includes(term));
+  renderRecipes(filtered);
 });
 
 fetchRecipes();
