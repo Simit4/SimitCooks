@@ -16,13 +16,20 @@
     </div>
   </header>
 
-  <section class="filters container">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="main">Main</button>
-    <button class="filter-btn" data-filter="snack">Snack</button>
-    <button class="filter-btn" data-filter="dessert">Dessert</button>
-    <button class="filter-btn" data-filter="video">Video Only</button>
-  </section>
+<div class="filter-bar">
+  <div class="category-filters">
+    <button data-category="all" class="active">All</button>
+    <button data-category="main">Main</button>
+    <button data-category="snack">Snack</button>
+    <button data-category="dessert">Dessert</button>
+  </div>
+  <button id="video-filter">Video Only</button>
+</div>
+
+<input type="text" id="search-input" placeholder="Search recipes..." />
+
+<div id="recipes-container" class="recipe-grid"></div>
+
 
   <section class="recipes-grid container" id="recipes-container">
     <!-- Recipes will load here dynamically -->
