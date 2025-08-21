@@ -28,8 +28,8 @@ function renderRecipes(recipes) {
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
-    card.dataset.category = recipe.category || 'all';
     card.dataset.hasVideo = recipe.video_url ? 'yes' : 'no';
+    card.dataset.tags = JSON.stringify(recipe.tags || []); // store tags as JSON string
 
     card.innerHTML = `
       <div class="thumbnail-wrapper">
@@ -46,7 +46,8 @@ function renderRecipes(recipes) {
 }
 
 function getThumbnail(url) {
-  const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  if (!url) return 'assets/default-thumbnail.jpg'; // default thumbnail
+  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
   return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : 'assets/default-thumbnail.jpg';
 }
 
@@ -59,7 +60,7 @@ document.getElementById('search-input')?.addEventListener('input', (e) => {
   });
 });
 
-// Filter buttons
+// Filter buttons by tag or video
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -67,12 +68,14 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 
     const filter = btn.dataset.filter;
     document.querySelectorAll('.recipe-card').forEach(card => {
+      const tags = JSON.parse(card.dataset.tags);
+
       if (filter === 'all') {
         card.style.display = 'flex';
       } else if (filter === 'video') {
         card.style.display = card.dataset.hasVideo === 'yes' ? 'flex' : 'none';
       } else {
-        card.style.display = card.dataset.category === filter ? 'flex' : 'none';
+        card.style.display = tags.includes(filter) ? 'flex' : 'none';
       }
     });
   });
