@@ -4,14 +4,8 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon/public key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const container = document.getElementById('recipes-container');
-const searchInput = document.getElementById('search-input');
-const filterButtons = document.querySelectorAll('.filters button');
+let allRecipes = [];
 
-let recipesData = [];
-let currentFilter = 'all';
-
-// Fetch recipes from Supabase
 async function fetchRecipes() {
   const { data, error } = await supabase
     .from('recipe_db')
@@ -23,31 +17,16 @@ async function fetchRecipes() {
     return;
   }
 
-  recipesData = data;
-  renderRecipes();
+  allRecipes = data || [];
+  renderRecipes(allRecipes);
 }
 
-// Render recipes
-function renderRecipes() {
+function renderRecipes(recipes) {
+  const container = document.getElementById('recipes-container');
   container.innerHTML = '';
 
-  let filtered = recipesData;
-
-  // Filter by category or video
-  if (currentFilter !== 'all') {
-    if (currentFilter === 'video') {
-      filtered = filtered.filter(r => r.video_url && r.video_url.trim() !== '');
-    } else {
-      filtered = filtered.filter(r => r.tags?.includes(currentFilter));
-    }
-  }
-
-  // Search filter
-  const term = searchInput.value.toLowerCase();
-  filtered = filtered.filter(r => r.title.toLowerCase().includes(term));
-
-  filtered.forEach(recipe => {
-    const thumb = getThumbnail(recipe.video_url, recipe.title);
+  recipes.forEach(recipe => {
+    const thumb = getThumbnail(recipe.video_url);
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
@@ -55,38 +34,51 @@ function renderRecipes() {
       <div class="thumbnail-wrapper">
         <img src="${thumb}" alt="${recipe.title}" />
       </div>
-      <div class="recipe-info">
-        <h3>${recipe.title}</h3>
-        <p>${recipe.description || ''}</p>
-        <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
-      </div>
+      <h3>${recipe.title}</h3>
+      <p>${recipe.description || ''}</p>
+      <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
     `;
     container.appendChild(card);
   });
 }
 
-// Get thumbnail
-function getThumbnail(url, title) {
-  if (url && url.trim() !== '') {
+function getThumbnail(url) {
+  if (url) {
     const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-    return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : 'assets/default-thumbnail.jpg';
+    if (match) {
+      return `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
+    }
   }
-  // Placeholder graphic (big emoji)
-  return `https://via.placeholder.com/400x240/27ae60/ffffff?text=🥟`;
+  // fallback graphic (make sure this exists in your assets folder)
+  return "assets/fallback.jpg";
 }
 
-// Search event
-searchInput.addEventListener('input', renderRecipes);
+/* ---------------- Search ---------------- */
+document.getElementById('search-input')?.addEventListener('input', (e) => {
+  const term = e.target.value.toLowerCase();
+  const filtered = allRecipes.filter(r =>
+    r.title.toLowerCase().includes(term)
+  );
+  renderRecipes(filtered);
+});
 
-// Filter buttons
-filterButtons.forEach(btn => {
+/* ---------------- Filter ---------------- */
+document.querySelectorAll('.filters button').forEach(btn => {
   btn.addEventListener('click', () => {
-    filterButtons.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentFilter = btn.dataset.filter;
-    renderRecipes();
+    const filter = btn.dataset.filter;
+
+    let filtered = allRecipes;
+
+    if (filter === 'video') {
+      filtered = allRecipes.filter(r => r.video_url && r.video_url.trim() !== "");
+    } else if (filter !== 'all') {
+      filtered = allRecipes.filter(r =>
+        r.tags && r.tags.toLowerCase().includes(filter)
+      );
+    }
+
+    renderRecipes(filtered);
   });
 });
 
-// Initial fetch
 fetchRecipes();
