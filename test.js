@@ -5,8 +5,12 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
+let recipesData = [];
+let activeCategory = 'all';
+let videoOnly = false;
+
 async function fetchRecipes() {
-  const { data: recipes, error } = await supabase
+  const { data, error } = await supabase
     .from('recipe_db')
     .select('*')
     .order('created_at', { ascending: false });
@@ -16,77 +20,72 @@ async function fetchRecipes() {
     return;
   }
 
-  renderRecipes(recipes);
+  recipesData = data || [];
+  renderRecipes();
 }
 
-function renderRecipes(recipes) {
+function renderRecipes() {
   const container = document.getElementById('recipes-container');
   container.innerHTML = '';
 
-  recipes.forEach(recipe => {
-    // Only set thumbnail if recipe has a valid video URL
-const thumb = recipe.video_url && recipe.video_url.trim() !== '' 
-  ? getThumbnail(recipe.video_url) 
-  : 'assets/no-video.png';
+  let filtered = recipesData;
 
-    
+  // Category filter
+  if (activeCategory !== 'all') {
+    filtered = filtered.filter(recipe => recipe.tags?.includes(activeCategory));
+  }
+
+  // Video filter
+  if (videoOnly) {
+    filtered = filtered.filter(recipe => recipe.video_url && recipe.video_url.trim() !== '');
+  }
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<p style="text-align:center;color:#888;">No recipes found.</p>`;
+    return;
+  }
+
+  filtered.forEach(recipe => {
+    const hasVideo = recipe.video_url && recipe.video_url.trim() !== '';
+    const thumb = hasVideo ? getThumbnail(recipe.video_url) : 'assets/no-video.png';
+
     const card = document.createElement('div');
     card.className = 'recipe-card';
-    card.dataset.tags = recipe.tags || '';
-    card.dataset.video = recipe.video_url || '';
-
     card.innerHTML = `
-  <div class="thumbnail-wrapper">
-    <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb ${hasVideo ? '' : 'no-video'}" />
-    ${hasVideo ? '<div class="play-icon">&#9658;</div>' : ''}
-  </div>
-  <h3>${recipe.title}</h3>
-  <p>${recipe.description}</p>
-  <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
-`;
-    
+      <div class="thumbnail-wrapper">
+        <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb ${hasVideo ? '' : 'no-video'}" />
+        ${hasVideo ? '<div class="play-icon">&#9658;</div>' : ''}
+      </div>
+      <h3>${recipe.title}</h3>
+      <p>${recipe.description}</p>
+      <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
+    `;
     container.appendChild(card);
   });
 }
 
+// Get YouTube thumbnail
 function getThumbnail(url) {
   const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : '';
+  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : 'assets/no-video.png';
 }
 
-// Filter buttons
+// Category buttons
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    filterRecipes(btn.dataset.filter);
+
+    activeCategory = btn.dataset.category;
+    videoOnly = btn.dataset.video === 'true';
+    renderRecipes();
   });
 });
 
-function filterRecipes(category) {
-  const cards = document.querySelectorAll('.recipe-card');
-  cards.forEach(card => {
-    const tags = card.dataset.tags.split(',');
-    const videoUrl = card.dataset.video;
-    // Only count as video if it's a non-empty string
-const hasVideo = recipe.video_url && recipe.video_url.trim() !== '';
-
-    if (category === 'all') {
-      card.style.display = 'block';
-    } else if (category === 'video') {
-      card.style.display = hasVideo ? 'block' : 'none';
-    } else {
-      card.style.display = tags.includes(category) ? 'block' : 'none';
-    }
-  });
-}
-
-
-// Search functionality
-document.getElementById('search-input')?.addEventListener('input', e => {
+// Search
+document.getElementById('search-input')?.addEventListener('input', (e) => {
   const term = e.target.value.toLowerCase();
-  const cards = document.querySelectorAll('.recipe-card');
-  cards.forEach(card => {
+  document.querySelectorAll('.recipe-card').forEach(card => {
     const title = card.querySelector('h3')?.textContent.toLowerCase();
     card.style.display = title.includes(term) ? 'block' : 'none';
   });
