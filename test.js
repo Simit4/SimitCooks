@@ -47,14 +47,14 @@ function renderRecipes() {
     const hasVideo = recipe.video_url && recipe.video_url.trim() !== '';
     const thumb = hasVideo
       ? getThumbnail(recipe.video_url)
-      : 'assets/momo.png'; // emoji or graphic
+      : 'assets/momo-graphic.png'; // High-quality image or emoji graphic
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
     card.innerHTML = `
       <div class="thumbnail-wrapper">
-        <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb ${hasVideo ? '' : 'no-video'}" />
-        ${hasVideo ? '<div class="play-icon">&#9658;</div>' : '<div class="no-video-label">🥟</div>'}
+        <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb" />
+        ${hasVideo ? '<div class="play-icon">&#9658;</div>' : ''}
       </div>
       <div class="recipe-content">
         <h3>${recipe.title}</h3>
