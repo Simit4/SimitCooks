@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recipes</title>
-  <link rel="stylesheet" href="test.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delicious Recipes</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Delicious Recipes</h1>
-    <div class="filters">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="video">Videos</button>
-      <button class="filter-btn" data-filter="main">Main</button>
-      <button class="filter-btn" data-filter="snack">Snack</button>
-      <button class="filter-btn" data-filter="dessert">Dessert</button>
-      <input type="text" id="search-input" placeholder="Search recipes...">
-    </div>
-  </header>
+<header>
+  <h1>Delicious Recipes</h1>
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="video">Video Only</button>
+    <button class="filter-btn" data-filter="main">Main</button>
+    <button class="filter-btn" data-filter="snack">Snack</button>
+    <button class="filter-btn" data-filter="dessert">Dessert</button>
+    <input type="text" id="search-input" placeholder="Search recipes...">
+  </div>
+</header>
 
-  <main>
-    <div id="recipes-container" class="recipes-grid"></div>
-  </main>
+<main>
+  <div id="recipes-container" class="recipes-grid"></div>
+</main>
 
-  <script type="module" src="test.js"></script>
+<script type="module" src="recipes.js"></script>
 </body>
 </html>
