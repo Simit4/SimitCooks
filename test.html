@@ -3,29 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recipes</title>
+  <title>Simi's Swaad Recipes</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <header>
-    <h1>Delicious Recipes</h1>
+    <h1>Simi's Swaad 🍴</h1>
+    <input type="text" id="search-input" placeholder="Search recipes..." />
   </header>
 
   <section class="filters">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="video">Video</button>
-    <button class="filter-btn" data-filter="text">Text Only</button>
-    <button class="filter-btn" data-filter="main">Main</button>
-    <button class="filter-btn" data-filter="snack">Snack</button>
-    <button class="filter-btn" data-filter="dessert">Dessert</button>
-    <button class="filter-btn" data-filter="festival">Festival</button>
+    <button data-filter="all" class="active">All</button>
+    <button data-filter="main">Main</button>
+    <button data-filter="snack">Snack</button>
+    <button data-filter="dessert">Dessert</button>
+    <button data-filter="video">Video Only</button>
   </section>
 
-  <section id="recipeGrid" class="recipe-grid">
-    <!-- Recipes dynamically inserted here -->
+  <section id="recipes-container" class="recipes-grid">
+    <!-- Recipes will be rendered here -->
   </section>
 
-  <script type="module" src="test.js"></script>
+  <script type="module" src="recipes.js"></script>
 </body>
 </html>
