@@ -5,9 +5,8 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-let recipesData = [];
-let activeCategory = 'all';
-let videoOnly = false;
+const container = document.getElementById('recipes-container');
+let allRecipes = [];
 
 async function fetchRecipes() {
   const { data, error } = await supabase
@@ -17,44 +16,31 @@ async function fetchRecipes() {
 
   if (error) {
     console.error('Error fetching recipes:', error);
+    container.innerHTML = `<p style="text-align:center;color:red;">Error loading recipes</p>`;
     return;
   }
 
-  recipesData = data;
-  renderRecipes();
+  allRecipes = data;
+  renderRecipes(allRecipes);
 }
 
-function renderRecipes() {
-  const container = document.getElementById('recipes-container');
+function renderRecipes(recipes) {
   container.innerHTML = '';
-
-  let filtered = recipesData;
-
-  if (activeCategory !== 'all') {
-    filtered = filtered.filter(r => r.tags?.includes(activeCategory));
-  }
-
-  if (videoOnly) {
-    filtered = filtered.filter(r => r.video_url && r.video_url.trim() !== '');
-  }
-
-  if (!filtered.length) {
-    container.innerHTML = `<p style="text-align:center;color:#888;">No recipes found.</p>`;
-    return;
-  }
-
-  filtered.forEach(recipe => {
+  
+  recipes.forEach(recipe => {
     const hasVideo = recipe.video_url && recipe.video_url.trim() !== '';
-    const thumb = hasVideo
-      ? getThumbnail(recipe.video_url)
-      : 'assets/momo-graphic.png'; // High-quality image or emoji graphic
+    const thumbHtml = hasVideo
+      ? `<img src="${getThumbnail(recipe.video_url)}" alt="${recipe.title}" class="recipe-thumb" />
+         <div class="play-icon">&#9658;</div>`
+      : `<div class="no-video">🥟</div>`; // emoji for no video
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
+    card.dataset.tags = recipe.tags ? recipe.tags.join(',') : '';
+
     card.innerHTML = `
       <div class="thumbnail-wrapper">
-        <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb" />
-        ${hasVideo ? '<div class="play-icon">&#9658;</div>' : ''}
+        ${thumbHtml}
       </div>
       <div class="recipe-content">
         <h3>${recipe.title}</h3>
@@ -73,28 +59,31 @@ function getThumbnail(url) {
     : 'assets/default-thumbnail.jpg';
 }
 
-// Category filter
-document.querySelectorAll('.category-filters button').forEach(btn => {
+// FILTER BUTTONS
+document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    activeCategory = btn.dataset.category;
-    document.querySelectorAll('.category-filters button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    renderRecipes();
+
+    const filter = btn.dataset.filter;
+
+    let filtered = allRecipes;
+
+    if (filter === 'video') {
+      filtered = allRecipes.filter(r => r.video_url && r.video_url.trim() !== '');
+    } else if (filter !== 'all') {
+      filtered = allRecipes.filter(r => r.tags && r.tags.includes(filter));
+    }
+
+    renderRecipes(filtered);
   });
 });
 
-// Video filter
-document.getElementById('video-filter').addEventListener('click', () => {
-  videoOnly = !videoOnly;
-  document.getElementById('video-filter').classList.toggle('active', videoOnly);
-  renderRecipes();
-});
-
-// Search
-document.getElementById('search-input').addEventListener('input', e => {
+// SEARCH INPUT
+document.getElementById('search-input')?.addEventListener('input', (e) => {
   const term = e.target.value.toLowerCase();
-  recipesData.forEach(r => r.visible = r.title.toLowerCase().includes(term));
-  renderRecipes();
+  const filtered = allRecipes.filter(r => r.title.toLowerCase().includes(term));
+  renderRecipes(filtered);
 });
 
 fetchRecipes();
