@@ -1,142 +1,143 @@
 :root {
-  --primary: #ff6b6b;
+  --primary: #27ae60;
+  --primary-dark: #1e8449;
   --accent: #f4a261;
-  --bg: #fdfdfd;
-  --card-bg: #ffffff;
+  --bg: #fdfcfb;
+  --section-bg: #f2e8dc;
   --text: #2c3e50;
-  --shadow: rgba(0,0,0,0.12);
-  --transition: 0.3s;
-  --border-radius: 18px;
+  --light: #ffffff;
+  --muted: #7f8c8d;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
 }
 
 body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
   background: var(--bg);
   color: var(--text);
 }
 
-.filter-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  padding: 20px;
-  justify-content: center;
-  align-items: center;
-}
-
-.category-filters button, #video-filter {
-  border: none;
-  padding: 12px 25px;
-  border-radius: 50px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: all var(--transition);
+header {
+  text-align: center;
+  padding: 2rem;
   background: var(--primary);
-  color: #fff;
+  color: var(--light);
 }
 
-.category-filters button.active, #video-filter.active,
-.category-filters button:hover, #video-filter:hover {
-  background: var(--accent);
-  color: #fff;
+header h1 {
+  font-size: 2.5rem;
 }
 
-#search-input {
-  display: block;
-  margin: 15px auto 25px auto;
-  width: 90%;
-  max-width: 450px;
-  padding: 14px 18px;
-  border-radius: var(--border-radius);
-  border: 1px solid #ccc;
-  font-size: 1rem;
+.filters {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.5rem 0;
 }
 
-.recipe-grid {
+.filter-btn {
+  background: var(--primary);
+  color: var(--light);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+  background: var(--primary-dark);
+}
+
+.recipes-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 28px;
-  padding: 20px;
+  gap: 1.5rem;
+  padding: 1rem 2rem 3rem;
 }
 
 .recipe-card {
-  background: var(--card-bg);
-  border-radius: var(--border-radius);
+  background: var(--light);
+  border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 0 8px 22px var(--shadow);
-  transition: transform var(--transition), box-shadow var(--transition);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
 }
 
 .recipe-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 28px var(--shadow);
+  transform: translateY(-5px);
 }
 
 .thumbnail-wrapper {
   position: relative;
   width: 100%;
-  padding-top: 56.25%;
+  padding-top: 56.25%; /* 16:9 ratio */
   overflow: hidden;
-  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 5rem; /* emoji size */
+  background: #f8f4f0;
 }
 
 .recipe-thumb {
   position: absolute;
   top: 0; left: 0;
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  transition: transform var(--transition);
 }
 
-.recipe-card:hover .recipe-thumb {
-  transform: scale(1.05);
-}
-
-.play-icon {
+.thumbnail-wrapper .play-icon {
   position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
   font-size: 3rem;
-  pointer-events: none;
-  text-shadow: 0 0 12px rgba(0,0,0,0.6);
-  color: #fff;
+  color: rgba(255,255,255,0.9);
+}
+
+.thumbnail-wrapper .no-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .recipe-content {
-  padding: 18px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  padding: 1rem;
 }
 
 .recipe-content h3 {
-  margin: 0 0 10px 0;
-  font-size: 1.3rem;
-  color: var(--text);
+  margin-bottom: 0.5rem;
 }
 
 .recipe-content p {
-  margin: 0 0 15px 0;
-  color: #555;
-  flex-grow: 1;
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-bottom: 0.8rem;
 }
 
 .view-btn {
-  text-align: center;
-  background: var(--primary);
-  color: #fff;
-  padding: 12px;
-  border-radius: var(--border-radius);
+  display: inline-block;
+  background: var(--accent);
+  color: var(--light);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
   text-decoration: none;
-  font-weight: 600;
-  transition: background var(--transition);
+  font-weight: bold;
+  transition: 0.3s;
 }
 
 .view-btn:hover {
-  background: var(--accent);
+  background: #e59443;
+}
+
+@media (max-width: 500px) {
+  .thumbnail-wrapper {
+    font-size: 4rem;
+  }
 }
