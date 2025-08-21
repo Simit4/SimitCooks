@@ -25,23 +25,26 @@ function renderRecipes(recipes) {
 
   recipes.forEach(recipe => {
     // Only set thumbnail if recipe has a valid video URL
-    const thumb = recipe.video_url && recipe.video_url.trim() !== ''
-      ? getThumbnail(recipe.video_url)
-      : '';
+const thumb = recipe.video_url && recipe.video_url.trim() !== '' 
+  ? getThumbnail(recipe.video_url) 
+  : 'assets/no-video.png';
 
+    
     const card = document.createElement('div');
     card.className = 'recipe-card';
     card.dataset.tags = recipe.tags || '';
     card.dataset.video = recipe.video_url || '';
 
     card.innerHTML = `
-      <div class="thumbnail-wrapper">
-        ${thumb ? `<img src="${thumb}" alt="${recipe.title}" class="recipe-thumb" />` : `<div class="no-thumb">No Video</div>`}
-      </div>
-      <h3>${recipe.title}</h3>
-      <p>${recipe.description}</p>
-      <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
-    `;
+  <div class="thumbnail-wrapper">
+    <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb ${hasVideo ? '' : 'no-video'}" />
+    ${hasVideo ? '<div class="play-icon">&#9658;</div>' : ''}
+  </div>
+  <h3>${recipe.title}</h3>
+  <p>${recipe.description}</p>
+  <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
+`;
+    
     container.appendChild(card);
   });
 }
@@ -66,7 +69,7 @@ function filterRecipes(category) {
     const tags = card.dataset.tags.split(',');
     const videoUrl = card.dataset.video;
     // Only count as video if it's a non-empty string
-    const hasVideo = videoUrl && videoUrl.trim() !== '' && videoUrl.toLowerCase() !== 'null' && videoUrl.toLowerCase() !== 'undefined';
+const hasVideo = recipe.video_url && recipe.video_url.trim() !== '';
 
     if (category === 'all') {
       card.style.display = 'block';
