@@ -1,9 +1,7 @@
 :root {
   --primary: #27ae60;
-  --primary-dark: #1e8449;
   --accent: #f4a261;
   --bg: #fdfcfb;
-  --section-bg: #f2f2f2;
   --text: #2c3e50;
 }
 
@@ -17,33 +15,39 @@ header {
 
 header h1 { font-size: 2rem; margin-bottom: 10px; }
 
-.filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top:10px; }
+.filters {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top:10px;
+}
 
 .filter-btn {
-  background: #fff; color: var(--primary); border: none; padding: 10px 15px; border-radius: 5px;
+  background: #fff; color: var(--primary); border: none; padding: 10px 15px; border-radius: 25px;
   cursor: pointer; transition: all 0.2s ease;
 }
 
 .filter-btn.active,
 .filter-btn:hover { background: var(--accent); color: #fff; }
 
-#search-input { padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 200px; }
+#search-input { padding: 10px; border-radius: 25px; border: 1px solid #ccc; width: 200px; }
 
 .recipes-grid {
-  display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: 20px; padding: 20px;
+  display: grid; grid-template-columns: repeat(auto-fill,minmax(250px,1fr)); gap: 25px; padding: 25px;
 }
 
 .recipe-card {
-  background: #fff; border-radius: 15px; overflow: hidden; cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s; text-align: center;
+  background: #fff; border-radius: 20px; overflow: hidden; cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s; text-align: center;
 }
 
-.recipe-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+.recipe-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
 
-.thumbnail-wrapper { position: relative; width: 100%; height: 180px; overflow: hidden; }
+.thumbnail-wrapper {
+  position: relative; width: 100%; height: 200px; overflow: hidden; border-radius: 20px 20px 0 0;
+}
 
 .thumbnail-wrapper img {
   width: 100%; height: 100%; object-fit: cover; display: block;
 }
 
-.recipe-card h3 { padding: 10px; font-size: 1.1rem; }
+.recipe-card h3 {
+  padding: 15px; font-size: 1.2rem; background: #fff;
+}
