@@ -6,8 +6,13 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 const container = document.getElementById('recipes-container');
-let allRecipes = [];
+const searchInput = document.getElementById('search-input');
+const filterButtons = document.querySelectorAll('.filters button');
 
+let recipesData = [];
+let currentFilter = 'all';
+
+// Fetch recipes from Supabase
 async function fetchRecipes() {
   const { data, error } = await supabase
     .from('recipe_db')
@@ -16,74 +21,83 @@ async function fetchRecipes() {
 
   if (error) {
     console.error('Error fetching recipes:', error);
-    container.innerHTML = `<p style="text-align:center;color:red;">Error loading recipes</p>`;
     return;
   }
 
-  allRecipes = data;
-  renderRecipes(allRecipes);
+  recipesData = data;
+  renderRecipes();
 }
 
-function renderRecipes(recipes) {
+// Render recipes
+function renderRecipes() {
   container.innerHTML = '';
-  
-  recipes.forEach(recipe => {
-    const hasVideo = recipe.video_url && recipe.video_url.trim() !== '';
-    const thumbHtml = hasVideo
-      ? `<img src="${getThumbnail(recipe.video_url)}" alt="${recipe.title}" class="recipe-thumb" />
-         <div class="play-icon">&#9658;</div>`
-      : `<div class="no-video">🥟</div>`; // emoji for no video
 
+  let filtered = recipesData;
+
+  // Apply filter
+  if (currentFilter !== 'all') {
+    if (currentFilter === 'video') {
+      filtered = filtered.filter(r => r.video_url && r.video_url.trim() !== '');
+    } else {
+      filtered = filtered.filter(r => r.tags?.includes(currentFilter));
+    }
+  }
+
+  // Apply search
+  const term = searchInput.value.toLowerCase();
+  filtered = filtered.filter(r => r.title.toLowerCase().includes(term));
+
+  filtered.forEach(recipe => {
     const card = document.createElement('div');
     card.className = 'recipe-card';
-    card.dataset.tags = recipe.tags ? recipe.tags.join(',') : '';
 
-    card.innerHTML = `
-      <div class="thumbnail-wrapper">
-        ${thumbHtml}
-      </div>
-      <div class="recipe-content">
-        <h3>${recipe.title}</h3>
-        <p>${recipe.description}</p>
-        <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
-      </div>
+    const thumbWrapper = document.createElement('div');
+    thumbWrapper.className = 'thumbnail-wrapper';
+
+    if (recipe.video_url && recipe.video_url.trim() !== '') {
+      const img = document.createElement('img');
+      img.src = getYoutubeThumbnail(recipe.video_url);
+      img.alt = recipe.title;
+      thumbWrapper.appendChild(img);
+    } else {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'placeholder-graphic';
+      placeholder.textContent = '🥟';
+      thumbWrapper.appendChild(placeholder);
+    }
+
+    const info = document.createElement('div');
+    info.className = 'recipe-info';
+    info.innerHTML = `
+      <h3>${recipe.title}</h3>
+      <p>${recipe.description || ''}</p>
+      <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
     `;
+
+    card.appendChild(thumbWrapper);
+    card.appendChild(info);
     container.appendChild(card);
   });
 }
 
-function getThumbnail(url) {
-  const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  return match
-    ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`
-    : 'assets/default-thumbnail.jpg';
+// Get YouTube thumbnail
+function getYoutubeThumbnail(url) {
+  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : '';
 }
 
-// FILTER BUTTONS
-document.querySelectorAll('.filter-btn').forEach(btn => {
+// Search event
+searchInput.addEventListener('input', renderRecipes);
+
+// Filter buttons
+filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    filterButtons.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-
-    const filter = btn.dataset.filter;
-
-    let filtered = allRecipes;
-
-    if (filter === 'video') {
-      filtered = allRecipes.filter(r => r.video_url && r.video_url.trim() !== '');
-    } else if (filter !== 'all') {
-      filtered = allRecipes.filter(r => r.tags && r.tags.includes(filter));
-    }
-
-    renderRecipes(filtered);
+    currentFilter = btn.dataset.filter;
+    renderRecipes();
   });
 });
 
-// SEARCH INPUT
-document.getElementById('search-input')?.addEventListener('input', (e) => {
-  const term = e.target.value.toLowerCase();
-  const filtered = allRecipes.filter(r => r.title.toLowerCase().includes(term));
-  renderRecipes(filtered);
-});
-
+// Initial fetch
 fetchRecipes();
