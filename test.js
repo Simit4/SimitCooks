@@ -18,28 +18,29 @@ async function fetchRecipes() {
     console.error('Error fetching recipes:', error);
     return;
   }
-
   allRecipes = data;
   renderRecipes(allRecipes);
 }
 
-// Render
+// Render cards
 function renderRecipes(recipes) {
   const container = document.getElementById('recipes-container');
   container.innerHTML = '';
 
   recipes.forEach(recipe => {
-    const thumb = getThumbnail(recipe.video_url);
+    const hasVideo = recipe.video_url && recipe.video_url.trim() !== "";
+    const thumb = hasVideo ? getThumbnail(recipe.video_url) : "assets/momo-graphic.png"; // high-quality placeholder
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
+    card.setAttribute('data-tags', recipe.tags || '');
+    card.setAttribute('data-video', hasVideo);
+
     card.innerHTML = `
       <div class="thumbnail-wrapper">
-        ${thumb 
-          ? `<img src="${thumb}" alt="${recipe.title}" class="recipe-thumb" />`
-          : `<div class="no-video"></div>`}
+        <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb"/>
       </div>
-      <div class="recipe-content">
+      <div class="recipe-info">
         <h3>${recipe.title}</h3>
         <p>${recipe.description || ''}</p>
         <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
@@ -51,28 +52,37 @@ function renderRecipes(recipes) {
 
 // Get YouTube thumbnail
 function getThumbnail(url) {
-  if (!url) return null;
-  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
+  const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  return match
+    ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`
+    : "assets/momo-graphic.png"; // fallback
 }
 
 // Filters
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
     const filter = btn.dataset.filter;
 
-    if (filter === 'all') {
-      renderRecipes(allRecipes);
-    } else if (filter === 'video') {
-      renderRecipes(allRecipes.filter(r => r.video_url));
-    } else {
-      renderRecipes(allRecipes.filter(r => r.tags?.includes(filter)));
+    let filtered = [...allRecipes];
+
+    if (filter === 'video') {
+      filtered = filtered.filter(r => r.video_url && r.video_url.trim() !== "");
+    } else if (filter !== 'all') {
+      filtered = filtered.filter(r => (r.tags || "").toLowerCase().includes(filter));
     }
+
+    renderRecipes(filtered);
+
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
   });
 });
 
-// Init
+// Search
+document.getElementById('search-input')?.addEventListener('input', (e) => {
+  const term = e.target.value.toLowerCase();
+  const filtered = allRecipes.filter(r => r.title.toLowerCase().includes(term));
+  renderRecipes(filtered);
+});
+
 fetchRecipes();
