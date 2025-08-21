@@ -5,7 +5,11 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-// Fetch Recipes
+const recipeGrid = document.getElementById("recipeGrid");
+const filterButtons = document.querySelectorAll(".filter-btn");
+
+let recipes = [];
+
 async function fetchRecipes() {
   const { data, error } = await supabase
     .from('recipe_db')
@@ -13,70 +17,65 @@ async function fetchRecipes() {
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Error fetching recipes:', error);
+    console.error("Error fetching recipes:", error);
+    recipeGrid.innerHTML = "<p style='text-align:center;color:red'>Failed to fetch recipes.</p>";
     return;
   }
 
-  renderRecipes(data);
+  recipes = data;
+  renderRecipes("all");
 }
 
-function renderRecipes(recipes) {
-  const container = document.getElementById('recipes-container');
-  container.innerHTML = '';
+// Render function
+function renderRecipes(filter = "all") {
+  recipeGrid.innerHTML = "";
 
   recipes.forEach(recipe => {
-    const thumb = getThumbnail(recipe.video_url);
+    const hasVideo = recipe.video_url && recipe.video_url.trim() !== "";
+    const recipeTags = recipe.tags || [];
 
-    const card = document.createElement('div');
-    card.className = 'recipe-card';
-    card.dataset.tags = recipe.tags ? recipe.tags.toLowerCase() : '';
-    card.dataset.hasvideo = recipe.video_url ? "true" : "false";
+    const matchesFilter =
+      filter === "all" ||
+      (filter === "video" && hasVideo) ||
+      (filter === "text" && !hasVideo) ||
+      recipeTags.includes(filter);
 
-    card.innerHTML = `
-      <div class="thumbnail-wrapper">
-        ${
-          recipe.video_url
-            ? `<img src="${thumb}" alt="${recipe.title}" class="recipe-thumb" />`
-            : `<span class="emoji-thumb">🥟</span>` /* Big emoji if no video */
-        }
-      </div>
-      <h3>${recipe.title}</h3>
-      <p>${recipe.description}</p>
-      <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
-    `;
-    container.appendChild(card);
+    if (!matchesFilter) return;
+
+    const card = document.createElement("div");
+    card.className = "recipe-card";
+
+    const thumb = document.createElement("div");
+    thumb.className = "recipe-thumb";
+
+    if (hasVideo && recipe.video_url) {
+      const videoIdMatch = recipe.video_url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+      const thumbnailUrl = videoIdMatch
+        ? `https://img.youtube.com/vi/${videoIdMatch[1]}/hqdefault.jpg`
+        : "assets/default-thumbnail.jpg";
+
+      thumb.style.backgroundImage = `url(${thumbnailUrl})`;
+      thumb.classList.add("has-video");
+    } else {
+      thumb.innerHTML = `<span class="placeholder-emoji">🥟</span>`;
+      thumb.style.background = "linear-gradient(135deg, #fef9f4, #f0eae0)";
+    }
+
+    const title = document.createElement("h3");
+    title.textContent = recipe.title;
+
+    card.appendChild(thumb);
+    card.appendChild(title);
+    recipeGrid.appendChild(card);
   });
 }
 
-// YouTube thumbnail generator
-function getThumbnail(url) {
-  const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  return match
-    ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`
-    : null;
-}
-
-// Filters
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    const filter = btn.dataset.filter;
-    const cards = document.querySelectorAll('.recipe-card');
-
-    cards.forEach(card => {
-      const tags = card.dataset.tags;
-      const hasVideo = card.dataset.hasvideo === "true";
-
-      if (filter === "all") {
-        card.style.display = "block";
-      } else if (filter === "video") {
-        card.style.display = hasVideo ? "block" : "none";
-      } else {
-        card.style.display = tags.includes(filter) ? "block" : "none";
-      }
-    });
+// Filter button events
+filterButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    filterButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderRecipes(btn.dataset.filter);
   });
 });
 
