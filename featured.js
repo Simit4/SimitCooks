@@ -25,21 +25,24 @@ function renderFeaturedRecipes(recipes) {
   container.innerHTML = '';
 
   recipes.forEach(recipe => {
-    const thumb = getThumbnail(recipe.video_url);
+    const thumb = recipe.thumbnail_url || getThumbnail(recipe.video_url) || 'https://i.ibb.co/4p4mR3N/momo-graphic.png';
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
+    card.onclick = () => window.location.href = `/recipe/${recipe.slug}`;
     card.innerHTML = `
       <div class="thumbnail-wrapper">
         <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb" />
       </div>
-      <h3>${recipe.title}</h3>
-      <p>${recipe.description}</p>
-      <a href="/recipe/${recipe.slug}" class="view-btn">View Recipe</a>
+      <div class="card-body">
+        <h3>${recipe.title}</h3>
+        <p>${recipe.description || ''}</p>
+      </div>
     `;
     container.appendChild(card);
   });
 }
+
 
 function getThumbnail(url) {
   const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
