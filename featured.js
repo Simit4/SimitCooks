@@ -30,7 +30,6 @@ function renderFeaturedRecipes(recipes) {
     card.innerHTML = `
       <div class="thumbnail-wrapper">
         <img src="${thumb}" alt="${recipe.title}" />
-
       </div>
       <div class="card-body">
         <h3>${recipe.title}</h3>
