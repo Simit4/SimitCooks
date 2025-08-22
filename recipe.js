@@ -14,14 +14,16 @@ function convertToEmbedUrl(url) {
   return match ? `https://www.youtube.com/embed/${match[1]}` : '';
 }
 
+// Fetch recipe data and render
 async function fetchAndRenderRecipe() {
   let slug;
 
-  // Handle clean URL /recipe/<slug>
+  // Handle /recipe/<slug> clean URL
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   if (pathParts[0] === 'recipe' && pathParts[1]) {
     slug = pathParts[1];
   } else {
+    // fallback to ?slug=<slug>
     const params = new URLSearchParams(window.location.search);
     slug = params.get('slug');
   }
@@ -42,7 +44,7 @@ async function fetchAndRenderRecipe() {
     return;
   }
 
-  // Update views count
+  // Update views
   if (recipe.id) {
     await supabase
       .from('recipe_db')
@@ -53,13 +55,15 @@ async function fetchAndRenderRecipe() {
   renderRecipe(recipe);
 }
 
+// Render recipe details
 function renderRecipe(recipe) {
   document.getElementById('recipe-title').innerText = recipe.title;
-  document.getElementById('recipe-description').innerText = recipe.description || '';
-  document.getElementById('prep-time').innerText = recipe.prep_time || '';
-  document.getElementById('cook-time').innerText = recipe.cook_time || '';
-  document.getElementById('servings').innerText = recipe.servings || '';
+  document.getElementById('recipe-description').innerText = recipe.description;
+  document.getElementById('prep-time').innerText = recipe.prep_time;
+  document.getElementById('cook-time').innerText = recipe.cook_time;
+  document.getElementById('servings').innerText = recipe.servings;
 
+  // Ingredients
   const ingredientsList = document.getElementById('ingredients-list');
   ingredientsList.innerHTML = '';
   recipe.ingredients?.forEach(item => {
@@ -68,6 +72,7 @@ function renderRecipe(recipe) {
     ingredientsList.appendChild(li);
   });
 
+  // Method
   const methodList = document.getElementById('method-list');
   methodList.innerHTML = '';
   recipe.method?.forEach(step => {
@@ -76,31 +81,35 @@ function renderRecipe(recipe) {
     methodList.appendChild(li);
   });
 
+  // Nutrition
   const nutrition = recipe.nutritional_info;
   if (nutrition) {
     document.getElementById('nutrition').innerHTML = `
-      <strong>Calories:</strong> ${nutrition.calories || '-'}<br>
-      <strong>Protein:</strong> ${nutrition.protein || '-'}<br>
-      <strong>Carbohydrates:</strong> ${nutrition.carbohydrates || '-'}<br>
-      <strong>Fiber:</strong> ${nutrition.fiber || '-'}<br>
-      <strong>Fat:</strong> ${nutrition.fat || '-'}
+      <strong>Calories:</strong> ${nutrition.calories}<br>
+      <strong>Protein:</strong> ${nutrition.protein}<br>
+      <strong>Carbohydrates:</strong> ${nutrition.carbohydrates}<br>
+      <strong>Fiber:</strong> ${nutrition.fiber}<br>
+      <strong>Fat:</strong> ${nutrition.fat}
     `;
   }
 
+  // Tags, Cuisine, Category
   document.getElementById('tags').textContent = recipe.tags?.join(', ') || 'Not available';
   document.getElementById('cuisine').textContent = recipe.cuisine?.join(', ') || 'Not available';
   document.getElementById('category').textContent = recipe.category?.join(', ') || 'Not available';
+
+  // Notes & Fun Facts
   document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
   document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
 
-  // Show video only if URL exists, hide otherwise
+  // Video: only show if valid URL
   const embedUrl = convertToEmbedUrl(recipe.video_url);
-  const videoIframe = document.getElementById('recipe-video');
+  const videoContainer = document.querySelector('.recipe-video');
   if (embedUrl) {
-    videoIframe.src = embedUrl;
-    videoIframe.style.display = 'block';
+    videoContainer.innerHTML = `<iframe id="recipe-video" src="${embedUrl}" allowfullscreen></iframe>`;
+    videoContainer.style.display = 'block';
   } else {
-    videoIframe.style.display = 'none';
+    videoContainer.style.display = 'none';
   }
 
   // Equipment
@@ -109,6 +118,7 @@ function renderRecipe(recipe) {
   }
 }
 
+// Fetch equipment details by IDs
 async function fetchEquipmentByIds(ids) {
   const { data, error } = await supabase
     .from('equipment_db')
@@ -137,4 +147,3 @@ async function fetchEquipmentByIds(ids) {
 
 // Initialize
 fetchAndRenderRecipe();
-
