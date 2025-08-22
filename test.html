@@ -1,52 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simi’s Swaad | Recipes</title>
-  <link rel="stylesheet" href="test.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simi’s Swaad – Recipes</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Navbar -->
-  <header class="site-header">
-    <div class="logo">Simi’s <span>Swaad</span></div>
-    <nav class="nav-links">
-      <a href="#">Home</a>
-      <a href="#">Recipes</a>
-      <a href="#">About</a>
-      <a href="#">Contact</a>
-    </nav>
+  <header>
+    <h1>Simi’s Swaad 🍲</h1>
+    <p>Authentic Nepali recipes, made with love</p>
   </header>
 
-  <!-- Hero -->
-  <section class="hero">
-    <h1>Delicious Recipes for Every Occasion</h1>
-    <p>Authentic Nepali & World flavors, made simple.</p>
-  </section>
-
-  <!-- Filters & Search -->
-  <section class="controls">
-    <div class="filters">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="video">Video Only</button>
-      <button class="filter-btn" data-filter="main">Main</button>
-      <button class="filter-btn" data-filter="snack">Snack</button>
-      <button class="filter-btn" data-filter="dessert">Dessert</button>
-      <button class="filter-btn" data-filter="festival">Festival</button>
-    </div>
-    <input type="text" id="search-input" placeholder="Search recipes..." />
-  </section>
-
-  <!-- Recipe Cards -->
   <main>
-    <div id="recipes-container" class="recipes-grid"></div>
+    <section class="filter-bar">
+      <button data-filter="all" class="active">All</button>
+      <button data-filter="main">Main</button>
+      <button data-filter="snack">Snack</button>
+      <button data-filter="dessert">Dessert</button>
+      <button data-filter="festival">Festival</button>
+    </section>
+
+    <section id="recipe-list" class="recipe-grid"></section>
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <p>© 2025 Simi’s Swaad · Made with ❤️ in Melbourne</p>
+  <footer>
+    <p>© 2025 Simi’s Swaad. All rights reserved.</p>
   </footer>
 
-  <script type="module" src="test.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
