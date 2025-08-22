@@ -53,10 +53,13 @@ function getThumbnail(url) {
 }
 
 function momoPlaceholder() {
-  return `<div class="momo-placeholder">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/7/70/Momo_icon.png" alt="Momo Placeholder">
+  return `<div class="momo-placeholder" style="text-align:center;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/70/Momo_icon.png" 
+         alt="Momo Placeholder" 
+         style="max-width:300px; width:100%; height:auto;">
   </div>`;
 }
+
 
 
 /* 🔥 Filters */
