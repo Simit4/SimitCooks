@@ -40,8 +40,7 @@ function renderRecipes(recipes) {
       <div class="recipe-body">
         <h3>${recipe.title}</h3>
         <p>${recipe.description || ""}</p>
-        <div class="recipe-tags">${tags}</div>
-      </div>
+    
     `;
     card.addEventListener("click", () => {
       window.location.href = `/recipe/${recipe.slug}/`;
