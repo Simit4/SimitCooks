@@ -80,14 +80,24 @@ function renderRecipes(recipes) {
 
 /* ------------------ Filters ------------------ */
 function setupFilters() {
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      filterRecipes(btn.dataset.filter);
-    };
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+
+      document.querySelectorAll('.recipe-card').forEach(card => {
+        if (filter === 'all') {
+          card.style.display = 'block';
+        } else {
+          // ✅ check if data-category contains the filter text
+          const categories = card.dataset.category.toLowerCase();
+          card.style.display = categories.includes(filter.toLowerCase()) ? 'block' : 'none';
+        }
+      });
+    });
   });
 }
+
 
 function filterRecipes(filter) {
   document.querySelectorAll('.recipe-card').forEach(card => {
