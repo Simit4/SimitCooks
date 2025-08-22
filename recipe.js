@@ -6,6 +6,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
+
 // Convert YouTube URL to embed URL
 function convertToEmbedUrl(url) {
   if (!url) return '';
@@ -16,12 +17,11 @@ function convertToEmbedUrl(url) {
 async function fetchAndRenderRecipe() {
   let slug;
 
-  // Clean URL handling: /recipe/<slug>
+  // Handle clean URL /recipe/<slug>
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   if (pathParts[0] === 'recipe' && pathParts[1]) {
     slug = pathParts[1];
   } else {
-    // fallback to query string: ?slug=<slug>
     const params = new URLSearchParams(window.location.search);
     slug = params.get('slug');
   }
@@ -93,14 +93,14 @@ function renderRecipe(recipe) {
   document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
   document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
 
-  // Show video only if URL exists
+  // Show video only if URL exists, hide otherwise
   const embedUrl = convertToEmbedUrl(recipe.video_url);
-  const videoContainer = document.getElementById('recipe-video');
+  const videoIframe = document.getElementById('recipe-video');
   if (embedUrl) {
-    videoContainer.src = embedUrl;
-    videoContainer.style.display = 'block';
+    videoIframe.src = embedUrl;
+    videoIframe.style.display = 'block';
   } else {
-    videoContainer.style.display = 'none';
+    videoIframe.style.display = 'none';
   }
 
   // Equipment
@@ -137,3 +137,4 @@ async function fetchEquipmentByIds(ids) {
 
 // Initialize
 fetchAndRenderRecipe();
+
