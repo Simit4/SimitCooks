@@ -11,9 +11,12 @@ const equipmentContainer = document.getElementById('equipment-container');
 
 async function fetchEquipment() {
   try {
+    equipmentContainer.innerHTML = '<p class="info-message">Loading equipment...</p>';
+
     const { data, error } = await supabase
       .from('equipment_db')
-      .select('id, name, description, image_url, affiliate_link');
+      .select('id, name, description, image_url, affiliate_link')
+      .order('id', { ascending: true });
 
     if (error) throw error;
 
@@ -22,7 +25,6 @@ async function fetchEquipment() {
       return;
     }
 
-    // Clear container and build equipment cards
     equipmentContainer.innerHTML = '';
     const fragment = document.createDocumentFragment();
 
@@ -35,25 +37,29 @@ async function fetchEquipment() {
       // Image
       if (image_url) {
         const img = document.createElement('img');
-        img.className = 'equipment-image';
         img.src = image_url;
         img.alt = name ? `Image of ${name}` : 'Equipment image';
+        img.onerror = () => {
+          img.src = 'https://via.placeholder.com/600x400?text=No+Image';
+        };
         card.appendChild(img);
       }
 
+      // Content wrapper
+      const content = document.createElement('div');
+      content.className = 'equipment-item-content';
+
       // Title
       const title = document.createElement('h3');
-      title.className = 'equipment-title';
       title.id = `equipment-title-${id}`;
       title.textContent = name || 'Unnamed Equipment';
-      card.appendChild(title);
+      content.appendChild(title);
 
       // Description
       if (description) {
         const desc = document.createElement('p');
-        desc.className = 'equipment-description';
         desc.textContent = description;
-        card.appendChild(desc);
+        content.appendChild(desc);
       }
 
       // Buy Button
@@ -63,11 +69,11 @@ async function fetchEquipment() {
         buyBtn.href = affiliate_link;
         buyBtn.target = '_blank';
         buyBtn.rel = 'noopener noreferrer nofollow';
-        buyBtn.setAttribute('aria-label', `Buy ${name}`);
         buyBtn.textContent = 'Buy Now';
-        card.appendChild(buyBtn);
+        content.appendChild(buyBtn);
       }
 
+      card.appendChild(content);
       fragment.appendChild(card);
     });
 
