@@ -60,6 +60,8 @@ function renderRecipes(recipes) {
     card.className = 'recipe-card';
     card.dataset.hasVideo = hasVideo;
     card.dataset.tags = recipe.tags?.join(',') || '';
+    card.dataset.category = recipe.category?.join(',') || '';
+
     card.onclick = () => window.location.href = `/recipe/${recipe.slug}`;
 
     card.innerHTML = `
