@@ -1,121 +1,108 @@
-/* Global */
-body {
-  font-family: 'Segoe UI', Tahoma, sans-serif;
+/* --------- Reset --------- */
+* {
   margin: 0;
   padding: 0;
-  background: #fafafa;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Inter", sans-serif;
+  background: #fdfdfd;
   color: #333;
+  line-height: 1.6;
 }
 
+/* --------- Header --------- */
 header {
-  text-align: center;
-  padding: 2rem 1rem;
   background: #27ae60;
-  color: white;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 2rem;
-}
-
-header p {
-  margin: 0.5rem 0 0;
-  font-size: 1rem;
-}
-
-/* Filter Buttons */
-.filter-bar {
+  color: #fff;
+  padding: 1.2rem;
   text-align: center;
-  margin: 1.5rem 0;
 }
-
-.filter-bar button {
-  background: #eee;
+header h1 {
+  margin-bottom: 0.8rem;
+}
+nav button {
+  background: #fff;
   border: none;
-  padding: 0.6rem 1.2rem;
+  padding: 0.5rem 1rem;
   margin: 0.3rem;
   border-radius: 20px;
   cursor: pointer;
-  transition: all 0.3s;
   font-weight: 500;
+  transition: all 0.3s ease;
+}
+nav button:hover {
+  background: #1e8449;
+  color: #fff;
 }
 
-.filter-bar button.active,
-.filter-bar button:hover {
-  background: #27ae60;
-  color: white;
-}
-
-/* Recipe Grid */
-.recipe-grid {
+/* --------- Recipe Grid --------- */
+.recipes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
-  padding: 0 1.5rem 2rem;
+  padding: 2rem;
 }
 
-/* Recipe Card */
+/* --------- Card --------- */
 .recipe-card {
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background: #fff;
+  border-radius: 16px;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   transition: transform 0.2s;
   cursor: pointer;
 }
-
 .recipe-card:hover {
   transform: translateY(-5px);
 }
-
 .recipe-thumb {
   position: relative;
-  width: 100%;
   height: 180px;
   overflow: hidden;
 }
-
 .recipe-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
-
-.play-icon {
+.recipe-thumb .play-icon {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 3rem;
-  color: white;
-  opacity: 0.8;
-  pointer-events: none;
+  background: rgba(0,0,0,0.6);
+  border-radius: 50%;
+  padding: 12px;
+}
+.recipe-thumb .play-icon svg {
+  width: 28px;
+  height: 28px;
+  fill: #fff;
 }
 
-.recipe-info {
+/* --------- Card Body --------- */
+.recipe-body {
   padding: 1rem;
 }
-
-.recipe-info h3 {
-  margin: 0;
-  font-size: 1.2rem;
-  color: #27ae60;
+.recipe-body h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
 }
-
-.recipe-info p {
-  margin: 0.5rem 0 0;
+.recipe-body p {
   font-size: 0.9rem;
   color: #555;
-  line-height: 1.4;
+  margin-bottom: 0.8rem;
 }
-
-/* Footer */
-footer {
-  text-align: center;
-  padding: 1rem;
-  background: #333;
-  color: white;
-  font-size: 0.85rem;
+.recipe-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.recipe-tags span {
+  font-size: 0.75rem;
+  background: #f4f4f4;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  color: #555;
 }
