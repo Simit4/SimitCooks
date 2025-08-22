@@ -204,6 +204,7 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Equipment Section Container
 -------------------------------------------------- */
+/* Equipment Section Container */
 .equipment-page {
   margin: 3rem auto;
   padding: 3rem 2rem;
@@ -225,7 +226,7 @@ h1, h2, h3, h4, h5 {
 
 .section-subtitle {
   text-align: center;
-  color: #7a7a8c;
+  color: #666;
   font-weight: 600;
   margin-bottom: 2rem;
   font-size: 1.1rem;
@@ -234,136 +235,87 @@ h1, h2, h3, h4, h5 {
 /* Equipment Grid */
 .equipment-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 1.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
 }
 
-/* Individual Equipment Item Card */
+/* Equipment Card */
 .equipment-item {
-  background: #fff8f1;
-  border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(239, 91, 37, 0.15);
-  padding: 1.5rem 1.2rem;
-  text-align: center;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-  user-select: none;
+  will-change: transform;
 }
 
-.equipment-item:hover,
-.equipment-item:focus {
-  box-shadow: 0 10px 28px rgba(239, 91, 37, 0.3);
-  transform: translateY(-5px);
-  outline: none;
+.equipment-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
 }
 
-/* Equipment Item Image */
+/* Large Image */
 .equipment-item img {
-  max-width: 120px;
-  height: auto;
-  margin-bottom: 1rem;
-  border-radius: 8px;
-  object-fit: contain;
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
 }
 
-/* Equipment Item Title */
-.equipment-item h4 {
+/* Content */
+.equipment-item-content {
+  padding: 1.2rem 1rem 1.5rem;
+  text-align: left;
+}
+
+.equipment-item-content h3 {
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
-  color: #ef5b25;
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
+  color: var(--primary-dark);
+  font-size: 1.3rem;
+  margin-bottom: 0.4rem;
 }
 
-/* Equipment Item Description */
-.equipment-item p {
-  font-size: 1rem;
+.equipment-item-content p {
+  font-size: 0.95rem;
   color: #555768;
-  line-height: 1.4;
-  user-select: text;
-  margin-bottom: 0;
+  line-height: 1.5;
+  margin-bottom: 1rem;
 }
 
 /* Buy Button */
 .btn-buy {
   display: inline-block;
-  padding: 0.65rem 2rem;
-  font-size: 1.1rem;
-  font-weight: 700;
+  padding: 0.6rem 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
   color: #fff;
   background: var(--primary);
-  border: none;
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(239, 91, 37, 0.4);
-  cursor: pointer;
-  user-select: none;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  font-family: 'Poppins', sans-serif;
-  transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
-  box-sizing: border-box;
-  white-space: nowrap;
+  border-radius: 8px;
   text-decoration: none;
-  margin-top: 1.5rem;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
 }
 
-.btn-buy:hover,
-.btn-buy:focus {
+.btn-buy:hover {
   background: var(--primary-dark);
-  box-shadow: 0 12px 28px rgba(217, 74, 15, 0.6);
-  transform: translateY(-3px);
-  outline: none;
+  transform: translateY(-2px);
 }
 
-.btn-buy:focus-visible {
-  outline: 2px solid #ffb169;
-  outline-offset: 3px;
-}
-
-@media (max-width: 860px) {
-  .equipment-page {
-    padding: 2rem 1rem;
-    margin: 2rem 1rem;
-  }
-
-  .section-title {
-    font-size: 1.8rem;
-    margin-bottom: 0.3rem;
-  }
-
-  .section-subtitle {
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .equipment-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .equipment-item {
-    padding: 1.2rem 1rem;
-  }
-
+/* Responsive */
+@media (max-width: 768px) {
   .equipment-item img {
-    max-width: 100px;
-    margin-bottom: 0.8rem;
+    height: 180px;
   }
 
-  .equipment-item h4 {
+  .equipment-item-content h3 {
     font-size: 1.1rem;
   }
 
-  .equipment-item p {
-    font-size: 0.95rem;
-  }
-
-  .btn-buy {
-    font-size: 1rem;
-    padding: 0.55rem 1.5rem;
-    margin-top: 1rem;
+  .equipment-item-content p {
+    font-size: 0.9rem;
   }
 }
 
