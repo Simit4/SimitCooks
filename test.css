@@ -1,108 +1,79 @@
-/* --------- Reset --------- */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body {
-  font-family: "Inter", sans-serif;
-  background: #fdfdfd;
-  color: #333;
-  line-height: 1.6;
+:root {
+  --primary: #27ae60;
+  --accent: #f4a261;
+  --dark: #1e1e1e;
+  --light: #fdfcfb;
+  --text: #2c3e50;
+  --shadow: rgba(0,0,0,0.15);
 }
 
-/* --------- Header --------- */
-header {
-  background: #27ae60;
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+body { background: var(--light); color: var(--text); line-height: 1.6; }
+
+/* 🔥 Navbar */
+.site-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 15px 8%; background: var(--dark); color: #fff;
+  position: sticky; top: 0; z-index: 10;
+}
+.site-header .logo { font-size: 1.5rem; font-weight: bold; }
+.site-header .logo span { color: var(--accent); }
+.nav-links a {
+  margin-left: 20px; text-decoration: none; color: #fff; font-weight: 500;
+  transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--accent); }
+
+/* 🔥 Hero */
+.hero {
+  text-align: center; padding: 60px 20px; background: linear-gradient(135deg,var(--primary),var(--accent));
   color: #fff;
-  padding: 1.2rem;
-  text-align: center;
 }
-header h1 {
-  margin-bottom: 0.8rem;
+.hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
+.hero p { font-size: 1.1rem; }
+
+/* 🔥 Controls */
+.controls {
+  padding: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; 
 }
-nav button {
-  background: #fff;
-  border: none;
-  padding: 0.5rem 1rem;
-  margin: 0.3rem;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
+.filters { display: flex; flex-wrap: wrap; gap: 10px; }
+.filter-btn {
+  background: #fff; border: 1px solid var(--primary); color: var(--primary);
+  padding: 8px 16px; border-radius: 25px; font-weight: 600; cursor: pointer;
+  transition: all 0.25s ease;
 }
-nav button:hover {
-  background: #1e8449;
-  color: #fff;
+.filter-btn.active, .filter-btn:hover {
+  background: var(--accent); border-color: var(--accent); color: #fff; transform: scale(1.05);
+}
+#search-input {
+  padding: 10px 15px; border: 1px solid #ccc; border-radius: 25px; width: 220px;
 }
 
-/* --------- Recipe Grid --------- */
+/* 🔥 Recipes Grid */
 .recipes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  padding: 2rem;
+  display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+  gap: 30px; padding: 30px 8%;
 }
-
-/* --------- Card --------- */
 .recipe-card {
-  background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  transition: transform 0.2s;
-  cursor: pointer;
+  background: #fff; border-radius: 18px; overflow: hidden; cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 8px 20px var(--shadow);
 }
-.recipe-card:hover {
-  transform: translateY(-5px);
-}
-.recipe-thumb {
-  position: relative;
-  height: 180px;
-  overflow: hidden;
-}
-.recipe-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.recipe-thumb .play-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0,0,0,0.6);
-  border-radius: 50%;
-  padding: 12px;
-}
-.recipe-thumb .play-icon svg {
-  width: 28px;
-  height: 28px;
-  fill: #fff;
-}
+.recipe-card:hover { transform: translateY(-8px); box-shadow: 0 18px 40px var(--shadow); }
 
-/* --------- Card Body --------- */
-.recipe-body {
-  padding: 1rem;
+.thumbnail-wrapper {
+  width: 100%; height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center;
+  background: #fafafa;
 }
-.recipe-body h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-.recipe-body p {
-  font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 0.8rem;
-}
-.recipe-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-.recipe-tags span {
-  font-size: 0.75rem;
-  background: #f4f4f4;
-  padding: 0.3rem 0.6rem;
-  border-radius: 12px;
-  color: #555;
+.thumbnail-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+.momo-placeholder img { max-width: 120px; opacity: 0.85; }
+
+.card-body { padding: 18px; text-align: center; }
+.recipe-card h3 { font-size: 1.3rem; margin-bottom: 8px; color: var(--primary); }
+.recipe-card p { font-size: 0.9rem; color: #666; }
+
+/* 🔥 Footer */
+.site-footer {
+  text-align: center; padding: 20px; background: var(--dark); color: #aaa; margin-top: 40px;
 }
