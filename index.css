@@ -324,23 +324,7 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Featured Recipes 
 -------------------------------------------------- */
-.featured-recipes h2 {
-  text-align: center;
-  font-size: 2.2rem;
-  margin-bottom: 2rem;
-  color: var(--primary);
-  font-weight: 800;
-}
 
-/* Grid: 3 cards in a row */
-#featured-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  padding-bottom: 2rem;
-}
-
-/* Card */
 .recipes-grid {
   display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
   gap: 30px; padding: 30px 8%;
@@ -394,20 +378,6 @@ h1, h2, h3, h4, h5 {
 .recipe-card p {
   font-size: 0.9rem; color: #666;
   height: 40px; overflow: hidden; text-overflow: ellipsis;
-}
-/* Responsive */
-@media (max-width: 900px) {
-  #featured-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  #featured-container {
-    grid-template-columns: 1fr;
-  }
-  .thumbnail-wrapper { height: 180px; }
-  .card-body p { height: auto; }
 }
 
 
