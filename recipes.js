@@ -6,12 +6,6 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-// ------------------ Supabase Setup ------------------
-const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 // ------------------ Helpers ------------------
 
@@ -66,7 +60,7 @@ function renderRecipes(recipes) {
     card.className = 'recipe-card';
     card.dataset.hasVideo = hasVideo.toString();
     card.dataset.tags = Array.isArray(recipe.tags) ? recipe.tags.join(',') : '';
-    card.dataset.category = recipe.category || 'uncategorized';
+    card.dataset.category = recipe.category || 'all';
     card.onclick = () => window.location.href = `/recipe/${recipe.slug}`;
 
     card.innerHTML = `
@@ -102,17 +96,18 @@ function setupFilters() {
 
 function filterRecipes(category = 'all', tag = 'all') {
   document.querySelectorAll('.recipe-card').forEach(card => {
-    const cardCategory = card.dataset.category || '';
+    const cardCategory = card.dataset.category || 'all';
     const cardTags = card.dataset.tags ? card.dataset.tags.split(',') : [];
+    const hasVideo = card.dataset.hasVideo === 'true';
 
     const categoryMatch = category === 'all' || cardCategory === category;
-    const tagMatch = tag === 'all' 
-      ? true 
-      : tag === 'video'
-        ? card.dataset.hasVideo === 'true'
-        : cardTags.includes(tag);
 
-    card.style.display = (categoryMatch && tagMatch) ? 'block' : 'none';
+    let tagMatch;
+    if (tag === 'all') tagMatch = true;
+    else if (tag === 'video') tagMatch = hasVideo;
+    else tagMatch = cardTags.includes(tag);
+
+    card.style.display = categoryMatch && tagMatch ? 'block' : 'none';
   });
 }
 
@@ -133,4 +128,3 @@ function setupSearch() {
 
 // ------------------ Initialize ------------------
 fetchRecipes();
-
