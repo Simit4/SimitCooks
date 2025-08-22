@@ -324,21 +324,7 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Featured Recipes 
 -------------------------------------------------- */
-
-#Featured-Recipes-h2 {
-  text-align: center;
-  font-size: 2.2rem;
-  margin-bottom: 2rem;
-  color: var(--primary);
-  font-weight: 800;
-font-family: 'Montserrat', sans-serif; /* Clean, modern, slightly stylish */
-
-}
-
-
-
-
-
+/* 🔥 Recipes Grid */
 .recipes-grid {
   display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
   gap: 30px; padding: 30px 8%;
@@ -467,7 +453,6 @@ font-family: 'Montserrat', sans-serif; /* Clean, modern, slightly stylish */
   }
   .recipe-card h3 {
     font-size: 1.1rem;
-
   }
   .recipe-card p {
     font-size: 0.8rem;
@@ -499,7 +484,6 @@ font-family: 'Montserrat', sans-serif; /* Clean, modern, slightly stylish */
     font-size: 0.7rem;
   }
 }
-
 
 
 
