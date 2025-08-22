@@ -5,7 +5,6 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-
 async function fetchRecipes() {
   const { data, error } = await supabase
     .from('recipe_db')
@@ -25,7 +24,7 @@ function renderRecipes(recipes) {
 
   recipes.forEach(recipe => {
     const hasVideo = !!recipe.video_url;
-    const thumb = hasVideo ? getThumbnail(recipe.video_url) : momoPlaceholder();
+    const thumb = hasVideo ? getVideoThumbnail(recipe.video_url) : momoPlaceholder();
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
@@ -34,7 +33,10 @@ function renderRecipes(recipes) {
     card.onclick = () => window.location.href = `/recipe/${recipe.slug}`;
 
     card.innerHTML = `
-      <div class="thumbnail-wrapper">${thumb}</div>
+      <div class="thumbnail-wrapper">
+        ${thumb}
+        ${hasVideo ? '<div class="play-overlay"></div>' : ''}
+      </div>
       <div class="card-body">
         <h3>${recipe.title}</h3>
         <p>${recipe.tags?.join(', ') || 'Uncategorized'}</p>
@@ -47,7 +49,7 @@ function renderRecipes(recipes) {
   setupSearch();
 }
 
-function getThumbnail(url) {
+function getVideoThumbnail(url) {
   const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
   return match ? `<img src="https://img.youtube.com/vi/${match[1]}/hqdefault.jpg" alt="video">` : '';
 }
@@ -58,7 +60,7 @@ function momoPlaceholder() {
   </div>`;
 }
 
-/* 🔥 Filters */
+/* Filters */
 function setupFilters() {
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.onclick = () => {
@@ -79,7 +81,7 @@ function filterRecipes(filter) {
   });
 }
 
-/* 🔥 Search */
+/* Search */
 function setupSearch() {
   const input = document.getElementById('search-input');
   input.oninput = e => {
