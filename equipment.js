@@ -7,83 +7,28 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-const equipmentContainer = document.getElementById('equipment-container');
-
 async function fetchEquipment() {
-  try {
-    equipmentContainer.innerHTML = '<p class="info-message">Loading equipment...</p>';
-
-    const { data, error } = await supabase
-      .from('equipment_db')
-      .select('id, name, description, image_url, affiliate_link')
-      .order('id', { ascending: true });
-
-    if (error) throw error;
-
-    if (!data || data.length === 0) {
-      equipmentContainer.innerHTML = '<p class="info-message">No equipment items found.</p>';
-      return;
-    }
-
-    equipmentContainer.innerHTML = '';
-    const fragment = document.createDocumentFragment();
-
-    data.forEach(({ id, name, description, image_url, affiliate_link }) => {
-      const card = document.createElement('article');
-      card.className = 'equipment-item';
-      card.setAttribute('role', 'region');
-      card.setAttribute('aria-labelledby', `equipment-title-${id}`);
-
-      // Image
-      if (image_url) {
-        const img = document.createElement('img');
-        img.src = image_url;
-        img.alt = name ? `Image of ${name}` : 'Equipment image';
-        img.onerror = () => {
-          img.src = 'https://via.placeholder.com/600x400?text=No+Image';
-        };
-        card.appendChild(img);
-      }
-
-      // Content wrapper
-      const content = document.createElement('div');
-      content.className = 'equipment-item-content';
-
-      // Title
-      const title = document.createElement('h3');
-      title.id = `equipment-title-${id}`;
-      title.textContent = name || 'Unnamed Equipment';
-      content.appendChild(title);
-
-      // Description
-      if (description) {
-        const desc = document.createElement('p');
-        desc.textContent = description;
-        content.appendChild(desc);
-      }
-
-      // Buy Button
-      if (affiliate_link) {
-        const buyBtn = document.createElement('a');
-        buyBtn.className = 'btn-buy';
-        buyBtn.href = affiliate_link;
-        buyBtn.target = '_blank';
-        buyBtn.rel = 'noopener noreferrer nofollow';
-        buyBtn.textContent = 'Buy Now';
-        content.appendChild(buyBtn);
-      }
-
-      card.appendChild(content);
-      fragment.appendChild(card);
-    });
-
-    equipmentContainer.appendChild(fragment);
-
-  } catch (err) {
-    console.error('Failed to load equipment:', err);
-    equipmentContainer.innerHTML = `<p class="error-message">Sorry, something went wrong loading equipment.</p>`;
+  const { data, error } = await supabase.from('equipment').select('*');
+  if (error) {
+    console.error('Error fetching equipment:', error);
+    return;
   }
+
+  const container = document.getElementById('equipment-container');
+  container.innerHTML = data.map(item => `
+    <div class="equipment-card">
+      <div class="equipment-image">
+        <img src="${item.image_url}" alt="${item.title}">
+      </div>
+      <div class="equipment-info">
+        <h3>${item.title}</h3>
+        <p>${item.description}</p>
+        <a href="${item.link}" target="_blank" class="buy-btn">
+          <i class="fas fa-cart-shopping"></i> Buy on Amazon
+        </a>
+      </div>
+    </div>
+  `).join('');
 }
 
-// Call on page load
 fetchEquipment();
