@@ -1,10 +1,8 @@
-
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon/public key
 const supabase = createClient(supabaseUrl, supabaseKey);
-
 
 
 /* ------------------ Helpers ------------------ */
@@ -49,7 +47,7 @@ function renderRecipes(recipes) {
   recipes.forEach(recipe => {
     const hasVideo = !!recipe.video_url;
 
-    // Determine which image to show
+    // Decide thumbnail
     const thumb = recipe.thumbnail_url
       ? `<img src="${recipe.thumbnail_url}" alt="${recipe.title}" class="recipe-thumb">`
       : hasVideo
@@ -58,9 +56,11 @@ function renderRecipes(recipes) {
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
+
+    // Store info for filtering
     card.dataset.hasVideo = hasVideo;
-    card.dataset.tags = recipe.tags?.join(',') || '';
-    card.dataset.category = recipe.category?.join(',') || '';
+    card.dataset.tags = (recipe.tags || []).map(t => t.toLowerCase()).join(','); 
+    card.dataset.category = (recipe.category || []).map(c => c.toLowerCase()).join(',');
 
     card.onclick = () => window.location.href = `/recipe/${recipe.slug}`;
 
@@ -81,31 +81,32 @@ function renderRecipes(recipes) {
 /* ------------------ Filters ------------------ */
 function setupFilters() {
   const filterBtns = document.querySelectorAll('.filter-btn');
+
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
+      // remove active from all, add to clicked
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
       const filter = btn.dataset.filter;
 
       document.querySelectorAll('.recipe-card').forEach(card => {
+        const hasVideo = card.dataset.hasVideo === 'true';
+        const tags = card.dataset.tags.split(',');
+        const categories = card.dataset.category.split(',');
+
         if (filter === 'all') {
           card.style.display = 'block';
+        } else if (filter === 'video') {
+          card.style.display = hasVideo ? 'block' : 'none';
         } else {
-          // ✅ check if data-category contains the filter text
-          const categories = card.dataset.category.toLowerCase();
-          card.style.display = categories.includes(filter.toLowerCase()) ? 'block' : 'none';
+          // match category OR tags
+          const matchCategory = categories.some(c => c.includes(filter.toLowerCase()));
+          const matchTag = tags.some(t => t.includes(filter.toLowerCase()));
+          card.style.display = (matchCategory || matchTag) ? 'block' : 'none';
         }
       });
     });
-  });
-}
-
-
-function filterRecipes(filter) {
-  document.querySelectorAll('.recipe-card').forEach(card => {
-    const hasVideo = card.dataset.hasVideo === 'true';
-    const tags = card.dataset.tags.split(',');
-    if (filter === 'all') card.style.display = 'block';
-    else if (filter === 'video') card.style.display = hasVideo ? 'block' : 'none';
-    else card.style.display = tags.includes(filter) ? 'block' : 'none';
   });
 }
 
@@ -116,7 +117,8 @@ function setupSearch() {
     const term = e.target.value.toLowerCase();
     document.querySelectorAll('.recipe-card').forEach(card => {
       const title = card.querySelector('h3').textContent.toLowerCase();
-      card.style.display = title.includes(term) ? 'block' : 'none';
+      const description = card.querySelector('p').textContent.toLowerCase();
+      card.style.display = (title.includes(term) || description.includes(term)) ? 'block' : 'none';
     });
   };
 }
