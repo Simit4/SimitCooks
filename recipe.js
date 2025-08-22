@@ -5,21 +5,25 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+
+
+// Convert YouTube URL to embed URL
 function convertToEmbedUrl(url) {
   if (!url) return '';
   const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
   return match ? `https://www.youtube.com/embed/${match[1]}` : '';
 }
 
+// Fetch recipe data and render
 async function fetchAndRenderRecipe() {
   let slug;
 
-  // Clean URL handling: /recipe/<slug>
+  // Handle /recipe/<slug> clean URL
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   if (pathParts[0] === 'recipe' && pathParts[1]) {
     slug = pathParts[1];
   } else {
-    // fallback to query string: ?slug=<slug>
+    // fallback to ?slug=<slug>
     const params = new URLSearchParams(window.location.search);
     slug = params.get('slug');
   }
@@ -51,6 +55,7 @@ async function fetchAndRenderRecipe() {
   renderRecipe(recipe);
 }
 
+// Render recipe details
 function renderRecipe(recipe) {
   document.getElementById('recipe-title').innerText = recipe.title;
   document.getElementById('recipe-description').innerText = recipe.description;
@@ -58,6 +63,7 @@ function renderRecipe(recipe) {
   document.getElementById('cook-time').innerText = recipe.cook_time;
   document.getElementById('servings').innerText = recipe.servings;
 
+  // Ingredients
   const ingredientsList = document.getElementById('ingredients-list');
   ingredientsList.innerHTML = '';
   recipe.ingredients?.forEach(item => {
@@ -66,6 +72,7 @@ function renderRecipe(recipe) {
     ingredientsList.appendChild(li);
   });
 
+  // Method
   const methodList = document.getElementById('method-list');
   methodList.innerHTML = '';
   recipe.method?.forEach(step => {
@@ -74,6 +81,7 @@ function renderRecipe(recipe) {
     methodList.appendChild(li);
   });
 
+  // Nutrition
   const nutrition = recipe.nutritional_info;
   if (nutrition) {
     document.getElementById('nutrition').innerHTML = `
@@ -85,14 +93,24 @@ function renderRecipe(recipe) {
     `;
   }
 
+  // Tags, Cuisine, Category
   document.getElementById('tags').textContent = recipe.tags?.join(', ') || 'Not available';
   document.getElementById('cuisine').textContent = recipe.cuisine?.join(', ') || 'Not available';
   document.getElementById('category').textContent = recipe.category?.join(', ') || 'Not available';
+
+  // Notes & Fun Facts
   document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
   document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
 
+  // Video: only show if valid URL
   const embedUrl = convertToEmbedUrl(recipe.video_url);
-  document.getElementById('recipe-video').src = embedUrl || '';
+  const videoContainer = document.querySelector('.recipe-video');
+  if (embedUrl) {
+    videoContainer.innerHTML = `<iframe id="recipe-video" src="${embedUrl}" allowfullscreen></iframe>`;
+    videoContainer.style.display = 'block';
+  } else {
+    videoContainer.style.display = 'none';
+  }
 
   // Equipment
   if (recipe.equipment_ids?.length) {
@@ -100,6 +118,7 @@ function renderRecipe(recipe) {
   }
 }
 
+// Fetch equipment details by IDs
 async function fetchEquipmentByIds(ids) {
   const { data, error } = await supabase
     .from('equipment_db')
