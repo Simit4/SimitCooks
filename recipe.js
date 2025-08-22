@@ -58,7 +58,6 @@ function renderRecipe(recipe) {
   document.getElementById('cook-time').innerText = recipe.cook_time;
   document.getElementById('servings').innerText = recipe.servings;
 
-  // Ingredients
   const ingredientsList = document.getElementById('ingredients-list');
   ingredientsList.innerHTML = '';
   recipe.ingredients?.forEach(item => {
@@ -67,7 +66,6 @@ function renderRecipe(recipe) {
     ingredientsList.appendChild(li);
   });
 
-  // Method
   const methodList = document.getElementById('method-list');
   methodList.innerHTML = '';
   recipe.method?.forEach(step => {
@@ -76,7 +74,6 @@ function renderRecipe(recipe) {
     methodList.appendChild(li);
   });
 
-  // Nutrition
   const nutrition = recipe.nutritional_info;
   if (nutrition) {
     document.getElementById('nutrition').innerHTML = `
@@ -94,14 +91,14 @@ function renderRecipe(recipe) {
   document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
   document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
 
-  // Video
+  // ✅ Fix for blank iframe issue
   const videoFrame = document.getElementById('recipe-video');
   const embedUrl = convertToEmbedUrl(recipe.video_url);
   if (embedUrl) {
     videoFrame.src = embedUrl;
-    videoFrame.style.display = 'block';
+    videoFrame.style.display = 'block'; // show if video exists
   } else {
-    videoFrame.style.display = 'none';
+    videoFrame.style.display = 'none'; // hide if no video
   }
 
   // Equipment
