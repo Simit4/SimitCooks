@@ -324,7 +324,6 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Featured Recipes 
 -------------------------------------------------- */
-
 .recipes-grid {
   display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
   gap: 30px; padding: 30px 8%;
@@ -379,6 +378,113 @@ h1, h2, h3, h4, h5 {
   font-size: 0.9rem; color: #666;
   height: 40px; overflow: hidden; text-overflow: ellipsis;
 }
+
+
+
+/* 🔥 Mobile Responsive */
+@media (max-width: 768px) {
+  /* Navbar */
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px 5%;
+  }
+  .nav-links {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .nav-links a {
+    margin-left: 0;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 40px 15px;
+  }
+  .hero h1 {
+    font-size: 2rem;
+  }
+  .hero p {
+    font-size: 1rem;
+  }
+
+  /* Controls */
+  .controls {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+  .filters {
+    justify-content: center;
+  }
+  #search-input {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Recipes Grid - Swipe Friendly */
+  .recipes-grid {
+    display: flex;
+    overflow-x: auto;
+    padding: 20px 5%;
+    gap: 15px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .recipe-card {
+    min-width: 220px;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+  .thumbnail-wrapper {
+    height: 150px;
+  }
+  .momo-placeholder {
+    height: 150px;
+  }
+
+  /* Card Body */
+  .card-body {
+    padding: 12px;
+  }
+  .recipe-card h3 {
+    font-size: 1.1rem;
+  }
+  .recipe-card p {
+    font-size: 0.8rem;
+    height: auto;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .site-header {
+    padding: 10px 5%;
+  }
+  .hero h1 {
+    font-size: 1.6rem;
+  }
+  .hero p {
+    font-size: 0.9rem;
+  }
+  .recipe-card {
+    min-width: 180px;
+  }
+  .thumbnail-wrapper, .momo-placeholder {
+    height: 130px;
+  }
+  .card-body h3 {
+    font-size: 0.95rem;
+  }
+  .card-body p {
+    font-size: 0.7rem;
+  }
+}
+
+
 
 
 
