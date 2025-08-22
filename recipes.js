@@ -7,21 +7,24 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 
-// ------------------ Helpers ------------------
-
+/* ------------------ Helpers ------------------ */
 // Get full-size YouTube thumbnail
 function getThumbnail(url) {
   const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
   return match ? `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg` : '';
 }
 
-// Fallback Momo placeholder image
+// Momo placeholder or fallback image
 function momoPlaceholder(recipe) {
   const imageUrl = recipe.thumbnail_url || 'https://i.ibb.co/4p4mR3N/momo-graphic.png';
-  return `<img src="${imageUrl}" alt="${recipe.title || 'Momo Placeholder'}" class="recipe-thumb">`;
+  return `
+    <div class="momo-placeholder">
+      <img src="${imageUrl}" alt="${recipe.title || 'Momo Placeholder'}" class="recipe-thumb">
+    </div>
+  `;
 }
 
-// ------------------ Fetch Recipes ------------------
+/* ------------------ Fetch Recipes ------------------ */
 async function fetchRecipes() {
   try {
     const { data: recipes, error } = await supabase
@@ -31,100 +34,80 @@ async function fetchRecipes() {
 
     if (error) throw error;
 
-    console.log('Fetched recipes:', recipes); // Debug
+    console.log('Fetched recipes:', recipes); // Debugging
     renderRecipes(recipes);
   } catch (err) {
     console.error('Error fetching recipes:', err.message);
   }
 }
 
-// ------------------ Render Recipes ------------------
+/* ------------------ Render Recipes ------------------ */
 function renderRecipes(recipes) {
   const container = document.getElementById('recipes-container');
   container.innerHTML = '';
 
-  const fragment = document.createDocumentFragment();
-
   recipes.forEach(recipe => {
     const hasVideo = !!recipe.video_url;
 
-    // Determine thumbnail
-    const thumbHtml = recipe.thumbnail_url
+    // Determine which image to show
+    const thumb = recipe.thumbnail_url
       ? `<img src="${recipe.thumbnail_url}" alt="${recipe.title}" class="recipe-thumb">`
       : hasVideo
         ? `<img src="${getThumbnail(recipe.video_url)}" alt="${recipe.title}" class="recipe-thumb">`
         : momoPlaceholder(recipe);
 
-    // Create recipe card
     const card = document.createElement('div');
     card.className = 'recipe-card';
-    card.dataset.hasVideo = hasVideo.toString();
-    card.dataset.tags = Array.isArray(recipe.tags) ? recipe.tags.join(',') : '';
-    card.dataset.category = recipe.category || 'all';
+    card.dataset.hasVideo = hasVideo;
+    card.dataset.tags = recipe.tags?.join(',') || '';
     card.onclick = () => window.location.href = `/recipe/${recipe.slug}`;
 
     card.innerHTML = `
-      <div class="thumbnail-wrapper">${thumbHtml}</div>
+      ${thumb ? `<div class="thumbnail-wrapper">${thumb}</div>` : ''}
       <div class="card-body">
         <h3>${recipe.title}</h3>
-        <p>${recipe.description || ''}</p>
+        <p>${recipe.description || ""}</p>
       </div>
     `;
-
-    fragment.appendChild(card);
+    container.appendChild(card);
   });
-
-  container.appendChild(fragment);
 
   setupFilters();
   setupSearch();
 }
 
-// ------------------ Filters ------------------
+/* ------------------ Filters ------------------ */
 function setupFilters() {
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.onclick = () => {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-
-      const category = btn.dataset.category || 'all';
-      const tag = btn.dataset.tag || 'all';
-      filterRecipes(category, tag);
+      filterRecipes(btn.dataset.filter);
     };
   });
 }
 
-function filterRecipes(category = 'all', tag = 'all') {
+function filterRecipes(filter) {
   document.querySelectorAll('.recipe-card').forEach(card => {
-    const cardCategory = card.dataset.category || 'all';
-    const cardTags = card.dataset.tags ? card.dataset.tags.split(',') : [];
     const hasVideo = card.dataset.hasVideo === 'true';
-
-    const categoryMatch = category === 'all' || cardCategory === category;
-
-    let tagMatch;
-    if (tag === 'all') tagMatch = true;
-    else if (tag === 'video') tagMatch = hasVideo;
-    else tagMatch = cardTags.includes(tag);
-
-    card.style.display = categoryMatch && tagMatch ? 'block' : 'none';
+    const tags = card.dataset.tags.split(',');
+    if (filter === 'all') card.style.display = 'block';
+    else if (filter === 'video') card.style.display = hasVideo ? 'block' : 'none';
+    else card.style.display = tags.includes(filter) ? 'block' : 'none';
   });
 }
 
-// ------------------ Search ------------------
+/* ------------------ Search ------------------ */
 function setupSearch() {
   const input = document.getElementById('search-input');
-  if (!input) return;
-
   input.oninput = e => {
     const term = e.target.value.toLowerCase();
     document.querySelectorAll('.recipe-card').forEach(card => {
       const title = card.querySelector('h3').textContent.toLowerCase();
-      const desc = card.querySelector('p')?.textContent.toLowerCase() || '';
-      card.style.display = (title + ' ' + desc).includes(term) ? 'block' : 'none';
+      card.style.display = title.includes(term) ? 'block' : 'none';
     });
   };
 }
 
-// ------------------ Initialize ------------------
+/* ------------------ Initialize ------------------ */
 fetchRecipes();
