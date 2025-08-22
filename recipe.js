@@ -48,16 +48,14 @@ function renderRecipe(recipe) {
        <ol>${recipe.method.map(step => `<li>${step}</li>`).join("")}</ol>`
     : "";
 
-  // Video or Placeholder
+  // ✅ Only show video if available
   const videoSection = recipe.video_url
     ? `<div class="recipe-video">
          <h2>Recipe Video</h2>
          <iframe src="https://www.youtube.com/embed/${extractVideoId(recipe.video_url)}" 
                  frameborder="0" allowfullscreen></iframe>
        </div>`
-    : `<div class="recipe-placeholder">
-         <img src="https://i.ibb.co/4p4mR3N/momo-graphic.png" alt="Momo Placeholder" />
-       </div>`;
+    : "";
 
   return `
     <article class="recipe-details">
