@@ -47,18 +47,11 @@ function renderRecipes(recipes) {
   setupSearch();
 }
 
-function getThumbnail(url) {
-  const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  return match ? `<img src="https://img.youtube.com/vi/${match[1]}/hqdefault.jpg" alt="video">` : '';
-}
-
-function momoPlaceholder() {
-  return `<div class="momo-placeholder" style="text-align:center;">
-    <img src="https://cdn.pixabay.com/photo/2024/02/20/15/19/ai-generated-8585693_1280.jpg" 
-         alt="Momo Placeholder" 
-         style="max-width:300px; width:100%; height:auto;">
-  </div>`;
-}
+const thumb = recipe.thumbnail_url 
+      ? `<img src="${recipe.thumbnail_url}" alt="${recipe.title}" style="max-width:300px; width:100%; height:auto;">`
+      : hasVideo 
+        ? getThumbnail(recipe.video_url) 
+        : momoPlaceholder();
 
 
 
