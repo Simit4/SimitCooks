@@ -1,0 +1,476 @@
+/* -------------------------------------------------
+   Global Variables â€“ easy theming
+-------------------------------------------------- */
+:root {
+  --primary:      #27ae60;   /* fresh green */
+  --primary-dark: #1e8449;
+  --accent:       #f4a261;   /* warm highlight */
+  --bg:           #fdfcfb;   /* soft background */
+  --section-bg:   #f2e8dc;   /* subtle beige */
+  --text:         #2c3e50;   /* main text */
+  --light:        #ffffff;
+  --muted:        #888888;
+  --border:       #e0e0e0;
+  --shadow-sm:    0 2px 6px rgba(0,0,0,0.08);
+  --shadow-md:    0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* -------------------------------------------------
+   Base Reset
+-------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.6;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* -------------------------------------------------
+   Headings
+-------------------------------------------------- */
+h1, h2, h3, h4, h5 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 0.5em;
+}
+
+/* -------------------------------------------------
+   Containers & Utilities
+-------------------------------------------------- */
+.container {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* -------------------------------------------------
+   Header & Navbar
+-------------------------------------------------- */
+.main-header {
+  background: var(--light);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  position: relative;
+}
+
+.logo {
+  font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  display: flex;
+  gap: 0.4rem;
+  align-items: baseline;
+  line-height: 1;
+  user-select: none;
+  transition: transform 0.3s ease-in-out;
+  text-shadow: 0 3px 6px rgba(0,0,0,0.08);
+  animation: fadeInLogo 0.8s ease-in-out;
+}
+
+.logo-modern {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  color: #166534;
+}
+
+.logo-traditional {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  color: #e67e22;
+}
+
+.logo:hover {
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transform: scale(1.03);
+}
+
+/* Navbar Links */
+.nav-links {
+  display: flex;          /* desktop nav visible */
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links li a {
+  position: relative;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.nav-links li a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: var(--primary);
+  transition: 0.3s;
+}
+
+.nav-links li a:hover::after {
+  width: 100%;
+}
+
+/* Hamburger Menu (mobile) */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  z-index: 1100;
+}
+
+.hamburger span {
+  width: 28px;
+  height: 3px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+/* Hamburger animation */
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Responsive Logo */
+@media (max-width: 768px) {
+  .logo {
+    font-size: 2rem;
+  }
+
+  /* Hide desktop nav by default on mobile */
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 0.75rem;
+    background: var(--light);
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow-md);
+    position: absolute;
+    top: 100%;
+    right: 1rem;
+  }
+
+  /* Show nav when active */
+  .nav-links.active {
+    display: flex;
+  }
+
+  /* Show hamburger on mobile */
+  .hamburger {
+    display: flex;
+  }
+}
+
+
+
+/* -------------------------------------------------
+   About Page
+-------------------------------------------------- */
+
+.about-us {
+  background: linear-gradient(to right, #fffaf6, #fff4e6);
+  padding: 4rem 2rem;
+  font-family: 'Open Sans', sans-serif;
+  color: #2a2a3a;
+}
+
+.about-container {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.about-image img {
+  width: 100%;
+  max-width: 450px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.about-content h2 {
+font-family: 'Montserrat', sans-serif; /* Clean, modern, slightly stylish */
+font-size: 2.5rem;
+color: var(--primary);
+margin-bottom: 1rem;
+text-align: center;
+
+}
+
+.about-content h2 span {
+  color: #ef5b25;
+}
+
+.about-content p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  color: #555768;
+}
+
+
+
+/* Mobile Responsive */
+@media (max-width: 860px) {
+  .about-container {
+    flex-direction: column-reverse;
+    text-align: center;
+  }
+
+  .about-image img {
+    max-width: 100%;
+  }
+
+  .about-content h2 {
+    font-size: 2rem;
+  }
+
+  .about-content p {
+    font-size: 1rem;
+  }
+}
+
+/* Timeline / Fun Facts */
+.about-facts {
+  margin-top: 4rem;
+  text-align: center;
+}
+
+.about-facts h3 {
+font-family: 'Montserrat', sans-serif; /* Clean, modern, slightly stylish */
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+/* Timeline container */
+.timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-left: 2rem;
+}
+
+/* Vertical line */
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20px;
+  width: 4px;
+  height: 100%;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+/* Timeline card/item */
+.timeline-item {
+  position: relative;
+  background: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* Timeline dot */
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -38px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background: var(--primary);
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Hover effect */
+.timeline-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* Text inside timeline */
+.timeline-item p {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Mobile Responsive */
+@media (max-width: 860px) {
+  .timeline {
+    padding-left: 1rem;
+    gap: 1.5rem;
+  }
+
+  .timeline-item::before {
+    left: -30px;
+  }
+
+  .timeline-item {
+    padding: 1rem 1.2rem;
+  }
+
+  .about-facts h3 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+
+
+
+
+/* ------------------------------------------------- Footer -------------------------------------------------- */
+
+/* ===== Base Footer Styling ===== */
+.site-footer {
+  background: #121212;
+  color: #ddd;
+  padding: 2rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* Footer main container */
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ===== Footer Brand / Logo ===== */
+.footer-brand .logo {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-brand p {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+/* ===== Footer Navigation ===== */
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-nav a {
+  color: #ddd;
+  text-decoration: none;
+  transition: color 0.3s;
+  font-size: 0.9rem;
+}
+
+.footer-nav a:hover {
+  color: #ff0000;
+}
+
+/* ===== Social Icons ===== */
+.footer-social a {
+  font-size: 1.3rem;
+  color: #ff0000;
+  transition: opacity 0.3s;
+}
+
+.footer-social a:hover {
+  opacity: 0.8;
+}
+
+/* ===== Footer Bottom / Copyright ===== */
+.footer-bottom {
+  text-align: center;
+  padding-top: 1rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.8rem;
+  color: #888;
+}
+
+/* ===== Mobile / Small Screen Adjustments ===== */
+@media (max-width: 600px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .footer-brand .logo {
+    font-size: 1.2rem;
+  }
+
+  .footer-nav {
+    justify-content: center;
+    gap: 0.8rem;
+  }
+
+  .footer-nav a {
+    font-size: 0.85rem;
+  }
+
+  .footer-social a {
+    font-size: 1.2rem;
+  }
+
+  .site-footer {
+    padding: 1.2rem 0.8rem; /* smaller padding for mobile */
+  }
+}
