@@ -18,7 +18,7 @@ async function fetchFeaturedRecipes() {
 }
 
 function renderFeaturedRecipes(recipes) {
-  const container = document.getElementById('featured-container');
+  const container = document.getElementById('recipes-container');
   container.innerHTML = '';
 
   recipes.forEach(recipe => {
