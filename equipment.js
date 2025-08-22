@@ -7,13 +7,6 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-// Supabase credentials
-const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
-const supabaseKey = 'YOUR_PUBLIC_ANON_KEY'; // replace with your anon key
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 const equipmentContainer = document.getElementById('equipment-container');
 
 async function fetchEquipment() {
