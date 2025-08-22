@@ -1,28 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Delicious Recipes</title>
-<link rel="stylesheet" href="test.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simi’s Swaad - Recipes</title>
+  <link rel="stylesheet" href="test.css">
 </head>
 <body>
-<header>
-  <h1>Delicious Recipes</h1>
-  <div class="filters">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="video">Video Only</button>
-    <button class="filter-btn" data-filter="main">Main</button>
-    <button class="filter-btn" data-filter="snack">Snack</button>
-    <button class="filter-btn" data-filter="dessert">Dessert</button>
-    <input type="text" id="search-input" placeholder="Search recipes...">
-  </div>
-</header>
+  <header>
+    <nav class="navbar">
+      <h1 class="logo">Simi’s Swaad</h1>
+      <ul>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="equipments.html">Equipments</a></li>
+        <li><a href="recipes.html">Recipes</a></li>
+      </ul>
+    </nav>
+  </header>
 
-<main>
-  <div id="recipes-container" class="recipes-grid"></div>
-</main>
+  <section class="filters">
+    <button data-filter="all" class="active">All</button>
+    <button data-filter="Main">Main</button>
+    <button data-filter="Snack">Snack</button>
+    <button data-filter="Dessert">Dessert</button>
+    <button data-filter="Festival">Festival</button>
+    <button data-filter="video">Video Only</button>
+  </section>
 
-<script type="module" src="test.js"></script>
+  <main class="recipe-grid" id="recipeGrid">
+    <!-- Recipes load dynamically here -->
+  </main>
+
+  <script src="test.js"></script>
 </body>
 </html>
