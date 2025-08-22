@@ -54,7 +54,7 @@ function getThumbnail(url) {
 
 function momoPlaceholder() {
   return `<div class="momo-placeholder" style="text-align:center;">
-    <img src="https://i.ibb.co/YTjW3vF/momo.png" 
+    <img src="https://pixabay.com/illustrations/ai-generated-momo-nepali-food-nepal-8585693/" 
          alt="Momo Placeholder" 
          style="max-width:300px; width:100%; height:auto;">
   </div>`;
