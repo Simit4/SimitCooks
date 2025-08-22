@@ -467,6 +467,8 @@ font-family: 'Montserrat', sans-serif; /* Clean, modern, slightly stylish */
   }
   .recipe-card h3 {
     font-size: 1.1rem;
+    font-family: 'Montserrat', sans-serif; /* Clean, modern, slightly stylish */
+
   }
   .recipe-card p {
     font-size: 0.8rem;
