@@ -52,7 +52,7 @@ function getThumbnail(url) {
   return match ? `<img src="https://img.youtube.com/vi/${match[1]}/hqdefault.jpg" alt="video">` : '';
 }
 
-//momo placeholder
+
 
 
 /* 🔥 Filters */
