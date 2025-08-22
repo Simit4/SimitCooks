@@ -230,7 +230,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .about-content h2 {
-font-family: 'Poppins', sans-serif;
+font-family: 'Montserrat', sans-serif; /* Clean, modern, slightly stylish */
 font-size: 2.5rem;
 color: var(--primary);
 margin-bottom: 1rem;
@@ -278,7 +278,7 @@ text-align: center;
 }
 
 .about-facts h3 {
-  font-family: 'Poppins', sans-serif;
+font-family: 'Montserrat', sans-serif; /* Clean, modern, slightly stylish */
   font-size: 2.5rem;
   color: var(--primary);
   margin-bottom: 2rem;
