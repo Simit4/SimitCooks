@@ -325,7 +325,7 @@ h1, h2, h3, h4, h5 {
    Featured Recipes 
 -------------------------------------------------- */
 
-.featured-recipes h2 {
+.h1 Featured Recipes {
   text-align: center;
   font-size: 2.2rem;
   margin-bottom: 2rem;
@@ -333,13 +333,7 @@ h1, h2, h3, h4, h5 {
   font-weight: 800;
 }
 
-/* Grid: 3 cards in a row */
-#featured-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  padding-bottom: 2rem;
-}
+
 
 
 
