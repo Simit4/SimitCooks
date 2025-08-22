@@ -25,12 +25,7 @@ function renderRecipes(recipes) {
 
   recipes.forEach(recipe => {
     const hasVideo = !!recipe.video_url;
-const thumb = recipe.thumbnail_url
-  ? `<img src="${recipe.thumbnail_url}" alt="${recipe.title}" style="max-width:300px; width:100%; height:auto;">`
-  : hasVideo
-    ? `<img src="${getThumbnail(recipe.video_url)}" alt="${recipe.title}" style="max-width:300px; width:100%; height:auto;">`
-    : ''; // no image
-
+    const thumb = hasVideo ? getThumbnail(recipe.video_url) : momoPlaceholder();
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
@@ -54,9 +49,14 @@ const thumb = recipe.thumbnail_url
 
 function getThumbnail(url) {
   const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : '';
+  return match ? `<img src="https://img.youtube.com/vi/${match[1]}/hqdefault.jpg" alt="video">` : '';
 }
 
+function momoPlaceholder() {
+  return `<div class="momo-placeholder">
+    <img src="https://i.ibb.co/4p4mR3N/momo-graphic.png" alt="Momo Placeholder">
+  </div>`;
+}
 
 /* 🔥 Filters */
 function setupFilters() {
