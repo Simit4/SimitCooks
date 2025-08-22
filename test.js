@@ -52,11 +52,6 @@ function getThumbnail(url) {
   return match ? `<img src="https://img.youtube.com/vi/${match[1]}/hqdefault.jpg" alt="video">` : '';
 }
 
-function momoPlaceholder() {
-  return `<div class="momo-placeholder">
-    <img src="https://i.ibb.co/4p4mR3N/momo-graphic.png" alt="Momo Placeholder">
-  </div>`;
-}
 
 /* 🔥 Filters */
 function setupFilters() {
