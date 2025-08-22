@@ -5,11 +5,6 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-function getThumbnail(url) {
-  const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : '';
-}
-
 
 async function fetchRecipes() {
   const { data, error } = await supabase
@@ -30,12 +25,7 @@ function renderRecipes(recipes) {
 
   recipes.forEach(recipe => {
     const hasVideo = !!recipe.video_url;
-
-    const thumb = recipe.thumbnail_url
-      ? `<img src="${recipe.thumbnail_url}" alt="${recipe.title}" style="max-width:300px; width:100%; height:auto;">`
-      : hasVideo
-        ? `<img src="${getThumbnail(recipe.video_url)}" alt="${recipe.title}" style="max-width:300px; width:100%; height:auto;">`
-        : ''; // no image
+    const thumb = hasVideo ? getThumbnail(recipe.video_url) : momoPlaceholder();
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
@@ -44,7 +34,7 @@ function renderRecipes(recipes) {
     card.onclick = () => window.location.href = `/recipe/${recipe.slug}`;
 
     card.innerHTML = `
-      ${thumb ? `<div class="thumbnail-wrapper">${thumb}</div>` : ''}
+      <div class="thumbnail-wrapper">${thumb}</div>
       <div class="card-body">
         <h3>${recipe.title}</h3>
         <p>${recipe.description || ""}</p>
@@ -57,6 +47,11 @@ function renderRecipes(recipes) {
   setupSearch();
 }
 
+const thumb = recipe.thumbnail_url 
+      ? `<img src="${recipe.thumbnail_url}" alt="${recipe.title}" style="max-width:300px; width:100%; height:auto;">`
+      : hasVideo 
+        ? getThumbnail(recipe.video_url) 
+        : momoPlaceholder();
 
 
 
