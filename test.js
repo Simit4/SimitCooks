@@ -52,6 +52,13 @@ function getThumbnail(url) {
   return match ? `<img src="https://img.youtube.com/vi/${match[1]}/hqdefault.jpg" alt="video">` : '';
 }
 
+function momoPlaceholder() {
+  return `<div class="momo-placeholder" style="text-align:center;">
+    <img src="https://i.ibb.co/YTjW3vF/momo.png" 
+         alt="Momo Placeholder" 
+         style="max-width:300px; width:100%; height:auto;">
+  </div>`;
+}
 
 
 
