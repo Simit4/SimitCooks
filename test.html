@@ -3,33 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simi’s Swaad - Recipes</title>
-  <link rel="stylesheet" href="test.css">
+  <title>Simi’s Swaad Recipes</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <nav class="navbar">
-      <h1 class="logo">Simi’s Swaad</h1>
-      <ul>
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="equipments.html">Equipments</a></li>
-        <li><a href="recipes.html">Recipes</a></li>
-      </ul>
+    <h1>Simi’s Swaad</h1>
+    <nav>
+      <button data-filter="all" class="filter-btn active">All</button>
+      <button data-filter="main" class="filter-btn">Main</button>
+      <button data-filter="snack" class="filter-btn">Snack</button>
+      <button data-filter="dessert" class="filter-btn">Dessert</button>
+      <button data-filter="festival" class="filter-btn">Festival</button>
+      <button data-filter="video" class="filter-btn">Videos</button>
     </nav>
   </header>
 
-  <section class="filters">
-    <button data-filter="all" class="active">All</button>
-    <button data-filter="Main">Main</button>
-    <button data-filter="Snack">Snack</button>
-    <button data-filter="Dessert">Dessert</button>
-    <button data-filter="Festival">Festival</button>
-    <button data-filter="video">Video Only</button>
-  </section>
-
-  <main class="recipe-grid" id="recipeGrid">
-    <!-- Recipes load dynamically here -->
+  <main>
+    <div id="recipe-list" class="recipe-grid"></div>
   </main>
 
   <script src="test.js"></script>
