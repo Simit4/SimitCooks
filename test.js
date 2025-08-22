@@ -47,11 +47,12 @@ function renderRecipes(recipes) {
   setupSearch();
 }
 
-const thumb = recipe.thumbnail_url 
-      ? `<img src="${recipe.thumbnail_url}" alt="${recipe.title}" style="max-width:300px; width:100%; height:auto;">`
-      : hasVideo 
-        ? getThumbnail(recipe.video_url) 
-        : momoPlaceholder();
+const thumb = recipe.thumbnail_url
+  ? `<img src="${recipe.thumbnail_url}" alt="${recipe.title}" style="max-width:300px; width:100%; height:auto;">`
+  : hasVideo
+    ? `<img src="${getThumbnail(recipe.video_url)}" alt="${recipe.title}" style="max-width:300px; width:100%; height:auto;">`
+    : ''; // <-- no image at all
+
 
 
 
