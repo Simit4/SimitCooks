@@ -25,7 +25,12 @@ function renderRecipes(recipes) {
 
   recipes.forEach(recipe => {
     const hasVideo = !!recipe.video_url;
-    const thumb = hasVideo ? getThumbnail(recipe.video_url) : momoPlaceholder();
+
+    const thumb = recipe.thumbnail_url
+      ? `<img src="${recipe.thumbnail_url}" alt="${recipe.title}" style="max-width:300px; width:100%; height:auto;">`
+      : hasVideo
+        ? `<img src="${getThumbnail(recipe.video_url)}" alt="${recipe.title}" style="max-width:300px; width:100%; height:auto;">`
+        : ''; // no image
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
@@ -34,7 +39,7 @@ function renderRecipes(recipes) {
     card.onclick = () => window.location.href = `/recipe/${recipe.slug}`;
 
     card.innerHTML = `
-      <div class="thumbnail-wrapper">${thumb}</div>
+      ${thumb ? `<div class="thumbnail-wrapper">${thumb}</div>` : ''}
       <div class="card-body">
         <h3>${recipe.title}</h3>
         <p>${recipe.description || ""}</p>
@@ -46,12 +51,6 @@ function renderRecipes(recipes) {
   setupFilters();
   setupSearch();
 }
-
-const thumb = recipe.thumbnail_url
-  ? `<img src="${recipe.thumbnail_url}" alt="${recipe.title}" style="max-width:300px; width:100%; height:auto;">`
-  : hasVideo
-    ? `<img src="${getThumbnail(recipe.video_url)}" alt="${recipe.title}" style="max-width:300px; width:100%; height:auto;">`
-    : ''; // <-- no image at all
 
 
 
