@@ -37,7 +37,7 @@ function renderRecipes(recipes) {
       <div class="thumbnail-wrapper">${thumb}</div>
       <div class="card-body">
         <h3>${recipe.title}</h3>
-        <p>${recipe.description || ""}</p>
+        <p>${recipe.tags?.join(', ') || 'Uncategorized'}</p>
       </div>
     `;
     container.appendChild(card);
@@ -47,13 +47,16 @@ function renderRecipes(recipes) {
   setupSearch();
 }
 
-const thumb = recipe.thumbnail_url 
-      ? `<img src="${recipe.thumbnail_url}" alt="${recipe.title}" style="max-width:300px; width:100%; height:auto;">`
-      : hasVideo 
-        ? getThumbnail(recipe.video_url) 
-        : momoPlaceholder();
+function getThumbnail(url) {
+  const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  return match ? `<img src="https://img.youtube.com/vi/${match[1]}/hqdefault.jpg" alt="video">` : '';
+}
 
-
+function momoPlaceholder() {
+  return `<div class="momo-placeholder">
+    <img src="https://i.ibb.co/4p4mR3N/momo-graphic.png" alt="Momo Placeholder">
+  </div>`;
+}
 
 /* 🔥 Filters */
 function setupFilters() {
@@ -89,3 +92,5 @@ function setupSearch() {
 }
 
 fetchRecipes();
+
+
