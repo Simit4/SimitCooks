@@ -54,9 +54,10 @@ function getThumbnail(url) {
 
 function momoPlaceholder() {
   return `<div class="momo-placeholder">
-    <img src="https://i.ibb.co/4p4mR3N/momo-graphic.png" alt="Momo Placeholder">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/70/Momo_icon.png" alt="Momo Placeholder">
   </div>`;
 }
+
 
 /* 🔥 Filters */
 function setupFilters() {
