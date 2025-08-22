@@ -7,7 +7,7 @@
 
   <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Open+Sans&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="recipes.css" />
+  <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <!-- SEO Meta Tags -->
@@ -61,29 +61,16 @@
   </div>
 </header>
 
-<section class="hero">
-    <h1>Delicious Recipes for Every Occasion</h1>
-    <p>Authentic Nepali & world flavors, simple to make at home.</p>
+<main class="container">
+  <section class="recipes-header">
+  <h2 class="section-title">Authentic Nepali & Home-Style Recipes</h2>
+    <input type="text" id="search-input" placeholder="Search recipes 🔍" />
   </section>
 
-  <!-- 🔥 Filters & Search -->
-  <section class="controls">
-<div class="filters">
-  <button class="filter-btn active" data-category="all" data-tag="all">All</button>
-  <button class="filter-btn" data-category="all" data-tag="video">Video Only</button>
-  <button class="filter-btn" data-category="main" data-tag="all">Main</button>
-  <button class="filter-btn" data-category="snack" data-tag="all">Snack</button>
-  <button class="filter-btn" data-category="dessert" data-tag="all">Dessert</button>
-  <button class="filter-btn" data-category="festival" data-tag="all">Festival</button>
-</div>
-
-    <input type="text" id="search-input" placeholder="Search recipes..." />
+  <section id="recipes-container" class="recipes-grid">
+    <!-- JS will inject recipe cards here -->
   </section>
-
-  <!-- 🔥 Recipe Cards -->
-  <main>
-    <div id="recipes-container" class="recipes-grid"></div>
-  </main>
+</main>
 
 
 <script type="module" src="recipes.js"></script>
