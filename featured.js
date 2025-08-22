@@ -5,7 +5,6 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-// Fetch top 3 most-viewed recipes
 async function fetchFeaturedRecipes() {
   const { data, error } = await supabase
     .from('recipe_db')
@@ -13,21 +12,16 @@ async function fetchFeaturedRecipes() {
     .order('views', { ascending: false })
     .limit(3);
 
-  if (error) {
-    console.error('Error fetching featured recipes:', error.message);
-    return;
-  }
+  if (error) return console.error('Error fetching featured recipes:', error.message);
 
   renderFeaturedRecipes(data);
 }
 
-// Render featured recipes
 function renderFeaturedRecipes(recipes) {
   const container = document.getElementById('featured-container');
   container.innerHTML = '';
 
   recipes.forEach(recipe => {
-    // Determine thumbnail: uploaded > video > momo fallback
     const thumb = recipe.thumbnail_url || getVideoThumbnail(recipe.video_url) || 'https://i.ibb.co/4p4mR3N/momo-graphic.png';
 
     const card = document.createElement('div');
@@ -35,7 +29,10 @@ function renderFeaturedRecipes(recipes) {
     card.onclick = () => window.location.href = `/recipe/${recipe.slug}`;
     card.innerHTML = `
       <div class="thumbnail-wrapper">
-        <img src="${thumb}" alt="${recipe.title}" class="recipe-thumb">
+        <img src="${thumb}" alt="${recipe.title}" />
+        <div class="overlay">
+          <span>View Recipe</span>
+        </div>
       </div>
       <div class="card-body">
         <h3>${recipe.title}</h3>
@@ -46,11 +43,9 @@ function renderFeaturedRecipes(recipes) {
   });
 }
 
-// Get YouTube thumbnail
 function getVideoThumbnail(url) {
   const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
+  return match ? `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg` : null;
 }
 
-// Initialize
 fetchFeaturedRecipes();
