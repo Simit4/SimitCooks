@@ -347,7 +347,9 @@ h1, h2, h3, h4, h5 {
   }
   .thumbnail-wrapper img,
   .momo-placeholder {
-    height: 150px;                      /* smaller for mobile */
+    width: 100%;
+    height: auto;
+    object-fit: contain;  /* show entire image */                   /* smaller for mobile */
   }
 
   .card-body { padding: 12px; }
