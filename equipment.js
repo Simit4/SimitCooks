@@ -53,4 +53,5 @@ async function fetchEquipment() {
   });
 }
 
+// Run on page load
 fetchEquipment();
