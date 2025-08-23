@@ -131,9 +131,10 @@ async function fetchEquipmentByIds(ids) {
     return;
   }
 
-  data.forEach(item => {
+  data.forEach((item, index) => {
     const card = document.createElement('div');
     card.className = 'equipment-item';
+    card.style.animationDelay = `${index * 0.1}s`; // staggered fade-in
 
     card.innerHTML = `
       <div class="image-wrapper">
@@ -149,6 +150,7 @@ async function fetchEquipmentByIds(ids) {
     container.appendChild(card);
   });
 }
+
 
 
 
