@@ -201,98 +201,41 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Hero Section
 -------------------------------------------------- */
-.about-hero-premium {
-  padding: 60px 0; /* compact height */
-  background: var(--bg);
-  position: relative;
-  overflow: hidden;
+.about-hero-simple {
+  padding: 80px 20px;  /* compact height */
+  background: linear-gradient(135deg, #27ae60, #f4a261); /* fresh gradient */
+  color: #fff;
+  text-align: center;
+  border-radius: 16px;
 }
 
-.hero-premium-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  flex-wrap: wrap;
-  position: relative;
-}
-
-.hero-text {
-  flex: 1 1 500px;
-  color: var(--text);
-  z-index: 2;
-}
-
-.hero-text h1 {
+.hero-simple-container h1 {
   font-size: 3rem;
   font-weight: 800;
   margin-bottom: 1rem;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
+  background: linear-gradient(90deg, #fff, rgba(255,255,255,0.8));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.hero-text p {
-  font-size: 1.1rem;
-  margin-bottom: 0.8rem;
-  line-height: 1.6;
-  color: var(--text);
-}
-
-.hero-visual {
-  flex: 1 1 400px;
-  height: 300px;
-  position: relative;
-  border-radius: 16px;
-}
-
-.shape {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.6;
-  transform: translate(0,0);
-  transition: transform 0.5s ease;
-}
-
-.shape1 {
-  width: 200px;
-  height: 200px;
-  top: -40px;
-  right: -60px;
-  background: var(--primary);
-}
-
-.shape2 {
-  width: 250px;
-  height: 250px;
-  bottom: -50px;
-  right: 40px;
-  background: var(--accent);
-}
-
-.hero-visual:hover .shape {
-  transform: translateY(-10px) scale(1.05);
+.hero-simple-container p {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  max-width: 700px;
+  margin: 10px auto;
+  color: #fff;
 }
 
 /* Responsive */
-@media (max-width: 992px) {
-  .hero-premium-container {
-    flex-direction: column-reverse;
-    text-align: center;
-  }
-
-  .hero-visual {
-    width: 100%;
-    height: 200px;
-    margin-bottom: 20px;
-  }
-
-  .hero-text h1 {
+@media (max-width: 768px) {
+  .hero-simple-container h1 {
     font-size: 2.5rem;
   }
-}
 
+  .hero-simple-container p {
+    font-size: 1rem;
+  }
+}
 
 
 
