@@ -24,7 +24,7 @@ function showSkeleton(count = BATCH) {
   }
 }
 
-// Render batch of equipment cards
+// Render batch
 function renderBatch(data) {
   const fragment = document.createDocumentFragment();
   const batch = data.slice(loadedCount, loadedCount + BATCH);
@@ -52,7 +52,7 @@ function renderBatch(data) {
   container.appendChild(fragment);
   loadedCount += batch.length;
 
-  // Match card heights after images load
+  // Match card heights
   const images = container.querySelectorAll('img');
   let loadedImages = 0;
   images.forEach(img => {
@@ -67,7 +67,7 @@ function renderBatch(data) {
   observeLastCard();
 }
 
-// Match card heights dynamically
+// Match card heights
 function matchCardHeights() {
   const cards = document.querySelectorAll('.equipment-card');
   let maxHeight = 0;
@@ -78,7 +78,7 @@ function matchCardHeights() {
   cards.forEach(card => card.style.height = maxHeight + 'px');
 }
 
-// Fetch equipment from Supabase
+// Fetch equipment
 async function fetchEquipment() {
   try {
     showSkeleton();
@@ -98,7 +98,7 @@ async function fetchEquipment() {
   }
 }
 
-// Infinite scroll observer
+// Infinite scroll
 function observeLastCard() {
   const cards = document.querySelectorAll('.equipment-card');
   const lastCard = cards[cards.length - 1];
@@ -106,8 +106,8 @@ function observeLastCard() {
 
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting && loadedCount < allEquipment.length) {
-        renderBatch(allEquipment);
+      if (entry.isIntersecting && loadedCount < filteredEquipment.length) {
+        renderBatch(filteredEquipment);
         observer.disconnect();
       }
     });
@@ -117,31 +117,27 @@ function observeLastCard() {
 }
 
 // Filter buttons
+let filteredEquipment = [];
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
     btn.classList.add('active');
     const filter = btn.dataset.filter;
-    const filtered = filter === 'all' ? allEquipment : allEquipment.filter(i => i.category === filter);
+    filteredEquipment = filter === 'all' ? allEquipment : allEquipment.filter(i => i.category === filter);
     container.innerHTML = '';
     loadedCount = 0;
-    renderBatch(filtered);
+    renderBatch(filteredEquipment);
   });
 });
 
-// Fade-in animation
-const style = document.createElement('style');
-style.innerHTML = `
-.fade-in {
-  opacity:0;
-  transform:translateY(20px);
-  animation: fadeInUp 0.6s forwards;
-}
-@keyframes fadeInUp {
-  to { opacity:1; transform:translateY(0); }
-}
-`;
-document.head.appendChild(style);
-
+// Initialize
+filteredEquipment = allEquipment;
 fetchEquipment();
 
+// Fade-in CSS
+const style = document.createElement('style');
+style.innerHTML = `
+.fade-in { opacity:0; transform:translateY(20px); animation: fadeInUp 0.6s forwards; }
+@keyframes fadeInUp { to { opacity:1; transform:translateY(0); } }
+`;
+document.head.appendChild(style);
