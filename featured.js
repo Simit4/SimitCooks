@@ -26,6 +26,7 @@ function renderFeaturedRecipes(recipes) {
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
+    // Do NOT set inline flex here — CSS handles mobile responsiveness
     card.onclick = () => window.location.href = `/recipe/${recipe.slug}`;
     card.innerHTML = `
       <div class="thumbnail-wrapper">
@@ -39,7 +40,6 @@ function renderFeaturedRecipes(recipes) {
     container.appendChild(card);
   });
 }
-
 
 function getVideoThumbnail(url) {
   const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
