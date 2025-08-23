@@ -300,7 +300,7 @@ h1, h2, h3, h4, h5 {
 
 .timeline-item {
   position: relative;
-  margin-bottom: 60px;
+  margin-bottom: 30px;
   opacity: 0;
   transform: translateX(-60px);
   transition: all 0.7s ease-out;
@@ -356,7 +356,7 @@ h1, h2, h3, h4, h5 {
 .about-cta {
   background: var(--cta-bg);
   text-align: center;
-  padding: 100px 20px;
+  padding: 60px 10px;
   border-radius: 16px;
   margin: 80px 0;
 }
