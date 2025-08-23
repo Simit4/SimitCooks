@@ -171,37 +171,6 @@ h1, h2, h3, h4, h5 {
 
 
 
-/* Responsive Logo */
-@media (max-width: 768px) {
-  .logo {
-    font-size: 2rem;
-  }
-
-  /* Hide desktop nav by default on mobile */
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    gap: 1rem;
-    margin-top: 0.75rem;
-    background: var(--light);
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: var(--shadow-md);
-    position: absolute;
-    top: 100%;
-    right: 1rem;
-  }
-
-  /* Show nav when active */
-  .nav-links.active {
-    display: flex;
-  }
-
-  /* Show hamburger on mobile */
-  .hamburger {
-    display: flex;
-  }
-}
 
 
 
@@ -386,13 +355,6 @@ h1, h2, h3, h4, h5 {
 
 
 
-
-
-
-
-
-
-
 /* ------------------------------------------------- Footer -------------------------------------------------- */
 
 /* ===== Base Footer Styling ===== */
@@ -472,6 +434,44 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Mobile Responsive – Cleaned & Optimized
 -------------------------------------------------- */
+
+
+/* Responsive Logo */
+@media (max-width: 768px) {
+  .logo {
+    font-size: 2rem;
+  }
+
+  /* Hide desktop nav by default on mobile */
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 0.75rem;
+    background: var(--light);
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow-md);
+    position: absolute;
+    top: 100%;
+    right: 1rem;
+  }
+
+  /* Show nav when active */
+  .nav-links.active {
+    display: flex;
+  }
+
+  /* Show hamburger on mobile */
+  .hamburger {
+    display: flex;
+  }
+}
+
+
+
+
+
 @media (max-width: 768px) {
   /* Navbar */
   .site-header {
