@@ -8,41 +8,49 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const container = document.getElementById('equipment-container');
 const filterButtons = document.querySelectorAll('.filter-btn');
 let allEquipment = [];
+let loadedCount = 0;
+const BATCH = 6;
 
-function showSkeleton(count=3){
+// Skeleton loader
+function showSkeleton(count = BATCH){
   container.innerHTML = '';
   for(let i=0;i<count;i++){
     const skeleton = document.createElement('div');
-    skeleton.className = 'equipment-card skeleton';
-    skeleton.innerHTML = `<div class="image-wrapper"></div><div class="card-body"></div>`;
+    skeleton.className='equipment-card skeleton';
+    skeleton.innerHTML=`<div class="image-wrapper"></div><div class="card-body"></div>`;
     container.appendChild(skeleton);
   }
 }
 
-function renderEquipment(data){
-  container.innerHTML = '';
-  if(!data || data.length===0){
-    container.innerHTML="<p>No equipment found.</p>";
-    return;
-  }
-  data.forEach(item=>{
+// Render batch
+function renderBatch(data){
+  const fragment = document.createDocumentFragment();
+  const batch = data.slice(loadedCount, loadedCount + BATCH);
+
+  batch.forEach((item, index)=>{
     const card = document.createElement('div');
     card.className='equipment-card';
+    const shortDesc = item.description ? item.description.split('. ')[0]+'.' : '';
     card.innerHTML=`
       <div class="image-wrapper">
         <img src="${item.image_url}" alt="${item.name}">
+        ${item.category ? `<span class="category-badge">${item.category}</span>` : ''}
       </div>
-      <div class="card-body">
+      <div class="card-body" title="${item.description}">
         <h3>${item.name}</h3>
-        <p>${item.description}</p>
+        <p>${shortDesc}</p>
         ${item.affiliate_link ? `<a href="${item.affiliate_link}" target="_blank" rel="noopener noreferrer" class="btn-buy">Buy Now</a>` : ''}
       </div>
     `;
-    container.appendChild(card);
+    card.style.animationDelay = `${(loadedCount+index)*0.08}s`;
+    fragment.appendChild(card);
   });
+
+  container.appendChild(fragment);
+  loadedCount += batch.length;
 }
 
-// Fetch all equipment
+// Fetch equipment
 async function fetchEquipment(){
   try{
     showSkeleton();
@@ -50,24 +58,34 @@ async function fetchEquipment(){
       .from('equipment_db')
       .select('id,name,image_url,description,affiliate_link,category')
       .order('id');
-
     if(error) throw error;
     allEquipment = data;
-    renderEquipment(allEquipment);
+    loadedCount = 0;
+    container.innerHTML='';
+    renderBatch(allEquipment);
   }catch(err){
     console.error(err);
-    container.innerHTML="<p>Error loading equipment.</p>";
+    container.innerHTML="<p class='error-message'>Failed to load equipment.</p>";
   }
 }
 
-// Filter buttons
+// Lazy load
+window.addEventListener('scroll', ()=>{
+  if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 200){
+    if(loadedCount<allEquipment.length) renderBatch(allEquipment);
+  }
+});
+
+// Filters
 filterButtons.forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelector('.filter-btn.active').classList.remove('active');
+  btn.addEventListener('click', ()=>{
+    document.querySelector('.filter-btn.active')?.classList.remove('active');
     btn.classList.add('active');
     const filter = btn.dataset.filter;
-    if(filter==='all') renderEquipment(allEquipment);
-    else renderEquipment(allEquipment.filter(item=>item.category===filter));
+    const filtered = filter==='all' ? allEquipment : allEquipment.filter(i=>i.category===filter);
+    container.innerHTML='';
+    loadedCount=0;
+    renderBatch(filtered);
   });
 });
 
