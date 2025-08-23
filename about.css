@@ -202,144 +202,146 @@ h1, h2, h3, h4, h5 {
 
 
 
-/* -------------------------------------------------
-   About Page
--------------------------------------------------- */
 /* -------------------------------
    Hero Section
 ---------------------------------*/
 .about-hero {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 120px 20px;
-  background: linear-gradient(135deg, #27ae60, #f4a261);
+  min-height: 100vh;
+  background: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1950&q=80') center/cover no-repeat fixed;
   color: #fff;
-  min-height: 500px;
+  overflow: hidden;
+}
+
+.about-hero .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--hero-overlay);
+  z-index: 1;
+}
+
+.about-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
 }
 
 .about-hero h1 {
   font-family: 'Poppins', sans-serif;
   font-size: 3rem;
   margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s forwards;
 }
 
 .about-hero h1 span {
-  color: #f4a261;
+  color: var(--accent);
 }
 
 .about-hero p {
   font-size: 1.2rem;
-  max-width: 700px;
-  margin: 0 auto 1rem;
-  line-height: 1.7;
+  margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s forwards;
 }
 
+.fade-in.delay-1 {
+  animation-delay: 0.5s;
+}
+.fade-in.delay-2 {
+  animation-delay: 1s;
+}
+.fade-in.delay-3 {
+  animation-delay: 1.5s;
+}
 
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-
-
-
-
-
-/* Timeline / Fun Facts */
+/* -------------------------------
+   Timeline / Fun Facts
+---------------------------------*/
 .about-facts {
-  margin-top: 4rem;
+  padding: 80px 0;
   text-align: center;
 }
 
 .about-facts h3 {
-font-family: 'Montserrat', sans-serif; /* Clean, modern, slightly stylish */
-  font-size: 2.5rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 50px;
   color: var(--primary);
-  margin-bottom: 2rem;
-  font-weight: 700;
 }
 
-/* Timeline container */
 .timeline {
-  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  padding-left: 2rem;
+  gap: 30px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-/* Vertical line */
-.timeline::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 20px;
-  width: 4px;
-  height: 100%;
-  background: var(--primary);
-  border-radius: 2px;
-}
-
-/* Timeline card/item */
 .timeline-item {
-  position: relative;
   background: #fff;
-  padding: 1rem 1.5rem;
+  padding: 25px 30px;
+  border-left: 5px solid var(--accent);
   border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  text-align: left;
+  font-size: 1.1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Timeline dot */
-.timeline-item::before {
-  content: '';
-  position: absolute;
-  left: -38px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  background: var(--primary);
-  border-radius: 50%;
-  border: 3px solid #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
-
-/* Hover effect */
 .timeline-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 25px rgba(0,0,0,0.12);
 }
 
-/* Text inside timeline */
-.timeline-item p {
-  margin: 0;
-  line-height: 1.5;
-  font-size: 1rem;
-  color: #333;
-}
-
-/* Mobile Responsive */
-@media (max-width: 860px) {
-  .timeline {
-    padding-left: 1rem;
-    gap: 1.5rem;
+/* -------------------------------
+   Responsive
+---------------------------------*/
+@media (max-width: 768px) {
+  .about-hero h1 {
+    font-size: 2.2rem;
   }
 
-  .timeline-item::before {
-    left: -30px;
+  .about-hero p {
+    font-size: 1rem;
+  }
+
+  .navbar ul {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .timeline {
+    gap: 20px;
   }
 
   .timeline-item {
-    padding: 1rem 1.2rem;
-  }
-
-  .about-facts h3 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
+    padding: 20px;
   }
 }
+
+
+
 
 
 
