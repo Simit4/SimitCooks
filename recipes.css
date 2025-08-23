@@ -1,5 +1,5 @@
 /* -------------------------------------------------
-   Global Variables â€“ easy theming
+   Global Variables – easy theming
 -------------------------------------------------- */
 :root {
   --primary:      #27ae60;   /* fresh green */
@@ -37,6 +37,12 @@ a {
   text-decoration: none;
 }
 
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 /* -------------------------------------------------
    Headings
 -------------------------------------------------- */
@@ -45,6 +51,16 @@ h1, h2, h3, h4, h5 {
   font-weight: 700;
   color: var(--text);
   margin: 0 0 0.5em;
+}
+
+h1 {
+  font-size: clamp(1.8rem, 2.5vw, 3rem);
+}
+h2 {
+  font-size: clamp(1.5rem, 2vw, 2.2rem);
+}
+p {
+  font-size: clamp(0.9rem, 1vw, 1.1rem);
 }
 
 /* -------------------------------------------------
@@ -90,7 +106,6 @@ h1, h2, h3, h4, h5 {
   user-select: none;
   transition: transform 0.3s ease-in-out;
   text-shadow: 0 3px 6px rgba(0,0,0,0.08);
-  animation: fadeInLogo 0.8s ease-in-out;
 }
 
 .logo-modern {
@@ -112,7 +127,7 @@ h1, h2, h3, h4, h5 {
 
 /* Navbar Links */
 .nav-links {
-  display: flex;          /* desktop nav visible */
+  display: flex;
   gap: 2rem;
   list-style: none;
 }
@@ -174,7 +189,6 @@ h1, h2, h3, h4, h5 {
     font-size: 2rem;
   }
 
-  /* Hide desktop nav by default on mobile */
   .nav-links {
     display: none;
     flex-direction: column;
@@ -189,31 +203,30 @@ h1, h2, h3, h4, h5 {
     right: 1rem;
   }
 
-  /* Show nav when active */
   .nav-links.active {
     display: flex;
   }
 
-  /* Show hamburger on mobile */
   .hamburger {
     display: flex;
   }
 }
 
-
-
-
-
-/* 🔥 Hero */
+/* -------------------------------------------------
+   Hero
+-------------------------------------------------- */
 .hero {
-  text-align: center; padding: 60px 20px;
+  text-align: center;
+  padding: 60px 20px;
   background: linear-gradient(135deg,var(--primary),var(--accent));
   color: #fff;
 }
-.hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
+.hero h1 { margin-bottom: 10px; }
 .hero p { font-size: 1.1rem; }
 
-/* 🔥 Controls */
+/* -------------------------------------------------
+   Controls
+-------------------------------------------------- */
 .controls {
   padding: 20px;
   display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;
@@ -231,19 +244,23 @@ h1, h2, h3, h4, h5 {
   padding: 10px 15px; border: 1px solid #ccc; border-radius: 25px; width: 220px;
 }
 
-/* 🔥 Recipes Grid */
+/* -------------------------------------------------
+   Recipes Grid
+-------------------------------------------------- */
 .recipes-grid {
-  display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-  gap: 30px; padding: 30px 8%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+  gap: 30px;
+  padding: 30px 8%;
 }
 .recipe-card {
   background: #fff; border-radius: 18px; overflow: hidden; cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
-  box-shadow: 0 8px 20px var(--shadow);
+  box-shadow: var(--shadow-md);
 }
 .recipe-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 18px 40px var(--shadow);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.12);
 }
 
 /* Thumbnail wrapper */
@@ -287,14 +304,73 @@ h1, h2, h3, h4, h5 {
   height: 40px; overflow: hidden; text-overflow: ellipsis;
 }
 
-/* 🔥 Footer */
+/* -------------------------------------------------
+   Footer
+-------------------------------------------------- */
 .site-footer {
-  text-align: center; padding: 20px; background: var(--dark); color: #aaa; margin-top: 40px;
+  background: #121212;
+  color: #ddd;
+  padding: 2rem 1rem;
+  font-size: 0.9rem;
 }
 
-/* 🔥 Mobile Responsive */
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-brand .logo {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.footer-brand p {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-nav a {
+  color: #ddd;
+  transition: color 0.3s;
+  font-size: 0.9rem;
+}
+.footer-nav a:hover {
+  color: #ff0000;
+}
+
+.footer-social a {
+  font-size: 1.3rem;
+  color: #ff0000;
+  transition: opacity 0.3s;
+}
+.footer-social a:hover {
+  opacity: 0.8;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 1rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.8rem;
+  color: #888;
+}
+
+/* -------------------------------------------------
+   Responsive Breakpoints
+-------------------------------------------------- */
+
+/* Tablets & Small Laptops */
 @media (max-width: 768px) {
-  /* Navbar */
   .site-header {
     flex-direction: column;
     align-items: flex-start;
@@ -306,36 +382,16 @@ h1, h2, h3, h4, h5 {
     flex-wrap: wrap;
     gap: 10px;
   }
-  .nav-links a {
-    margin-left: 0;
-  }
-
-  /* Hero */
   .hero {
     padding: 40px 15px;
   }
-  .hero h1 {
-    font-size: 2rem;
-  }
-  .hero p {
-    font-size: 1rem;
-  }
-
-  /* Controls */
+  .hero h1 { font-size: 2rem; }
+  .hero p { font-size: 1rem; }
   .controls {
     flex-direction: column;
     gap: 15px;
     padding: 15px;
   }
-  .filters {
-    justify-content: center;
-  }
-  #search-input {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  /* Recipes Grid - Swipe Friendly */
   .recipes-grid {
     display: flex;
     overflow-x: auto;
@@ -344,160 +400,39 @@ h1, h2, h3, h4, h5 {
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
   }
-
   .recipe-card {
     min-width: 220px;
     flex: 0 0 auto;
     scroll-snap-align: start;
   }
-  .thumbnail-wrapper {
-    height: 150px;
-  }
+  .thumbnail-wrapper,
   .momo-placeholder {
     height: 150px;
-  }
-
-  /* Card Body */
-  .card-body {
-    padding: 12px;
-  }
-  .recipe-card h3 {
-    font-size: 1.1rem;
-  }
-  .recipe-card p {
-    font-size: 0.8rem;
-    height: auto;
   }
 }
 
 /* Extra small screens */
 @media (max-width: 480px) {
-  .site-header {
-    padding: 10px 5%;
-  }
-  .hero h1 {
-    font-size: 1.6rem;
-  }
-  .hero p {
-    font-size: 0.9rem;
-  }
-  .recipe-card {
-    min-width: 180px;
-  }
-  .thumbnail-wrapper, .momo-placeholder {
-    height: 130px;
-  }
-  .card-body h3 {
-    font-size: 0.95rem;
-  }
-  .card-body p {
-    font-size: 0.7rem;
-  }
+  .site-header { padding: 10px 5%; }
+  .hero h1 { font-size: 1.6rem; }
+  .hero p { font-size: 0.9rem; }
+  .recipe-card { min-width: 180px; }
+  .thumbnail-wrapper, .momo-placeholder { height: 130px; }
+  .card-body h3 { font-size: 0.95rem; }
+  .card-body p { font-size: 0.7rem; }
 }
 
-
-
-
-
-/* ------------------------------------------------- Footer -------------------------------------------------- */
-
-/* ===== Base Footer Styling ===== */
-.site-footer {
-  background: #121212;
-  color: #ddd;
-  padding: 2rem 1rem;
-  font-size: 0.9rem;
+/* Ultra small devices (≤360px) */
+@media (max-width: 360px) {
+  .logo { font-size: 1.4rem; }
+  .recipe-card { min-width: 160px; }
+  .hero h1 { font-size: 1.4rem; }
+  .hero p { font-size: 0.8rem; }
 }
 
-/* Footer main container */
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
+/* Large screens >1400px */
+@media (min-width: 1400px) {
+  .container { max-width: 1400px; }
+  .hero { padding: 100px 20px; }
+  .hero h1 { font-size: 3.5rem; }
 }
-
-/* ===== Footer Brand / Logo ===== */
-.footer-brand .logo {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.footer-brand p {
-  font-size: 0.85rem;
-  color: #aaa;
-}
-
-/* ===== Footer Navigation ===== */
-.footer-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.footer-nav a {
-  color: #ddd;
-  text-decoration: none;
-  transition: color 0.3s;
-  font-size: 0.9rem;
-}
-
-.footer-nav a:hover {
-  color: #ff0000;
-}
-
-/* ===== Social Icons ===== */
-.footer-social a {
-  font-size: 1.3rem;
-  color: #ff0000;
-  transition: opacity 0.3s;
-}
-
-.footer-social a:hover {
-  opacity: 0.8;
-}
-
-/* ===== Footer Bottom / Copyright ===== */
-.footer-bottom {
-  text-align: center;
-  padding-top: 1rem;
-  margin-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.8rem;
-  color: #888;
-}
-
-/* ===== Mobile / Small Screen Adjustments ===== */
-@media (max-width: 600px) {
-  .footer-content {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 1rem;
-  }
-
-  .footer-brand .logo {
-    font-size: 1.2rem;
-  }
-
-  .footer-nav {
-    justify-content: center;
-    gap: 0.8rem;
-  }
-
-  .footer-nav a {
-    font-size: 0.85rem;
-  }
-
-  .footer-social a {
-    font-size: 1.2rem;
-  }
-
-  .site-footer {
-    padding: 1.2rem 0.8rem; /* smaller padding for mobile */
-  }
-}
-
