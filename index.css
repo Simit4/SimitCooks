@@ -590,78 +590,44 @@ h1, h2, h3, h4, h5 {
 
 
 /* -------------------------------------------------
-   Featured Recipes – Mobile Responsive Fix
+   Mobile Responsive – Horizontal Scroll
 -------------------------------------------------- */
 @media (max-width: 768px) {
   #Featured-Recipes-h2 {
     font-size: 1.8rem;
-    padding: 40px 20px;    
-    text-align: center;
+    padding: 40px 20px;
   }
 
-  .recipes-grid {
-    display: flex;            /* switch from grid */
-    flex-wrap: nowrap;        /* no wrapping */
+  /* Horizontal Scroll Container */
+  #recipes-container.recipes-grid {
+    display: flex !important;           /* force flex */
+    flex-wrap: nowrap;
     overflow-x: auto;
     gap: 15px;
     padding: 20px 5%;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    scroll-padding-left: 5%;
+    scroll-padding-right: 5%;
+    grid-template-columns: none !important; /* override desktop grid */
   }
 
   .recipe-card {
-    flex: 0 0 auto;           /* prevent stretching */
-    min-width: 220px;         /* fixed width for cards */
+    flex: 0 0 220px;                    /* fixed width cards */
     scroll-snap-align: start;
+    min-width: 220px;
   }
-   
-.thumbnail-wrapper,
-.momo-placeholder {
-  height: 150px;
-}
 
-.thumbnail-wrapper img,
-.momo-placeholder img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-
-
+  .thumbnail-wrapper, .momo-placeholder { height: 150px; }
   .card-body { padding: 12px; }
   .recipe-card h3 { font-size: 1.1rem; }
-  .recipe-card p {
-    font-size: 0.8rem;
-    height: 40px;            /* keep fixed height */
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  .recipe-card p { font-size: 0.8rem; height: 40px; }
 }
 
 @media (max-width: 480px) {
-  #Featured-Recipes-h2 {
-    font-size: 1.5rem;
-  }
-
-  .recipe-card {
-    min-width: 180px;             /* smaller cards for small screens */
-  }
-
-   .recipe-card p {
-    height: auto;
-  }
-
-  .thumbnail-wrapper,
-  .momo-placeholder {
-    height: 130px;
-  }
-
-  .card-body h3 {
-    font-size: 0.95rem;
-  }
-
-  .card-body p {
-    font-size: 0.7rem;
-  }
-   
+  #Featured-Recipes-h2 { font-size: 1.5rem; }
+  .recipe-card { flex: 0 0 180px; min-width: 180px; }
+  .thumbnail-wrapper, .momo-placeholder { height: 130px; }
+  .card-body h3 { font-size: 0.95rem; }
+  .card-body p { font-size: 0.7rem; height: auto; }
 }
