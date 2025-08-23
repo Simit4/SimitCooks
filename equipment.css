@@ -254,93 +254,107 @@ h1, h2, h3, h4, h5 {
 
 
 
-
-/* Equipment Grid */
-.equipment-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1.5rem 4rem;
-}
-
 #equipment-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
   max-width: 1200px;
   margin: auto;
 }
 
+/* Equipment Card */
 .equipment-card {
   display: flex;
   flex-direction: column;
   background: #fff;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 6px var(--shadow);
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .equipment-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 12px var(--shadow);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px var(--shadow);
 }
 
+/* Image Wrapper */
 .equipment-card .image-wrapper {
   width: 100%;
-  height: 240px; /* fixed but flexible */
+  height: 260px;
   display: flex;
   justify-content: center;
   align-items: center;
   background: #fff;
-  padding: 15px;
+  padding: 10px;
 }
 
 .equipment-card img {
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain; /* full image, never cropped */
+  object-fit: contain; /* full image, not cropped */
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
 }
 
 .equipment-card img.loaded {
   opacity: 1;
 }
 
+/* Card Body */
 .equipment-card .card-body {
   padding: 12px 15px;
   text-align: center;
 }
 
 .equipment-card h3 {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  margin: 0;
+  margin: 5px 0;
   color: var(--text);
+}
+
+.equipment-card p {
+  font-size: 0.88rem;
+  color: #555;
+  margin: 5px 0 10px;
+  line-height: 1.4;
+}
+
+/* Buy Button */
+.btn-buy {
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--primary);
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-buy:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
 }
 
 /* Skeleton Loader */
 .skeleton {
-  background: #fff;
-  border-radius: 10px;
-  overflow: hidden;
   animation: pulse 1.5s infinite;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .skeleton .image-wrapper {
-  height: 240px;
+  height: 260px;
   background: #eee;
 }
 
 .skeleton-text {
-  height: 14px;
+  height: 12px;
   background: #e0e0e0;
-  margin: 10px auto;
+  margin: 8px auto;
   border-radius: 4px;
 }
 
@@ -354,13 +368,37 @@ h1, h2, h3, h4, h5 {
   100% { background-color: #f0f0f0; }
 }
 
-/* Empty/Error */
+/* Empty / Error Messages */
 .empty, .error {
   text-align: center;
-  color: #666;
   font-size: 1.1rem;
+  color: #666;
   padding: 40px;
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  #equipment-container {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+  }
+  
+  .equipment-card .image-wrapper {
+    height: 200px;
+  }
+
+  .equipment-card h3 {
+    font-size: 1rem;
+  }
+
+  .equipment-card p {
+    font-size: 0.82rem;
+  }
+}
+
+
+
+
 
 /* ------------------------------------------------- Footer -------------------------------------------------- */
 
