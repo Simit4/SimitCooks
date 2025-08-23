@@ -270,7 +270,7 @@ h1, h2, h3, h4, h5 {
 .about-timeline {
   padding: 40px 20px;
   background: var(--section-bg);
-  border-radius: 12px;
+  border-radius: 30px;
 }
 
 .about-timeline h2 {
