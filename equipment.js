@@ -11,12 +11,12 @@ const filterButtons = document.querySelectorAll('.filter-btn');
 
 let allEquipment = [];
 let filteredEquipment = [];
-
+let loadedCount = 0; const BATCH = 20;
 
 // -------------------------------
 // Skeleton loader
 // -------------------------------
-function showSkeleton(count = 6) {
+function showSkeleton(count = BATCH) {
   container.innerHTML = '';
   for (let i = 0; i < count; i++) {
     const skeleton = document.createElement('div');
