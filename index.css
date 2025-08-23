@@ -169,6 +169,8 @@ h1, h2, h3, h4, h5 {
   transform: rotate(-45deg) translate(5px, -5px);
 }
 
+
+
 /* Responsive Logo */
 @media (max-width: 768px) {
   .logo {
@@ -200,6 +202,9 @@ h1, h2, h3, h4, h5 {
     display: flex;
   }
 }
+
+
+
 
 /* -------------------------------------------------
    Hero Section – Modern Soft
