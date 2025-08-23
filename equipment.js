@@ -13,43 +13,53 @@ const filterButtons = document.querySelectorAll(".filter-btn");
 function showSkeleton(count=6){
   equipmentContainer.innerHTML="";
   for(let i=0;i<count;i++){
-    const s=document.createElement("div");
-    s.className="equipment-card skeleton";
-    s.innerHTML=`<div class="image-wrapper"></div><div class="card-body"><div class="skeleton-text short"></div><div class="skeleton-text"></div></div>`;
-    equipmentContainer.appendChild(s);
+    const skeleton=document.createElement("div");
+    skeleton.className="equipment-card skeleton";
+    skeleton.innerHTML=`<div class="image-wrapper"></div><div class="card-body"><div class="skeleton-text short"></div><div class="skeleton-text"></div></div>`;
+    equipmentContainer.appendChild(skeleton);
   }
 }
 
-// Render Cards
+// Render Equipment
 function renderEquipment(data){
   equipmentContainer.innerHTML="";
   if(!data||data.length===0){equipmentContainer.innerHTML=`<p class="empty">No equipment found.</p>`;return;}
+  
   data.forEach(item=>{
     const card=document.createElement("div");
     card.className="equipment-card";
     card.dataset.category=item.category||"other";
+
+    const rating=item.rating||Math.floor(Math.random()*5+1);
+
     const imgSrc=item.image_url||'https://via.placeholder.com/300x260?text=No+Image';
-    card.innerHTML=`<div class="image-wrapper"><img src="${imgSrc}" alt="${item.name}" loading="lazy"></div>
+    card.innerHTML=`
+      <div class="image-wrapper"><img src="${imgSrc}" alt="${item.name}" loading="lazy"></div>
       <div class="card-body">
         <h3>${item.name}</h3>
         <p>${item.description}</p>
         ${item.affiliate_link?`<a href="${item.affiliate_link}" target="_blank" rel="noopener noreferrer" class="btn-buy">Buy Now</a>`:""}
-      </div>`;
+      </div>
+      <div class="overlay">
+        <div class="rating">${'★'.repeat(rating)}${'☆'.repeat(5-rating)}</div>
+        ${item.affiliate_link?`<a href="${item.affiliate_link}" target="_blank" class="btn-quick">Quick View</a>`:""}
+      </div>
+    `;
     card.querySelector("img").onload=()=>card.querySelector("img").classList.add("loaded");
     equipmentContainer.appendChild(card);
   });
 }
 
-// Fetch Data
+// Fetch Equipment from Supabase
 async function fetchEquipment(){
   try{
     showSkeleton();
-    const {data,error}=await supabase.from("equipment_db").select("id,name,image_url,description,affiliate_link,category").order("id",{ascending:true});
-    if(error)throw error;
+    const { data, error } = await supabase.from("equipment_db").select("id,name,image_url,description,affiliate_link,category").order("id",{ascending:true});
+    if(error) throw error;
     renderEquipment(data);
   }catch(err){
     console.error(err);
-    equipmentContainer.innerHTML=`<p class="error">⚠️ Unable to load equipment. Please try again later.</p>`;
+    equipmentContainer.innerHTML=`<p class="error">⚠️ Unable to load equipment. Try again later.</p>`;
   }
 }
 
@@ -58,19 +68,19 @@ filterButtons.forEach(btn=>{
   btn.addEventListener("click",()=>{
     filterButtons.forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
-    const category=btn.dataset.filter;
-    const cards=document.querySelectorAll(".equipment-card");
-    cards.forEach(card=>{
-      if(category==="all"||card.dataset.category===category){
-        card.style.display="flex";
-        setTimeout(()=>card.classList.remove("hidden"),20);
-      }else{
-        card.classList.add("hidden");
-        setTimeout(()=>card.style.display="none",300);
-      }
+    const filter=btn.dataset.filter;
+    const allCards=document.querySelectorAll(".equipment-card");
+    allCards.forEach(card=>{
+      if(filter==="all"||card.dataset.category===filter) card.style.display="flex";
+      else card.style.display="none";
     });
   });
 });
 
-// Init
+// Mobile Menu
+const hamburger=document.querySelector(".hamburger");
+const navLinks=document.querySelector(".nav-links");
+hamburger.addEventListener("click",()=>{hamburger.classList.toggle("active"); navLinks.classList.toggle("active");});
+
+// Initialize
 fetchEquipment();
