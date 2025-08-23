@@ -205,17 +205,18 @@ h1, h2, h3, h4, h5 {
    Equipment Section Container
 -------------------------------------------------- */
 
+/* Equipment Grid */
 .equipment-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
 }
 
 /* Equipment Card */
 .equipment-item {
   background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -224,21 +225,20 @@ h1, h2, h3, h4, h5 {
 
 .equipment-item:hover {
   transform: translateY(-6px);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.15);
 }
 
-/* Large Image Focus */
+/* BIG IMAGE - full proper ratio */
 .equipment-item img {
   width: 100%;
-  height: 240px;
-  object-fit: cover;
+  height: auto;          /* keep natural aspect ratio */
   display: block;
   border-bottom: 1px solid #eee;
 }
 
-/* Content: Minimal */
+/* Content: minimal & centered */
 .equipment-item-content {
-  padding: 1rem;
+  padding: 1.5rem 1rem;
   text-align: center;
 }
 
@@ -246,30 +246,28 @@ h1, h2, h3, h4, h5 {
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
   color: var(--primary-dark, #1e8449);
-  font-size: 1.1rem;
-  margin-bottom: 0.8rem;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 /* Buy Button */
 .btn-buy {
   display: inline-block;
-  padding: 0.55rem 1.3rem;
-  font-size: 0.9rem;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #fff;
   background: linear-gradient(135deg, var(--primary, #27ae60), var(--primary-dark, #1e8449));
   border-radius: 8px;
   text-decoration: none;
   transition: all 0.25s ease;
-  box-shadow: 0 3px 10px rgba(39, 174, 96, 0.3);
+  box-shadow: 0 4px 14px rgba(39, 174, 96, 0.3);
 }
 
 .btn-buy:hover {
   background: var(--primary-dark, #1e8449);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
-
-
 
 
 
