@@ -202,8 +202,8 @@ h1, h2, h3, h4, h5 {
    Hero Section – Refined
 -------------------------------------------------- */
 .about-hero-simple {
-padding: 25px 15px;
-  background: linear-gradient(135deg, #e0f7fa, #b2ebf2); /* soft cyan gradient */
+  padding: 25px 15px;
+  background: linear-gradient(135deg, #fceabb, #f8b500); /* soft yellow-orange */
   color: #fff;
   text-align: center;
   position: relative;
