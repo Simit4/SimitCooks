@@ -6,7 +6,6 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-
 // Convert YouTube URL to embed URL
 function convertToEmbedUrl(url) {
   if (!url) return '';
@@ -23,7 +22,6 @@ async function fetchAndRenderRecipe() {
   if (pathParts[0] === 'recipe' && pathParts[1]) {
     slug = pathParts[1];
   } else {
-    // fallback to ?slug=<slug>
     const params = new URLSearchParams(window.location.search);
     slug = params.get('slug');
   }
@@ -102,7 +100,7 @@ function renderRecipe(recipe) {
   document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
   document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
 
-  // Video: only show if valid URL
+  // Video
   const embedUrl = convertToEmbedUrl(recipe.video_url);
   const videoContainer = document.querySelector('.recipe-video');
   if (embedUrl) {
@@ -118,7 +116,7 @@ function renderRecipe(recipe) {
   }
 }
 
-// Fetch equipment details by IDs
+// Fetch equipment details by IDs and render with modern card structure
 async function fetchEquipmentByIds(ids) {
   const { data, error } = await supabase
     .from('equipment_db')
@@ -134,18 +132,25 @@ async function fetchEquipmentByIds(ids) {
   }
 
   data.forEach(item => {
-    container.innerHTML += `
-      <div class="equipment-item">
-        <img src="${item.image_url}" alt="${item.name}" class="equipment-image" />
-        <h3 class="equipment-title">${item.name}</h3>
-        <p class="equipment-description">${item.description || ''}</p>
-        <a href="${item.affiliate_link}" class="btn-buy" target="_blank" rel="noopener noreferrer">Buy Now</a>
+    const card = document.createElement('div');
+    card.className = 'equipment-item';
+
+    card.innerHTML = `
+      <div class="image-wrapper">
+        <img src="${item.image_url}" alt="${item.name}">
+        <div class="overlay">
+          <a href="${item.affiliate_link || '#'}" target="_blank" class="btn-buy">Buy Now</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <h4>${item.name}</h4>
+        <p>${item.description || ''}</p>
       </div>
     `;
+
+    container.appendChild(card);
   });
 }
 
 // Initialize
 fetchAndRenderRecipe();
-
-
