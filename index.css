@@ -429,20 +429,22 @@ h1, h2, h3, h4, h5 {
 
 
 
-
-
 /* -------------------------------------------------
    Mobile Responsive – Cleaned & Optimized
 -------------------------------------------------- */
 
-
-/* Responsive Logo */
+/* Responsive Logo & Hamburger */
 @media (max-width: 768px) {
   .logo {
     font-size: 2rem;
   }
 
-  /* Hide desktop nav by default on mobile */
+  /* Hamburger Menu */
+  .hamburger {
+    display: flex;
+  }
+
+  /* Mobile nav hidden by default, shown when active */
   .nav-links {
     display: none;
     flex-direction: column;
@@ -455,36 +457,17 @@ h1, h2, h3, h4, h5 {
     position: absolute;
     top: 100%;
     right: 1rem;
+    z-index: 1000;
   }
 
-  /* Show nav when active */
   .nav-links.active {
     display: flex;
   }
 
-  /* Show hamburger on mobile */
-  .hamburger {
-    display: flex;
-  }
-}
-
-
-
-
-
-@media (max-width: 768px) {
-  /* Navbar */
   .site-header {
     flex-direction: column;
     align-items: flex-start;
     padding: 15px 5%;
-  }
-
-  .nav-links {
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
   }
 
   .nav-links a {
@@ -517,7 +500,7 @@ h1, h2, h3, h4, h5 {
     padding: 0 1rem;
   }
 
-  /* Recipes Grid: swipe-friendly */
+  /* Recipes Grid – swipe-friendly */
   .recipes-grid {
     display: flex;
     overflow-x: auto;
@@ -540,6 +523,7 @@ h1, h2, h3, h4, h5 {
 
   .card-body {
     padding: 12px;
+    text-align: center;
   }
 
   .recipe-card h3 {
@@ -568,6 +552,7 @@ h1, h2, h3, h4, h5 {
   }
 }
 
+/* Extra small screens */
 @media (max-width: 480px) {
   /* Hero */
   .hero {
@@ -639,3 +624,6 @@ h1, h2, h3, h4, h5 {
     font-size: 1.2rem;
   }
 }
+
+
+
