@@ -205,14 +205,16 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    About Page
 -------------------------------------------------- */
-
+/* -------------------------------
+   Hero Section
+---------------------------------*/
 .about-hero {
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 120px 20px;
-  background: linear-gradient(135deg, #27ae60, #f4a261); /* subtle green to warm orange */
+  background: linear-gradient(135deg, #27ae60, #f4a261);
   color: #fff;
   min-height: 500px;
 }
@@ -224,11 +226,10 @@ h1, h2, h3, h4, h5 {
 }
 
 .about-hero h1 span {
-  color: #f4a261; /* accent color for "Us" */
+  color: #f4a261;
 }
 
 .about-hero p {
-  font-family: 'Open Sans', sans-serif;
   font-size: 1.2rem;
   max-width: 700px;
   margin: 0 auto 1rem;
@@ -239,70 +240,8 @@ h1, h2, h3, h4, h5 {
 
 
 
-.about-us {
-  background: linear-gradient(to right, #fffaf6, #fff4e6);
-  padding: 4rem 2rem;
-  font-family: 'Open Sans', sans-serif;
-  color: #2a2a3a;
-}
-
-.about-container {
-  display: flex;
-  align-items: center;
-  gap: 3rem;
-  max-width: 1100px;
-  margin: 0 auto;
-  flex-wrap: wrap;
-}
-
-.about-image img {
-  width: 100%;
-  max-width: 450px;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-}
-
-.about-content h2 {
-font-family: 'Montserrat', sans-serif; /* Clean, modern, slightly stylish */
-font-size: 2.5rem;
-color: var(--primary);
-margin-bottom: 1rem;
-text-align: center;
-
-}
-
-.about-content h2 span {
-  color: #ef5b25;
-}
-
-.about-content p {
-  font-size: 1.1rem;
-  line-height: 1.7;
-  margin-bottom: 1rem;
-  color: #555768;
-}
 
 
-
-/* Mobile Responsive */
-@media (max-width: 860px) {
-  .about-container {
-    flex-direction: column-reverse;
-    text-align: center;
-  }
-
-  .about-image img {
-    max-width: 100%;
-  }
-
-  .about-content h2 {
-    font-size: 2rem;
-  }
-
-  .about-content p {
-    font-size: 1rem;
-  }
-}
 
 /* Timeline / Fun Facts */
 .about-facts {
