@@ -599,39 +599,31 @@ h1, h2, h3, h4, h5 {
     text-align: center;
   }
 
-  .recipes-grid {
-    display: flex;
-    flex-wrap: nowrap;           /* prevent wrapping */
-    overflow-x: auto;
-    gap: 15px;
-    padding: 20px 5%;
+    .recipes-grid {
+    display: flex !important;          /* ensures flex layout on mobile */
+    flex-wrap: nowrap;                 /* no wrapping */
+    overflow-x: auto;                  /* horizontal scroll */
+    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
     scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
+    padding: 20px 5%;
+    gap: 15px;
   }
-
   .recipe-card {
-    flex: 0 0 auto;              /* critical for mobile swipe */
-    min-width: 220px;            /* adjust card width */
+    flex: 0 0 220px;                   /* fixed width for swipe */
     scroll-snap-align: start;
   }
-
-  .thumbnail-wrapper,
+  .thumbnail-wrapper img,
   .momo-placeholder {
-    height: 150px;
+    height: 150px;                      /* smaller for mobile */
   }
 
-  .card-body {
-    padding: 12px;
-    text-align: center;
-  }
-
-  .recipe-card h3 {
-    font-size: 1.1rem;
-  }
-
+  .card-body { padding: 12px; }
+  .recipe-card h3 { font-size: 1.1rem; }
   .recipe-card p {
     font-size: 0.8rem;
-    height: auto;
+    height: 40px;            /* keep fixed height */
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
