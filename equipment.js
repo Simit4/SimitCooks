@@ -22,12 +22,12 @@ function showSkeleton(count = BATCH){
   }
 }
 
-// Render batch
+// Render a batch
 function renderBatch(data){
   const fragment = document.createDocumentFragment();
-  const batch = data.slice(loadedCount, loadedCount + BATCH);
+  const batch = data.slice(loadedCount, loadedCount+BATCH);
 
-  batch.forEach((item, index)=>{
+  batch.forEach((item,index)=>{
     const card = document.createElement('div');
     card.className='equipment-card';
     const shortDesc = item.description ? item.description.split('. ')[0]+'.' : '';
@@ -35,11 +35,14 @@ function renderBatch(data){
       <div class="image-wrapper">
         <img src="${item.image_url}" alt="${item.name}">
         ${item.category ? `<span class="category-badge">${item.category}</span>` : ''}
+        ${Math.random()<0.2 ? `<span class="special-badge">New</span>` : ''}
+        <div class="overlay">
+          <p>${shortDesc}</p>
+          ${item.affiliate_link ? `<a href="${item.affiliate_link}" target="_blank" class="btn-buy">Buy Now</a>` : ''}
+        </div>
       </div>
-      <div class="card-body" title="${item.description}">
+      <div class="card-body">
         <h3>${item.name}</h3>
-        <p>${shortDesc}</p>
-        ${item.affiliate_link ? `<a href="${item.affiliate_link}" target="_blank" rel="noopener noreferrer" class="btn-buy">Buy Now</a>` : ''}
       </div>
     `;
     card.style.animationDelay = `${(loadedCount+index)*0.08}s`;
@@ -47,20 +50,21 @@ function renderBatch(data){
   });
 
   container.appendChild(fragment);
-  loadedCount += batch.length;
+  loadedCount+=batch.length;
+  observeLastCard();
 }
 
 // Fetch equipment
 async function fetchEquipment(){
   try{
     showSkeleton();
-    const { data, error } = await supabase
-      .from('equipment_db')
+    const {data,error} = await supabase.from('equipment_db')
       .select('id,name,image_url,description,affiliate_link,category')
       .order('id');
+
     if(error) throw error;
-    allEquipment = data;
-    loadedCount = 0;
+    allEquipment=data;
+    loadedCount=0;
     container.innerHTML='';
     renderBatch(allEquipment);
   }catch(err){
@@ -69,12 +73,22 @@ async function fetchEquipment(){
   }
 }
 
-// Lazy load
-window.addEventListener('scroll', ()=>{
-  if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 200){
-    if(loadedCount<allEquipment.length) renderBatch(allEquipment);
-  }
-});
+// Infinite scroll using IntersectionObserver
+function observeLastCard(){
+  const cards = document.querySelectorAll('.equipment-card');
+  const lastCard = cards[cards.length-1];
+  if(!lastCard) return;
+
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting && loadedCount<allEquipment.length){
+        renderBatch(allEquipment);
+        observer.disconnect();
+      }
+    });
+  },{rootMargin:'100px'});
+  observer.observe(lastCard);
+}
 
 // Filters
 filterButtons.forEach(btn=>{
