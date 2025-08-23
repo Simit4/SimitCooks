@@ -297,6 +297,8 @@ h1, h2, h3, h4, h5 {
   color: #888;
 }
 
+
+
 /* =================================================
    🔹 Responsive
 ================================================= */
@@ -330,17 +332,23 @@ h1, h2, h3, h4, h5 {
   #search-input { width: 100%; max-width: 100%; }
 
   /* Recipes Grid – mobile swipe */
-  .recipes-grid {
-    display: flex;
-    overflow-x: auto;
+    .recipes-grid {
+    display: flex !important;          /* ensures flex layout on mobile */
+    flex-wrap: nowrap;                 /* no wrapping */
+    overflow-x: auto;                  /* horizontal scroll */
+    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+    scroll-snap-type: x mandatory;
     padding: 20px 5%;
     gap: 15px;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
   }
-  .recipe-card { min-width: 220px; flex: 0 0 auto; scroll-snap-align: start; }
-  .thumbnail-wrapper { height: 150px; }
-  .momo-placeholder { height: 150px; }
+  .recipe-card {
+    flex: 0 0 220px;                   /* fixed width for swipe */
+    scroll-snap-align: start;
+  }
+  .thumbnail-wrapper,
+  .momo-placeholder {
+    height: 150px;                      /* smaller for mobile */
+  }
 
   .card-body { padding: 12px; }
   .recipe-card h3 { font-size: 1.1rem; }
