@@ -5,6 +5,7 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+
 const container = document.getElementById('equipment-container');
 const filterButtons = document.querySelectorAll('.filter-btn');
 let allEquipment = [];
@@ -22,10 +23,10 @@ function showSkeleton(count = BATCH){
   }
 }
 
-// Render a batch
+// Render a batch of cards
 function renderBatch(data){
   const fragment = document.createDocumentFragment();
-  const batch = data.slice(loadedCount, loadedCount+BATCH);
+  const batch = data.slice(loadedCount, loadedCount + BATCH);
 
   batch.forEach((item,index)=>{
     const card = document.createElement('div');
@@ -35,7 +36,6 @@ function renderBatch(data){
       <div class="image-wrapper">
         <img src="${item.image_url}" alt="${item.name}">
         ${item.category ? `<span class="category-badge">${item.category}</span>` : ''}
-        ${Math.random()<0.2 ? `<span class="special-badge">New</span>` : ''}
         <div class="overlay">
           <p>${shortDesc}</p>
           ${item.affiliate_link ? `<a href="${item.affiliate_link}" target="_blank" class="btn-buy">Buy Now</a>` : ''}
@@ -50,11 +50,40 @@ function renderBatch(data){
   });
 
   container.appendChild(fragment);
-  loadedCount+=batch.length;
+  loadedCount += batch.length;
+
+  // After images load, match card heights
+  const images = container.querySelectorAll('img');
+  let loadedImages = 0;
+  images.forEach(img=>{
+    if(img.complete){
+      loadedImages++;
+    } else {
+      img.onload = () => {
+        loadedImages++;
+        if(loadedImages === images.length) matchCardHeights();
+      }
+    }
+  });
+  if(loadedImages === images.length) matchCardHeights();
+
   observeLastCard();
 }
 
-// Fetch equipment
+// Match all card heights dynamically
+function matchCardHeights(){
+  const cards = document.querySelectorAll('.equipment-card');
+  let maxHeight = 0;
+  cards.forEach(card=>{
+    card.style.height='auto'; // reset
+    if(card.offsetHeight > maxHeight) maxHeight = card.offsetHeight;
+  });
+  cards.forEach(card=>{
+    card.style.height = maxHeight + 'px';
+  });
+}
+
+// Fetch equipment from Supabase
 async function fetchEquipment(){
   try{
     showSkeleton();
@@ -63,8 +92,8 @@ async function fetchEquipment(){
       .order('id');
 
     if(error) throw error;
-    allEquipment=data;
-    loadedCount=0;
+    allEquipment = data;
+    loadedCount = 0;
     container.innerHTML='';
     renderBatch(allEquipment);
   }catch(err){
@@ -73,7 +102,7 @@ async function fetchEquipment(){
   }
 }
 
-// Infinite scroll using IntersectionObserver
+// Infinite scroll
 function observeLastCard(){
   const cards = document.querySelectorAll('.equipment-card');
   const lastCard = cards[cards.length-1];
@@ -81,7 +110,7 @@ function observeLastCard(){
 
   const observer = new IntersectionObserver(entries=>{
     entries.forEach(entry=>{
-      if(entry.isIntersecting && loadedCount<allEquipment.length){
+      if(entry.isIntersecting && loadedCount < allEquipment.length){
         renderBatch(allEquipment);
         observer.disconnect();
       }
