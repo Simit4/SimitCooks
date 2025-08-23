@@ -511,51 +511,7 @@ h1, h2, h3, h4, h5 {
     width: 100%;
     max-width: 100%;
   }
-}
-
-/* Extra small screens */
-@media (max-width: 480px) {
-  /* Hero */
-  .hero {
-    min-height: 45vh;
-    padding: 1rem;
-  }
-
-  .hero h1 {
-    font-size: 1.6rem;
-  }
-
-  .hero p {
-    font-size: 0.9rem;
-  }
-
-  .btn-hero {
-    font-size: 0.95rem;
-    padding: 0.5rem 1.3rem;
-  }
-
-  /* Featured Recipes Title */
-  #Featured-Recipes-h2 {
-    font-size: 1.5rem;
-  }
-
-  .recipe-card {
-    min-width: 180px;
-  }
-
-  .thumbnail-wrapper,
-  .momo-placeholder {
-    height: 130px;
-  }
-
-  .card-body h3 {
-    font-size: 0.95rem;
-  }
-
-  .card-body p {
-    font-size: 0.7rem;
-  }
-
+   
   /* Footer Adjustments */
   .site-footer {
     padding: 1.2rem 0.8rem;
@@ -584,6 +540,31 @@ h1, h2, h3, h4, h5 {
   .footer-social a {
     font-size: 1.2rem;
   }
+}
+
+
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  /* Hero */
+  .hero {
+    min-height: 45vh;
+    padding: 1rem;
+  }
+
+  .hero h1 {
+    font-size: 1.6rem;
+  }
+
+  .hero p {
+    font-size: 0.9rem;
+  }
+
+  .btn-hero {
+    font-size: 0.95rem;
+    padding: 0.5rem 1.3rem;
+  }
+
 }
 
 
