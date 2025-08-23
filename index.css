@@ -206,7 +206,7 @@ h1, h2, h3, h4, h5 {
 -------------------------------------------------- */
 .hero {
   background: linear-gradient(135deg, #f0f8f2, #eaf3e0); /* soft pastel gradient */
-  min-height: 70vh;
+  min-height: 50vh;
   display: flex;
   align-items: center;
   justify-content: center;
