@@ -507,6 +507,7 @@ h1, h2, h3, h4, h5 {
 
    
 
+/* ===== Mobile / Small Screen Adjustments ===== */
 @media (max-width: 600px) {
   .footer-content {
     flex-direction: column;
@@ -533,9 +534,10 @@ h1, h2, h3, h4, h5 {
   }
 
   .site-footer {
-    padding: 1.2rem 0.8rem;
+    padding: 1.2rem 0.8rem; /* smaller padding for mobile */
   }
 }
+
 
 
 
