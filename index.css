@@ -268,17 +268,20 @@ h1, h2, h3, h4, h5 {
 
 .btn-hero {
   display: inline-block;
-  padding: 0.65rem 2rem;
+  padding: 0.65rem 2.5rem;       /* extra horizontal padding for capsule shape */
   font-size: 1.1rem;
   font-weight: 700;
   color: #fff;
   background: var(--primary);
   border: none;
-  border-radius: 14px; /* slightly more modern rounded */
+  border-radius: 50px;           /* full capsule */
   box-shadow: 0 8px 20px rgba(39,174,96,0.35);
   cursor: pointer;
   transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
   text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
 .btn-hero:hover,
@@ -288,6 +291,7 @@ h1, h2, h3, h4, h5 {
   transform: translateY(-3px);
   outline: none;
 }
+
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
