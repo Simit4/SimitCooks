@@ -203,7 +203,7 @@ h1, h2, h3, h4, h5 {
 -------------------------------------------------- */
 .about-hero-simple {
 padding: 25px 15px;
-  background: var(--cta-bg);
+  background: linear-gradient(135deg, #e0f7fa, #b2ebf2); /* soft cyan gradient */
   color: #fff;
   text-align: center;
   position: relative;
