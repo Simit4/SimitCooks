@@ -6,6 +6,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
+
 const container = document.getElementById('equipment-container');
 const filterButtons = document.querySelectorAll('.filter-btn');
 let allEquipment = [];
@@ -13,26 +14,26 @@ let loadedCount = 0;
 const BATCH = 6;
 
 // Skeleton loader
-function showSkeleton(count = BATCH){
+function showSkeleton(count = BATCH) {
   container.innerHTML = '';
-  for(let i=0;i<count;i++){
+  for (let i = 0; i < count; i++) {
     const skeleton = document.createElement('div');
-    skeleton.className='equipment-card skeleton';
-    skeleton.innerHTML=`<div class="image-wrapper"></div><div class="card-body"></div>`;
+    skeleton.className = 'equipment-card skeleton';
+    skeleton.innerHTML = `<div class="image-wrapper"></div><div class="card-body"></div>`;
     container.appendChild(skeleton);
   }
 }
 
-// Render a batch of cards
-function renderBatch(data){
+// Render batch of equipment cards
+function renderBatch(data) {
   const fragment = document.createDocumentFragment();
   const batch = data.slice(loadedCount, loadedCount + BATCH);
 
-  batch.forEach((item,index)=>{
+  batch.forEach((item, index) => {
     const card = document.createElement('div');
-    card.className='equipment-card';
-    const shortDesc = item.description ? item.description.split('. ')[0]+'.' : '';
-    card.innerHTML=`
+    card.className = 'equipment-card fade-in';
+    const shortDesc = item.description ? item.description.split('. ')[0] + '.' : '';
+    card.innerHTML = `
       <div class="image-wrapper">
         <img src="${item.image_url}" alt="${item.name}">
         ${item.category ? `<span class="category-badge">${item.category}</span>` : ''}
@@ -45,91 +46,102 @@ function renderBatch(data){
         <h3>${item.name}</h3>
       </div>
     `;
-    card.style.animationDelay = `${(loadedCount+index)*0.08}s`;
     fragment.appendChild(card);
   });
 
   container.appendChild(fragment);
   loadedCount += batch.length;
 
-  // After images load, match card heights
+  // Match card heights after images load
   const images = container.querySelectorAll('img');
   let loadedImages = 0;
-  images.forEach(img=>{
-    if(img.complete){
+  images.forEach(img => {
+    if (img.complete) loadedImages++;
+    else img.onload = () => {
       loadedImages++;
-    } else {
-      img.onload = () => {
-        loadedImages++;
-        if(loadedImages === images.length) matchCardHeights();
-      }
-    }
+      if (loadedImages === images.length) matchCardHeights();
+    };
   });
-  if(loadedImages === images.length) matchCardHeights();
+  if (loadedImages === images.length) matchCardHeights();
 
   observeLastCard();
 }
 
-// Match all card heights dynamically
-function matchCardHeights(){
+// Match card heights dynamically
+function matchCardHeights() {
   const cards = document.querySelectorAll('.equipment-card');
   let maxHeight = 0;
-  cards.forEach(card=>{
-    card.style.height='auto'; // reset
-    if(card.offsetHeight > maxHeight) maxHeight = card.offsetHeight;
+  cards.forEach(card => {
+    card.style.height = 'auto';
+    if (card.offsetHeight > maxHeight) maxHeight = card.offsetHeight;
   });
-  cards.forEach(card=>{
-    card.style.height = maxHeight + 'px';
-  });
+  cards.forEach(card => card.style.height = maxHeight + 'px');
 }
 
 // Fetch equipment from Supabase
-async function fetchEquipment(){
-  try{
+async function fetchEquipment() {
+  try {
     showSkeleton();
-    const {data,error} = await supabase.from('equipment_db')
+    const { data, error } = await supabase
+      .from('equipment_db')
       .select('id,name,image_url,description,affiliate_link,category')
       .order('id');
 
-    if(error) throw error;
+    if (error) throw error;
     allEquipment = data;
     loadedCount = 0;
-    container.innerHTML='';
+    container.innerHTML = '';
     renderBatch(allEquipment);
-  }catch(err){
+  } catch (err) {
     console.error(err);
-    container.innerHTML="<p class='error-message'>Failed to load equipment.</p>";
+    container.innerHTML = "<p class='error-message'>Failed to load equipment.</p>";
   }
 }
 
-// Infinite scroll
-function observeLastCard(){
+// Infinite scroll observer
+function observeLastCard() {
   const cards = document.querySelectorAll('.equipment-card');
-  const lastCard = cards[cards.length-1];
-  if(!lastCard) return;
+  const lastCard = cards[cards.length - 1];
+  if (!lastCard) return;
 
-  const observer = new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting && loadedCount < allEquipment.length){
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && loadedCount < allEquipment.length) {
         renderBatch(allEquipment);
         observer.disconnect();
       }
     });
-  },{rootMargin:'100px'});
+  }, { rootMargin: '150px' });
+
   observer.observe(lastCard);
 }
 
-// Filters
-filterButtons.forEach(btn=>{
-  btn.addEventListener('click', ()=>{
+// Filter buttons
+filterButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
     btn.classList.add('active');
     const filter = btn.dataset.filter;
-    const filtered = filter==='all' ? allEquipment : allEquipment.filter(i=>i.category===filter);
-    container.innerHTML='';
-    loadedCount=0;
+    const filtered = filter === 'all' ? allEquipment : allEquipment.filter(i => i.category === filter);
+    container.innerHTML = '';
+    loadedCount = 0;
     renderBatch(filtered);
   });
 });
 
+// Fade-in animation
+const style = document.createElement('style');
+style.innerHTML = `
+.fade-in {
+  opacity:0;
+  transform:translateY(20px);
+  animation: fadeInUp 0.6s forwards;
+}
+@keyframes fadeInUp {
+  to { opacity:1; transform:translateY(0); }
+}
+`;
+document.head.appendChild(style);
+
 fetchEquipment();
+
