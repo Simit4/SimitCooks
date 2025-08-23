@@ -297,7 +297,7 @@ h1, h2, h3, h4, h5 {
 /* 🔥 Recipes Grid */
 .recipes-grid {
   display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-  gap: 30px; padding-bottom: 30px 8%;
+  gap: 30px; padding: 30px 8%;
 }
 .recipe-card {
   background: #fff; border-radius: 18px; overflow: hidden; cursor: pointer;
