@@ -205,28 +205,29 @@ h1, h2, h3, h4, h5 {
   background: var(--hero-gradient);
   color: #fff;
   text-align: center;
-  padding: 140px 20px;
+  padding: 90px 20px;  /* reduced from 140px */
   border-radius: 16px;
   position: relative;
   overflow: hidden;
 }
 
 .about-hero h1 {
-  font-size: 3.8rem;
+  font-size: 3.2rem;   /* slightly smaller for reduced height */
   font-weight: 800;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   background: linear-gradient(90deg, #fff, rgba(255,255,255,0.85));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .about-hero p {
-  font-size: 1.25rem;
-  max-width: 720px;
-  margin: 14px auto;
-  line-height: 1.8;
+  font-size: 1.15rem;  /* slightly smaller for reduced hero */
+  max-width: 700px;
+  margin: 10px auto;
+  line-height: 1.7;
   color: #fff;
 }
+
 
 /* -------------------------------------------------
    Timeline Section
