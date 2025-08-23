@@ -202,57 +202,44 @@ h1, h2, h3, h4, h5 {
 
 
 
-/* Hero Section */
+
+
+
+
+/* -------------------------------
+   Hero Section
+---------------------------------*/
 .about-hero {
   display: flex;
   align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1950&q=80') center/cover no-repeat fixed;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 20px;
+  background: linear-gradient(135deg, #27ae60, #f4a261);
   color: #fff;
+  min-height: 500px;
 }
 
-.hero-grid {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 40px;
-  flex-wrap: wrap;
-}
-
-.hero-text {
-  max-width: 600px;
-}
-
-.hero-text h1 {
+.about-hero h1 {
   font-family: 'Poppins', sans-serif;
   font-size: 3rem;
   margin-bottom: 1rem;
 }
 
-.hero-text h1 span {
-  color: var(--accent);
+.about-hero h1 span {
+  color: #f4a261;
 }
 
-.hero-text p {
+.about-hero p {
   font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto 1rem;
   line-height: 1.7;
-  margin-bottom: 1rem;
 }
 
-.hero-image img {
-  width: 100%;
-  max-width: 450px;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-  transform: scale(1);
-  transition: transform 0.5s ease;
-}
-
-.hero-image img:hover {
-  transform: scale(1.05);
-}
-
-/* Timeline */
+/* -------------------------------
+   Timeline / Fun Facts
+---------------------------------*/
 .about-facts {
   padding: 80px 0;
   text-align: center;
@@ -275,124 +262,27 @@ h1, h2, h3, h4, h5 {
 
 .timeline-item {
   background: #fff;
-  padding: 25px 30px;
+  padding: 20px 25px;
   border-left: 5px solid var(--accent);
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   text-align: left;
   font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.timeline-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 25px rgba(0,0,0,0.12);
-}
-
-.timeline-icon {
-  font-size: 1.8rem;
-  color: var(--accent);
-}
-
-/* Stats */
-.about-stats {
-  padding: 80px 0;
-  display: flex;
-  justify-content: center;
-}
-
-.stats-grid {
-  display: flex;
-  gap: 40px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.stat-card {
-  background: #fff;
-  padding: 40px 30px;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 25px rgba(0,0,0,0.12);
-}
-
-.stat-card h2 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-  color: var(--primary);
-}
-
-.stat-card p {
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-/* CTA */
-.about-cta {
-  background: var(--primary);
-  padding: 80px 20px;
-  text-align: center;
-  color: #fff;
-}
-
-.about-cta h2 {
-  font-size: 2rem;
-  margin-bottom: 30px;
-}
-
-.cta-btn {
-  background: var(--accent);
-  color: #fff;
-  padding: 15px 35px;
-  border-radius: 50px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.3s ease;
-}
-
-.cta-btn:hover {
-  background: #e6954f;
-}
-
-/* Responsive */
-@media (max-width: 992px) {
-  .hero-grid {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .hero-image img {
-    max-width: 90%;
-  }
-
-  .timeline-item {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
+/* -------------------------------
+   Responsive
+---------------------------------*/
 @media (max-width: 768px) {
-  .hero-text h1 {
+  .about-hero h1 {
     font-size: 2.2rem;
   }
 
-  .hero-text p {
+  .about-hero p {
     font-size: 1rem;
   }
 
 }
-
 
 
 
