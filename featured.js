@@ -26,7 +26,6 @@ function renderFeaturedRecipes(recipes) {
 
     const card = document.createElement('div');
     card.className = 'recipe-card';
-    card.style.flex = '0 0 auto'; // ensures proper mobile scroll
     card.onclick = () => window.location.href = `/recipe/${recipe.slug}`;
     card.innerHTML = `
       <div class="thumbnail-wrapper">
