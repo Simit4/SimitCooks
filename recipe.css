@@ -233,19 +233,19 @@ h1, h2, h3, h4, h5 {
 
 .recipe-meta {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1.5rem;
+  justify-content: center; /* centers horizontally */
+  align-items: center;     /* aligns icons and text vertically */
+  flex-wrap: wrap;         /* allows wrapping on small screens */
+  gap: 1.5rem;             /* space between each meta item */
   font-size: 1.05rem;
   color: #7a7a8c;
-  margin: 1rem 0;
-  text-align: center;
+  margin: 1rem 0;          /* vertical spacing */
+  text-align: center;      /* fallback for wrapping items */
 }
 
 .recipe-meta span {
   display: flex;
-  align-items: center;
+  align-items: center;     /* vertical alignment of icon and text */
   gap: 0.3rem;
   font-weight: 600;
 }
@@ -285,6 +285,7 @@ h1, h2, h3, h4, h5 {
   cursor: default;
 }
 
+/* Info blocks: nutrition, tags, notes, facts */
 #nutrition,
 #notes,
 #facts {
@@ -319,80 +320,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* -------------------------------------------------
-   Print Button – Capsule Style
--------------------------------------------------- */
-.btn-print {
-  display: inline-block;
-  margin-top: 2rem;
-  padding: 0.65rem 2.2rem;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #fff;
-  background: var(--primary);
-  border: none;
-  border-radius: 50px;
-  box-shadow: 0 8px 20px rgba(239, 91, 37, 0.4);
-  cursor: pointer;
-  user-select: none;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  font-family: 'Poppins', sans-serif;
-  transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
-  box-sizing: border-box;
-  white-space: nowrap;
-}
-
-.btn-print:hover,
-.btn-print:focus {
-  background: var(--primary-dark);
-  box-shadow: 0 12px 28px rgba(217, 74, 15, 0.6);
-  transform: translateY(-3px);
-  outline: none;
-}
-
-.btn-print:focus-visible {
-  outline: 2px solid #ffb169;
-  outline-offset: 3px;
-}
-
-/* -------------------------------------------------
-   Recipe Video
--------------------------------------------------- */
-.recipe-video {
-  width: 100%;
-  max-width: 720px;
-  aspect-ratio: 16 / 9;
-  margin: 2.5rem auto;
-  background-color: #000;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow:
-    0 16px 32px rgba(0, 0, 0, 0.18),
-    0 6px 12px rgba(0, 0, 0, 0.08);
-  transition: box-shadow 0.4s ease, transform 0.35s ease;
-  will-change: transform;
-}
-
-.recipe-video:hover,
-.recipe-video:focus-within {
-  box-shadow:
-    0 24px 48px rgba(0, 0, 0, 0.26),
-    0 8px 16px rgba(0, 0, 0, 0.12);
-  transform: translateY(-5px);
-}
-
-.recipe-video iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  display: block;
-  border-radius: 16px;
-  background-color: transparent;
-}
-
-/* -------------------------------------------------
-   Mobile Responsive
+   Mobile Responsive Added
 -------------------------------------------------- */
 @media (max-width: 860px) {
   .recipe-page {
@@ -412,7 +340,6 @@ h1, h2, h3, h4, h5 {
   }
 
   .description {
-    font-size: 1rem;
     max-height: 3.2em;       /* truncate text */
     overflow: hidden;
     text-overflow: ellipsis;
@@ -460,6 +387,42 @@ h1, h2, h3, h4, h5 {
     max-width: 100%;
     aspect-ratio: 16 / 9;
   }
+
+  /* Equipment Section Images fully visible */
+  .image-wrapper {
+    height: auto;
+  }
+
+  .image-wrapper img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  /* Overlay always visible */
+  .overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .overlay h4 {
+    font-size: 1.1rem;
+  }
+
+  .overlay p {
+    font-size: 0.9rem;
+  }
+
+  .btn-buy {
+    padding: 0.45rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  .overlay h4,
+  .overlay p,
+  .overlay .btn-buy {
+    transform: none;
+  }
 }
 
 @media (max-width: 480px) {
@@ -468,8 +431,7 @@ h1, h2, h3, h4, h5 {
   }
 
   .description {
-    font-size: 0.95rem;
-    -webkit-line-clamp: 2; /* truncate to 2 lines */
+    -webkit-line-clamp: 2;
   }
 
   .recipe-layout {
