@@ -205,54 +205,30 @@ h1, h2, h3, h4, h5 {
    Equipment Section Container
 -------------------------------------------------- */
 /* -------------------------------
-   Hero Section – Subtle Gradient
+   Hero Section – Linear Gradient
 ---------------------------------*/
 .equipment-hero {
   position: relative;
   width: 100%;
   height: 380px;
-  background: linear-gradient(135deg, #e0f7f1, #c7f0e5); /* soft mint/teal gradient */
+  background: linear-gradient(135deg, #f5f7fa, #dceefc); /* soft blue-gray gradient */
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #2c3e50; /* dark text for contrast */
+  color: #1f3a4d; /* dark slate for contrast */
   overflow: hidden;
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
 }
 
-/* Overlay for gentle depth */
+/* Overlay for subtle depth */
 .hero-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(255,255,255,0.1); /* very subtle overlay */
+  background: rgba(255,255,255,0.05); /* very subtle overlay */
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0 2rem;
-  text-align: center;
-}
+  flex-dir
 
-/* Hero Title */
-.hero-overlay h1 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  color: #1a3a34; /* deep teal for elegance */
-  line-height: 1.2;
-}
-
-/* Hero Subtitle */
-.hero-overlay p {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: #344d47; /* slightly lighter for subtle contrast */
-  max-width: 650px;
-  margin: 0 auto;
-}
 
 
 /* -------------------------------
