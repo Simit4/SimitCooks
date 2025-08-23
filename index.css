@@ -290,7 +290,7 @@ h1, h2, h3, h4, h5 {
   padding: 20px 0;         /* reduce top/bottom padding */
   margin: 0 auto;          /* center horizontally if text-align: center */
   max-width: 1100px;       /* same as .container */
-  text-align: left;         /* aligns with the container/cards */
+  text-align: center;         /* aligns with the container/cards */
 }
 
 
@@ -580,7 +580,7 @@ h1, h2, h3, h4, h5 {
   #Featured-Recipes-h2 {
     font-size: 1.8rem;
     padding: 20px 10px;   /* reduce top/bottom and side padding */
-    text-align: left; 
+    text-align: center;         /* aligns with the container/cards */
   }
 
  #recipes-container.recipes-grid {
@@ -636,7 +636,8 @@ h1, h2, h3, h4, h5 {
 @media (max-width: 480px) {
   #Featured-Recipes-h2 {     font-size: 1.5rem;
     padding: 15px 10px;   /* even closer for small screens */
-    text-align: left;  }
+      text-align: center;         /* aligns with the container/cards */
+ }
   .recipe-card { flex: 0 0 180px; min-width: 180px; }
   .thumbnail-wrapper, .momo-placeholder { height: auto; }
   .card-body h3 { font-size: 0.95rem; }
