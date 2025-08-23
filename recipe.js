@@ -145,6 +145,9 @@ async function fetchEquipmentByIds(ids) {
           <a href="${item.affiliate_link || '#'}" target="_blank" class="btn-buy">Buy Now</a>
         </div>
       </div>
+  <div class="card-body">
+    <h4 class="equipment-title">${item.name}</h4>
+  </div>
     `;
 
     container.appendChild(card);
