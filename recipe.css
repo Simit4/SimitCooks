@@ -801,10 +801,10 @@ h1, h2, h3, h4, h5 {
 
 
 
-/* Equipment Page Mobile – Optimized Like Desktop */
+/* Equipment Page Mobile – Overlay Only on Hover */
 @media (max-width: 860px) {
   .equipment-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* keep multiple cards per row if possible */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
     padding: 0 1.5rem 2.5rem;
   }
@@ -815,22 +815,29 @@ h1, h2, h3, h4, h5 {
   }
 
   .image-wrapper {
-    height: 240px; /* same as desktop for uniform look */
+    height: 240px; /* same as desktop */
     overflow: hidden;
   }
 
   .image-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* ensures full image visible */
+    object-fit: contain; /* full image visible */
     transition: transform 0.4s ease, filter 0.4s ease;
   }
 
-  /* Overlay always visible */
+  /* Overlay hidden by default */
   .overlay {
+    opacity: 0;
+    transform: translateY(100%);
+    text-align: left;
+    transition: all 0.3s ease;
+  }
+
+  /* Show overlay on hover */
+  .equipment-item:hover .overlay {
     opacity: 1;
     transform: translateY(0);
-    text-align: left;
   }
 
   .overlay h4 { font-size: 1.2rem; }
@@ -843,7 +850,7 @@ h1, h2, h3, h4, h5 {
     transform: none;
   }
 
-  /* Optional: add subtle hover zoom on mobile if desired */
+  /* Optional hover zoom for images */
   .equipment-item:hover img {
     transform: scale(1.03);
   }
