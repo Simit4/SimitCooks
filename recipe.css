@@ -326,7 +326,7 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Mobile Responsive
 -------------------------------------------------- */
-@media (max-width: 860px) {
+@media (max-width: 768px) {
   .recipe-page {
     padding: 2rem 1.5rem;
     margin: 1.5rem;
@@ -460,6 +460,7 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Print Styles
 -------------------------------------------------- */
+
 @media print {
   body {
     background: #fff;
@@ -629,7 +630,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* Mobile: overlay always visible */
-@media (max-width: 860px) {
+@media (max-width: 768px) {
   .overlay {
     opacity: 1;
     transform: translateY(0);
@@ -768,7 +769,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* ===== Mobile / Small Screen Adjustments ===== */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .footer-content {
     flex-direction: column;
     align-items: center;
@@ -802,7 +803,7 @@ h1, h2, h3, h4, h5 {
 
 
 /* Equipment Page Mobile – Overlay Only on Hover */
-@media (max-width: 860px) {
+@media (max-width: 768px) {
   .equipment-grid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
@@ -853,5 +854,15 @@ h1, h2, h3, h4, h5 {
   /* Optional hover zoom for images */
   .equipment-item:hover img {
     transform: scale(1.03);
+  }
+}
+
+
+
+/* Print Button Mobile */
+@media (max-width: 860px) {
+  .btn-print {
+    padding: 0.55rem 1.8rem;  /* slightly smaller capsule */
+    font-size: 1rem;          /* smaller text */
   }
 }
