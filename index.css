@@ -598,8 +598,8 @@ h1, h2, h3, h4, h5 {
   }
 
   .recipes-grid {
-    display: flex;                /* horizontal scroll */
-    flex-wrap: nowrap;
+    display: flex;
+    flex-wrap: nowrap;           /* prevent wrapping */
     overflow-x: auto;
     gap: 15px;
     padding: 20px 5%;
@@ -608,14 +608,14 @@ h1, h2, h3, h4, h5 {
   }
 
   .recipe-card {
-    flex: 0 0 auto;               /* prevent shrinking */
-    min-width: 220px;             /* adjust width for mobile */
+    flex: 0 0 auto;              /* critical for mobile swipe */
+    min-width: 220px;            /* adjust card width */
     scroll-snap-align: start;
   }
 
   .thumbnail-wrapper,
   .momo-placeholder {
-    height: 150px;                /* smaller thumbnails */
+    height: 150px;
   }
 
   .card-body {
