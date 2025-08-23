@@ -51,17 +51,25 @@ function renderEquipment(data){
 }
 
 // Fetch Equipment from Supabase
-async function fetchEquipment(){
-  try{
+async function fetchEquipment() {
+  try {
     showSkeleton();
-    const { data, error } = await supabase.from("equipment_db").select("id,name,image_url,description,affiliate_link,category").order("id",{ascending:true});
-    if(error) throw error;
+    const { data, error, status } = await supabase
+      .from("equipment_db")
+      .select("id,name,image_url,description,affiliate_link,category")
+      .order("id", { ascending: true });
+
+    console.log("Supabase status:", status);
+    console.log("Data:", data);
+    console.log("Error:", error);
+
+    if (error) throw error;
     renderEquipment(data);
-  }catch(err){
-    console.error(err);
-    equipmentContainer.innerHTML=`<p class="error">⚠️ Unable to load equipment. Try again later.</p>`;
+
+  } catch(err) {
+    console.error("Fetch Error:", err);
+    equipmentContainer.innerHTML = `<p class="error">⚠️ Unable to load equipment. Try again later.</p>`;
   }
-}
 
 // Filter Buttons
 filterButtons.forEach(btn=>{
