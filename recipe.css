@@ -236,18 +236,20 @@ h1, h2, h3, h4, h5 {
 }
 
 .recipe-meta {
-  justify-content: center; /* center horizontally */
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
+  justify-content: center; /* centers horizontally */
+  align-items: center;     /* aligns icons and text vertically */
+  flex-wrap: wrap;         /* allows wrapping on small screens */
+  gap: 1.5rem;             /* space between each meta item */
   font-size: 1.05rem;
   color: #7a7a8c;
-  margin-bottom: 1rem;
+  margin: 1rem 0;          /* vertical spacing */
+  text-align: center;      /* fallback for wrapping items */
 }
 
 .recipe-meta span {
   display: flex;
-  align-items: center;
+  align-items: center;     /* vertical alignment of icon and text */
   gap: 0.3rem;
   font-weight: 600;
 }
