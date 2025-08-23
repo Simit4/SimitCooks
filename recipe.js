@@ -42,8 +42,6 @@ async function fetchAndRenderRecipe() {
     return;
   }
 
-  renderRecipe(recipe);
-
   // Update views
   if (recipe.id) {
     await supabase
@@ -51,6 +49,8 @@ async function fetchAndRenderRecipe() {
       .update({ views: (recipe.views || 0) + 1 })
       .eq('id', recipe.id);
   }
+
+  renderRecipe(recipe);
 }
 
 // Render recipe details
@@ -79,6 +79,27 @@ function renderRecipe(recipe) {
     methodList.appendChild(li);
   });
 
+  // Nutrition
+  const nutrition = recipe.nutritional_info;
+  if (nutrition) {
+    document.getElementById('nutrition').innerHTML = `
+      <strong>Calories:</strong> ${nutrition.calories}<br>
+      <strong>Protein:</strong> ${nutrition.protein}<br>
+      <strong>Carbohydrates:</strong> ${nutrition.carbohydrates}<br>
+      <strong>Fiber:</strong> ${nutrition.fiber}<br>
+      <strong>Fat:</strong> ${nutrition.fat}
+    `;
+  }
+
+  // Tags, Cuisine, Category
+  document.getElementById('tags').textContent = recipe.tags?.join(', ') || 'Not available';
+  document.getElementById('cuisine').textContent = recipe.cuisine?.join(', ') || 'Not available';
+  document.getElementById('category').textContent = recipe.category?.join(', ') || 'Not available';
+
+  // Notes & Fun Facts
+  document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
+  document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
+
   // Video
   const embedUrl = convertToEmbedUrl(recipe.video_url);
   const videoContainer = document.querySelector('.recipe-video');
@@ -95,7 +116,7 @@ function renderRecipe(recipe) {
   }
 }
 
-// Fetch equipment by IDs and render like main page
+// Fetch equipment details by IDs and render like main equipment page
 async function fetchEquipmentByIds(ids) {
   const { data, error } = await supabase
     .from('equipment_db')
@@ -111,17 +132,17 @@ async function fetchEquipmentByIds(ids) {
     return;
   }
 
-  data.forEach(({ id, name, description, image_url, affiliate_link }) => {
+  const fragment = document.createDocumentFragment();
+
+  data.forEach(item => {
     const card = document.createElement('article');
     card.className = 'equipment-item';
 
     // Image
     const img = document.createElement('img');
-    img.src = image_url || 'https://via.placeholder.com/600x400?text=No+Image';
-    img.alt = name || 'Equipment Image';
-    img.onerror = () => {
-      img.src = 'https://via.placeholder.com/600x400?text=No+Image';
-    };
+    img.src = item.image_url;
+    img.alt = item.name;
+    img.onerror = () => img.src = 'https://via.placeholder.com/600x400?text=No+Image';
     card.appendChild(img);
 
     // Content
@@ -129,29 +150,30 @@ async function fetchEquipmentByIds(ids) {
     content.className = 'equipment-item-content';
 
     const title = document.createElement('h3');
-    title.textContent = name || 'Unnamed Equipment';
+    title.textContent = item.name;
     content.appendChild(title);
 
-    // Optional: short description (keep elegant, max 80 chars)
-    if (description) {
+    if (item.description) {
       const desc = document.createElement('p');
-      desc.textContent = description.length > 80 ? description.slice(0, 80) + '…' : description;
+      desc.textContent = item.description;
       content.appendChild(desc);
     }
 
-    if (affiliate_link) {
+    if (item.affiliate_link) {
       const buyBtn = document.createElement('a');
-      buyBtn.href = affiliate_link;
+      buyBtn.className = 'btn-buy';
+      buyBtn.href = item.affiliate_link;
       buyBtn.target = '_blank';
       buyBtn.rel = 'noopener noreferrer nofollow';
-      buyBtn.className = 'btn-buy';
       buyBtn.textContent = 'Buy Now';
       content.appendChild(buyBtn);
     }
 
     card.appendChild(content);
-    container.appendChild(card);
+    fragment.appendChild(card);
   });
+
+  container.appendChild(fragment);
 }
 
 // Initialize
