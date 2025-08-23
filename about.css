@@ -271,6 +271,9 @@ padding: 25px 15px;
 .about-timeline {
   padding: 40px 20px;
   background: var(--section-bg);
+border: 1px solid rgba(0, 0, 0, 0.08);  
+border-radius: 14px;  
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); 
 }
 
 .about-timeline h2 {
@@ -284,7 +287,7 @@ padding: 25px 15px;
 .timeline {
   position: relative;
   margin-left: 30px;
-  padding-left: 40px;
+padding: 25px 15px;
 }
 
 .timeline::before {
