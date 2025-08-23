@@ -203,7 +203,7 @@ h1, h2, h3, h4, h5 {
 -------------------------------------------------- */
 .about-hero-simple {
   padding: 25px 15px;
-  background: linear-gradient(135deg, #fceabb, #f8b500); /* soft yellow-orange */
+  background: var(--section-bg);
   color: #fff;
   text-align: center;
   position: relative;
@@ -223,7 +223,8 @@ h1, h2, h3, h4, h5 {
 }
 
 .hero-simple-container h1 {
-  font-size: 3.2rem;
+  font-size: 2.6rem;
+  color: var(--primary);
   font-weight: 800;
   margin-bottom: 1rem;
   line-height: 1.2;
@@ -234,13 +235,14 @@ h1, h2, h3, h4, h5 {
 }
 
 .hero-simple-container p {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   line-height: 1.8;
   max-width: 700px;
   text-align: center;   
   margin: 15px auto 0;
   color: rgba(255, 255, 255, 0.9);
   animation: fadeInUp 1.2s ease forwards;
+  color: var(--text);   
 }
 
 /* Subtle Animation */
