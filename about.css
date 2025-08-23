@@ -202,7 +202,7 @@ h1, h2, h3, h4, h5 {
    Hero Section – Refined
 -------------------------------------------------- */
 .about-hero-simple {
-  padding: 25px 15px;
+  padding: 40px 20px;
   background: var(--section-bg);
   color: #fff;
   text-align: center;
