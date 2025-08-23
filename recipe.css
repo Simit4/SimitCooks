@@ -860,7 +860,7 @@ h1, h2, h3, h4, h5 {
 
 
 /* Print Button Mobile */
-@media (max-width: 860px) {
+@media (max-width: 768px) {
   .btn-print {
     padding: 0.55rem 1.8rem;  /* slightly smaller capsule */
     font-size: 1rem;          /* smaller text */
