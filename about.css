@@ -206,82 +206,117 @@ h1, h2, h3, h4, h5 {
 
 
 
-/* -------------------------------
-   Hero Section
----------------------------------*/
+/* Hero */
 .about-hero {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 120px 20px;
-background: linear-gradient(135deg, #2ecc71, #fff8e7);
+  background: var(--bg-gradient);
   color: #fff;
-  height: 250px;
+  text-align: center;
+  padding: 100px 20px;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
 }
 
 .about-hero h1 {
-  font-family: 'Poppins', sans-serif;
   font-size: 3rem;
-  margin-bottom: 1rem;
+  font-weight: 700;
+  margin-bottom: 20px;
 }
 
 .about-hero h1 span {
-  color: #f4a261;
+  color: #fff;
+  position: relative;
 }
 
 .about-hero p {
   font-size: 1.2rem;
   max-width: 700px;
-  margin: 0 auto 1rem;
-  line-height: 1.7;
+  margin: 10px auto;
+  line-height: 1.6;
 }
 
-/* -------------------------------
-   Timeline / Fun Facts
----------------------------------*/
+/* Timeline */
 .about-facts {
-  padding: 80px 0;
-  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-color);
 }
 
-.about-facts h3 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 2rem;
+.about-facts h2 {
+  text-align: center;
+  font-size: 2.5rem;
   margin-bottom: 50px;
-  color: var(--primary);
 }
 
 .timeline {
   display: flex;
   flex-direction: column;
-  gap: 30px;
-  max-width: 800px;
-  margin: 0 auto;
+  position: relative;
+  padding-left: 20px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--accent);
+  border-radius: 2px;
 }
 
 .timeline-item {
-  background: #fff;
-  padding: 20px 25px;
-  border-left: 5px solid var(--accent);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  text-align: left;
-  font-size: 1.1rem;
+  position: relative;
+  padding: 20px 40px;
+  margin-bottom: 40px;
+  border-radius: 10px;
+  background: #f9f9f9;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-/* -------------------------------
-   Responsive
----------------------------------*/
+.timeline-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+}
+
+.timeline-date {
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+/* CTA Section */
+.about-cta {
+  background: #f4f4f4;
+  text-align: center;
+  padding: 80px 20px;
+  border-radius: 12px;
+  margin: 60px 0;
+}
+
+.about-cta h3 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: var(--primary);
+}
+
+.about-cta p {
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto;
+  color: var(--secondary-text);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .about-hero h1 {
     font-size: 2.2rem;
   }
-
-  .about-hero p {
-    font-size: 1rem;
+  
+  .timeline-item {
+    padding: 20px;
   }
-
 }
 
 
