@@ -26,10 +26,10 @@ function showSkeleton(count = BATCH) {
 
 // Render batch
 function renderBatch(data) {
+  container.innerHTML = ''; // clear previous
   const fragment = document.createDocumentFragment();
-  const batch = data.slice(loadedCount, loadedCount + BATCH);
 
-  batch.forEach((item, index) => {
+  data.forEach(item => {
     const card = document.createElement('div');
     card.className = 'equipment-card fade-in';
     const shortDesc = item.description ? item.description.split('. ')[0] + '.' : '';
@@ -49,6 +49,7 @@ function renderBatch(data) {
     fragment.appendChild(card);
   });
 
+  
   container.appendChild(fragment);
   loadedCount += batch.length;
 
