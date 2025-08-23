@@ -140,7 +140,7 @@ async function fetchEquipmentByIds(ids) {
       <div class="image-wrapper">
         <img src="${item.image_url}" alt="${item.name}">
         <div class="overlay">
-          <h4>${item.name}</h4>
+          
           <p>${item.description || ''}</p>
           <a href="${item.affiliate_link || '#'}" target="_blank" class="btn-buy">Buy Now</a>
         </div>
