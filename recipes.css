@@ -336,16 +336,28 @@ h1, h2, h3, h4, h5 {
 
   /* Recipes Grid – horizontal scroll for mobile */
   .recipes-grid {
-    display: flex;
+    display: flex !important;          /* switch from grid to flex */
+    flex-wrap: nowrap;                 /* horizontal scroll */
     overflow-x: auto;
     padding: 20px 5%;
     gap: 15px;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
   }
-  .recipe-card { min-width: 220px; flex: 0 0 auto; scroll-snap-align: start; }
-  .thumbnail-wrapper { height: 150px; }
-  .momo-placeholder { height: 150px; }
+
+  .recipe-card {
+    min-width: 220px;                  /* fixed width for swipe cards */
+    flex: 0 0 auto;                    /* prevent shrinking */
+    scroll-snap-align: start;
+  }
+
+  .thumbnail-wrapper {
+    height: 150px;
+  }
+  .momo-placeholder {
+    height: 150px;
+  }
+}
 
   /* Card Body */
   .card-body { padding: 12px; }
@@ -370,7 +382,7 @@ h1, h2, h3, h4, h5 {
   .hero h1 { font-size: 1.6rem; }
   .hero p  { font-size: 0.9rem; }
   .recipe-card { min-width: 180px; }
-  .thumbnail-wrapper,
+  .thumbnail-wrapper, .momo-placeholder { height: 130px; }
   .momo-placeholder { height: 130px; }
   .card-body h3 { font-size: 0.95rem; }
   .card-body p  { font-size: 0.7rem; }
