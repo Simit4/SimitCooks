@@ -210,65 +210,90 @@ h1, h2, h3, h4, h5 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
+  padding: 1rem 0;
 }
 
 /* Equipment Card */
 .equipment-item {
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
 .equipment-item:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.15);
 }
 
-/* BIG IMAGE - full proper ratio */
+/* Large Full Image */
 .equipment-item img {
   width: 100%;
-  height: auto;          /* keep natural aspect ratio */
+  height: auto;
   display: block;
-  border-bottom: 1px solid #eee;
+  transition: transform 0.4s ease;
 }
 
-/* Content: minimal & centered */
+.equipment-item:hover img {
+  transform: scale(1.05); /* subtle zoom on hover */
+}
+
+/* Content Section */
 .equipment-item-content {
-  padding: 1.5rem 1rem;
+  padding: 1.5rem;
   text-align: center;
+  background: linear-gradient(to bottom, #fff, #fafafa);
 }
 
 .equipment-item-content h3 {
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
   color: var(--primary-dark, #1e8449);
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   margin-bottom: 1rem;
+  transition: color 0.3s ease;
+}
+
+.equipment-item:hover .equipment-item-content h3 {
+  color: var(--primary, #27ae60);
 }
 
 /* Buy Button */
 .btn-buy {
   display: inline-block;
-  padding: 0.7rem 1.5rem;
+  padding: 0.75rem 1.6rem;
   font-size: 1rem;
   font-weight: 600;
   color: #fff;
   background: linear-gradient(135deg, var(--primary, #27ae60), var(--primary-dark, #1e8449));
-  border-radius: 8px;
+  border-radius: 10px;
   text-decoration: none;
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 14px rgba(39, 174, 96, 0.3);
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(39, 174, 96, 0.35);
 }
 
 .btn-buy:hover {
   background: var(--primary-dark, #1e8449);
   transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(39, 174, 96, 0.4);
 }
 
+/* Responsive Polish */
+@media (max-width: 768px) {
+  .equipment-item-content {
+    padding: 1rem;
+  }
+  .equipment-item-content h3 {
+    font-size: 1.05rem;
+  }
+  .btn-buy {
+    font-size: 0.9rem;
+    padding: 0.65rem 1.3rem;
+  }
+}
 
 
 /* ------------------------------------------------- Footer -------------------------------------------------- */
