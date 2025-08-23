@@ -494,47 +494,6 @@ h1, h2, h3, h4, h5 {
     padding: 0.55rem 1.5rem;
   }
 
-  /* Featured Recipes Title */
-  #Featured-Recipes-h2 {
-    font-size: 1.8rem;
-    padding: 0 1rem;
-  }
-
-  /* Recipes Grid – swipe-friendly */
-  .recipes-grid {
-    display: flex;
-    overflow-x: auto;
-    gap: 15px;
-    padding: 20px 5%;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .recipe-card {
-    min-width: 220px;
-    flex: 0 0 auto;
-    scroll-snap-align: start;
-  }
-
-  .thumbnail-wrapper,
-  .momo-placeholder {
-    height: 150px;
-  }
-
-  .card-body {
-    padding: 12px;
-    text-align: center;
-  }
-
-  .recipe-card h3 {
-    font-size: 1.1rem;
-  }
-
-  .recipe-card p {
-    font-size: 0.8rem;
-    height: auto;
-  }
-
   /* Controls */
   .controls {
     flex-direction: column;
@@ -627,3 +586,72 @@ h1, h2, h3, h4, h5 {
 
 
 
+
+/* -------------------------------------------------
+   Featured Recipes – Mobile Responsive Fix
+-------------------------------------------------- */
+@media (max-width: 768px) {
+  #Featured-Recipes-h2 {
+    font-size: 1.8rem;
+    padding: 0 1rem;
+    text-align: center;
+  }
+
+  .recipes-grid {
+    display: flex;                /* horizontal scroll */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 20px 5%;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .recipe-card {
+    flex: 0 0 auto;               /* prevent shrinking */
+    min-width: 220px;             /* adjust width for mobile */
+    scroll-snap-align: start;
+  }
+
+  .thumbnail-wrapper,
+  .momo-placeholder {
+    height: 150px;                /* smaller thumbnails */
+  }
+
+  .card-body {
+    padding: 12px;
+    text-align: center;
+  }
+
+  .recipe-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .recipe-card p {
+    font-size: 0.8rem;
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  #Featured-Recipes-h2 {
+    font-size: 1.5rem;
+  }
+
+  .recipe-card {
+    min-width: 180px;             /* smaller cards for small screens */
+  }
+
+  .thumbnail-wrapper,
+  .momo-placeholder {
+    height: 130px;
+  }
+
+  .card-body h3 {
+    font-size: 0.95rem;
+  }
+
+  .card-body p {
+    font-size: 0.7rem;
+  }
+}
