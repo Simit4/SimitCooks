@@ -8,7 +8,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const equipmentContainer = document.getElementById("equipment-container");
 
-// Show skeleton loader while fetching
+// Skeleton loader
 function showSkeleton(count = 6) {
   equipmentContainer.innerHTML = "";
   for (let i = 0; i < count; i++) {
@@ -34,10 +34,7 @@ function renderEquipment(data) {
   }
 
   data.forEach(item => {
-    const card = document.createElement("a");
-    card.href = item.link;
-    card.target = "_blank";
-    card.rel = "noopener noreferrer";
+    const card = document.createElement("div");
     card.className = "equipment-card";
 
     card.innerHTML = `
@@ -46,6 +43,7 @@ function renderEquipment(data) {
       </div>
       <div class="card-body">
         <h3>${item.name}</h3>
+        ${item.link ? `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="btn-buy">Buy Now</a>` : ""}
       </div>
     `;
 
@@ -57,14 +55,14 @@ function renderEquipment(data) {
   });
 }
 
-// Fetch from Supabase
+// Fetch data from Supabase
 async function fetchEquipment() {
   try {
-    showSkeleton(); // show skeleton while loading
+    showSkeleton(); // show skeletons while loading
 
     const { data, error } = await supabase
-      .from("equipment")
-      .select("id, name, image, link")
+      .from("equipment_db")
+      .select("id, name, image_url, link")
       .order("id", { ascending: true });
 
     if (error) throw error;
