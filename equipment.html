@@ -59,24 +59,25 @@
   </div>
 </header>
 
-<!-- Hero -->
-<section class="equipment-hero">
-  <div class="hero-overlay">
-    <h1>Handpicked Kitchen Equipment</h1>
-    <p>High-quality tools I personally use & recommend for home cooks</p>
+  <!-- Hero Section -->
+  <header class="equipment-hero">
+    <h1>Essential Kitchen Equipment</h1>
+    <p>Handpicked tools I personally use & recommend in my kitchen</p>
+  </header>
+
+  <!-- Filters -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="knives">Knives</button>
+    <button class="filter-btn" data-filter="pots">Pots</button>
+    <button class="filter-btn" data-filter="appliances">Appliances</button>
   </div>
-</section>
 
-<!-- Filters -->
-<div class="filter-bar container">
-  <button class="filter-btn active" data-filter="all">All</button>
-  <button class="filter-btn" data-filter="knives">Knives</button>
-  <button class="filter-btn" data-filter="pots">Pots</button>
-  <button class="filter-btn" data-filter="appliances">Appliances</button>
-</div>
+  <!-- Equipment Grid -->
+  <section class="equipment-grid" id="equipmentGrid">
+    <!-- Dynamic items from Supabase will render here -->
+  </section>
 
-<!-- Equipment Grid -->
-<section id="equipment-container" class="container equipment-grid"></section>
   
 
 <script type="module" src="equipment.js"></script>
