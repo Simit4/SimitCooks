@@ -595,7 +595,7 @@ h1, h2, h3, h4, h5 {
 @media (max-width: 768px) {
   #Featured-Recipes-h2 {
     font-size: 1.8rem;
-    padding: 0 1rem;
+    padding: 40px 20px;    
     text-align: center;
   }
 
