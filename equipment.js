@@ -9,7 +9,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const equipmentContainer = document.getElementById("equipment-container");
 
 // Skeleton loader
-function showSkeleton(count = 6) {
+function showSkeleton(count = 4) {
   equipmentContainer.innerHTML = "";
   for (let i = 0; i < count; i++) {
     const skeleton = document.createElement("div");
@@ -18,18 +18,19 @@ function showSkeleton(count = 6) {
       <div class="image-wrapper"></div>
       <div class="card-body">
         <div class="skeleton-text short"></div>
+        <div class="skeleton-text"></div>
       </div>
     `;
     equipmentContainer.appendChild(skeleton);
   }
 }
 
-// Render equipment cards
+// Render equipment
 function renderEquipment(data) {
   equipmentContainer.innerHTML = "";
 
   if (!data || data.length === 0) {
-    equipmentContainer.innerHTML = `<p class="empty">No equipment found yet.</p>`;
+    equipmentContainer.innerHTML = `<p class="empty">No equipment found.</p>`;
     return;
   }
 
@@ -39,15 +40,15 @@ function renderEquipment(data) {
 
     card.innerHTML = `
       <div class="image-wrapper">
-        <img src="${item.image}" alt="${item.name}">
+        <img src="${item.image_url}" alt="${item.name}">
       </div>
       <div class="card-body">
         <h3>${item.name}</h3>
-        ${item.link ? `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="btn-buy">Buy Now</a>` : ""}
+        <p>${item.description}</p>
+        ${item.affiliate_link ? `<a href="${item.affiliate_link}" target="_blank" rel="noopener noreferrer" class="btn-buy">Buy Now</a>` : ""}
       </div>
     `;
 
-    // Smooth image fade-in
     const img = card.querySelector("img");
     img.onload = () => img.classList.add("loaded");
 
@@ -55,14 +56,14 @@ function renderEquipment(data) {
   });
 }
 
-// Fetch data from Supabase
+// Fetch from Supabase
 async function fetchEquipment() {
   try {
-    showSkeleton(); // show skeletons while loading
+    showSkeleton(); // show skeleton while loading
 
     const { data, error } = await supabase
       .from("equipment_db")
-      .select("id, name, image_url, link")
+      .select("id, name, image_url, description, affiliate_link")
       .order("id", { ascending: true });
 
     if (error) throw error;
