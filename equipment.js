@@ -8,27 +8,30 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const equipmentContainer = document.getElementById("equipment-container");
 
-// Show loading state
-equipmentContainer.innerHTML = `<p class="loading">Loading equipment...</p>`;
-
-async function fetchEquipment() {
-  const { data, error } = await supabase
-    .from("equipment")
-    .select("id, name, image, link")
-    .order("id", { ascending: true });
-
-  if (error) {
-    console.error("Error fetching equipment:", error);
-    equipmentContainer.innerHTML = `<p class="error">⚠️ Unable to load equipment. Please try again later.</p>`;
-    return;
+// Show skeleton loader while fetching
+function showSkeleton(count = 6) {
+  equipmentContainer.innerHTML = "";
+  for (let i = 0; i < count; i++) {
+    const skeleton = document.createElement("div");
+    skeleton.className = "equipment-card skeleton";
+    skeleton.innerHTML = `
+      <div class="image-wrapper"></div>
+      <div class="card-body">
+        <div class="skeleton-text short"></div>
+      </div>
+    `;
+    equipmentContainer.appendChild(skeleton);
   }
+}
+
+// Render equipment cards
+function renderEquipment(data) {
+  equipmentContainer.innerHTML = "";
 
   if (!data || data.length === 0) {
     equipmentContainer.innerHTML = `<p class="empty">No equipment found yet.</p>`;
     return;
   }
-
-  equipmentContainer.innerHTML = "";
 
   data.forEach(item => {
     const card = document.createElement("a");
@@ -46,11 +49,30 @@ async function fetchEquipment() {
       </div>
     `;
 
+    // Smooth image fade-in
     const img = card.querySelector("img");
     img.onload = () => img.classList.add("loaded");
 
     equipmentContainer.appendChild(card);
   });
+}
+
+// Fetch from Supabase
+async function fetchEquipment() {
+  try {
+    showSkeleton(); // show skeleton while loading
+
+    const { data, error } = await supabase
+      .from("equipment")
+      .select("id, name, image, link")
+      .order("id", { ascending: true });
+
+    if (error) throw error;
+    renderEquipment(data);
+  } catch (err) {
+    console.error("Error fetching equipment:", err);
+    equipmentContainer.innerHTML = `<p class="error">⚠️ Unable to load equipment. Please try again later.</p>`;
+  }
 }
 
 // Run on page load
