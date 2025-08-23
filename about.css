@@ -445,53 +445,65 @@ h1, h2, h3, h4, h5 {
 
 
 /* -------------------------------------------------
-   Mobile Responsive Enhancements
+   Modern Mobile Responsive
 -------------------------------------------------- */
 @media (max-width: 860px) {
 
   /* Hero Section */
   .about-hero-simple {
-    padding: 40px 15px;
+    padding: 50px 20px;
   }
   .hero-simple-container h1 {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 6vw, 2.8rem); /* fluid scaling */
+    line-height: 1.3;
   }
   .hero-simple-container p {
-    font-size: 1rem;
-    max-width: 90%;
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    max-width: 95%;
+    margin: 0 auto;
   }
 
   /* Timeline Section */
   .about-timeline h2 {
-    font-size: 2rem;
-    margin-bottom: 40px;
+    font-size: clamp(1.8rem, 5vw, 2.2rem);
+    margin-bottom: 2.5rem;
   }
   .timeline {
-    margin-left: 15px;
-    padding-left: 20px;
+    margin-left: 0;
+    padding-left: 15px;
+  }
+  .timeline-item {
+    padding-left: 40px;
   }
   .timeline-item .timeline-icon {
-    left: 5px;
-    width: 18px;
-    height: 18px;
+    left: 0;
+    width: 16px;
+    height: 16px;
   }
   .timeline-content {
-    padding: 20px;
+    padding: 18px;
+    font-size: 0.95rem;
   }
 
   /* CTA Section */
   .about-cta {
-    padding: 40px 15px;
+    padding: 50px 20px;
+    text-align: center;
   }
   .about-cta h3 {
-    font-size: 2rem;
+    font-size: clamp(1.8rem, 5vw, 2.2rem);
+    margin-bottom: 1rem;
   }
   .about-cta p {
-    font-size: 1rem;
+    font-size: clamp(0.95rem, 2.5vw, 1.05rem);
     max-width: 90%;
+    margin: 0 auto 1.5rem;
   }
-
-
+  .about-cta .btn {
+    padding: 0.75rem 1.8rem;
+    font-size: 1rem;
+    border-radius: 8px;
+  }
 
    
 
