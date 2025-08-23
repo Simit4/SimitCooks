@@ -13,11 +13,18 @@ function convertToEmbedUrl(url) {
   return match ? `https://www.youtube.com/embed/${match[1]}` : '';
 }
 
-// Fetch recipe data
+// Fetch recipe data and render
 async function fetchAndRenderRecipe() {
   let slug;
+
+  // Handle /recipe/<slug> clean URL
   const pathParts = window.location.pathname.split('/').filter(Boolean);
-  slug = (pathParts[0] === 'recipe' && pathParts[1]) ? pathParts[1] : new URLSearchParams(window.location.search).get('slug');
+  if (pathParts[0] === 'recipe' && pathParts[1]) {
+    slug = pathParts[1];
+  } else {
+    const params = new URLSearchParams(window.location.search);
+    slug = params.get('slug');
+  }
 
   if (!slug) {
     document.getElementById('recipe-title').innerText = 'Recipe not found';
@@ -37,7 +44,10 @@ async function fetchAndRenderRecipe() {
 
   // Update views
   if (recipe.id) {
-    await supabase.from('recipe_db').update({ views: (recipe.views || 0) + 1 }).eq('id', recipe.id);
+    await supabase
+      .from('recipe_db')
+      .update({ views: (recipe.views || 0) + 1 })
+      .eq('id', recipe.id);
   }
 
   renderRecipe(recipe);
@@ -90,11 +100,11 @@ function renderRecipe(recipe) {
   document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
   document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
 
-  // Video: only show if valid URL
+  // Video
   const embedUrl = convertToEmbedUrl(recipe.video_url);
   const videoContainer = document.querySelector('.recipe-video');
   if (embedUrl) {
-    videoContainer.innerHTML = `<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+    videoContainer.innerHTML = `<iframe id="recipe-video" src="${embedUrl}" allowfullscreen></iframe>`;
     videoContainer.style.display = 'block';
   } else {
     videoContainer.style.display = 'none';
@@ -106,12 +116,13 @@ function renderRecipe(recipe) {
   }
 }
 
-// Fetch and render equipment by IDs
+// Fetch equipment details by IDs and render like main equipment page
 async function fetchEquipmentByIds(ids) {
   const { data, error } = await supabase
     .from('equipment_db')
     .select('*')
-    .in('id', ids);
+    .in('id', ids)
+    .order('id', { ascending: true });
 
   const container = document.getElementById('equipment-container');
   container.innerHTML = '';
@@ -121,57 +132,49 @@ async function fetchEquipmentByIds(ids) {
     return;
   }
 
+  const fragment = document.createDocumentFragment();
+
   data.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'equipment-card fade-in';
-    const shortDesc = item.description ? item.description.split('. ')[0] + '.' : '';
-    card.innerHTML = `
-      <div class="image-wrapper">
-        <img src="${item.image_url}" alt="${item.name}">
-        <div class="overlay">
-          ${shortDesc ? `<p>${shortDesc}</p>` : ''}
-          ${item.affiliate_link ? `<a href="${item.affiliate_link}" target="_blank" class="btn-buy">Buy Now</a>` : ''}
-        </div>
-      </div>
-      <div class="card-body">
-        <h3>${item.name}</h3>
-      </div>
-    `;
-    container.appendChild(card);
+    const card = document.createElement('article');
+    card.className = 'equipment-item';
+
+    // Image
+    const img = document.createElement('img');
+    img.src = item.image_url;
+    img.alt = item.name;
+    img.onerror = () => img.src = 'https://via.placeholder.com/600x400?text=No+Image';
+    card.appendChild(img);
+
+    // Content
+    const content = document.createElement('div');
+    content.className = 'equipment-item-content';
+
+    const title = document.createElement('h3');
+    title.textContent = item.name;
+    content.appendChild(title);
+
+    if (item.description) {
+      const desc = document.createElement('p');
+      desc.textContent = item.description;
+      content.appendChild(desc);
+    }
+
+    if (item.affiliate_link) {
+      const buyBtn = document.createElement('a');
+      buyBtn.className = 'btn-buy';
+      buyBtn.href = item.affiliate_link;
+      buyBtn.target = '_blank';
+      buyBtn.rel = 'noopener noreferrer nofollow';
+      buyBtn.textContent = 'Buy Now';
+      content.appendChild(buyBtn);
+    }
+
+    card.appendChild(content);
+    fragment.appendChild(card);
   });
 
-  // Optional: match heights for uniform grid
-  matchCardHeights();
+  container.appendChild(fragment);
 }
-
-// Match card heights for grid consistency
-function matchCardHeights() {
-  const cards = document.querySelectorAll('.equipment-card');
-  let maxHeight = 0;
-  cards.forEach(card => {
-    card.style.height = 'auto';
-    if (card.offsetHeight > maxHeight) maxHeight = card.offsetHeight;
-  });
-  cards.forEach(card => card.style.height = maxHeight + 'px');
-}
-
-// Add fade-in CSS dynamically
-const style = document.createElement('style');
-style.innerHTML = `
-.fade-in { opacity:0; transform:translateY(20px); animation: fadeInUp 0.6s forwards; }
-@keyframes fadeInUp { to { opacity:1; transform:translateY(0); } }
-.equipment-card { margin:1rem; border-radius:12px; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,0.08); transition: transform 0.3s ease; }
-.equipment-card:hover { transform: translateY(-5px); box-shadow:0 12px 32px rgba(0,0,0,0.15); }
-.image-wrapper { position:relative; width:100%; height:250px; overflow:hidden; }
-.image-wrapper img { width:100%; height:100%; object-fit:contain; display:block; }
-.overlay { position:absolute; bottom:0; left:0; width:100%; background:rgba(255,255,255,0.9); padding:0.8rem; display:flex; justify-content:space-between; align-items:center; }
-.overlay p { margin:0; font-size:0.9rem; color:#333; flex:1; }
-.btn-buy { background:var(--primary); color:#fff; padding:0.5rem 1rem; border-radius:8px; text-decoration:none; font-weight:600; margin-left:0.5rem; transition:background 0.3s ease; }
-.btn-buy:hover { background:var(--primary-dark); }
-.card-body { padding:0.8rem 0.5rem; text-align:center; }
-.card-body h3 { margin:0; font-size:1rem; color:var(--primary-dark); }
-`;
-document.head.appendChild(style);
 
 // Initialize
 fetchAndRenderRecipe();
