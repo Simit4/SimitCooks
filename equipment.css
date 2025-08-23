@@ -205,25 +205,28 @@ h1, h2, h3, h4, h5 {
    Equipment Section Container
 -------------------------------------------------- */
 /* -------------------------------
-   Hero Section
+   Hero Section – Gradient Modern
 ---------------------------------*/
 .equipment-hero {
   position: relative;
   width: 100%;
   height: 380px;
-  background: url('https://images.unsplash.com/photo-1601050690845-8b6376a4fcd4?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+  background: linear-gradient(135deg, #27ae60, #1abc9c); /* Green-to-teal gradient */
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
   overflow: hidden;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 }
 
+/* Overlay for subtle depth */
 .hero-overlay {
   position: absolute;
-  top:0; left:0; right:0; bottom:0;
-  background: rgba(0,0,0,0.45);
-  display:flex;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25); /* soft dark overlay for text contrast */
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -231,25 +234,30 @@ h1, h2, h3, h4, h5 {
   text-align: center;
 }
 
+/* Hero Title */
 .hero-overlay h1 {
   font-family: 'Poppins', sans-serif;
-  font-size: 2.8rem;
+  font-size: 3rem;
   font-weight: 800;
   margin-bottom: 1rem;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+  color: #ffffff;
+  text-shadow: 1px 2px 8px rgba(0,0,0,0.35);
+  line-height: 1.2;
 }
 
+/* Hero Subtitle */
 .hero-overlay p {
   font-family: 'Open Sans', sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 500;
-  text-shadow: 1px 1px 6px rgba(0,0,0,0.5);
-  max-width: 600px;
+  color: #f0f0f0;
+  text-shadow: 1px 2px 6px rgba(0,0,0,0.3);
+  max-width: 650px;
+  margin: 0 auto;
 }
 
-/* -------------------------------
-   Filter Buttons
----------------------------------*/
+
+
 /* -------------------------------
    Filter Buttons Modern Style
 ---------------------------------*/
