@@ -16,7 +16,7 @@ let filteredEquipment = [];
 // -------------------------------
 // Skeleton loader
 // -------------------------------
-function showSkeleton(count = BATCH) {
+function showSkeleton(count = 6) {
   container.innerHTML = '';
   for (let i = 0; i < count; i++) {
     const skeleton = document.createElement('div');
