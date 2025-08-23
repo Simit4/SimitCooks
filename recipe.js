@@ -151,5 +151,6 @@ async function fetchEquipmentByIds(ids) {
 }
 
 
+
 // Initialize
 fetchAndRenderRecipe();
