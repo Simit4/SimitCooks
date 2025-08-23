@@ -204,14 +204,7 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Equipment Section Container
 -------------------------------------------------- */
-:root{
-  --primary:#27ae60;
-  --primary-dark:#1e8449;
-  --accent:#f4a261;
-  --bg:#f9f9f9;
-  --text:#2c3e50;
-  --shadow:rgba(0,0,0,0.12);
-}
+
 
 /* Grid */
 .equipment-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:2.5rem; padding:0 2rem 3rem; }
