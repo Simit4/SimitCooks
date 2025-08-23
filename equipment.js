@@ -8,36 +8,81 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const equipmentContainer = document.getElementById("equipment-container");
 
+// -----------------------------
+// Skeleton Loader
+// -----------------------------
+function showSkeleton(count = 6) {
+  equipmentContainer.innerHTML = "";
+  for (let i = 0; i < count; i++) {
+    const skeleton = document.createElement("div");
+    skeleton.className = "equipment-card skeleton";
+    skeleton.innerHTML = `
+      <div class="image-wrapper"></div>
+      <div class="card-body">
+        <div class="skeleton-text short"></div>
+        <div class="skeleton-text"></div>
+      </div>
+    `;
+    equipmentContainer.appendChild(skeleton);
+  }
+}
+
+// -----------------------------
+// Render Equipment Cards
+// -----------------------------
+function renderEquipment(data) {
+  equipmentContainer.innerHTML = "";
+
+  if (!data || data.length === 0) {
+    equipmentContainer.innerHTML = `<p class="empty">No equipment found.</p>`;
+    return;
+  }
+
+  data.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "equipment-card";
+
+    card.innerHTML = `
+      <div class="image-wrapper">
+        <img src="${item.image_url}" alt="${item.name}">
+      </div>
+      <div class="card-body">
+        <h3>${item.name}</h3>
+        <p>${item.description}</p>
+        ${item.affiliate_link ? `<a href="${item.affiliate_link}" target="_blank" rel="noopener noreferrer" class="btn-buy">Buy Now</a>` : ""}
+      </div>
+    `;
+
+    // Smooth image fade-in
+    const img = card.querySelector("img");
+    img.onload = () => img.classList.add("loaded");
+
+    equipmentContainer.appendChild(card);
+  });
+}
+
+// -----------------------------
+// Fetch Data from Supabase
+// -----------------------------
 async function fetchEquipment() {
   try {
-    equipmentContainer.innerHTML = "Loading...";
+    showSkeleton(); // show skeleton while loading
 
     const { data, error } = await supabase
       .from("equipment_db")
       .select("id, name, image_url, description, affiliate_link")
-      .order("id");
+      .order("id", { ascending: true });
 
     if (error) throw error;
-    if (!data || data.length === 0) {
-      equipmentContainer.innerHTML = "No equipment found.";
-      return;
-    }
+    renderEquipment(data);
 
-    equipmentContainer.innerHTML = "";
-    data.forEach(item => {
-      const div = document.createElement("div");
-      div.innerHTML = `
-        <img src="${item.image_url}" alt="${item.name}" style="width:100%">
-        <h3>${item.name}</h3>
-        <p>${item.description}</p>
-        <a href="${item.affiliate_link}" target="_blank">Buy Now</a>
-      `;
-      equipmentContainer.appendChild(div);
-    });
   } catch (err) {
-    console.error(err);
-    equipmentContainer.innerHTML = "Error loading equipment.";
+    console.error("Error fetching equipment:", err);
+    equipmentContainer.innerHTML = `<p class="error">⚠️ Unable to load equipment. Please try again later.</p>`;
   }
 }
 
+// -----------------------------
+// Run on Page Load
+// -----------------------------
 fetchEquipment();
