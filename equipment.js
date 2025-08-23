@@ -6,33 +6,42 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-
 const container = document.getElementById('equipment-container');
 const filterButtons = document.querySelectorAll('.filter-btn');
-let allEquipment = [];
-let loadedCount = 0;
-const BATCH = 6;
 
+let allEquipment = [];
+let filteredEquipment = [];
+
+
+// -------------------------------
 // Skeleton loader
+// -------------------------------
 function showSkeleton(count = BATCH) {
   container.innerHTML = '';
   for (let i = 0; i < count; i++) {
     const skeleton = document.createElement('div');
     skeleton.className = 'equipment-card skeleton';
-    skeleton.innerHTML = `<div class="image-wrapper"></div><div class="card-body"></div>`;
+    skeleton.innerHTML = `
+      <div class="image-wrapper"></div>
+      <div class="card-body"></div>
+    `;
     container.appendChild(skeleton);
   }
 }
 
-// Render batch
+// -------------------------------
+// Render batch of equipment cards
+// -------------------------------
 function renderBatch(data) {
-  container.innerHTML = ''; // clear previous
   const fragment = document.createDocumentFragment();
+  const batch = data.slice(loadedCount, loadedCount + BATCH);
 
-  data.forEach(item => {
+  batch.forEach(item => {
     const card = document.createElement('div');
     card.className = 'equipment-card fade-in';
+
     const shortDesc = item.description ? item.description.split('. ')[0] + '.' : '';
+
     card.innerHTML = `
       <div class="image-wrapper">
         <img src="${item.image_url}" alt="${item.name}">
@@ -46,16 +55,17 @@ function renderBatch(data) {
         <h3>${item.name}</h3>
       </div>
     `;
+
     fragment.appendChild(card);
   });
 
-  
   container.appendChild(fragment);
   loadedCount += batch.length;
 
-  // Match card heights
+  // Match card heights after images load
   const images = container.querySelectorAll('img');
   let loadedImages = 0;
+
   images.forEach(img => {
     if (img.complete) loadedImages++;
     else img.onload = () => {
@@ -63,43 +73,56 @@ function renderBatch(data) {
       if (loadedImages === images.length) matchCardHeights();
     };
   });
-  if (loadedImages === images.length) matchCardHeights();
 
+  if (loadedImages === images.length) matchCardHeights();
   observeLastCard();
 }
 
+// -------------------------------
 // Match card heights
+// -------------------------------
 function matchCardHeights() {
   const cards = document.querySelectorAll('.equipment-card');
   let maxHeight = 0;
+
   cards.forEach(card => {
     card.style.height = 'auto';
     if (card.offsetHeight > maxHeight) maxHeight = card.offsetHeight;
   });
+
   cards.forEach(card => card.style.height = maxHeight + 'px');
 }
 
-// Fetch equipment
+// -------------------------------
+// Fetch equipment from Supabase
+// -------------------------------
 async function fetchEquipment() {
   try {
     showSkeleton();
+
     const { data, error } = await supabase
       .from('equipment_db')
       .select('id,name,image_url,description,affiliate_link,category')
       .order('id');
 
     if (error) throw error;
+
     allEquipment = data;
+    filteredEquipment = allEquipment;
     loadedCount = 0;
+
     container.innerHTML = '';
     renderBatch(allEquipment);
+
   } catch (err) {
     console.error(err);
     container.innerHTML = "<p class='error-message'>Failed to load equipment.</p>";
   }
 }
 
-// Infinite scroll
+// -------------------------------
+// Infinite scroll observer
+// -------------------------------
 function observeLastCard() {
   const cards = document.querySelectorAll('.equipment-card');
   const lastCard = cards[cards.length - 1];
@@ -117,28 +140,42 @@ function observeLastCard() {
   observer.observe(lastCard);
 }
 
+// -------------------------------
 // Filter buttons
-let filteredEquipment = [];
+// -------------------------------
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
     btn.classList.add('active');
+
     const filter = btn.dataset.filter;
-    filteredEquipment = filter === 'all' ? allEquipment : allEquipment.filter(i => i.category === filter);
+    filteredEquipment = filter === 'all'
+      ? allEquipment
+      : allEquipment.filter(item => item.category === filter);
+
     container.innerHTML = '';
     loadedCount = 0;
     renderBatch(filteredEquipment);
   });
 });
 
+// -------------------------------
 // Initialize
-filteredEquipment = allEquipment;
+// -------------------------------
 fetchEquipment();
 
-// Fade-in CSS
+// -------------------------------
+// Fade-in animation CSS
+// -------------------------------
 const style = document.createElement('style');
 style.innerHTML = `
-.fade-in { opacity:0; transform:translateY(20px); animation: fadeInUp 0.6s forwards; }
-@keyframes fadeInUp { to { opacity:1; transform:translateY(0); } }
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s forwards;
+  }
+  @keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
 `;
 document.head.appendChild(style);
