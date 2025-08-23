@@ -208,51 +208,68 @@ h1, h2, h3, h4, h5 {
 /* Equipment Grid */
 .equipment-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
-  padding: 1rem 0;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 2.5rem;
+  padding: 2rem 0;
 }
 
 /* Equipment Card */
 .equipment-item {
   background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+  border-radius: 16px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
   transition: transform 0.35s ease, box-shadow 0.35s ease;
+  cursor: pointer;
+  position: relative;
 }
 
 .equipment-item:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 14px 32px rgba(0,0,0,0.15);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 12px 34px rgba(0,0,0,0.15);
 }
 
-/* Large Full Image */
+/* Image Section */
 .equipment-item img {
   width: 100%;
   height: auto;
   display: block;
-  transition: transform 0.4s ease;
+  transition: transform 0.6s ease;
 }
 
 .equipment-item:hover img {
-  transform: scale(1.05); /* subtle zoom on hover */
+  transform: scale(1.08);
+}
+
+/* Gradient Overlay for Elegance */
+.equipment-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.25), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.equipment-item:hover::after {
+  opacity: 1;
 }
 
 /* Content Section */
 .equipment-item-content {
   padding: 1.5rem;
   text-align: center;
-  background: linear-gradient(to bottom, #fff, #fafafa);
+  z-index: 2;
+  background: #fff;
 }
 
 .equipment-item-content h3 {
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
-  color: var(--primary-dark, #1e8449);
-  font-size: 1.2rem;
+  font-size: 1.25rem;
+  color: #222;
   margin-bottom: 1rem;
   transition: color 0.3s ease;
 }
@@ -261,39 +278,43 @@ h1, h2, h3, h4, h5 {
   color: var(--primary, #27ae60);
 }
 
-/* Buy Button */
+/* Premium Buy Button */
 .btn-buy {
   display: inline-block;
-  padding: 0.75rem 1.6rem;
+  padding: 0.8rem 1.8rem;
   font-size: 1rem;
   font-weight: 600;
   color: #fff;
   background: linear-gradient(135deg, var(--primary, #27ae60), var(--primary-dark, #1e8449));
-  border-radius: 10px;
+  border-radius: 12px;
   text-decoration: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(39, 174, 96, 0.35);
+  transition: all 0.35s ease;
+  box-shadow: 0 6px 18px rgba(39,174,96,0.3);
 }
 
 .btn-buy:hover {
   background: var(--primary-dark, #1e8449);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(39, 174, 96, 0.4);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 10px 24px rgba(39,174,96,0.45);
 }
 
-/* Responsive Polish */
+/* Responsive */
 @media (max-width: 768px) {
+  .equipment-grid {
+    gap: 1.5rem;
+  }
   .equipment-item-content {
     padding: 1rem;
   }
   .equipment-item-content h3 {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
   }
   .btn-buy {
     font-size: 0.9rem;
-    padding: 0.65rem 1.3rem;
+    padding: 0.7rem 1.4rem;
   }
 }
+
 
 
 /* ------------------------------------------------- Footer -------------------------------------------------- */
