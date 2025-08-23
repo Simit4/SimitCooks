@@ -201,22 +201,26 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Hero Section
 -------------------------------------------------- */
-.about-hero-split {
-  padding: 60px 0;  /* reduced height */
-  background: var(--bg); /* neutral background */
+.about-hero-premium {
+  padding: 60px 0; /* compact height */
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
 }
 
-.hero-split-container {
+.hero-premium-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
+  position: relative;
 }
 
 .hero-text {
   flex: 1 1 500px;
   color: var(--text);
+  z-index: 2;
 }
 
 .hero-text h1 {
@@ -238,18 +242,42 @@ h1, h2, h3, h4, h5 {
 .hero-visual {
   flex: 1 1 400px;
   height: 300px;
+  position: relative;
   border-radius: 16px;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  transition: transform 0.3s ease;
 }
 
-.hero-visual:hover {
-  transform: scale(1.03);
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.6;
+  transform: translate(0,0);
+  transition: transform 0.5s ease;
+}
+
+.shape1 {
+  width: 200px;
+  height: 200px;
+  top: -40px;
+  right: -60px;
+  background: var(--primary);
+}
+
+.shape2 {
+  width: 250px;
+  height: 250px;
+  bottom: -50px;
+  right: 40px;
+  background: var(--accent);
+}
+
+.hero-visual:hover .shape {
+  transform: translateY(-10px) scale(1.05);
 }
 
 /* Responsive */
 @media (max-width: 992px) {
-  .hero-split-container {
+  .hero-premium-container {
     flex-direction: column-reverse;
     text-align: center;
   }
@@ -257,12 +285,17 @@ h1, h2, h3, h4, h5 {
   .hero-visual {
     width: 100%;
     height: 200px;
+    margin-bottom: 20px;
   }
 
   .hero-text h1 {
     font-size: 2.5rem;
   }
 }
+
+
+
+
 
 
 
