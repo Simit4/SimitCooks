@@ -486,169 +486,159 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Equipment Section Container
 -------------------------------------------------- */
-.equipment-page {
-  margin: 3rem auto;
-  padding: 3rem 2rem;
+/* ------------------------------
+   Equipment Section - Recipe Page
+--------------------------------*/
+#equipment-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+/* Equipment Card */
+.equipment-card {
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.07);
-  max-width: 1100px;
-}
-
-/* Section Title and Subtitle */
-.section-title {
-  font-family: 'Poppins', sans-serif;
-  color: var(--primary);
-  font-weight: 800;
-  font-size: 2.3rem;
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
-
-.section-subtitle {
-  text-align: center;
-  color: #7a7a8c;
-  font-weight: 600;
-  margin-bottom: 2rem;
-  font-size: 1.1rem;
-}
-
-/* Equipment Grid */
-.equipment-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 1.8rem;
-}
-
-/* Individual Equipment Item Card */
-.equipment-item {
-  background: #fff8f1;
-  border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(239, 91, 37, 0.15);
-  padding: 1.5rem 1.2rem;
-  text-align: center;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
-  user-select: none;
+  will-change: transform;
 }
 
-.equipment-item:hover,
-.equipment-item:focus {
-  box-shadow: 0 10px 28px rgba(239, 91, 37, 0.3);
+.equipment-card:hover {
   transform: translateY(-5px);
-  outline: none;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.15);
 }
 
-/* Equipment Item Image */
-.equipment-item img {
-  max-width: 120px;
-  height: auto;
-  margin-bottom: 1rem;
-  border-radius: 8px;
+/* Image Wrapper */
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  background: #f9f9f9;
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+  display: block;
+  transition: transform 0.3s ease;
 }
 
-/* Equipment Item Title */
-.equipment-item h4 {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  color: #ef5b25;
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
+.equipment-card:hover .image-wrapper img {
+  transform: scale(1.05);
 }
 
-/* Equipment Item Description */
-.equipment-item p {
-  font-size: 1rem;
-  color: #555768;
-  line-height: 1.4;
-  user-select: text;
-  margin-bottom: 0;
+/* Overlay with description and button */
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255,255,255,0.95);
+  padding: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-/* Buy Button */
+.equipment-card:hover .overlay {
+  opacity: 1;
+}
+
+.overlay p {
+  margin: 0;
+  flex: 1;
+  color: #333;
+  font-weight: 500;
+}
+
 .btn-buy {
-  display: inline-block;
-  padding: 0.65rem 2rem;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #fff;
   background: var(--primary);
-  border: none;
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(239, 91, 37, 0.4);
-  cursor: pointer;
-  user-select: none;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  font-family: 'Poppins', sans-serif;
-  transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
-  box-sizing: border-box;
-  white-space: nowrap;
+  color: #fff;
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
   text-decoration: none;
-  margin-top: 1.5rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.btn-buy:hover,
-.btn-buy:focus {
+.btn-buy:hover {
   background: var(--primary-dark);
-  box-shadow: 0 12px 28px rgba(217, 74, 15, 0.6);
-  transform: translateY(-3px);
-  outline: none;
+  transform: translateY(-2px);
 }
 
-.btn-buy:focus-visible {
-  outline: 2px solid #ffb169;
-  outline-offset: 3px;
+/* Card Body */
+.card-body {
+  padding: 0.8rem 0.5rem;
+  text-align: center;
 }
 
-@media (max-width: 860px) {
-  .equipment-page {
-    padding: 2rem 1rem;
-    margin: 2rem 1rem;
+.card-body h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--primary-dark);
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.equipment-card:hover .card-body h3 {
+  color: var(--primary);
+}
+
+/* Fade-in Animation */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .image-wrapper {
+    height: 200px;
   }
 
-  .section-title {
-    font-size: 1.8rem;
-    margin-bottom: 0.3rem;
-  }
-
-  .section-subtitle {
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .equipment-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .equipment-item {
-    padding: 1.2rem 1rem;
-  }
-
-  .equipment-item img {
-    max-width: 100px;
-    margin-bottom: 0.8rem;
-  }
-
-  .equipment-item h4 {
-    font-size: 1.1rem;
-  }
-
-  .equipment-item p {
-    font-size: 0.95rem;
+  .overlay {
+    font-size: 0.85rem;
   }
 
   .btn-buy {
-    font-size: 1rem;
-    padding: 0.55rem 1.5rem;
-    margin-top: 1rem;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .card-body h3 {
+    font-size: 0.95rem;
   }
 }
 
+@media (max-width: 480px) {
+  .image-wrapper {
+    height: 180px;
+  }
+
+  .card-body h3 {
+    font-size: 0.9rem;
+  }
+}
 
 
 
