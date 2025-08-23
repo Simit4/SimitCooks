@@ -280,6 +280,7 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Featured Recipes 
 -------------------------------------------------- */
+
 #Featured-Recipes-h2 {
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
@@ -287,6 +288,7 @@ h1, h2, h3, h4, h5 {
   color: var(--primary);
   text-align: center;
   letter-spacing: 0.5px;
+  padding: 40px 20px; 
 }
 
 
