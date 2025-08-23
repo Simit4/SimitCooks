@@ -599,23 +599,34 @@ h1, h2, h3, h4, h5 {
     text-align: center;
   }
 
-    .recipes-grid {
-    display: flex !important;          /* ensures flex layout on mobile */
-    flex-wrap: nowrap;                 /* no wrapping */
-    overflow-x: auto;                  /* horizontal scroll */
-    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
-    scroll-snap-type: x mandatory;
-    padding: 20px 5%;
+  .recipes-grid {
+    display: flex;            /* switch from grid */
+    flex-wrap: nowrap;        /* no wrapping */
+    overflow-x: auto;
     gap: 15px;
+    padding: 20px 5%;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
   }
+
   .recipe-card {
-    flex: 0 0 220px;                   /* fixed width for swipe */
+    flex: 0 0 auto;           /* prevent stretching */
+    min-width: 220px;         /* fixed width for cards */
     scroll-snap-align: start;
   }
-  .thumbnail-wrapper img,
-  .momo-placeholder {
-    height: 150px;                      /* smaller for mobile */
-  }
+   
+.thumbnail-wrapper,
+.momo-placeholder {
+  height: 150px;
+}
+
+.thumbnail-wrapper img,
+.momo-placeholder img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
 
   .card-body { padding: 12px; }
   .recipe-card h3 { font-size: 1.1rem; }
@@ -636,6 +647,10 @@ h1, h2, h3, h4, h5 {
     min-width: 180px;             /* smaller cards for small screens */
   }
 
+   .recipe-card p {
+    height: auto;
+  }
+
   .thumbnail-wrapper,
   .momo-placeholder {
     height: 130px;
@@ -648,4 +663,5 @@ h1, h2, h3, h4, h5 {
   .card-body p {
     font-size: 0.7rem;
   }
+   
 }
