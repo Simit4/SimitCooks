@@ -627,3 +627,66 @@ h1, h2, h3, h4, h5 {
   color: #888;
 }
 
+
+
+
+/* =================================================
+   🔹 Mobile Responsive CSS
+================================================= */
+
+/* Header & Navbar */
+@media (max-width: 768px) {
+  .logo { font-size: 2rem; }
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 0.75rem;
+    background: var(--light);
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow-md);
+    position: absolute;
+    top: 100%;
+    right: 1rem;
+  }
+  .nav-links.active { display: flex; }
+  .hamburger { display: flex; }
+}
+
+/* Recipe Page */
+@media (max-width: 860px) {
+  .recipe-page { padding: 2rem 1.5rem; margin: 1.5rem; }
+  #recipe-title { font-size: 2rem; padding: 0.8rem 0; }
+  .recipe-meta { gap: 1rem; font-size: 0.95rem; }
+  .description { font-size: 1rem; margin-bottom: 1.5rem; overflow: hidden; text-overflow: ellipsis; }
+  .recipe-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .recipe-left h3 { font-size: 1.25rem; }
+  #ingredients-list li, #method-list li { font-size: 1rem; padding-left: 1.2rem; margin-bottom: 0.6rem; }
+  #nutrition, #notes, #facts { font-size: 0.95rem; padding: 0.8rem 1rem; }
+  #tags, #cuisine, #category { font-size: 0.95rem; }
+  #notes, #facts { font-size: 0.9rem; }
+}
+
+/* Equipment Page */
+@media (max-width: 860px) {
+  .equipment-grid { grid-template-columns: 1fr; gap: 1.5rem; padding: 0 1rem 2rem; }
+  .equipment-item { opacity: 1; }
+  .image-wrapper { height: auto; }
+  .image-wrapper img { width: 100%; height: auto; object-fit: contain; }
+  .overlay { opacity: 1; transform: translateY(0); text-align: left; }
+  .overlay h4 { font-size: 1.1rem; }
+  .overlay p { font-size: 0.9rem; }
+  .btn-buy { padding: 0.45rem 1.2rem; font-size: 0.95rem; }
+  .overlay h4, .overlay p, .overlay .btn-buy { transform: none; }
+}
+
+/* Footer */
+@media (max-width: 600px) {
+  .footer-content { flex-direction: column; align-items: center; text-align: center; gap: 1rem; }
+  .footer-brand .logo { font-size: 1.2rem; }
+  .footer-nav { justify-content: center; gap: 0.8rem; }
+  .footer-nav a { font-size: 0.85rem; }
+  .footer-social a { font-size: 1.2rem; }
+  .site-footer { padding: 1.2rem 0.8rem; }
+}
