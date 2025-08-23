@@ -6,6 +6,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
+
 // Convert YouTube URL to embed URL
 function convertToEmbedUrl(url) {
   if (!url) return '';
@@ -22,6 +23,7 @@ async function fetchAndRenderRecipe() {
   if (pathParts[0] === 'recipe' && pathParts[1]) {
     slug = pathParts[1];
   } else {
+    // fallback to ?slug=<slug>
     const params = new URLSearchParams(window.location.search);
     slug = params.get('slug');
   }
@@ -100,7 +102,7 @@ function renderRecipe(recipe) {
   document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
   document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
 
-  // Video
+  // Video: only show if valid URL
   const embedUrl = convertToEmbedUrl(recipe.video_url);
   const videoContainer = document.querySelector('.recipe-video');
   if (embedUrl) {
@@ -116,13 +118,12 @@ function renderRecipe(recipe) {
   }
 }
 
-// Fetch equipment details by IDs and render like main equipment page
+// Fetch equipment details by IDs
 async function fetchEquipmentByIds(ids) {
   const { data, error } = await supabase
     .from('equipment_db')
     .select('*')
-    .in('id', ids)
-    .order('id', { ascending: true });
+    .in('id', ids);
 
   const container = document.getElementById('equipment-container');
   container.innerHTML = '';
@@ -132,49 +133,19 @@ async function fetchEquipmentByIds(ids) {
     return;
   }
 
-  const fragment = document.createDocumentFragment();
-
   data.forEach(item => {
-    const card = document.createElement('article');
-    card.className = 'equipment-item';
-
-    // Image
-    const img = document.createElement('img');
-    img.src = item.image_url;
-    img.alt = item.name;
-    img.onerror = () => img.src = 'https://via.placeholder.com/600x400?text=No+Image';
-    card.appendChild(img);
-
-    // Content
-    const content = document.createElement('div');
-    content.className = 'equipment-item-content';
-
-    const title = document.createElement('h3');
-    title.textContent = item.name;
-    content.appendChild(title);
-
-    if (item.description) {
-      const desc = document.createElement('p');
-      desc.textContent = item.description;
-      content.appendChild(desc);
-    }
-
-    if (item.affiliate_link) {
-      const buyBtn = document.createElement('a');
-      buyBtn.className = 'btn-buy';
-      buyBtn.href = item.affiliate_link;
-      buyBtn.target = '_blank';
-      buyBtn.rel = 'noopener noreferrer nofollow';
-      buyBtn.textContent = 'Buy Now';
-      content.appendChild(buyBtn);
-    }
-
-    card.appendChild(content);
-    fragment.appendChild(card);
+    container.innerHTML += `
+      <div class="equipment-item">
+        <img src="${item.image_url}" alt="${item.name}" class="equipment-image" />
+        <h3 class="equipment-title">${item.name}</h3>
+        <p class="equipment-description">${item.description || ''}</p>
+        <a href="${item.affiliate_link}" class="btn-buy" target="_blank" rel="noopener noreferrer">Buy Now</a>
+      </div>
+    `;
   });
-
-  container.appendChild(fragment);
 }
 
 // Initialize
 fetchAndRenderRecipe();
+
+
