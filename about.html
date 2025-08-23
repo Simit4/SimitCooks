@@ -65,8 +65,8 @@
 
 
 <body>
-  
 
+  
 <!-- Hero Section -->
 <section class="about-hero">
   <div class="about-hero-content container">
@@ -80,7 +80,7 @@
   </div>
 </section>
 
-<!-- Our Story / Modern Timeline -->
+<!-- Modern Timeline -->
 <section class="about-timeline container">
   <h2>Our Journey</h2>
   <div class="timeline">
@@ -108,7 +108,7 @@
   </div>
 </section>
 
-<!-- Optional CTA / Vision -->
+<!-- CTA Section -->
 <section class="about-cta">
   <div class="container">
     <h3>Our Vision</h3>
@@ -117,7 +117,6 @@
     </p>
   </div>
 </section>
-
 
 
 <!-- Scroll Animation JS -->
@@ -129,8 +128,7 @@ function revealTimeline() {
 
   timelineItems.forEach(item => {
     const itemTop = item.getBoundingClientRect().top;
-
-    if (itemTop < triggerBottom) {
+    if(itemTop < triggerBottom){
       item.classList.add('in-view');
     }
   });
@@ -139,7 +137,6 @@ function revealTimeline() {
 window.addEventListener('scroll', revealTimeline);
 window.addEventListener('load', revealTimeline);
 </script>
-
 
   
   
