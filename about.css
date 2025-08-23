@@ -202,7 +202,7 @@ h1, h2, h3, h4, h5 {
    Hero Section – Refined
 -------------------------------------------------- */
 .about-hero-simple {
-  padding: 70px 10px;
+  padding: 60px 10px;
   background: linear-gradient(135deg, #27ae60, #f4a261);
   color: #fff;
   text-align: center;
@@ -269,14 +269,14 @@ h1, h2, h3, h4, h5 {
    Timeline Section – Refined
 -------------------------------------------------- */
 .about-timeline {
-  padding: 100px 20px;
+  padding: 60px 10px;
   background: var(--section-bg);
 }
 
 .about-timeline h2 {
   text-align: center;
   font-size: 3rem;
-  margin-bottom: 80px;
+  margin-bottom: 60px;
   color: var(--primary);
   position: relative;
 }
