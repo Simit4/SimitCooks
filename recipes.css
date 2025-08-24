@@ -360,12 +360,25 @@ h1, h2, h3, h4, h5 {
     flex: 0 0 220px;                   /* fixed width for swipe */
     scroll-snap-align: start;
   }
-  .thumbnail-wrapper img,
-  .momo-placeholder {
-    width: 100%;
-    height: auto;
-    object-fit: contain;  /* show entire image */                   /* smaller for mobile */
-  }
+
+
+.thumbnail-wrapper {
+  width: 100%;
+  height: 150px;          /* same height for all thumbnails */
+  display: flex;
+  align-items: center;    /* center vertically */
+  justify-content: center; /* center horizontally */
+  overflow: hidden;       /* hide any overflow */
+  background: #f9f9f9;    /* optional: neutral bg behind image */
+}
+
+.thumbnail-wrapper img,
+.momo-placeholder {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;    /* full image, no crop */
+}
+
 
   .card-body { padding: 12px; }
   .recipe-card h3 { font-size: 1.1rem; }
