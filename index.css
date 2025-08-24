@@ -606,25 +606,24 @@ h1, h2, h3, h4, h5 {
     justify-content: space-between;
   }
 
-  /* Thumbnail wrapper – fixed size */
-  .thumbnail-wrapper {
-    width: 100%;
-    height: 150px;              /* same height for all thumbnails */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    background: #f9f9f9;
-    border-radius: 10px;
-  }
+.thumbnail-wrapper {
+  width: 100%;
+  height: 140px;              /* slightly smaller for mobile consistency */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #f9f9f9;
+  border-radius: 10px;
+}
 
-  /* Images */
-  .thumbnail-wrapper img {
-    max-width: 100%;
-    max-height: 100%;
-  object-fit: cover;  /* crop to fill the wrapper exactly */
-    display: block;
-  }
+.thumbnail-wrapper img {
+  width: 100%;               /* force image to fill wrapper */
+  height: 100%;              /* force image to fill wrapper */
+  object-fit: cover;         /* crop excess parts */
+  display: block;
+}
+
 
   /* Placeholder (same as image size) */
   .momo-placeholder {
