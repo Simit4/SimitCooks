@@ -649,7 +649,7 @@ h1, h2, h3, h4, h5 {
 
   .recipe-card h3 { 
     font-size: 1.1rem; 
-    margin-bottom: 6px; 
+    margin-bottom: 2px; 
   }
 
   /* Description: show only 2 lines */
@@ -661,7 +661,7 @@ h1, h2, h3, h4, h5 {
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.3rem;
-  /* min-height: 2.6rem;  remove this */
+  min-height: auto; /* remove extra space */
   }
 }
 
