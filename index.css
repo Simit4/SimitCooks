@@ -653,13 +653,10 @@ h1, h2, h3, h4, h5 {
 
   /* Description: show only 2 lines */
   .recipe-card p {
-  font-size: 0.8rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  display: block;   /* normal block */
+  line-height: 1.3rem;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.3rem;
   }
 }
 
