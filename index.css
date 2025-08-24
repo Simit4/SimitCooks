@@ -644,7 +644,7 @@ h1, h2, h3, h4, h5 {
   flex-direction: column;
   justify-content: flex-start;  /* keep h3 and p together */
   gap: 4px;                     /* optional: small gap between h3 and p */
-  padding: 12px;
+  padding: 6px;
   }
 
   .recipe-card h3 { 
