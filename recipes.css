@@ -360,7 +360,7 @@ h1, h2, h3, h4, h5 {
 .recipe-card {
   flex: 0 0 220px;                   /* fixed width for swipe */
   scroll-snap-align: start;
-  height: 320px;                      /* uniform card height */
+  height: auto;                    
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
