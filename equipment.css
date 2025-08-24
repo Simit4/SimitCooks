@@ -242,6 +242,8 @@ h1, h2, h3, h4, h5 {
   font-weight: 800;
   color: #1f3a4d; /* deep slate */
   line-height: 1.2;
+  animation: fadeInUp 1s ease forwards;
+
 }
 
 /* Hero Subtitle */
@@ -252,8 +254,15 @@ h1, h2, h3, h4, h5 {
   color: #3a556b; /* softer slate for subtle contrast */
   max-width: 650px;
   margin: 0 auto;
+  animation: fadeInUp 1.2s ease forwards;
+
 }
 
+/* Subtle Fade-In Animation */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
 
 
 /* -------------------------------
