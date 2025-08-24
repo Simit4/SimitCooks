@@ -600,7 +600,7 @@ h1, h2, h3, h4, h5 {
     flex: 0 0 220px;
     scroll-snap-align: start;
     min-width: 220px;
-    height: 320px;               /* fixed uniform height */
+    height: 220px;               /* fixed uniform height */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
