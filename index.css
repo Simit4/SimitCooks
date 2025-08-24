@@ -622,7 +622,7 @@ h1, h2, h3, h4, h5 {
   .thumbnail-wrapper img {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain;
+  object-fit: cover;  /* crop to fill the wrapper exactly */
     display: block;
   }
 
