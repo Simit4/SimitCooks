@@ -601,15 +601,24 @@ h1, h2, h3, h4, h5 {
     scroll-snap-align: start;
     min-width: 220px;
   }
+   
 
- .thumbnail-wrapper img,
-.momo-placeholder {
+.thumbnail-wrapper {
   width: 100%;
-  height: 150px;       /* set consistent thumbnail height */
-  object-fit: cover;   /* crop to fill area */
-  border-radius: 10px; /* optional, for nicer look */
+  height: 150px;          /* same height for all thumbnails */
+  display: flex;
+  align-items: center;    /* center vertically */
+  justify-content: center; /* center horizontally */
+  overflow: hidden;       /* hide any overflow */
+  background: #f9f9f9;    /* optional: neutral bg behind image */
 }
 
+.thumbnail-wrapper img,
+.momo-placeholder {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;    /* full image, no crop */
+}
 
 
   .card-body { padding: 12px; text-align: center; }
@@ -625,6 +634,7 @@ h1, h2, h3, h4, h5 {
     text-overflow: ellipsis;
     line-height: 1.3rem;
   }
+   
 }
 
 
