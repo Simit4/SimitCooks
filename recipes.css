@@ -137,8 +137,23 @@ h1, h2, h3, h4, h5 {
   background: linear-gradient(135deg, var(--primary), var(--accent));
   color: #fff;
 }
-.hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
-.hero p  { font-size: 1.1rem; }
+.hero h1 { 
+  font-size: 2.5rem; margin-bottom: 10px;
+  animation: fadeInUp 1s ease forwards;
+          
+}
+.hero p  { 
+  font-size: 1.1rem; 
+  animation: fadeInUp 1.2s ease forwards;
+
+}
+
+/* Subtle Fade-In Animation */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
 
 /* =================================================
    🔹 Controls (Filters & Search)
