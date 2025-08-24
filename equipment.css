@@ -242,8 +242,9 @@ h1, h2, h3, h4, h5 {
   font-weight: 800;
   color: #1f3a4d; /* deep slate */
   line-height: 1.2;
+  opacity: 0; /* start hidden */
   animation: fadeInUp 1s ease forwards;
-
+  animation-delay: 0s;
 }
 
 /* Hero Subtitle */
@@ -251,11 +252,13 @@ h1, h2, h3, h4, h5 {
   font-family: 'Open Sans', sans-serif;
   font-size: 1.25rem;
   font-weight: 500;
-  color: #3a556b; /* softer slate for subtle contrast */
+  color: #3a556b; /* softer slate */
   max-width: 650px;
   margin: 0 auto;
+  text-align: center;
+  opacity: 0; /* start hidden */
   animation: fadeInUp 1.2s ease forwards;
-
+  animation-delay: 0.2s; /* slight delay after h1 */
 }
 
 /* Subtle Fade-In Animation */
