@@ -602,12 +602,14 @@ h1, h2, h3, h4, h5 {
     min-width: 220px;
   }
 
-  .thumbnail-wrapper img,
-  .momo-placeholder {
-    width: 100%;
-    height: auto;
-    object-fit: contain;  /* show entire image */                   /* smaller for mobile */
-  }
+ .thumbnail-wrapper img,
+.momo-placeholder {
+  width: 100%;
+  height: 150px;       /* set consistent thumbnail height */
+  object-fit: cover;   /* crop to fill area */
+  border-radius: 10px; /* optional, for nicer look */
+}
+
 
 
   .card-body { padding: 12px; text-align: center; }
