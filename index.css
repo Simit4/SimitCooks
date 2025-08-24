@@ -600,32 +600,33 @@ h1, h2, h3, h4, h5 {
     flex: 0 0 220px;
     scroll-snap-align: start;
     min-width: 220px;
-    height: 320px;              /* uniform card height */
+    height: 320px;               /* fixed uniform height */
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 
-.thumbnail-wrapper {
-  width: 100%;
-  height: 140px;              /* slightly smaller for mobile consistency */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: #f9f9f9;
-  border-radius: 10px;
-}
+  /* Thumbnail wrapper – fixed size */
+  .thumbnail-wrapper {
+    width: 100%;
+    height: 140px;               /* uniform thumbnail height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #f9f9f9;
+    border-radius: 10px;
+  }
 
-.thumbnail-wrapper img {
-  width: 100%;               /* force image to fill wrapper */
-  height: 100%;              /* force image to fill wrapper */
-  object-fit: cover;         /* crop excess parts */
-  display: block;
-}
+  /* Images fill wrapper */
+  .thumbnail-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;           /* crop to fill wrapper exactly */
+    display: block;
+  }
 
-
-  /* Placeholder (same as image size) */
+  /* Placeholder – same size as image */
   .momo-placeholder {
     width: 100%;
     height: 100%;
@@ -652,6 +653,7 @@ h1, h2, h3, h4, h5 {
     margin-bottom: 6px; 
   }
 
+  /* Description: show only 2 lines */
   .recipe-card p {
     font-size: 0.8rem;
     display: -webkit-box;
@@ -660,9 +662,10 @@ h1, h2, h3, h4, h5 {
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.3rem;
-    min-height: 2.6rem;
+    min-height: 2.6rem;          /* reserve space so all cards align */
   }
 }
+
 
 
 @media (max-width: 480px) {
