@@ -640,12 +640,11 @@ h1, h2, h3, h4, h5 {
 }
 
   .card-body { 
-    padding: 12px; 
-    text-align: center; 
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;  /* keep h3 and p together */
+  gap: 4px;                     /* optional: small gap between h3 and p */
+  padding: 12px;
   }
 
   .recipe-card h3 { 
@@ -655,14 +654,14 @@ h1, h2, h3, h4, h5 {
 
   /* Description: show only 2 lines */
   .recipe-card p {
-    font-size: 0.8rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.3rem;
-    min-height: 2.6rem;          /* reserve space so all cards align */
+  font-size: 0.8rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3rem;
+  /* min-height: 2.6rem;  remove this */
   }
 }
 
