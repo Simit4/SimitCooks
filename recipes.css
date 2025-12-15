@@ -134,8 +134,9 @@ h1, h2, h3, h4, h5 {
 .hero {
   text-align: center;
   padding: 60px 20px;
-background: linear-gradient(135deg, #e0e7ff, #f0f9ff);
+background: linear-gradient(135deg, #fde2e4, #fff1f2);
 color: #374151;
+
 
 }
 .hero h1 { 
