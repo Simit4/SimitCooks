@@ -256,20 +256,41 @@ h1, h2, h3, h4, h5 {
 -------------------------------------------------- */
 
 #Featured-Recipes-h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  text-transform: uppercase; /* makes it all caps */
-  letter-spacing: 1px;       /* improves readability */
-  color: #0f172a;            /* dark neutral on pastel background */
-  margin-bottom: 1rem;
+ font-size: 2.25rem;               /* slightly larger for emphasis */
+  font-weight: 800;                  /* strong, bold heading */
+  text-transform: uppercase;         /* all caps */
+  letter-spacing: 2px;               /* adds breathing room between letters */
+  color: #0f172a;                    /* dark neutral for contrast */
   text-align: center;
+  margin-bottom: 1rem;
+  line-height: 1.2;                  /* tighter but readable */
+  position: relative;                /* for decorative underline if needed */
+  animation: fadeInUp 1s ease forwards; /* optional subtle entrance animation */
+}
+
+/* Optional: subtle underline accent for visual cue */
+#Featured-Recipes-h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: #22c55e;              /* fresh accent color (green) */
+  margin: 0.5rem auto 0;             /* centered under heading */
+  border-radius: 2px;
+}
+
+/* Fade-in animation */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 
 
 
 
-/* 🔥 Recipes Grid */
+
+/* Recipes Grid */
 .recipes-grid {
   display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
   gap: 30px; padding: 30px 8%;
