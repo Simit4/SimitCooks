@@ -388,14 +388,14 @@ h1, h2, h3, h4, h5 {
 -------------------------------------------------- */
 .btn-print {
   display: inline-block;
-  margin-top: 2rem;
-  padding: 0.65rem 2.2rem; /* wider for capsule shape */
+  margin-top: 1rem;
+  padding: 0.35rem 1.2rem; /* wider for capsule shape */
   font-size: 1.1rem;
   font-weight: 700;
   color: #fff;
   background: var(--primary);
   border: none;
-  border-radius: 40px; /* CHANGES ITS SHAPE */
+  border-radius: 30px; /* CHANGES ITS SHAPE */
   box-shadow: 0 8px 20px rgba(239, 91, 37, 0.4);
   cursor: pointer;
   user-select: none;
