@@ -278,7 +278,7 @@ h1, h2, h3, h4, h5 {
    Timeline Section – Ultra Modern Minimal
 -------------------------------------------------- */
 .about-timeline {
-
+  margin-top: 4rem;
   background: var(--section-bg);
   border-radius: 30px;
   padding:2rem;
