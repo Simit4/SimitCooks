@@ -260,9 +260,10 @@ h1, h2, h3, h4, h5 {
   font-weight: 800;                  /* strong, bold heading */
   text-transform: uppercase;         /* all caps */
   letter-spacing: 2px;               /* adds breathing room between letters */
-  color: #0f172a;                    /* dark neutral for contrast */
+  color: #2f5233;                    /* dark neutral for contrast */
   text-align: center;
   margin-bottom: 1rem;
+  padding-top: 2rem
   line-height: 1.2;                  /* tighter but readable */
   position: relative;                /* for decorative underline if needed */
   animation: fadeInUp 1s ease forwards; /* optional subtle entrance animation */
