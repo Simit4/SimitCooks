@@ -256,15 +256,13 @@ h1, h2, h3, h4, h5 {
 -------------------------------------------------- */
 
 #Featured-Recipes-h2 {
-  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
   font-weight: 700;
-  color: var(--primary);
-  letter-spacing: 0.5px;
-  font-size: 2.2rem;       /* bigger on desktop */
-  padding: 20px 0;         /* reduce top/bottom padding */
-  margin: 0 auto;          /* center horizontally if text-align: center */
-  max-width: 1100px;       /* same as .container */
-  text-align: center;         /* aligns with the container/cards */
+  text-transform: uppercase; /* makes it all caps */
+  letter-spacing: 1px;       /* improves readability */
+  color: #0f172a;            /* dark neutral on pastel background */
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 
