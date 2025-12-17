@@ -395,7 +395,7 @@ h1, h2, h3, h4, h5 {
   color: #fff;
   background: var(--primary);
   border: none;
-  border-radius: 15px; /* CHANGES ITS SHAPE */
+  border-radius: 25px; 
   box-shadow: 0 8px 20px rgba(239, 91, 37, 0.4);
   cursor: pointer;
   user-select: none;
