@@ -281,6 +281,7 @@ h1, h2, h3, h4, h5 {
   padding: 40px 20px;
   background: var(--section-bg);
   border-radius: 30px;
+  padding-top:2rem;
 }
 
 .about-timeline h2 {
@@ -296,7 +297,7 @@ h1, h2, h3, h4, h5 {
   position: relative;
   margin-left: 18px;
   padding-left: 12px;
-  padding-top:2rem;
+
 
 }
 
