@@ -5,10 +5,12 @@ export function renderFooter() {
   footer.innerHTML = `
     <div class="footer-content container">
       <div class="footer-brand">
+    <a href="index.html">       
         <h2 class="logo">
           <span class="logo-modern">Simit's</span>
           <span class="logo-traditional">Swaad</span>
         </h2>
+        </a>
         <p>Simple, home-style recipes made with love.</p>
       </div>
 
