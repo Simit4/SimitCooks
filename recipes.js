@@ -97,8 +97,6 @@ function setupFilters() {
 
         if (filter === 'all') {
           card.style.display = 'block';
-        } else if (filter === 'video') {
-          card.style.display = hasVideo ? 'block' : 'none';
         } else {
           // match category OR tags
           const matchCategory = categories.some(c => c.includes(filter.toLowerCase()));
