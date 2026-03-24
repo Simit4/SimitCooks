@@ -30,7 +30,7 @@ export function renderFooter() {
     </div>
 
     <div class="footer-bottom">
-      &copy; ${new Date().getFullYear()} Simit's Swaad. All rights reserved.
+      &copy; ${new Date().getFullYear()} Simit Cooks. All rights reserved.
     </div>
   `;
 
