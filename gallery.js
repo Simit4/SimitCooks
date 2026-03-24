@@ -7,66 +7,49 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 
-
-// -------------------------
-// DOM references
-// -------------------------
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
 let allImages = [];
 let filteredImages = [];
 let loadedCount = 0;
-const BATCH = 12; // images per batch
+const BATCH = 12;
 
-// -------------------------
-// Skeleton loader
-// -------------------------
+// ----- Skeleton Loader -----
 function showSkeleton(count = BATCH) {
   gallery.innerHTML = '';
   for (let i = 0; i < count; i++) {
-    const skeleton = document.createElement('div');
-    skeleton.className = 'gallery-item skeleton';
-    skeleton.innerHTML = `<div class="image-wrapper" style="height:250px;background:#eee;border-radius:15px;"></div>`;
-    gallery.appendChild(skeleton);
+    const sk = document.createElement('div');
+    sk.className = 'skeleton';
+    gallery.appendChild(sk);
   }
 }
 
-// -------------------------
-// Render a batch of images
-// -------------------------
+// ----- Render Batch -----
 function renderBatch(data) {
-  const fragment = document.createDocumentFragment();
   const batch = data.slice(loadedCount, loadedCount + BATCH);
-
   batch.forEach(img => {
-    const div = document.createElement('div');
-    div.className = 'gallery-item fade-in';
-
-    // Click → recipe page
-    const recipeSlug = img.name.toLowerCase().replace(/\s+/g, '-');
-    div.innerHTML = `
-      <a href="/recipes.html?slug=${recipeSlug}">
+    const link = document.createElement('a');
+    link.href = `recipes.html?img=${encodeURIComponent(img.name)}`;
+    link.className = 'glightbox';
+    link.innerHTML = `
+      <div class="gallery-item">
         <img src="${img.url}" alt="${img.name}">
         <div class="overlay">${img.emoji} ${img.name}</div>
-      </a>
+      </div>
     `;
-
-    fragment.appendChild(div);
+    gallery.appendChild(link);
   });
-
-  gallery.appendChild(fragment);
   loadedCount += batch.length;
+  GLightbox({ selector: '.glightbox' });
   observeLastImage();
 }
 
-// -------------------------
-// Infinite scroll observer
-// -------------------------
+// ----- Infinite Scroll -----
 function observeLastImage() {
-  const items = document.querySelectorAll('.gallery-item');
-  const lastItem = items[items.length - 1];
-  if (!lastItem) return;
+  const imgs = document.querySelectorAll('.gallery-item');
+  const lastImg = imgs[imgs.length - 1];
+  if (!lastImg) return;
 
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -77,34 +60,27 @@ function observeLastImage() {
     });
   }, { rootMargin: '200px' });
 
-  observer.observe(lastItem);
+  observer.observe(lastImg);
 }
 
-// -------------------------
-// Load gallery from Supabase
-// -------------------------
-async function loadGallery() {
+// ----- Fetch Gallery -----
+async function fetchGallery() {
   try {
     showSkeleton();
 
-    const { data, error } = await supabase.storage.from('gallery').list('', { limit: 200 });
+    const { data, error } = await supabase.storage.from('gallery').list();
     if (error) throw error;
 
     allImages = data.map(file => {
-      const url = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
-
-      // Determine category by filename
-      let category = 'main';
-      let emoji = '🍲';
       const nameLower = file.name.toLowerCase();
+      let category = 'main', emoji = '🍲';
+      if (nameLower.startsWith('appetizer')) { category = 'appetizer'; emoji = '🥗'; }
       if (nameLower.startsWith('dessert')) { category = 'dessert'; emoji = '🍰'; }
-      else if (nameLower.startsWith('appetizer')) { category = 'appetizer'; emoji = '🥗'; }
-
+      const url = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
       const name = file.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '')
                             .replace(/_/g, ' ')
                             .replace(/\b(appetizer|main|dessert)\b/i, '')
                             .trim();
-
       return { url, name, category, emoji };
     });
 
@@ -114,21 +90,20 @@ async function loadGallery() {
     renderBatch(filteredImages);
 
   } catch (err) {
-    console.error('Failed to load gallery:', err);
-    gallery.innerHTML = "<p class='error-message'>Failed to load images.</p>";
+    console.error(err);
+    gallery.innerHTML = "<p style='text-align:center;color:red'>Failed to load gallery.</p>";
   }
 }
 
-// -------------------------
-// Filter buttons
-// -------------------------
+// ----- Filter Buttons -----
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
     btn.classList.add('active');
-
-    const filter = btn.dataset.category;
-    filteredImages = filter === 'all' ? allImages : allImages.filter(img => img.category === filter);
+    const category = btn.dataset.category;
+    filteredImages = category === 'all'
+      ? allImages
+      : allImages.filter(img => img.category === category);
 
     gallery.innerHTML = '';
     loadedCount = 0;
@@ -136,19 +111,5 @@ filterButtons.forEach(btn => {
   });
 });
 
-// -------------------------
-// Fade-in animation
-// -------------------------
-const style = document.createElement('style');
-style.innerHTML = `
-  .fade-in { opacity: 0; transform: translateY(20px); animation: fadeInUp 0.5s forwards; }
-  @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-  .skeleton { animation: pulse 1.2s infinite; background: linear-gradient(-90deg, #eee 0%, #f5f5f5 50%, #eee 100%); background-size: 400% 400%; }
-  @keyframes pulse { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
-`;
-document.head.appendChild(style);
-
-// -------------------------
-// Initialize
-// -------------------------
-loadGallery();
+// ----- Initialize -----
+fetchGallery();
