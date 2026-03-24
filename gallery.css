@@ -1,8 +1,7 @@
-/* ----- Gallery Container ----- */
 .gallery-container {
-  max-width: 1600px;  /* wider page */
+  max-width: 1600px;
   margin: 60px auto;
-  padding: 0 50px;    /* increased side padding */
+  padding: 0 50px;
 }
 .gallery-title {
   text-align: center;
@@ -12,8 +11,6 @@
   font-weight: 800;
   font-family: 'Poppins', sans-serif;
 }
-
-/* Category Buttons */
 .category-buttons {
   text-align: center;
   margin-bottom: 50px;
@@ -35,15 +32,11 @@
   background: #ff6b6b;
   color: #fff;
 }
-
-/* Gallery Grid */
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 25px;
 }
-
-/* Gallery Item */
 .gallery-item {
   position: relative;
   border-radius: 18px;
@@ -64,8 +57,6 @@
 .gallery-item:hover img {
   transform: scale(1.08);
 }
-
-/* Hover Overlay */
 .overlay {
   position: absolute;
   bottom: 0;
@@ -91,8 +82,6 @@
 .gallery-item:hover .overlay {
   opacity: 1;
 }
-
-/* Skeleton Loader */
 .skeleton {
   background: #e0e0e0;
   border-radius: 18px;
@@ -104,8 +93,7 @@
   50% { opacity: 1; }
   100% { opacity: 0.6; }
 }
-
-/* ----- GLightbox Custom Overlay ----- */
+/* GLightbox overlay */
 .gslide {
   position: relative;
   text-align: center;
