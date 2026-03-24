@@ -7,9 +7,6 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 
-
-
-// ---------------- DOM ----------------
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -19,7 +16,6 @@ let loadedCount = 0;
 const BATCH = 12;
 let glightbox;
 
-// ---------------- Skeleton Loader ----------------
 function showSkeleton(count = BATCH) {
   gallery.innerHTML = '';
   for (let i = 0; i < count; i++) {
@@ -29,35 +25,24 @@ function showSkeleton(count = BATCH) {
   }
 }
 
-// ---------------- Fetch Gallery ----------------
 async function fetchGallery() {
   showSkeleton();
 
   try {
-    // 1️⃣ Fetch metadata from Supabase
     const { data: metadata = [], error: metaError } = await supabase
       .from('gallery_metadata')
       .select('file_name, description, emoji, category');
-
     if (metaError) throw metaError;
 
-    console.log('Fetched Metadata:', metadata);
-
-    // 2️⃣ Fetch storage files
     const { data: files = [], error: fileError } = await supabase.storage.from('gallery').list();
     if (fileError) throw fileError;
 
-    console.log('Files in Storage:', files.map(f => f.name));
-
-    // 3️⃣ Map storage files to metadata
+    // Map files to metadata
     allImages = files
       .filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
       .map(f => {
-        // Case-insensitive match for safety
         const meta = metadata.find(m => m.file_name.toLowerCase() === f.name.toLowerCase());
-
         const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(f.name);
-
         return {
           url: publicUrl,
           name: f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i,'').replace(/_/g,' ').trim(),
@@ -67,7 +52,7 @@ async function fetchGallery() {
         };
       });
 
-    console.log('Mapped Images:', allImages); // ✅ Debug: confirm description appears
+    console.log('Mapped Images:', allImages); // ✅ confirm description
 
     filteredImages = allImages;
     loadedCount = 0;
@@ -80,7 +65,6 @@ async function fetchGallery() {
   }
 }
 
-// ---------------- Render Batch ----------------
 function renderBatch(data) {
   const batch = data.slice(loadedCount, loadedCount + BATCH);
 
@@ -106,7 +90,6 @@ function renderBatch(data) {
 
   loadedCount += batch.length;
 
-  // Initialize or reload GLightbox
   if (glightbox) glightbox.reload();
   else {
     glightbox = GLightbox({
@@ -130,7 +113,6 @@ function renderBatch(data) {
   observeLastImage();
 }
 
-// ---------------- Infinite Scroll ----------------
 function observeLastImage() {
   const imgs = document.querySelectorAll('.gallery-item');
   const lastImg = imgs[imgs.length - 1];
@@ -148,7 +130,6 @@ function observeLastImage() {
   observer.observe(lastImg);
 }
 
-// ---------------- Filter Buttons ----------------
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
@@ -161,5 +142,5 @@ filterButtons.forEach(btn => {
   });
 });
 
-// ---------------- Initialize ----------------
+// ---------------- Init ----------------
 fetchGallery();
