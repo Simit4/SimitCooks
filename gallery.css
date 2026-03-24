@@ -1,60 +1,67 @@
-/* ---------------- GENERAL ---------------- */
+/* ---------------- BODY ---------------- */
 body {
   font-family: 'Open Sans', sans-serif;
-  margin: 0;
-  background: #fdfdfd;
-  color: #333;
+  margin:0;
+  background:#fafafa;
+  color:#333;
 }
-a { text-decoration: none; color: inherit; }
 
-/* Increase side padding */
-.container { width: 88%; max-width: 1600px; margin: auto; }
-
-/* ---------------- HEADER ---------------- */
-.main-header {
-  background: #fff;
-  box-shadow: 0 3px 18px rgba(0,0,0,0.08);
-  position: sticky;
-  top: 0;
-  z-index: 999;
-  padding: 20px 0;
+/* ---------------- CONTAINER ---------------- */
+.container {
+  width:88%;
+  max-width:1600px;
+  margin:auto;
 }
-.logo { font-family: 'Poppins', sans-serif; font-weight:700; font-size:1.8rem; color:#ff6b6b; }
-.logo-traditional { font-weight:400; color:#555; }
-.navbar { display:flex; justify-content:space-between; align-items:center; }
-.nav-links { list-style:none; display:flex; gap:25px; padding:0; }
-.nav-links a { font-weight:600; transition:color 0.3s; }
-.nav-links a.active, .nav-links a:hover { color:#ff6b6b; }
 
-/* ---------------- GALLERY CONTAINER ---------------- */
-.gallery-container { margin:80px auto; }
+/* ---------------- GALLERY TITLE ---------------- */
 .gallery-title {
-  text-align:center; color:#ff6b6b; font-size:3rem; font-weight:700; margin-bottom:40px;
+  text-align:center;
+  font-family:'Poppins', sans-serif;
+  font-weight:700;
+  font-size:3rem;
+  color:#ff6b6b;
+  margin-bottom:40px;
   position:relative;
 }
 .gallery-title::after {
   content:'';
-  width:80px; height:5px;
+  width:80px;
+  height:5px;
   background:#ff6b6b;
-  display:block; margin:12px auto 0; border-radius:2px;
+  display:block;
+  margin:12px auto 0;
+  border-radius:2px;
 }
 
 /* ---------------- CATEGORY BUTTONS ---------------- */
-.category-buttons { text-align:center; margin-bottom:50px; }
+.category-buttons {
+  text-align:center;
+  margin-bottom:50px;
+}
 .category-buttons button {
-  background:#fff; border:2px solid #ff6b6b; color:#ff6b6b;
-  padding:12px 30px; margin:0 12px 12px 0; border-radius:50px;
-  font-weight:600; cursor:pointer; transition:all 0.4s;
+  background:#fff;
+  border:2px solid #ff6b6b;
+  color:#ff6b6b;
+  padding:12px 30px;
+  margin:0 12px 12px 0;
+  border-radius:50px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.4s;
 }
 .category-buttons button.active,
-.category-buttons button:hover { background:#ff6b6b; color:#fff; transform:scale(1.08); }
+.category-buttons button:hover {
+  background:#ff6b6b;
+  color:#fff;
+  transform:scale(1.08);
+}
 
-/* ---------------- GALLERY GRID (MASONRY) ---------------- */
+/* ---------------- GALLERY GRID ---------------- */
 .gallery-grid {
   column-count:4;
   column-gap:30px;
   width:100%;
-  padding: 0 20px; /* adds padding inside grid */
+  padding: 0 20px;
 }
 @media(max-width:1400px){ .gallery-grid{ column-count:3; } }
 @media(max-width:1000px){ .gallery-grid{ column-count:2; } }
@@ -62,59 +69,107 @@ a { text-decoration: none; color: inherit; }
 
 /* ---------------- GALLERY ITEM ---------------- */
 .gallery-item {
-  position:relative; margin-bottom:25px;
-  display:inline-block; width:100%;
-  border-radius:20px; overflow:hidden;
-  cursor:pointer; box-shadow:0 12px 35px rgba(0,0,0,0.12);
-  transform:translateY(20px); opacity:0;
+  position:relative;
+  margin-bottom:25px;
+  display:inline-block;
+  width:100%;
+  border-radius:20px;
+  overflow:hidden;
+  cursor:pointer;
+  box-shadow:0 12px 35px rgba(0,0,0,0.12);
+  transform:translateY(20px);
+  opacity:0;
   transition: transform 0.6s, box-shadow 0.4s;
 }
 .gallery-item img {
-  width:100%; display:block; object-fit:cover;
+  width:100%;
+  display:block;
+  object-fit:cover;
   transition: transform 0.5s;
   border-radius:20px;
 }
-.gallery-item:hover img { transform:scale(1.05); }
+.gallery-item:hover img {
+  transform:scale(1.05);
+  box-shadow:0 20px 50px rgba(0,0,0,0.2);
+}
 
-/* ---------------- IMAGE OVERLAY ---------------- */
+/* ---------------- OVERLAY ---------------- */
 .overlay {
-  position:absolute; bottom:0; left:0; right:0;
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
   background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.75) 80%);
-  color:#fff; padding:15px 18px; font-weight:600; font-size:16px;
-  opacity:0; transition:opacity 0.4s; display:flex; justify-content:space-between; align-items:center;
+  color:#fff;
+  padding:15px 18px;
+  font-weight:600;
+  font-size:16px;
+  opacity:0;
+  transition:opacity 0.4s;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
   border-radius:0 0 20px 20px;
 }
-.gallery-item:hover .overlay { opacity:1; }
+.gallery-item:hover .overlay {
+  opacity:1;
+}
 
-/* ---------------- SKELETON LOADER ---------------- */
+/* ---------------- SKELETON ---------------- */
 .skeleton {
   background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
   background-size: 200% 100%;
-  border-radius:20px; height:280px; animation:pulse 1.6s infinite linear;
+  border-radius:20px;
+  height:280px;
+  animation:pulse 1.6s infinite linear;
   margin-bottom:25px;
 }
-@keyframes pulse { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+@keyframes pulse {
+  0%{background-position:200% 0;}
+  100%{background-position:-200% 0;}
+}
 
-/* ---------------- FADE-IN ANIMATION ---------------- */
-.fade-in { animation:fadeUp 0.6s forwards; }
-@keyframes fadeUp { to{ opacity:1; transform:translateY(0); } }
+/* ---------------- FADE-IN ---------------- */
+.fade-in {
+  animation:fadeUp 0.6s forwards;
+}
+@keyframes fadeUp {
+  to{ opacity:1; transform:translateY(0); }
+}
 
-/* ---------------- LIGHTBOX CUSTOM ---------------- */
+/* ---------------- LIGHTBOX CUSTOM (INSTAGRAM STYLE) ---------------- */
 .glightbox-clean .gslide {
   border-radius:20px;
   overflow:hidden;
   position:relative;
   text-align:center;
   padding:20px;
+  background:#000;
+}
+.glightbox-clean .gslide img {
+  max-height:80vh;
+  object-fit:contain;
+  border-radius:20px;
+  margin:auto;
 }
 .glightbox-clean .gslide .gslide-title {
-  font-family: 'Poppins', sans-serif;
+  font-family:'Poppins', sans-serif;
   font-weight:700;
   font-size:2rem;
-  color:#ff6b6b;
-  margin-bottom:10px;
+  color:#fff;
+  margin-top:-50px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.2));
+  display:inline-block;
+  padding:8px 16px;
+  border-radius:12px;
 }
 .glightbox-clean .gslide .gslide-description {
-  font-size:1.1rem;
-  color:#555;
+  font-size:1.2rem;
+  color:#eee;
+  margin-top:10px;
+  background: rgba(0,0,0,0.4);
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:10px;
+  max-width:80%;
 }
