@@ -476,6 +476,7 @@ h1, h2, h3, h4, h5 {
 
 
 
+
 /* -------------------------------------------------
    Mobile Responsive – Cleaned & Optimized
 -------------------------------------------------- */
@@ -615,7 +616,104 @@ h1, h2, h3, h4, h5 {
 
 
 
+/* -------------------------------------------------
+   Mobile Responsive – Horizontal Scroll
+-------------------------------------------------- */
+@media (max-width: 768px) {
+  #Featured-Recipes-h2 {
+    font-size: 1.8rem;
+    padding: 20px 10px;
+    text-align: center;
+  }
+
+  #recipes-container.recipes-grid {
+    display: flex !important;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 20px 5%;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-left: 5%;
+    scroll-padding-right: 5%;
+    grid-template-columns: none !important;
+  }
+
+  .recipe-card {
+    flex: 0 0 220px;
+    scroll-snap-align: start;
+    min-width: 220px;
+    height: auto;               /* fixed uniform height */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+ /* Thumbnail wrapper – 16:9 ratio */
+.thumbnail-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9;       /* maintains 16:9 ratio */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #f9f9f9;
+  border-radius: 10px;
+}
+
+/* Image inside thumbnail */
+.thumbnail-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;          /* fills the 16:9 box, crops excess */
+  display: block;
+}
+
+/* Placeholder */
+.momo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: #777;
+  background: #eaeaea;
+  border-radius: 10px;
+}
+
+  .card-body { 
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;  /* keep h3 and p together */
+  padding: 2px;
+  }
+
+  .recipe-card h3 { 
+    font-size: 1.1rem; 
+    margin-bottom: 2px; 
+  }
+
+  /* Description: show only 2 lines */
+  .recipe-card p {
+  display: block;   /* normal block */
+  line-height: 1.3rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  }
+}
 
 
+
+@media (max-width: 480px) {
+  #Featured-Recipes-h2 {     font-size: 1.5rem;
+    padding: 15px 10px;   /* even closer for small screens */
+      text-align: center;         /* aligns with the container/cards */
+ }
+  .recipe-card { flex: 0 0 180px; min-width: 180px; }
+  .thumbnail-wrapper, .momo-placeholder { height: auto; }
+  .card-body h3 { font-size: 0.95rem; }
+  .recipe-card p { font-size: 0.7rem; }
+}
 
 
