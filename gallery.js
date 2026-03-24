@@ -6,6 +6,11 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
+const supabaseKey = 'YOUR_ANON_KEY'; // replace with your anon key
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
@@ -16,7 +21,7 @@ let loadedCount = 0;
 const BATCH = 12;
 let glightbox;
 
-// ---------------- Skeleton Loader ----------------
+// --------------- Skeleton Loader ----------------
 function showSkeleton(count = BATCH) {
   gallery.innerHTML = '';
   for (let i = 0; i < count; i++) {
@@ -26,7 +31,7 @@ function showSkeleton(count = BATCH) {
   }
 }
 
-// ---------------- Render Batch ----------------
+// --------------- Render Images ----------------
 function renderBatch(data) {
   const batch = data.slice(loadedCount, loadedCount + BATCH);
 
@@ -34,15 +39,14 @@ function renderBatch(data) {
     const link = document.createElement('a');
     link.href = img.url;
     link.className = 'glightbox';
-    link.setAttribute('data-title', `${img.emoji} ${img.name}`);
-    link.setAttribute('data-description', img.description || '');
-    link.setAttribute('data-type', 'image');
+    link.setAttribute('data-title', `${img.emoji || '🍲'} ${img.name}`);
+    link.setAttribute('data-description', img.description || ''); // <--- DESCRIPTION
 
     link.innerHTML = `
       <div class="gallery-item fade-in" style="animation-delay:${i*70}ms">
         <img loading="lazy" src="${img.url}" alt="${img.name}">
         <div class="overlay">
-          <div>${img.emoji} ${img.name}</div>
+          <div>${img.emoji || '🍲'} ${img.name}</div>
           <div class="description">${img.description || ''}</div>
         </div>
       </div>
@@ -52,17 +56,16 @@ function renderBatch(data) {
 
   loadedCount += batch.length;
 
-  // Initialize or reload GLightbox
   if (glightbox) glightbox.reload();
   else {
     glightbox = GLightbox({
       selector: '.glightbox',
-      touchNavigation: false, // disable swipe/zoom
+      touchNavigation: false,
       loop: true,
       openEffect: 'zoom',
       closeEffect: 'fade',
       slideEffect: 'slide',
-      zoomable: false, // disable pinch/scroll zoom
+      zoomable: false,
       renderSlide: slide => `
         <div class="gslide">
           <img src="${slide.href}" alt="${slide.title}">
@@ -88,7 +91,7 @@ function renderBatch(data) {
   observeLastImage();
 }
 
-// ---------------- Infinite Scroll ----------------
+// --------------- Infinite Scroll ----------------
 function observeLastImage() {
   const imgs = document.querySelectorAll('.gallery-item');
   const lastImg = imgs[imgs.length - 1];
@@ -106,25 +109,28 @@ function observeLastImage() {
   observer.observe(lastImg);
 }
 
-// ---------------- Fetch Gallery with Supabase Metadata ----------------
+// --------------- Fetch Gallery from Supabase ----------------
 async function fetchGallery() {
   try {
     showSkeleton();
 
+    // Get files from storage
     const { data: files, error: fileError } = await supabase.storage.from('gallery').list();
     if (fileError) throw fileError;
 
+    // Get metadata from gallery_metadata
     const { data: metadata = [], error: metaError } = await supabase
       .from('gallery_metadata')
       .select('file_name, description, emoji, category');
     if (metaError) throw metaError;
 
+    // Map files to metadata
     allImages = files
       .filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
       .map(f => {
         const meta = metadata.find(m => m.file_name === f.name) || {};
-        const name = f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '').replace(/_/g,' ').trim();
         const url = supabase.storage.from('gallery').getPublicUrl(f.name).data.publicUrl;
+        const name = f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i,'').replace(/_/g,' ').trim();
         return {
           url,
           name,
@@ -145,7 +151,7 @@ async function fetchGallery() {
   }
 }
 
-// ---------------- Filter Buttons ----------------
+// --------------- Filter Buttons ----------------
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
@@ -158,5 +164,5 @@ filterButtons.forEach(btn => {
   });
 });
 
-// ---------------- Initialize ----------------
+// --------------- Initialize ----------------
 fetchGallery();
