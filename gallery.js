@@ -16,7 +16,6 @@ let loadedCount = 0;
 const BATCH = 12;
 let glightbox;
 
-// --------------- Skeleton Loader ----------------
 function showSkeleton(count = BATCH) {
   gallery.innerHTML = '';
   for (let i = 0; i < count; i++) {
@@ -26,7 +25,6 @@ function showSkeleton(count = BATCH) {
   }
 }
 
-// --------------- Render Images ----------------
 function renderBatch(data) {
   const batch = data.slice(loadedCount, loadedCount + BATCH);
 
@@ -34,13 +32,15 @@ function renderBatch(data) {
     const link = document.createElement('a');
     link.href = img.url;
     link.className = 'glightbox';
-    link.setAttribute('data-title', `${img.name}`);
+    link.setAttribute('data-title', `${img.emoji || '🍲'} ${img.name}`);
+    link.setAttribute('data-description', img.description || '');
 
     link.innerHTML = `
       <div class="gallery-item fade-in" style="animation-delay:${i*70}ms">
         <img loading="lazy" src="${img.url}" alt="${img.name}">
         <div class="overlay">
-          <div>${img.name}</div>
+          <div>${img.emoji || '🍲'} ${img.name}</div>
+          <div class="description">${img.description || ''}</div>
         </div>
       </div>
     `;
@@ -84,7 +84,6 @@ function renderBatch(data) {
   observeLastImage();
 }
 
-// --------------- Infinite Scroll ----------------
 function observeLastImage() {
   const imgs = document.querySelectorAll('.gallery-item');
   const lastImg = imgs[imgs.length - 1];
@@ -102,34 +101,32 @@ function observeLastImage() {
   observer.observe(lastImg);
 }
 
-// --------------- Fetch Gallery from Supabase ----------------
 async function fetchGallery() {
   try {
     showSkeleton();
 
-    // Get files from storage
-    const { data: files, error: fileError } = await supabase.storage.from('gallery').list();
-    if (fileError) throw fileError;
-
-    // Get metadata from gallery_metadata
+    // Fetch metadata first
     const { data: metadata = [], error: metaError } = await supabase
       .from('gallery_metadata')
       .select('file_name, description, emoji, category');
     if (metaError) throw metaError;
 
-    // Map files to metadata
+    // Fetch storage files
+    const { data: files, error: fileError } = await supabase.storage.from('gallery').list();
+    if (fileError) throw fileError;
+
     allImages = files
       .filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
       .map(f => {
-        const meta = metadata.find(m => m.file_name === f.name) || {};
+        const meta = metadata.find(m => m.file_name === f.name);
         const url = supabase.storage.from('gallery').getPublicUrl(f.name).data.publicUrl;
         const name = f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i,'').replace(/_/g,' ').trim();
         return {
           url,
           name,
-          category: meta.category || 'main',
-          emoji: meta.emoji || '🍲',
-          description: meta.description || ''
+          category: meta?.category || 'main',
+          emoji: meta?.emoji || '🍲',
+          description: meta?.description || 'No description yet.'
         };
       });
 
@@ -144,7 +141,6 @@ async function fetchGallery() {
   }
 }
 
-// --------------- Filter Buttons ----------------
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
@@ -157,5 +153,4 @@ filterButtons.forEach(btn => {
   });
 });
 
-// --------------- Initialize ----------------
 fetchGallery();
