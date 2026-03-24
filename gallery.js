@@ -97,14 +97,7 @@ function renderBatch(data) {
       slideEffect: 'slide',
       zoomable: false,
       loop: true,
-      renderSlide: slide => `
-        <div class="gslide">
-          <img src="${slide.href}" alt="${slide.title}">
-          <div class="gslide-overlay">
-            <div class="gslide-title">${slide.title}</div>
-            <div class="gslide-description">${slide.description || ''}</div>
-          </div>
-        </div>
+
       `
     });
   }
