@@ -4,12 +4,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Recipes | Simit Cooks</title>
+  <title>Gallery | Simit Cooks</title>
 
   <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Open+Sans&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="gallery.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600;700&family=Unbounded:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- GLightbox CSS (REQUIRED) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+  
+  <!-- Your Custom CSS -->
+  <link rel="stylesheet" href="gallery.css" />
 
   <!-- SEO Meta Tags -->
   <meta name="description" content="Explore delicious Nepali and home-style recipes from Simit Cooks — from curry to chowmein, and everything in between." />
@@ -20,7 +25,7 @@
   <meta property="og:title" content="Gallery | Simit Cooks" />
   <meta property="og:description" content="Discover authentic and easy-to-make recipes from Simit Cooks kitchen." />
   <meta property="og:image" content="https://yourwebsite.com/recipes-thumbnail.jpg" />
-  <meta property="og:url" content="https://yourwebsite.com/recipes.html" />
+  <meta property="og:url" content="https://yourwebsite.com/gallery.html" />
   <meta name="twitter:card" content="summary_large_image" />
 
   <!-- Google Analytics -->
@@ -37,7 +42,7 @@
 
 <header class="main-header">
   <div class="container header-wrapper">
-    <a href="index.html">
+    <a href="index.html" style="text-decoration: none;">
       <div class="logo" aria-label="Simit Cooks">
         <span class="logo-modern">Simit's</span>
         <span class="logo-traditional">Cooks</span>
@@ -45,20 +50,16 @@
     </a>
     <nav class="navbar">
       <ul class="nav-links">
-        <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
+        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
         <li><a href="recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
         <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
         <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
       </ul>
-
-        <!-- Hamburger -->
-  <button class="hamburger">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-
-      
+      <button class="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </nav>
   </div>
 </header>
@@ -66,12 +67,10 @@
 <section class="hero">
   <div class="hero-content container">
     <h1>Simit Cooks Gallery</h1>
+    <p>Explore our delicious culinary creations</p>
   </div>
 </section>
 
-
-  
-  
 <!-- Gallery Section -->
 <section class="gallery-container">
   <!-- Filter Buttons -->
@@ -86,18 +85,12 @@
   <div class="gallery-grid" id="gallery"></div>
 </section>
 
-
-<!-- Lightbox JS -->
+<!-- Scripts -->
+<!-- GLightbox -->
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+<!-- Your Gallery Script -->
 <script type="module" src="gallery.js"></script>
-<script type="module" src="footer.js"></script>
 <script type="module" src="mobile-menu.js"></script>
-<script type="module">
-  import GLightbox from 'https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.esm.js';
-  window.GLightbox = GLightbox;
-</script>
 
-
-  
 </body>
 </html>
