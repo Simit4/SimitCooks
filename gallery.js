@@ -43,7 +43,7 @@ function renderBatch(data) {
         <img loading="lazy" src="${img.url}" alt="${img.name}">
         <div class="overlay">
           <div>${img.emoji} ${img.name}</div>
-          <div class="description">${img.description}</div>
+          <div class="description">${img.description || ''}</div>
         </div>
       </div>
     `;
@@ -52,29 +52,28 @@ function renderBatch(data) {
 
   loadedCount += batch.length;
 
-  // Initialize / reload GLightbox
+  // Initialize or reload GLightbox
   if (glightbox) glightbox.reload();
   else {
     glightbox = GLightbox({
       selector: '.glightbox',
-      touchNavigation: false, // no pinch/scroll zoom
+      touchNavigation: false, // disable swipe/zoom
       loop: true,
       openEffect: 'zoom',
       closeEffect: 'fade',
       slideEffect: 'slide',
-      zoomable: false, // disable gestures
+      zoomable: false, // disable pinch/scroll zoom
       renderSlide: slide => `
         <div class="gslide">
           <img src="${slide.href}" alt="${slide.title}">
           <div class="gslide-overlay">
             <div class="gslide-title">${slide.title}</div>
-            <div class="gslide-description">${slide.description}</div>
+            <div class="gslide-description">${slide.description || ''}</div>
           </div>
         </div>
       `
     });
 
-    // Tap to toggle overlay
     glightbox.on('slide_after_load', ({ slideNode }) => {
       const overlay = slideNode.querySelector('.gslide-overlay');
       if (!overlay) return;
@@ -107,22 +106,19 @@ function observeLastImage() {
   observer.observe(lastImg);
 }
 
-// ---------------- Fetch Gallery with Metadata from Supabase ----------------
+// ---------------- Fetch Gallery with Supabase Metadata ----------------
 async function fetchGallery() {
   try {
     showSkeleton();
 
-    // Get list of files from Supabase storage
     const { data: files, error: fileError } = await supabase.storage.from('gallery').list();
     if (fileError) throw fileError;
 
-    // Fetch metadata from Supabase table
     const { data: metadata = [], error: metaError } = await supabase
       .from('gallery_metadata')
       .select('file_name, description, emoji, category');
     if (metaError) throw metaError;
 
-    // Map files + metadata
     allImages = files
       .filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
       .map(f => {
