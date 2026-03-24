@@ -5,6 +5,8 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+
+
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -27,20 +29,18 @@ async function fetchGallery() {
   showSkeleton();
 
   try {
-    const { data: metadata = [], error: metaError } = await supabase
+    const { data: metadata = [] } = await supabase
       .from('gallery_metadata')
       .select('file_name, description, emoji, category');
-    if (metaError) throw metaError;
 
-    const { data: files = [], error: fileError } = await supabase.storage.from('gallery').list();
-    if (fileError) throw fileError;
+    const { data: files = [] } = await supabase.storage.from('gallery').list();
 
-    // Map files to metadata
     allImages = files
       .filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
       .map(f => {
         const meta = metadata.find(m => m.file_name.toLowerCase() === f.name.toLowerCase());
         const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(f.name);
+
         return {
           url: publicUrl,
           name: f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i,'').replace(/_/g,' ').trim(),
@@ -50,16 +50,14 @@ async function fetchGallery() {
         };
       });
 
-    console.log('Mapped Images:', allImages); // ✅ confirm description
-
     filteredImages = allImages;
     loadedCount = 0;
     gallery.innerHTML = '';
     renderBatch(filteredImages);
 
   } catch (err) {
-    console.error('Gallery fetch error:', err);
     gallery.innerHTML = "<p style='text-align:center;color:red'>Failed to load gallery.</p>";
+    console.error(err);
   }
 }
 
@@ -140,5 +138,4 @@ filterButtons.forEach(btn => {
   });
 });
 
-// ---------------- Init ----------------
 fetchGallery();
