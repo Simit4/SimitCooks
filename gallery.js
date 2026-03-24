@@ -95,11 +95,11 @@ function renderBatch(data) {
       selector: '.glightbox',
       openEffect: 'zoom',
       slideEffect: 'slide',
-      zoomable: false,
-      loop: true,
-
-      `
+      zoomable: true,
+      loop: true
     });
+      `
+
   }
 
   observeLastImage();
