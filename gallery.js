@@ -6,7 +6,14 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
+// ---------------- Supabase Setup ----------------
+const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
+const supabaseKey = 'YOUR_ANON_KEY'; // replace with your actual anon key
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// ---------------- DOM Elements ----------------
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -16,6 +23,7 @@ let loadedCount = 0;
 const BATCH = 12;
 let glightbox;
 
+// ---------------- Skeleton Loader ----------------
 function showSkeleton(count = BATCH) {
   gallery.innerHTML = '';
   for (let i = 0; i < count; i++) {
@@ -25,6 +33,7 @@ function showSkeleton(count = BATCH) {
   }
 }
 
+// ---------------- Render Batch ----------------
 function renderBatch(data) {
   const batch = data.slice(loadedCount, loadedCount + BATCH);
 
@@ -49,6 +58,7 @@ function renderBatch(data) {
 
   loadedCount += batch.length;
 
+  // Initialize or reload GLightbox
   if (glightbox) glightbox.reload();
   else {
     glightbox = GLightbox({
@@ -69,21 +79,12 @@ function renderBatch(data) {
         </div>
       `
     });
-
-    glightbox.on('slide_after_load', ({ slideNode }) => {
-      const overlay = slideNode.querySelector('.gslide-overlay');
-      if (!overlay) return;
-      overlay.style.transition = 'opacity 0.4s';
-      overlay.style.opacity = '1';
-      slideNode.querySelector('img').addEventListener('click', () => {
-        overlay.style.opacity = overlay.style.opacity === '1' ? '0' : '1';
-      });
-    });
   }
 
   observeLastImage();
 }
 
+// ---------------- Infinite Scroll ----------------
 function observeLastImage() {
   const imgs = document.querySelectorAll('.gallery-item');
   const lastImg = imgs[imgs.length - 1];
@@ -101,42 +102,45 @@ function observeLastImage() {
   observer.observe(lastImg);
 }
 
+// ---------------- Fetch Gallery from Supabase ----------------
 async function fetchGallery() {
   try {
     showSkeleton();
 
-// Fetch metadata first
-const { data: metadata = [], error: metaError } = await supabase
-  .from('gallery_metadata')
-  .select('file_name, description, emoji, category');
-if (metaError) throw metaError;
+    // ---------------- Fetch metadata ----------------
+    const { data: metadata = [], error: metaError } = await supabase
+      .from('gallery_metadata')
+      .select('file_name, description, emoji, category');
 
-// Fetch storage files
-const { data: files, error: fileError } = await supabase.storage.from('gallery').list();
-if (fileError) throw fileError;
+    if (metaError) throw metaError;
 
-// Map files to metadata
-allImages = files
-  .filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
-  .map(f => {
-    // Find metadata with exact match
-    const meta = metadata.find(m => m.file_name === f.name);
+    // ---------------- Fetch storage files ----------------
+    const { data: files = [], error: fileError } = await supabase.storage.from('gallery').list();
+    if (fileError) throw fileError;
 
-    // Get public URL
-    const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(f.name);
+    // ---------------- Map files to metadata ----------------
+    allImages = files
+      .filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
+      .map(f => {
+        // case-insensitive match to be safe
+        const meta = metadata.find(m => m.file_name.toLowerCase() === f.name.toLowerCase());
+        const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(f.name);
 
-    return {
-      url: publicUrl,
-      name: f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i,'').replace(/_/g,' ').trim(),
-      category: meta?.category || 'main',
-      emoji: meta?.emoji || '🍲',
-      description: meta?.description || 'No description yet.'
-    };
-  });
+        return {
+          url: publicUrl,
+          name: f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i,'').replace(/_/g,' ').trim(),
+          category: meta?.category || 'main',
+          emoji: meta?.emoji || '🍲',
+          description: meta?.description || 'No description yet.'
+        };
+      });
 
-filteredImages = allImages;
+    // ---------------- Debug Logging ----------------
+    console.log('Files in bucket:', files.map(f => f.name));
+    console.log('Metadata from DB:', metadata);
+    console.log('Mapped Images:', allImages);
 
-    
+    filteredImages = allImages;
     loadedCount = 0;
     gallery.innerHTML = '';
     renderBatch(filteredImages);
@@ -147,6 +151,7 @@ filteredImages = allImages;
   }
 }
 
+// ---------------- Filter Buttons ----------------
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
@@ -159,4 +164,5 @@ filterButtons.forEach(btn => {
   });
 });
 
+// ---------------- Initialize ----------------
 fetchGallery();
