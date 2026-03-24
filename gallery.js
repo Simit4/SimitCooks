@@ -6,85 +6,95 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-
-
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
-let allImages = [], filteredImages = [], loadedCount = 0;
-const BATCH = 12;
-let glightbox;
+let allImages=[], filteredImages=[], loadedCount=0, BATCH=12, glightbox;
 
 // ---------------- SKELETON ----------------
-function showSkeleton(count = BATCH) {
-  gallery.innerHTML = '';
-  for (let i=0;i<count;i++){
-    const sk = document.createElement('div'); sk.className='skeleton'; gallery.appendChild(sk);
+function showSkeleton(count=BATCH){
+  gallery.innerHTML='';
+  for(let i=0;i<count;i++){
+    const sk=document.createElement('div');
+    sk.className='skeleton';
+    gallery.appendChild(sk);
   }
 }
 
-// ---------------- RENDER ----------------
+// ---------------- RENDER BATCH ----------------
 function renderBatch(data){
-  const batch = data.slice(loadedCount, loadedCount+BATCH);
+  const batch=data.slice(loadedCount, loadedCount+BATCH);
   batch.forEach((img,i)=>{
-    const link = document.createElement('a');
-    link.href = img.url;
-    link.className = 'glightbox';
-    link.setAttribute('data-title', `${img.emoji} ${img.name}`);
-    link.setAttribute('data-description', 'Click to view recipe');
+    const link=document.createElement('a');
+    link.href=img.url;
+    link.className='glightbox';
+    link.setAttribute('data-title',`${img.emoji} ${img.name}`);
+    link.setAttribute('data-description',`<a href="recipes.html?img=${encodeURIComponent(img.name)}" target="_blank">View Recipe</a>`);
     link.setAttribute('data-type','image');
 
-    link.innerHTML = `
-      <div class="gallery-item fade-in" style="animation-delay:${i*50}ms">
+    link.innerHTML=`
+      <div class="gallery-item fade-in" style="animation-delay:${i*70}ms">
         <img loading="lazy" src="${img.url}" alt="${img.name}">
         <div class="overlay">${img.emoji} ${img.name}</div>
-      </div>`;
+        <i class="fas fa-heart like-heart"></i>
+      </div>
+    `;
     gallery.appendChild(link);
+
+    // Double click to like heart animation
+    const card = link.querySelector('.gallery-item');
+    card.addEventListener('dblclick',()=>{
+      const heart = card.querySelector('.like-heart');
+      heart.classList.remove('pop'); // reset
+      void heart.offsetWidth; // trigger reflow
+      heart.classList.add('pop');
+    });
   });
   loadedCount+=batch.length;
 
   if(glightbox) glightbox.reload();
-  else glightbox = GLightbox({ selector: '.glightbox', touchNavigation:true, loop:true });
+  else glightbox=GLightbox({ selector:'.glightbox', touchNavigation:true, loop:true });
 
   observeLastImage();
 }
 
 // ---------------- INFINITE SCROLL ----------------
 function observeLastImage(){
-  const imgs = document.querySelectorAll('.gallery-item');
-  const lastImg = imgs[imgs.length-1];
+  const imgs=document.querySelectorAll('.gallery-item');
+  const lastImg=imgs[imgs.length-1];
   if(!lastImg) return;
-  const observer = new IntersectionObserver(entries=>{
+
+  const observer=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{
       if(entry.isIntersecting && loadedCount<filteredImages.length){
         renderBatch(filteredImages);
         observer.disconnect();
       }
     });
-  }, { rootMargin:'200px' });
+  },{rootMargin:'250px'});
   observer.observe(lastImg);
 }
 
-// ---------------- FETCH ----------------
+// ---------------- FETCH GALLERY ----------------
 async function fetchGallery(){
   try{
     showSkeleton();
-    const { data,error } = await supabase.storage.from('gallery').list();
+    const {data,error}=await supabase.storage.from('gallery').list();
     if(error) throw error;
 
-    allImages = data
+    allImages=data
       .filter(f=>/\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
       .map(f=>{
-        const nameLower = f.name.toLowerCase();
+        const nameLower=f.name.toLowerCase();
         let category='main', emoji='🍲';
-        if(nameLower.startsWith('appetizer')) { category='appetizer'; emoji='🥗'; }
-        if(nameLower.startsWith('dessert')) { category='dessert'; emoji='🍰'; }
-        const url = supabase.storage.from('gallery').getPublicUrl(f.name).data.publicUrl;
-        const name = f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i,'').replace(/_/g,' ').replace(/\b(appetizer|main|dessert)\b/i,'').trim();
-        return { url,name,category,emoji };
+        if(nameLower.startsWith('appetizer')){category='appetizer'; emoji='🥗';}
+        if(nameLower.startsWith('dessert')){category='dessert'; emoji='🍰';}
+        const url=supabase.storage.from('gallery').getPublicUrl(f.name).data.publicUrl;
+        const name=f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i,'').replace(/_/g,' ').replace(/\b(appetizer|main|dessert)\b/i,'').trim();
+        return {url,name,category,emoji};
       });
 
-    filteredImages = allImages;
+    filteredImages=allImages;
     loadedCount=0;
     gallery.innerHTML='';
     renderBatch(filteredImages);
@@ -96,8 +106,8 @@ filterButtons.forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelector('.filter-btn.active')?.classList.remove('active');
     btn.classList.add('active');
-    const category = btn.dataset.category;
-    filteredImages = category==='all'? allImages : allImages.filter(img=>img.category===category);
+    const category=btn.dataset.category;
+    filteredImages=category==='all'? allImages : allImages.filter(img=>img.category===category);
     gallery.innerHTML=''; loadedCount=0; renderBatch(filteredImages);
   });
 });
