@@ -1,16 +1,12 @@
-// gallery.js
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// Supabase credentials
+// Supabase setup
 const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-// -------------------------------
-// DOM elements
-// -------------------------------
-const container = document.getElementById('gallery');
+const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
 let allImages = [];
@@ -22,11 +18,11 @@ const BATCH = 12;
 // Skeleton loader
 // -------------------------------
 function showSkeleton(count = BATCH) {
-  container.innerHTML = '';
+  gallery.innerHTML = '';
   for (let i = 0; i < count; i++) {
     const skeleton = document.createElement('div');
     skeleton.className = 'gallery-item skeleton';
-    container.appendChild(skeleton);
+    gallery.appendChild(skeleton);
   }
 }
 
@@ -47,7 +43,7 @@ function renderBatch(data) {
     fragment.appendChild(div);
   });
 
-  container.appendChild(fragment);
+  gallery.appendChild(fragment);
   loadedCount += batch.length;
   observeLastItem();
 }
@@ -56,7 +52,7 @@ function renderBatch(data) {
 // Infinite scroll
 // -------------------------------
 function observeLastItem() {
-  const items = container.querySelectorAll('.gallery-item');
+  const items = gallery.querySelectorAll('.gallery-item');
   const lastItem = items[items.length - 1];
   if (!lastItem) return;
 
@@ -73,7 +69,7 @@ function observeLastItem() {
 }
 
 // -------------------------------
-// Fetch images from Supabase
+// Fetch images from Supabase Storage
 // -------------------------------
 async function fetchGallery() {
   showSkeleton();
@@ -85,9 +81,11 @@ async function fetchGallery() {
 
   if (error) {
     console.error('❌ Gallery fetch error:', error);
-    container.innerHTML = "<p>Failed to load gallery.</p>";
+    gallery.innerHTML = "<p>Failed to load gallery.</p>";
     return;
   }
+
+  console.log('✅ Files fetched:', data);
 
   allImages = data.map(file => {
     const nameLower = file.name.toLowerCase();
@@ -100,13 +98,15 @@ async function fetchGallery() {
                           .replace(/\b(appetizer|main|dessert)\b/i, '')
                           .trim();
 
+    // THIS WORKS: Use the same method as equipment.js
     const url = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
+    console.log('IMAGE URL:', url);
     return { url, name, category, emoji };
   });
 
   filteredImages = allImages;
   loadedCount = 0;
-  container.innerHTML = '';
+  gallery.innerHTML = '';
   renderBatch(filteredImages);
 }
 
@@ -121,7 +121,7 @@ filterButtons.forEach(btn => {
     const filter = btn.dataset.category;
     filteredImages = filter === 'all' ? allImages : allImages.filter(img => img.category === filter);
 
-    container.innerHTML = '';
+    gallery.innerHTML = '';
     loadedCount = 0;
     renderBatch(filteredImages);
   });
