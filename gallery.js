@@ -7,6 +7,9 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 
+
+
+// ---------------- DOM ----------------
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -16,6 +19,7 @@ let loadedCount = 0;
 const BATCH = 12;
 let glightbox;
 
+// ---------------- Skeleton Loader ----------------
 function showSkeleton(count = BATCH) {
   gallery.innerHTML = '';
   for (let i = 0; i < count; i++) {
@@ -37,15 +41,21 @@ async function fetchGallery() {
 
     if (metaError) throw metaError;
 
+    console.log('Fetched Metadata:', metadata);
+
     // 2️⃣ Fetch storage files
     const { data: files = [], error: fileError } = await supabase.storage.from('gallery').list();
     if (fileError) throw fileError;
+
+    console.log('Files in Storage:', files.map(f => f.name));
 
     // 3️⃣ Map storage files to metadata
     allImages = files
       .filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
       .map(f => {
+        // Case-insensitive match for safety
         const meta = metadata.find(m => m.file_name.toLowerCase() === f.name.toLowerCase());
+
         const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(f.name);
 
         return {
@@ -53,11 +63,11 @@ async function fetchGallery() {
           name: f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i,'').replace(/_/g,' ').trim(),
           category: meta?.category || 'main',
           emoji: meta?.emoji || '🍲',
-          description: meta?.description || 'No description yet.'  // ✅ This will now show
+          description: meta?.description || 'No description yet.'
         };
       });
 
-    console.log('Mapped Images (check description):', allImages); // Debug: confirm descriptions
+    console.log('Mapped Images:', allImages); // ✅ Debug: confirm description appears
 
     filteredImages = allImages;
     loadedCount = 0;
@@ -70,7 +80,7 @@ async function fetchGallery() {
   }
 }
 
-// ---------------- Render Images ----------------
+// ---------------- Render Batch ----------------
 function renderBatch(data) {
   const batch = data.slice(loadedCount, loadedCount + BATCH);
 
@@ -82,7 +92,7 @@ function renderBatch(data) {
     link.setAttribute('data-description', img.description);
 
     link.innerHTML = `
-      <div class="gallery-item">
+      <div class="gallery-item fade-in" style="animation-delay:${i*50}ms">
         <img src="${img.url}" alt="${img.name}" loading="lazy">
         <div class="overlay">
           <div class="title">${img.emoji} ${img.name}</div>
@@ -96,6 +106,7 @@ function renderBatch(data) {
 
   loadedCount += batch.length;
 
+  // Initialize or reload GLightbox
   if (glightbox) glightbox.reload();
   else {
     glightbox = GLightbox({
