@@ -6,12 +6,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// ---------------- Supabase Setup ----------------
-const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
-const supabaseKey = 'YOUR_ANON_KEY'; // replace with your actual anon key
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 // ---------------- DOM Elements ----------------
 const gallery = document.getElementById('gallery');
