@@ -55,18 +55,44 @@
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
     }
-    .gallery-grid img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
+    .gallery-item {
+      position: relative;
       border-radius: 15px;
+      overflow: hidden;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       cursor: pointer;
       transition: transform 0.3s, box-shadow 0.3s;
     }
-    .gallery-grid img:hover {
+    .gallery-item img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .gallery-item:hover img {
       transform: scale(1.05);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    }
+
+    /* Hover Overlay */
+    .overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      padding: 10px 15px;
+      font-weight: 600;
+      font-size: 16px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .gallery-item:hover .overlay {
+      opacity: 1;
     }
   </style>
 </head>
@@ -123,35 +149,35 @@
   <!-- Supabase JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script>
-    // Initialize Supabase
     const supabaseUrl = 'https://YOUR_SUPABASE_URL.supabase.co';
     const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
     let allImages = [];
 
-    // Load gallery images from Supabase
     async function loadGallery() {
       const { data, error } = await supabase
         .storage
-        .from('gallery') // replace with your bucket name
+        .from('gallery')
         .list('', { limit: 100, sortBy: { column: 'name', order: 'asc' } });
 
-      if (error) {
-        console.error('Error fetching images:', error);
-        return;
-      }
+      if (error) { console.error('Error fetching images:', error); return; }
 
-      const galleryDiv = document.getElementById('gallery');
-      galleryDiv.innerHTML = '';
-
-      // Store images with category (you can encode category in file name: e.g., dessert_chocolate.jpg)
       allImages = data.map(file => {
         let category = 'main';
-        if (file.name.toLowerCase().startsWith('dessert')) category = 'dessert';
-        else if (file.name.toLowerCase().startsWith('appetizer')) category = 'appetizer';
+        let emoji = '🍲';
+        const nameLower = file.name.toLowerCase();
+        if (nameLower.startsWith('dessert')) { category = 'dessert'; emoji = '🍰'; }
+        else if (nameLower.startsWith('appetizer')) { category = 'appetizer'; emoji = '🥗'; }
+
+        // Extract readable dish name
+        const name = file.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '')
+                              .replace(/_/g, ' ')
+                              .replace(/\b(appetizer|main|dessert)\b/i, '')
+                              .trim();
+
         const imgUrl = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
-        return { url: imgUrl, name: file.name, category };
+        return { url: imgUrl, name, category, emoji };
       });
 
       displayImages('all');
@@ -166,15 +192,18 @@
         const link = document.createElement('a');
         link.href = img.url;
         link.className = 'glightbox';
-        link.setAttribute('data-title', img.name.replace(/\.[^/.]+$/, ""));
-        link.innerHTML = `<img src="${img.url}" alt="${img.name}">`;
+        link.setAttribute('data-title', `${img.emoji} ${img.name}`);
+        link.innerHTML = `
+          <div class="gallery-item">
+            <img src="${img.url}" alt="${img.name}">
+            <div class="overlay">${img.emoji} ${img.name}</div>
+          </div>`;
         galleryDiv.appendChild(link);
       });
 
       GLightbox({ selector: '.glightbox' });
     }
 
-    // Category buttons
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -186,8 +215,6 @@
     loadGallery();
   </script>
 
-  <!-- Existing scripts -->
   <script type="module" src="mobile-menu.js"></script>
-
 </body>
 </html>
