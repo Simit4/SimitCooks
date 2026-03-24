@@ -7,114 +7,100 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 
+
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
-let allImages = [];
-let filteredImages = [];
-let loadedCount = 0;
+let allImages = [], filteredImages = [], loadedCount = 0;
 const BATCH = 12;
+let glightbox;
 
-// ----- Skeleton Loader -----
+// ---------------- SKELETON ----------------
 function showSkeleton(count = BATCH) {
   gallery.innerHTML = '';
-  for (let i = 0; i < count; i++) {
-    const sk = document.createElement('div');
-    sk.className = 'skeleton';
-    gallery.appendChild(sk);
+  for (let i=0;i<count;i++){
+    const sk = document.createElement('div'); sk.className='skeleton'; gallery.appendChild(sk);
   }
 }
 
-// ----- Render Batch -----
-function renderBatch(data) {
-  const batch = data.slice(loadedCount, loadedCount + BATCH);
-  batch.forEach(img => {
+// ---------------- RENDER ----------------
+function renderBatch(data){
+  const batch = data.slice(loadedCount, loadedCount+BATCH);
+  batch.forEach((img,i)=>{
     const link = document.createElement('a');
-    link.href = `recipes.html?img=${encodeURIComponent(img.name)}`;
+    link.href = img.url;
     link.className = 'glightbox';
+    link.setAttribute('data-title', `${img.emoji} ${img.name}`);
+    link.setAttribute('data-description', 'Click to view recipe');
+    link.setAttribute('data-type','image');
+
     link.innerHTML = `
-      <div class="gallery-item fade-in">
-        <img src="${img.url}" alt="${img.name}">
+      <div class="gallery-item fade-in" style="animation-delay:${i*50}ms">
+        <img loading="lazy" src="${img.url}" alt="${img.name}">
         <div class="overlay">${img.emoji} ${img.name}</div>
-      </div>
-    `;
+      </div>`;
     gallery.appendChild(link);
   });
-  loadedCount += batch.length;
+  loadedCount+=batch.length;
 
-  // Initialize or refresh GLightbox
-  GLightbox({ selector: '.glightbox' });
+  if(glightbox) glightbox.reload();
+  else glightbox = GLightbox({ selector: '.glightbox', touchNavigation:true, loop:true });
+
   observeLastImage();
 }
 
-// ----- Infinite Scroll -----
-function observeLastImage() {
+// ---------------- INFINITE SCROLL ----------------
+function observeLastImage(){
   const imgs = document.querySelectorAll('.gallery-item');
-  const lastImg = imgs[imgs.length - 1];
-  if (!lastImg) return;
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && loadedCount < filteredImages.length) {
+  const lastImg = imgs[imgs.length-1];
+  if(!lastImg) return;
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting && loadedCount<filteredImages.length){
         renderBatch(filteredImages);
         observer.disconnect();
       }
     });
-  }, { rootMargin: '200px' });
-
+  }, { rootMargin:'200px' });
   observer.observe(lastImg);
 }
 
-// ----- Fetch Gallery -----
-async function fetchGallery() {
-  try {
+// ---------------- FETCH ----------------
+async function fetchGallery(){
+  try{
     showSkeleton();
+    const { data,error } = await supabase.storage.from('gallery').list();
+    if(error) throw error;
 
-    const { data, error } = await supabase.storage.from('gallery').list();
-    if (error) throw error;
-
-    // Only process actual image files
     allImages = data
-      .filter(file => /\.(jpg|jpeg|png|webp|gif)$/i.test(file.name)) // <-- ignore folders & non-images
-      .map(file => {
-        const nameLower = file.name.toLowerCase();
-        let category = 'main', emoji = '🍲';
-        if (nameLower.startsWith('appetizer')) { category = 'appetizer'; emoji = '🥗'; }
-        if (nameLower.startsWith('dessert')) { category = 'dessert'; emoji = '🍰'; }
-        const url = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
-        const name = file.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '')
-                              .replace(/_/g, ' ')
-                              .replace(/\b(appetizer|main|dessert)\b/i, '')
-                              .trim();
-        return { url, name, category, emoji };
+      .filter(f=>/\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
+      .map(f=>{
+        const nameLower = f.name.toLowerCase();
+        let category='main', emoji='🍲';
+        if(nameLower.startsWith('appetizer')) { category='appetizer'; emoji='🥗'; }
+        if(nameLower.startsWith('dessert')) { category='dessert'; emoji='🍰'; }
+        const url = supabase.storage.from('gallery').getPublicUrl(f.name).data.publicUrl;
+        const name = f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i,'').replace(/_/g,' ').replace(/\b(appetizer|main|dessert)\b/i,'').trim();
+        return { url,name,category,emoji };
       });
 
     filteredImages = allImages;
-    loadedCount = 0;
-    gallery.innerHTML = '';
+    loadedCount=0;
+    gallery.innerHTML='';
     renderBatch(filteredImages);
-
-  } catch (err) {
-    console.error(err);
-    gallery.innerHTML = "<p style='text-align:center;color:red'>Failed to load gallery.</p>";
-  }
+  }catch(err){ console.error(err); gallery.innerHTML="<p style='text-align:center;color:red'>Failed to load gallery.</p>"; }
 }
 
-// ----- Filter Buttons -----
-filterButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
+// ---------------- FILTER BUTTONS ----------------
+filterButtons.forEach(btn=>{
+  btn.addEventListener('click',()=>{
     document.querySelector('.filter-btn.active')?.classList.remove('active');
     btn.classList.add('active');
     const category = btn.dataset.category;
-    filteredImages = category === 'all'
-      ? allImages
-      : allImages.filter(img => img.category === category);
-
-    gallery.innerHTML = '';
-    loadedCount = 0;
-    renderBatch(filteredImages);
+    filteredImages = category==='all'? allImages : allImages.filter(img=>img.category===category);
+    gallery.innerHTML=''; loadedCount=0; renderBatch(filteredImages);
   });
 });
 
-// ----- Initialize -----
+// ---------------- INIT ----------------
 fetchGallery();
