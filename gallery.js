@@ -87,8 +87,8 @@ function renderBatch(data) {
 
   loadedCount += batch.length;
 
-  if (glightbox) glightbox.reload();
-  else {
+  // ✅ Initialize or reload GLightbox correctly
+  if (!glightbox) {
     glightbox = GLightbox({
       selector: '.glightbox',
       openEffect: 'zoom',
@@ -96,6 +96,8 @@ function renderBatch(data) {
       zoomable: true,
       loop: true
     });
+  } else {
+    glightbox.reload(); // Refresh to include new dynamically added links
   }
 
   observeLastImage();
