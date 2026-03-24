@@ -5,6 +5,11 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
+const supabaseKey = 'YOUR_ANON_KEY'; // replace with your actual anon key
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
@@ -40,7 +45,10 @@ function renderBatch(data) {
     link.innerHTML = `
       <div class="gallery-item fade-in" style="animation-delay:${i*70}ms">
         <img loading="lazy" src="${img.url}" alt="${img.name}">
-        <div class="overlay">${img.emoji} ${img.name}</div>
+        <div class="overlay">
+          <div>${img.emoji} ${img.name}</div>
+          <div class="description">${img.description}</div>
+        </div>
       </div>
     `;
     gallery.appendChild(link);
@@ -48,17 +56,17 @@ function renderBatch(data) {
 
   loadedCount += batch.length;
 
-  // Initialize / reload GLightbox without pinch/scroll zoom
+  // Initialize / reload GLightbox
   if (glightbox) glightbox.reload();
   else {
     glightbox = GLightbox({
       selector: '.glightbox',
-      touchNavigation: false, // disable swipe/zoom gestures
+      touchNavigation: false, // no pinch/scroll zoom
       loop: true,
       openEffect: 'zoom',
       closeEffect: 'fade',
       slideEffect: 'slide',
-      zoomable: false, // disable pinch/scroll zoom
+      zoomable: false, // disable gestures
       renderSlide: slide => `
         <div class="gslide">
           <img src="${slide.href}" alt="${slide.title}">
@@ -103,19 +111,22 @@ function observeLastImage() {
   observer.observe(lastImg);
 }
 
-// ---------------- Fetch Gallery with Metadata ----------------
+// ---------------- Fetch Gallery with Metadata from Supabase ----------------
 async function fetchGallery() {
   try {
     showSkeleton();
 
+    // Get list of files from Supabase storage
     const { data: files, error: fileError } = await supabase.storage.from('gallery').list();
     if (fileError) throw fileError;
 
+    // Fetch metadata from Supabase table
     const { data: metadata = [], error: metaError } = await supabase
       .from('gallery_metadata')
       .select('file_name, description, emoji, category');
     if (metaError) throw metaError;
 
+    // Map files + metadata
     allImages = files
       .filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
       .map(f => {
@@ -127,7 +138,7 @@ async function fetchGallery() {
           name,
           category: meta.category || 'main',
           emoji: meta.emoji || '🍲',
-          description: meta.description || 'Delicious homemade dish.'
+          description: meta.description || ''
         };
       });
 
