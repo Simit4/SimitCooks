@@ -89,18 +89,16 @@ function renderBatch(data) {
 
   loadedCount += batch.length;
 
-  if (glightbox) glightbox.reload();
-  else {
+if (glightbox) glightbox.reload();
+else {
     glightbox = GLightbox({
-      selector: '.glightbox',
-      openEffect: 'zoom',
-      slideEffect: 'slide',
-      zoomable: true,
-      loop: true
+        selector: '.glightbox',
+        openEffect: 'zoom',
+        slideEffect: 'slide',
+        zoomable: true,
+        loop: true
     });
-      `
-
-  }
+}
 
   observeLastImage();
 }
