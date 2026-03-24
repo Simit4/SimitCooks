@@ -5,6 +5,11 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
+const supabaseKey = 'YOUR_ANON_KEY';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
@@ -36,19 +41,8 @@ function renderBatch(data){
       <div class="gallery-item fade-in" style="animation-delay:${i*70}ms">
         <img loading="lazy" src="${img.url}" alt="${img.name}">
         <div class="overlay">${img.emoji} ${img.name}</div>
-        <i class="fas fa-heart like-heart"></i>
-      </div>
-    `;
+      </div>`;
     gallery.appendChild(link);
-
-    // Double click to like heart animation
-    const card = link.querySelector('.gallery-item');
-    card.addEventListener('dblclick',()=>{
-      const heart = card.querySelector('.like-heart');
-      heart.classList.remove('pop'); // reset
-      void heart.offsetWidth; // trigger reflow
-      heart.classList.add('pop');
-    });
   });
   loadedCount+=batch.length;
 
