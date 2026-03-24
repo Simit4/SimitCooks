@@ -6,14 +6,6 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-// -------------------- Supabase Setup --------------------
-const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-// -------------------- DOM Elements --------------------
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -23,7 +15,6 @@ let loadedCount = 0;
 const BATCH = 12;
 let glightbox;
 
-// -------------------- Skeleton Loader --------------------
 function showSkeleton(count = BATCH) {
   gallery.innerHTML = '';
   for (let i = 0; i < count; i++) {
@@ -33,7 +24,6 @@ function showSkeleton(count = BATCH) {
   }
 }
 
-// -------------------- Fetch Images from Supabase --------------------
 async function fetchGallery() {
   showSkeleton();
 
@@ -70,16 +60,14 @@ async function fetchGallery() {
   }
 }
 
-// -------------------- Render Images Batch --------------------
 function renderBatch(data) {
   const batch = data.slice(loadedCount, loadedCount + BATCH);
 
   batch.forEach((img, i) => {
     const item = document.createElement('div');
     item.className = 'gallery-item fade-in';
-    item.style.animationDelay = `${i * 50}ms`;
+    item.style.animationDelay = `${i*50}ms`;
 
-    // Hover overlay + clickable GLightbox link
     item.innerHTML = `
       <a href="${img.url}" class="glightbox" data-title="${img.emoji} ${img.name}" data-description="${img.description}"></a>
       <img src="${img.url}" alt="${img.name}" loading="lazy">
@@ -94,7 +82,6 @@ function renderBatch(data) {
 
   loadedCount += batch.length;
 
-  // Initialize or reload GLightbox
   if (glightbox) glightbox.reload();
   else {
     glightbox = GLightbox({
@@ -109,7 +96,6 @@ function renderBatch(data) {
   observeLastImage();
 }
 
-// -------------------- Infinite Scroll / Lazy Load --------------------
 function observeLastImage() {
   const imgs = document.querySelectorAll('.gallery-item');
   const lastImg = imgs[imgs.length - 1];
@@ -127,7 +113,6 @@ function observeLastImage() {
   observer.observe(lastImg);
 }
 
-// -------------------- Filter Buttons --------------------
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
@@ -142,5 +127,4 @@ filterButtons.forEach(btn => {
   });
 });
 
-// -------------------- Initial Fetch --------------------
 fetchGallery();
