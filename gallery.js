@@ -89,6 +89,7 @@ function renderBatch(data) {
   if (glig
       htbox) glightbox.reload();
   else {
+    
 glightbox = GLightbox({
   selector: '.glightbox',
   openEffect: 'zoom',
@@ -107,8 +108,7 @@ glightbox = GLightbox({
   `
 });
 
-    
-  }
+}
 
   observeLastImage();
 }
