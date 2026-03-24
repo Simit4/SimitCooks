@@ -86,8 +86,7 @@ function renderBatch(data) {
 
   loadedCount += batch.length;
 
-  if (glig
-      htbox) glightbox.reload();
+  if (glightbox) glightbox.reload();
   else {
     
 glightbox = GLightbox({
