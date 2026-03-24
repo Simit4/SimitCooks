@@ -7,18 +7,15 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 
-
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
 let allImages = [];
 let filteredImages = [];
 let loadedCount = 0;
-const BATCH = 10; // Images per batch for infinite scroll
+const BATCH = 10;
 
-// -------------------------------
 // Skeleton loader
-// -------------------------------
 function showSkeleton(count = BATCH) {
   gallery.innerHTML = '';
   for (let i = 0; i < count; i++) {
@@ -29,9 +26,7 @@ function showSkeleton(count = BATCH) {
   }
 }
 
-// -------------------------------
 // Render batch
-// -------------------------------
 function renderBatch(data) {
   const fragment = document.createDocumentFragment();
   const batch = data.slice(loadedCount, loadedCount + BATCH);
@@ -43,8 +38,8 @@ function renderBatch(data) {
       <img src="${item.url}" alt="${item.name}" loading="lazy">
       <div class="overlay">${item.name}</div>
     `;
-    // Click opens recipe page (replace URL logic if you have recipe slug)
     div.addEventListener('click', () => {
+      // Example: link to recipe page by name
       window.location.href = `/recipes.html?name=${encodeURIComponent(item.name)}`;
     });
     fragment.appendChild(div);
@@ -55,9 +50,7 @@ function renderBatch(data) {
   observeLastImage();
 }
 
-// -------------------------------
 // Infinite scroll
-// -------------------------------
 function observeLastImage() {
   const items = document.querySelectorAll('.gallery-item');
   const last = items[items.length - 1];
@@ -75,13 +68,14 @@ function observeLastImage() {
   observer.observe(last);
 }
 
-// -------------------------------
-// Fetch images from Supabase
-// -------------------------------
+// Fetch gallery
 async function fetchGallery() {
   showSkeleton();
 
-  const { data, error } = await supabase.storage.from('gallery').list('', { limit: 100 });
+  const { data, error } = await supabase.storage
+    .from('gallery')
+    .list('', { limit: 100 });
+
   if (error) {
     console.error('❌ Error fetching gallery:', error);
     gallery.innerHTML = '<p>Failed to load gallery.</p>';
@@ -90,16 +84,20 @@ async function fetchGallery() {
 
   allImages = data.map(file => {
     let category = 'main';
-    if (file.name.toLowerCase().startsWith('dessert')) category = 'dessert';
-    else if (file.name.toLowerCase().startsWith('appetizer')) category = 'appetizer';
+    const lower = file.name.toLowerCase();
+    if (lower.startsWith('dessert')) category = 'dessert';
+    else if (lower.startsWith('appetizer')) category = 'appetizer';
 
     const name = file.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '')
                           .replace(/_/g, ' ')
                           .replace(/\b(appetizer|main|dessert)\b/i, '')
                           .trim();
 
-    const url = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
-    return { url, name, category };
+    const { data: publicData } = supabase.storage
+      .from('gallery')
+      .getPublicUrl(file.name);
+
+    return { url: publicData.publicUrl, name, category };
   });
 
   filteredImages = allImages;
@@ -108,9 +106,7 @@ async function fetchGallery() {
   renderBatch(filteredImages);
 }
 
-// -------------------------------
 // Filter buttons
-// -------------------------------
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
@@ -127,9 +123,7 @@ filterButtons.forEach(btn => {
   });
 });
 
-// -------------------------------
 // Fade-in animation
-// -------------------------------
 const style = document.createElement('style');
 style.innerHTML = `
   .fade-in { opacity: 0; transform: translateY(20px); animation: fadeInUp 0.6s forwards; }
@@ -138,7 +132,5 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// -------------------------------
-// Init
-// -------------------------------
+// Initialize
 fetchGallery();
