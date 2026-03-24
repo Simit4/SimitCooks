@@ -14,87 +14,64 @@
   <!-- Lightbox CSS -->
   <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet" />
 
+
+  
   <style>
     /* Gallery Styles */
-    .gallery-container {
-      max-width: 1400px;
-      margin: 50px auto;
-      padding: 0 20px;
-    }
-    .gallery-title {
-      text-align: center;
-      color: #ff6b6b;
-      margin-bottom: 30px;
-    }
-
-    /* Category Buttons */
-    .category-buttons {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-    .category-buttons button {
-      background: #fff;
-      border: 2px solid #ff6b6b;
-      color: #ff6b6b;
-      padding: 8px 20px;
-      margin: 0 10px 10px 0;
-      border-radius: 25px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .category-buttons button.active,
-    .category-buttons button:hover {
-      background: #ff6b6b;
-      color: #fff;
-    }
-
-    /* Grid */
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
     .gallery-item {
-      position: relative;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .gallery-item img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.3s;
-    }
-    .gallery-item:hover img {
-      transform: scale(1.05);
-    }
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  transition: all 0.4s ease;
+}
 
-    /* Hover Overlay */
-    .overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0,0,0,0.6);
-      color: #fff;
-      padding: 10px 15px;
-      font-weight: 600;
-      font-size: 16px;
-      opacity: 0;
-      transition: opacity 0.3s;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .gallery-item:hover .overlay {
-      opacity: 1;
-    }
+.gallery-item img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  display: block;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.1);
+}
+
+/* Hover Overlay */
+.overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  color: #fff;
+  font-weight: 600;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.gallery-item:hover .overlay {
+  opacity: 1;
+}
+
+/* Skeleton Loader */
+.skeleton {
+  background: #f0f0f0;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { background-color: #f0f0f0; }
+  50% { background-color: #e0e0e0; }
+  100% { background-color: #f0f0f0; }
+}
   </style>
+
+
+
+
+  
 </head>
 <body>
   
@@ -122,60 +99,123 @@
   </header>
 
   <!-- GALLERY SECTION -->
-  <section class="gallery-container">
-    <h1 class="gallery-title">🍲 Simit Cooks Gallery</h1>
+<section class="gallery-container">
+  <h1 class="gallery-title">🍲 Simit Cooks Gallery</h1>
 
-    <!-- Category Filter Buttons -->
-    <div class="category-buttons">
-      <button class="filter-btn active" data-category="all">All</button>
-      <button class="filter-btn" data-category="appetizer">Appetizers</button>
-      <button class="filter-btn" data-category="main">Mains</button>
-      <button class="filter-btn" data-category="dessert">Desserts</button>
-    </div>
+  <!-- Category Filter Buttons -->
+  <div class="category-buttons">
+    <button class="filter-btn active" data-category="all">All</button>
+    <button class="filter-btn" data-category="appetizer">Appetizers</button>
+    <button class="filter-btn" data-category="main">Mains</button>
+    <button class="filter-btn" data-category="dessert">Desserts</button>
+  </div>
 
-    <!-- Gallery Grid -->
-    <div class="gallery-grid" id="gallery"></div>
-  </section>
+  <!-- Gallery Grid -->
+  <div class="gallery-grid" id="gallery"></div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="container">
-      <p>&copy; 2026 Simit Cooks. All rights reserved.</p>
-    </div>
-  </footer>
 
+//JAVASCRIPT
   
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
   const gallery = document.getElementById('gallery');
+  const BATCH_SIZE = 6; // images per scroll
+  let allImages = [];
+  let displayedCount = 0;
 
-  const images = [
-    "Giant_Dumplings.jpg"
-  ];
+  // Fetch images from Supabase
+  async function fetchImages() {
+const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 
-  images.forEach(name => {
-    const url = `https://ozdwocrbrojtyogolqxn.supabase.co/storage/v1/object/public/gallery/${name}`;
+    const client = supabase.createClient(supabaseUrl, supabaseKey);
 
-    const div = document.createElement('div');
-    div.className = 'gallery-item';
+    const { data, error } = await client.storage.from('gallery').list();
 
-    div.innerHTML = `
-      <img src="${url}" alt="${name}">
-      <div class="overlay">${name.replace('.jpg','')}</div>
-    `;
+    if (error) { console.error(error); return; }
 
-    gallery.appendChild(div);
+    // Map images with category + emoji + name
+    allImages = data.map(file => {
+      const url = client.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
+      let category = 'main', emoji = '🍲';
+      if (file.name.startsWith('dessert')) { category = 'dessert'; emoji = '🍰'; }
+      if (file.name.startsWith('appetizer')) { category = 'appetizer'; emoji = '🥗'; }
+
+      const name = file.name.replace(/\.(jpg|jpeg|png)/i,'').replace(/_/g,' ').replace(/(main|dessert|appetizer)/,'').trim();
+
+      // Optional: create slug for recipe page
+      const slug = name.toLowerCase().replace(/\s+/g,'-');
+
+      return { url, name, category, emoji, slug };
+    });
+
+    displayNextBatch('all');
+  }
+
+  // Display next batch for infinite scroll
+  function displayNextBatch(category) {
+    const filtered = category === 'all' ? allImages : allImages.filter(img => img.category === category);
+    const nextBatch = filtered.slice(displayedCount, displayedCount + BATCH_SIZE);
+
+    nextBatch.forEach(img => {
+      const link = document.createElement('a');
+      link.href = `/recipes/${img.slug}`; // click → recipe page
+      link.className = 'glightbox';
+      link.setAttribute('data-title', `${img.emoji} ${img.name}`);
+
+      link.innerHTML = `
+        <div class="gallery-item skeleton">
+          <img src="${img.url}" alt="${img.name}" loading="lazy">
+          <div class="overlay">${img.emoji} ${img.name}</div>
+        </div>
+      `;
+      gallery.appendChild(link);
+
+      // remove skeleton after image loads
+      const imgEl = link.querySelector('img');
+      imgEl.onload = () => link.querySelector('.gallery-item').classList.remove('skeleton');
+    });
+
+    displayedCount += nextBatch.length;
+
+    // Initialize or refresh lightbox
+    GLightbox({ selector: '.glightbox' });
+  }
+
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      gallery.innerHTML = '';
+      displayedCount = 0;
+      displayNextBatch(btn.dataset.category);
+    });
   });
 
+  // Infinite scroll
+  window.addEventListener('scroll', () => {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+      const activeCategory = document.querySelector('.filter-btn.active').dataset.category;
+      displayNextBatch(activeCategory);
+    }
+  });
+
+  await fetchImages();
 });
 </script>
 
+
+
+  
+
   <!-- Your existing mobile menu script -->
   <script type="module" src="mobile-menu.js"></script>
+  <script type="module" src="footer.js"></script>
+
   
 </body>
 </html>
