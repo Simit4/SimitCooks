@@ -145,16 +145,12 @@
   </footer>
 
 <script>
-
-
 const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 
-  
+
 const { createClient } = supabase;
 const client = createClient(supabaseUrl, supabaseKey);
-
-let allImages = [];
 
 async function loadGallery() {
   const { data, error } = await client.storage.from('gallery').list();
@@ -164,48 +160,27 @@ async function loadGallery() {
     return;
   }
 
-  allImages = data.map(file => {
+  const gallery = document.getElementById('gallery');
+  gallery.innerHTML = '';
+
+  data.forEach(file => {
     const url = client.storage
       .from('gallery')
       .getPublicUrl(file.name).data.publicUrl;
 
-    // 🔥 FIX: works with ANY filename (no prefix needed)
-    const name = file.name
-      .replace(/\.(jpg|jpeg|png|webp|gif)$/i, '')
-      .replace(/_/g, ' ');
+    console.log('Image URL:', url);
 
-    return {
-      url,
-      name,
-      category: 'all', // no category for now
-      emoji: '🍲'
-    };
-  });
+    // 🔥 IMPORTANT: direct image first (no lightbox wrapper)
+    const div = document.createElement('div');
+    div.className = 'gallery-item';
 
-  displayImages('all');
-}
-
-function displayImages() {
-  const galleryDiv = document.getElementById('gallery');
-  galleryDiv.innerHTML = '';
-
-  allImages.forEach(img => {
-    const link = document.createElement('a');
-    link.href = img.url;
-    link.className = 'glightbox';
-    link.setAttribute('data-title', `${img.emoji} ${img.name}`);
-
-    link.innerHTML = `
-      <div class="gallery-item">
-        <img src="${img.url}" alt="${img.name}">
-        <div class="overlay">${img.emoji} ${img.name}</div>
-      </div>
+    div.innerHTML = `
+      <img src="${url}" alt="${file.name}">
+      <div class="overlay">${file.name}</div>
     `;
 
-    galleryDiv.appendChild(link);
+    gallery.appendChild(div);
   });
-
-  GLightbox({ selector: '.glightbox' });
 }
 
 loadGallery();
