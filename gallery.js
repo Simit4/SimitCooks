@@ -7,7 +7,6 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 
-
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -45,6 +44,48 @@ function showError(message) {
       </button>
     </div>
   `;
+}
+
+// Initialize or refresh GLightbox
+function initGLightbox() {
+  // Destroy existing instance if it exists
+  if (glightbox) {
+    glightbox.destroy();
+    glightbox = null;
+  }
+  
+  // Create new GLightbox instance
+  glightbox = GLightbox({
+    selector: '.glightbox',
+    openEffect: 'zoom',
+    closeEffect: 'zoom',
+    slideEffect: 'slide',
+    zoomable: true,
+    loop: true,
+    autoplayVideos: false,
+    touchNavigation: true,
+    keyboardNavigation: true,
+    closeButton: true,
+    draggable: true,
+    dragToleranceX: 40,
+    dragToleranceY: 65,
+    width: '90vw',
+    height: 'auto',
+    className: 'glightbox-container',
+    skin: 'clean',
+    moreText: 'See more',
+    moreLength: 60,
+    touchFollowAxis: true,
+    preload: true,
+    slideTransition: 'slide',
+    openEffectTiming: 300,
+    closeEffectTiming: 300,
+    slideEffectTiming: 300,
+    // Ensure it opens as a modal
+    modal: true,
+    // Position at center
+    position: 'center'
+  });
 }
 
 // Fetch images from Supabase
@@ -85,7 +126,7 @@ async function fetchGallery() {
           originalName: f.name
         };
       })
-      .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+      .sort((a, b) => a.name.localeCompare(b.name));
 
     if (allImages.length === 0) {
       showError('No images found in the gallery.');
@@ -101,6 +142,13 @@ async function fetchGallery() {
     console.error('Gallery fetch error:', err);
     showError('Failed to load gallery. Please try again later.');
   }
+}
+
+// Escape HTML to prevent XSS
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 }
 
 // Render a batch of images
@@ -119,10 +167,13 @@ function renderBatch(data) {
     link.setAttribute('data-gallery', 'gallery');
     link.setAttribute('data-title', `${img.emoji} ${img.name}`);
     link.setAttribute('data-description', img.description);
+    
+    // Add data attributes for GLightbox
+    link.setAttribute('data-glightbox', `title: ${escapeHtml(img.emoji + ' ' + img.name)}; description: ${escapeHtml(img.description)}`);
 
     link.innerHTML = `
       <div class="gallery-item fade-in" style="animation-delay:${i * 50}ms">
-        <img src="${img.url}" alt="${img.name}" loading="lazy">
+        <img src="${img.url}" alt="${escapeHtml(img.name)}" loading="lazy">
         <div class="overlay">
           <div class="title">${escapeHtml(img.emoji)} ${escapeHtml(img.name)}</div>
           <div class="description">${escapeHtml(img.description)}</div>
@@ -136,33 +187,11 @@ function renderBatch(data) {
   gallery.appendChild(fragment);
   loadedCount += batch.length;
 
-  // Initialize or refresh GLightbox
-  if (typeof GLightbox !== 'undefined') {
-    if (!glightbox) {
-      glightbox = GLightbox({
-        selector: '.glightbox',
-        openEffect: 'zoom',
-        closeEffect: 'zoom',
-        slideEffect: 'slide',
-        zoomable: true,
-        loop: true,
-        autoplayVideos: false,
-        touchNavigation: true
-      });
-    } else {
-      glightbox.reload();
-    }
-  }
+  // Initialize or refresh GLightbox after adding new elements
+  initGLightbox();
 
   // Setup infinite scroll
   setupInfiniteScroll();
-}
-
-// Escape HTML to prevent XSS
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
 }
 
 // Setup intersection observer for infinite scroll
@@ -232,29 +261,4 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && glightbox) {
     glightbox.close();
   }
-});
-
-// Optional: Prefetch next batch on hover near bottom
-let prefetchTimeout;
-window.addEventListener('scroll', () => {
-  if (prefetchTimeout) clearTimeout(prefetchTimeout);
-  prefetchTimeout = setTimeout(() => {
-    const scrollPosition = window.innerHeight + window.scrollY;
-    const documentHeight = document.documentElement.scrollHeight;
-    
-    // If user is within 500px of bottom, prefetch next batch
-    if (documentHeight - scrollPosition < 500 && loadedCount < filteredImages.length) {
-      const nextBatch = filteredImages.slice(loadedCount, loadedCount + BATCH);
-      if (nextBatch.length > 0) {
-        // Preload images in background
-        nextBatch.forEach(img => {
-          const preloadLink = document.createElement('link');
-          preloadLink.rel = 'preload';
-          preloadLink.as = 'image';
-          preloadLink.href = img.url;
-          document.head.appendChild(preloadLink);
-        });
-      }
-    }
-  }, 150);
 });
