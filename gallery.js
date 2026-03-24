@@ -6,6 +6,11 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
+const supabaseKey = 'YOUR_ANON_KEY'; // replace with your actual anon key
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
@@ -14,6 +19,7 @@ let allImages = [];
 let filteredImages = [];
 let loadedCount = 0;
 const BATCH = 12;
+let glightbox;
 
 // ---------------- Skeleton Loader ----------------
 function showSkeleton(count = BATCH) {
@@ -30,22 +36,58 @@ function renderBatch(data) {
   const batch = data.slice(loadedCount, loadedCount + BATCH);
 
   batch.forEach((img, i) => {
-    const item = document.createElement('div');
-    item.className = 'gallery-item fade-in';
-    item.style.animationDelay = `${i*70}ms`;
+    const link = document.createElement('a');
+    link.href = img.url;
+    link.className = 'glightbox';
+    link.setAttribute('data-title', `${img.emoji} ${img.name}`);
+    link.setAttribute('data-description', img.description || '');
+    link.setAttribute('data-type', 'image');
 
-    item.innerHTML = `
-      <img loading="lazy" src="${img.url}" alt="${img.name}">
-      <div class="overlay">
-        <div><span style="margin-right:6px;">${img.emoji}</span>${img.name}</div>
-        <div class="description" style="font-size:0.9rem;margin-top:4px;">${img.description}</div>
+    link.innerHTML = `
+      <div class="gallery-item fade-in" style="animation-delay:${i*70}ms">
+        <img loading="lazy" src="${img.url}" alt="${img.name}">
+        <div class="overlay">${img.emoji} ${img.name}</div>
       </div>
     `;
-
-    gallery.appendChild(item);
+    gallery.appendChild(link);
   });
 
   loadedCount += batch.length;
+
+  // Initialize / reload GLightbox without pinch/scroll zoom
+  if (glightbox) glightbox.reload();
+  else {
+    glightbox = GLightbox({
+      selector: '.glightbox',
+      touchNavigation: false, // disable swipe/zoom gestures
+      loop: true,
+      openEffect: 'zoom',
+      closeEffect: 'fade',
+      slideEffect: 'slide',
+      zoomable: false, // disable pinch/scroll zoom
+      renderSlide: slide => `
+        <div class="gslide">
+          <img src="${slide.href}" alt="${slide.title}">
+          <div class="gslide-overlay">
+            <div class="gslide-title">${slide.title}</div>
+            <div class="gslide-description">${slide.description}</div>
+          </div>
+        </div>
+      `
+    });
+
+    // Tap to toggle overlay
+    glightbox.on('slide_after_load', ({ slideNode }) => {
+      const overlay = slideNode.querySelector('.gslide-overlay');
+      if (!overlay) return;
+      overlay.style.transition = 'opacity 0.4s';
+      overlay.style.opacity = '1';
+      slideNode.querySelector('img').addEventListener('click', () => {
+        overlay.style.opacity = overlay.style.opacity === '1' ? '0' : '1';
+      });
+    });
+  }
+
   observeLastImage();
 }
 
@@ -72,11 +114,9 @@ async function fetchGallery() {
   try {
     showSkeleton();
 
-    // List files from storage
     const { data: files, error: fileError } = await supabase.storage.from('gallery').list();
     if (fileError) throw fileError;
 
-    // Fetch metadata
     const { data: metadata = [], error: metaError } = await supabase
       .from('gallery_metadata')
       .select('file_name, description, emoji, category');
