@@ -9,7 +9,7 @@ async function fetchFeaturedRecipes() {
   const { data, error } = await supabase
     .from('recipe_db')
     .select('*')
-    .order('views', { ascending: false })
+    .order('views', { ascending: true })
     .limit(3);
 
   if (error) return console.error('Error fetching featured recipes:', error.message);
