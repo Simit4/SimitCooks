@@ -1,39 +1,19 @@
-/* ---------------- BODY ---------------- */
-body {
-  font-family: 'Open Sans', sans-serif;
-  margin: 0;
-  background: #fafafa;
-  color: #333;
+/* ----- Gallery Container ----- */
+.gallery-container {
+  max-width: 1600px;  /* wider page */
+  margin: 60px auto;
+  padding: 0 50px;    /* increased side padding */
 }
-
-/* ---------------- CONTAINER ---------------- */
-.container {
-  width: 90%;
-  max-width: 1600px;
-  margin: auto;
-}
-
-/* ---------------- GALLERY TITLE ---------------- */
 .gallery-title {
   text-align: center;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  font-size: 3rem;
   color: #ff6b6b;
   margin-bottom: 40px;
-  position: relative;
-}
-.gallery-title::after {
-  content: '';
-  width: 80px;
-  height: 5px;
-  background: #ff6b6b;
-  display: block;
-  margin: 12px auto 0;
-  border-radius: 2px;
+  font-size: 2.5rem;
+  font-weight: 800;
+  font-family: 'Poppins', sans-serif;
 }
 
-/* ---------------- CATEGORY BUTTONS ---------------- */
+/* Category Buttons */
 .category-buttons {
   text-align: center;
   margin-bottom: 50px;
@@ -42,149 +22,120 @@ body {
   background: #fff;
   border: 2px solid #ff6b6b;
   color: #ff6b6b;
-  padding: 12px 30px;
+  padding: 10px 22px;
   margin: 0 12px 12px 0;
-  border-radius: 50px;
-  font-weight: 600;
+  border-radius: 30px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.4s;
+  transition: 0.3s;
+  font-family: 'Open Sans', sans-serif;
 }
 .category-buttons button.active,
 .category-buttons button:hover {
   background: #ff6b6b;
   color: #fff;
-  transform: scale(1.08);
 }
 
-/* ---------------- GALLERY GRID (MASONRY) ---------------- */
+/* Gallery Grid */
 .gallery-grid {
-  column-count: 4;
-  column-gap: 25px;
-  width: 100%;
-  padding: 0 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
 }
-@media (max-width: 1400px) { .gallery-grid { column-count: 3; } }
-@media (max-width: 1000px) { .gallery-grid { column-count: 2; } }
-@media (max-width: 650px) { .gallery-grid { column-count: 1; } }
 
-/* ---------------- GALLERY ITEM ---------------- */
+/* Gallery Item */
 .gallery-item {
   position: relative;
-  margin-bottom: 25px;
-  display: inline-block;
-  width: 100%;
-  border-radius: 20px;
+  border-radius: 18px;
   overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.18);
   cursor: pointer;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-  transform: translateY(20px);
-  opacity: 0;
-  transition: transform 0.6s, box-shadow 0.4s;
+  transition: transform 0.35s, box-shadow 0.35s;
+  background: #fff;
 }
 .gallery-item img {
   width: 100%;
-  display: block;
+  height: 280px;
   object-fit: cover;
-  transition: transform 0.5s;
-  border-radius: 20px;
+  display: block;
+  transition: transform 0.35s;
+  border-radius: 18px;
 }
 .gallery-item:hover img {
-  transform: scale(1.05);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  transform: scale(1.08);
 }
 
-/* ---------------- OVERLAY ---------------- */
+/* Hover Overlay */
 .overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 80%);
+  background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 100%);
   color: #fff;
-  padding: 15px 18px;
-  font-weight: 600;
-  font-size: 16px;
+  padding: 12px 18px;
+  font-weight: 700;
+  font-size: 1.05rem;
   opacity: 0;
-  transition: opacity 0.4s;
+  transition: opacity 0.35s;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 0 0 20px 20px;
+  flex-direction: column;
+}
+.overlay .description {
+  font-weight: 400;
+  font-size: 0.9rem;
+  margin-top: 6px;
+  line-height: 1.3;
+  color: #fefefe;
 }
 .gallery-item:hover .overlay {
   opacity: 1;
 }
 
-/* ---------------- SKELETON ---------------- */
+/* Skeleton Loader */
 .skeleton {
-  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
-  background-size: 200% 100%;
-  border-radius: 20px;
+  background: #e0e0e0;
+  border-radius: 18px;
   height: 280px;
-  animation: pulse 1.6s infinite linear;
-  margin-bottom: 25px;
+  animation: pulse 1.5s infinite;
 }
 @keyframes pulse {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
 }
 
-/* ---------------- FADE-IN ANIMATION ---------------- */
-.fade-in {
-  animation: fadeUp 0.6s forwards;
-}
-@keyframes fadeUp {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ---------------- LIGHTBOX CUSTOM ---------------- */
-.glightbox-clean .gslide {
-  border-radius: 20px;
-  overflow: hidden;
+/* ----- GLightbox Custom Overlay ----- */
+.gslide {
   position: relative;
   text-align: center;
-  background: #000;
 }
-
-.glightbox-clean .gslide img {
-  max-height: 85vh;
-  width: auto;
-  object-fit: contain;
-  border-radius: 20px;
-  display: block;
-  margin: auto;
+.gslide img {
+  max-width: 90vw;
+  max-height: 80vh;
+  margin: 0 auto;
+  border-radius: 18px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
 }
-
 .gslide-overlay {
   position: absolute;
-  top: 50%;
+  bottom: 5%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  color: #fff;
-  pointer-events: none;
-  text-align: center;
-  background: linear-gradient(180deg, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.8) 100%);
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.6);
+  padding: 18px 28px;
   border-radius: 15px;
-  padding: 15px 20px;
-  transition: opacity 0.4s;
-  opacity: 1;
-}
-.gslide-overlay .gslide-title {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  font-size: 2.4rem;
-  margin-bottom: 10px;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-}
-.gslide-overlay .gslide-description {
+  color: #fff;
+  max-width: 90%;
   font-family: 'Open Sans', sans-serif;
-  font-weight: 500;
-  font-size: 1.3rem;
-  line-height: 1.4;
-  color: #f0f0f0;
-  text-shadow: 0 1px 5px rgba(0,0,0,0.4);
 }
-.gslide-overlay.hide {
-  opacity: 0;
+.gslide-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.gslide-description {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.4;
 }
