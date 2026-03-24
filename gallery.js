@@ -6,12 +6,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// Supabase setup
-const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
@@ -22,6 +17,7 @@ let loadedCount = 0;
 const BATCH = 12;
 let glightbox = null;
 
+// Show skeleton loader
 function showSkeleton(count = BATCH) {
   if (!gallery) return;
   gallery.innerHTML = '';
@@ -32,30 +28,30 @@ function showSkeleton(count = BATCH) {
   }
 }
 
+// Initialize GLightbox
 function initGLightbox() {
-  // Destroy existing instance
   if (glightbox) {
     glightbox.destroy();
   }
   
-  // Create new instance
-  glightbox = GLightbox({
-    selector: '.glightbox',
-    openEffect: 'zoom',
-    closeEffect: 'zoom',
-    zoomable: true,
-    loop: true,
-    touchNavigation: true,
-    keyboardNavigation: true,
-    closeButton: true,
-    draggable: true,
-    width: 'auto',
-    height: 'auto',
-    className: 'glightbox-clean',
-    skin: 'clean'
-  });
+  if (typeof GLightbox !== 'undefined') {
+    glightbox = GLightbox({
+      selector: '.glightbox',
+      openEffect: 'zoom',
+      closeEffect: 'zoom',
+      zoomable: true,
+      loop: true,
+      touchNavigation: true,
+      keyboardNavigation: true,
+      closeButton: true,
+      draggable: true,
+      width: 'auto',
+      height: 'auto'
+    });
+  }
 }
 
+// Fetch images from Supabase
 async function fetchGallery() {
   showSkeleton();
 
@@ -93,7 +89,7 @@ async function fetchGallery() {
       .sort((a, b) => a.name.localeCompare(b.name));
 
     if (allImages.length === 0) {
-      gallery.innerHTML = "<p style='text-align:center;color:red'>No images found.</p>";
+      gallery.innerHTML = "<p style='text-align:center;color:red;padding:2rem;'>No images found in the gallery.</p>";
       return;
     }
 
@@ -104,10 +100,11 @@ async function fetchGallery() {
 
   } catch (err) {
     console.error('Gallery fetch error:', err);
-    gallery.innerHTML = "<p style='text-align:center;color:red'>Failed to load gallery.</p>";
+    gallery.innerHTML = "<p style='text-align:center;color:red;padding:2rem;'>Failed to load gallery. Please try again later.</p>";
   }
 }
 
+// Render a batch of images
 function renderBatch(data) {
   if (!gallery) return;
   
@@ -121,10 +118,10 @@ function renderBatch(data) {
     link.setAttribute('data-gallery', 'gallery');
     link.innerHTML = `
       <div class="gallery-item fade-in" style="animation-delay:${i * 50}ms">
-        <img src="${img.url}" alt="${img.name}" loading="lazy">
+        <img src="${img.url}" alt="${img.name.replace(/[<>]/g, '')}" loading="lazy">
         <div class="overlay">
-          <div class="title">${img.emoji} ${img.name}</div>
-          <div class="description">${img.description}</div>
+          <div class="title">${img.emoji} ${img.name.replace(/[<>]/g, '')}</div>
+          <div class="description">${img.description.replace(/[<>]/g, '')}</div>
         </div>
       </div>
     `;
@@ -132,33 +129,35 @@ function renderBatch(data) {
   });
 
   loadedCount += batch.length;
-  initGLightbox(); // Re-initialize GLightbox for new images
+  initGLightbox();
   observeLastImage();
 }
 
+// Infinite scroll observer
 function observeLastImage() {
-  const imgs = document.querySelectorAll('.gallery-item');
-  const lastImg = imgs[imgs.length - 1];
-  if (!lastImg) return;
+  const items = document.querySelectorAll('.gallery-item');
+  const lastItem = items[items.length - 1];
+  if (!lastItem) return;
 
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting && loadedCount < filteredImages.length) {
-        renderBatch(filteredImages);
         observer.disconnect();
+        renderBatch(filteredImages);
       }
     });
   }, { rootMargin: '250px' });
 
-  observer.observe(lastImg);
+  observer.observe(lastItem);
 }
 
+// Filter functionality
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
     btn.classList.add('active');
     const category = btn.dataset.category;
-    filteredImages = category === 'all' ? allImages : allImages.filter(img => img.category === category);
+    filteredImages = category === 'all' ? [...allImages] : allImages.filter(img => img.category === category);
     gallery.innerHTML = '';
     loadedCount = 0;
     renderBatch(filteredImages);
@@ -166,4 +165,5 @@ filterButtons.forEach(btn => {
   });
 });
 
+// Initialize gallery
 fetchGallery();
