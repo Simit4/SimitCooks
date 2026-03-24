@@ -144,83 +144,30 @@
     </div>
   </footer>
 
-  <!-- Lightbox JS -->
-  <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
-  <!-- Supabase JS -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script>
-    // ✅ Supabase client
-    const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+<script>
+const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    let allImages = [];
+async function testGallery() {
+  const { data, error } = await supabase.storage.from('gallery').list();
+  if (error) return console.error('Supabase list error:', error);
 
-    async function loadGallery() {
-      const { data, error } = await supabase
-        .storage
-        .from('gallery')
-        .list('', { limit: 100, sortBy: { column: 'name', order: 'asc' } });
+  console.log('Supabase files:', data);
 
-      if (error) { 
-        console.error('Error fetching images:', error); 
-        return; 
-      }
+  data.forEach(file => {
+    const url = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
+    console.log(file.name, url);
+    const img = document.createElement('img');
+    img.src = url;
+    img.style.width = '150px';
+    img.style.margin = '5px';
+    document.body.appendChild(img);
+  });
+}
 
-      console.log('Files fetched from Supabase:', data);
-
-      allImages = data.map(file => {
-        let category = 'main';
-        let emoji = '🍲';
-        const nameLower = file.name.toLowerCase();
-        if (nameLower.startsWith('dessert')) { category = 'dessert'; emoji = '🍰'; }
-        else if (nameLower.startsWith('appetizer')) { category = 'appetizer'; emoji = '🥗'; }
-
-        const name = file.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '')
-                              .replace(/_/g, ' ')
-                              .replace(/\b(appetizer|main|dessert)\b/i, '')
-                              .trim();
-
-        const imgUrl = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
-        console.log(file.name, imgUrl); // debug public URL
-        return { url: imgUrl, name, category, emoji };
-      });
-
-      displayImages('all');
-    }
-
-    function displayImages(category) {
-      const galleryDiv = document.getElementById('gallery');
-      galleryDiv.innerHTML = '';
-
-      const imagesToShow = category === 'all' ? allImages : allImages.filter(img => img.category === category);
-      imagesToShow.forEach(img => {
-        const link = document.createElement('a');
-        link.href = img.url;
-        link.className = 'glightbox';
-        link.setAttribute('data-title', `${img.emoji} ${img.name}`);
-        link.innerHTML = `
-          <div class="gallery-item">
-            <img src="${img.url}" alt="${img.name}">
-            <div class="overlay">${img.emoji} ${img.name}</div>
-          </div>`;
-        galleryDiv.appendChild(link);
-      });
-
-      GLightbox({ selector: '.glightbox' });
-    }
-
-    // Category filters
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        displayImages(btn.getAttribute('data-category'));
-      });
-    });
-
-    loadGallery();
-  </script>
+testGallery();
+</script>
 
   <!-- Your existing mobile menu script -->
   <script type="module" src="mobile-menu.js"></script>
