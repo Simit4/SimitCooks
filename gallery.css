@@ -254,6 +254,7 @@ h1, h2, h3, h4, h5 {
 
 /* ------------------------------------------------- Gallary -------------------------------------------------- */
 
+/* ---------- Gallery Item Hover Overlay ---------- */
 .gallery-item {
   position: relative;
   border-radius: 20px;
@@ -267,7 +268,6 @@ h1, h2, h3, h4, h5 {
   width: 100%;
   height: 250px;
   object-fit: cover;
-  display: block;
   border-radius: 20px;
   transition: transform 0.3s;
 }
@@ -276,7 +276,6 @@ h1, h2, h3, h4, h5 {
   transform: scale(1.08);
 }
 
-/* Overlay */
 .overlay {
   position: absolute;
   top: 50%;
@@ -285,15 +284,12 @@ h1, h2, h3, h4, h5 {
   width: 90%;
   padding: 15px 20px;
   border-radius: 16px;
-  
   background: rgba(255, 255, 255, 0.95);
-  color: #166534; /* deep green theme */
-  
+  color: #166534;
   text-align: center;
   opacity: 0;
   transition: opacity 0.3s, transform 0.3s;
-  pointer-events: none; /* allows click to pass to GLightbox */
-  
+  pointer-events: none;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -305,25 +301,22 @@ h1, h2, h3, h4, h5 {
   transform: translate(-50%, -50%) scale(1.05);
 }
 
-/* Title */
 .overlay .title {
   font-size: 1.25rem;
   font-weight: 700;
   color: #27ae60;
 }
 
-/* Description */
 .overlay .description {
   font-size: 0.95rem;
   color: #2c3e50;
   line-height: 1.4;
-  max-height: 3.6em; /* max 2 lines */
+  max-height: 3.6em;
   overflow: hidden;
   text-overflow: ellipsis;
-}    
+}
 
-
-
+/* GLightbox Centered Overlay */
 .gslide-overlay {
   position: absolute;
   top: 50%;
@@ -354,48 +347,21 @@ h1, h2, h3, h4, h5 {
   line-height: 1.5;
 }
 
-/* Animation */
 @keyframes fadeZoom {
   from { opacity: 0; transform: translate(-50%, -60%) scale(0.9); }
   to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-
-
+/* Responsive */
 @media (max-width: 640px) {
-  .gallery-item img {
-    height: 200px;
-  }
-
-  .overlay {
-    width: 95%;
-    padding: 12px 15px;
-  }
-
-  .overlay .title {
-    font-size: 1rem;
-  }
-
-  .overlay .description {
-    font-size: 0.85rem;
-  }
-
-  .gslide-overlay {
-    max-width: 90%;
-    padding: 18px;
-  }
-
-  .gslide-title {
-    font-size: 1.4rem;
-  }
-
-  .gslide-description {
-    font-size: 0.95rem;
-  }
+  .gallery-item img { height: 200px; }
+  .overlay { width: 95%; padding: 12px 15px; }
+  .overlay .title { font-size: 1rem; }
+  .overlay .description { font-size: 0.85rem; }
+  .gslide-overlay { max-width: 90%; padding: 18px; }
+  .gslide-title { font-size: 1.4rem; }
+  .gslide-description { font-size: 0.95rem; }
 }
-
-
-
 
 
 
