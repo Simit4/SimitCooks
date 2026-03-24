@@ -1,1 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />  
 
+  <title>Gallery | Simit Cooks</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Open+Sans&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Lightbox CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet" />
+
+  <style>
+    /* Gallery Styles */
+    .gallery-container {
+      max-width: 1400px;
+      margin: 50px auto;
+      padding: 0 20px;
+    }
+    .gallery-title {
+      text-align: center;
+      color: #ff6b6b;
+      margin-bottom: 30px;
+    }
+
+    /* Category Buttons */
+    .category-buttons {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .category-buttons button {
+      background: #fff;
+      border: 2px solid #ff6b6b;
+      color: #ff6b6b;
+      padding: 8px 20px;
+      margin: 0 10px 10px 0;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .category-buttons button.active,
+    .category-buttons button:hover {
+      background: #ff6b6b;
+      color: #fff;
+    }
+
+    /* Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .gallery-grid img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .gallery-grid img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="container header-wrapper">
+      <a href="index.html">
+        <div class="logo" aria-label="Simit Cooks">
+          <span class="logo-modern">Simit's</span>
+          <span class="logo-traditional">Cooks</span>
+        </div>
+      </a>
+      <nav class="navbar">
+        <ul class="nav-links">
+          <li><a href="recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
+          <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
+          <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
+          <li><a href="gallery.html"><i class="fas fa-image"></i> Gallery</a></li>
+        </ul>
+        <button class="hamburger">
+          <span></span><span></span><span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- GALLERY SECTION -->
+  <section class="gallery-container">
+    <h1 class="gallery-title">🍲 Simit Cooks Gallery</h1>
+
+    <!-- Category Filter Buttons -->
+    <div class="category-buttons">
+      <button class="filter-btn active" data-category="all">All</button>
+      <button class="filter-btn" data-category="appetizer">Appetizers</button>
+      <button class="filter-btn" data-category="main">Mains</button>
+      <button class="filter-btn" data-category="dessert">Desserts</button>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div class="gallery-grid" id="gallery"></div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Simit Cooks. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Lightbox JS -->
+  <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    // Initialize Supabase
+    const supabaseUrl = 'https://YOUR_SUPABASE_URL.supabase.co';
+    const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    let allImages = [];
+
+    // Load gallery images from Supabase
+    async function loadGallery() {
+      const { data, error } = await supabase
+        .storage
+        .from('gallery') // replace with your bucket name
+        .list('', { limit: 100, sortBy: { column: 'name', order: 'asc' } });
+
+      if (error) {
+        console.error('Error fetching images:', error);
+        return;
+      }
+
+      const galleryDiv = document.getElementById('gallery');
+      galleryDiv.innerHTML = '';
+
+      // Store images with category (you can encode category in file name: e.g., dessert_chocolate.jpg)
+      allImages = data.map(file => {
+        let category = 'main';
+        if (file.name.toLowerCase().startsWith('dessert')) category = 'dessert';
+        else if (file.name.toLowerCase().startsWith('appetizer')) category = 'appetizer';
+        const imgUrl = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
+        return { url: imgUrl, name: file.name, category };
+      });
+
+      displayImages('all');
+    }
+
+    function displayImages(category) {
+      const galleryDiv = document.getElementById('gallery');
+      galleryDiv.innerHTML = '';
+
+      const imagesToShow = category === 'all' ? allImages : allImages.filter(img => img.category === category);
+      imagesToShow.forEach(img => {
+        const link = document.createElement('a');
+        link.href = img.url;
+        link.className = 'glightbox';
+        link.setAttribute('data-title', img.name.replace(/\.[^/.]+$/, ""));
+        link.innerHTML = `<img src="${img.url}" alt="${img.name}">`;
+        galleryDiv.appendChild(link);
+      });
+
+      GLightbox({ selector: '.glightbox' });
+    }
+
+    // Category buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        displayImages(btn.getAttribute('data-category'));
+      });
+    });
+
+    loadGallery();
+  </script>
+
+  <!-- Existing scripts -->
+  <script type="module" src="mobile-menu.js"></script>
+
+</body>
+</html>
