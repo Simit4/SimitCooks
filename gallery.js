@@ -105,32 +105,38 @@ async function fetchGallery() {
   try {
     showSkeleton();
 
-    // Fetch metadata first
-    const { data: metadata = [], error: metaError } = await supabase
-      .from('gallery_metadata')
-      .select('file_name, description, emoji, category');
-    if (metaError) throw metaError;
+// Fetch metadata first
+const { data: metadata = [], error: metaError } = await supabase
+  .from('gallery_metadata')
+  .select('file_name, description, emoji, category');
+if (metaError) throw metaError;
 
-    // Fetch storage files
-    const { data: files, error: fileError } = await supabase.storage.from('gallery').list();
-    if (fileError) throw fileError;
+// Fetch storage files
+const { data: files, error: fileError } = await supabase.storage.from('gallery').list();
+if (fileError) throw fileError;
 
-    allImages = files
-      .filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
-      .map(f => {
-        const meta = metadata.find(m => m.file_name === f.name);
-        const url = supabase.storage.from('gallery').getPublicUrl(f.name).data.publicUrl;
-        const name = f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i,'').replace(/_/g,' ').trim();
-        return {
-          url,
-          name,
-          category: meta?.category || 'main',
-          emoji: meta?.emoji || '🍲',
-          description: meta?.description || 'No description yet.'
-        };
-      });
+// Map files to metadata
+allImages = files
+  .filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
+  .map(f => {
+    // Find metadata with exact match
+    const meta = metadata.find(m => m.file_name === f.name);
 
-    filteredImages = allImages;
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(f.name);
+
+    return {
+      url: publicUrl,
+      name: f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i,'').replace(/_/g,' ').trim(),
+      category: meta?.category || 'main',
+      emoji: meta?.emoji || '🍲',
+      description: meta?.description || 'No description yet.'
+    };
+  });
+
+filteredImages = allImages;
+
+    
     loadedCount = 0;
     gallery.innerHTML = '';
     renderBatch(filteredImages);
