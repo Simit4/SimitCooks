@@ -6,7 +6,9 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// DOM elements
+
+
+// DOM
 const container = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -15,22 +17,17 @@ let filteredImages = [];
 let loadedCount = 0;
 const BATCH = 12;
 
-// -------------------------------
 // Skeleton loader
-// -------------------------------
 function showSkeleton(count = BATCH) {
   container.innerHTML = '';
   for (let i = 0; i < count; i++) {
     const skeleton = document.createElement('div');
     skeleton.className = 'gallery-item skeleton';
-    skeleton.innerHTML = `<div class="image-wrapper"></div>`;
     container.appendChild(skeleton);
   }
 }
 
-// -------------------------------
-// Render batch of images
-// -------------------------------
+// Render batch
 function renderBatch(data) {
   const fragment = document.createDocumentFragment();
   const batch = data.slice(loadedCount, loadedCount + BATCH);
@@ -42,30 +39,16 @@ function renderBatch(data) {
       <img src="${item.url}" alt="${item.name}" loading="lazy">
       <div class="overlay">${item.emoji} ${item.name}</div>
     `;
-    // Optional: click → go to recipe page
-    div.addEventListener('click', () => {
-      if (item.recipeLink) window.location.href = item.recipeLink;
-    });
     fragment.appendChild(div);
   });
 
   container.appendChild(fragment);
   loadedCount += batch.length;
 
-  // Wait for images to load to avoid layout shift
-  const images = container.querySelectorAll('img');
-  let loadedImages = 0;
-  images.forEach(img => {
-    if (img.complete) loadedImages++;
-    else img.onload = () => { loadedImages++; };
-  });
-
   observeLastItem();
 }
 
-// -------------------------------
-// Infinite scroll observer
-// -------------------------------
+// Infinite scroll
 function observeLastItem() {
   const items = container.querySelectorAll('.gallery-item');
   const lastItem = items[items.length - 1];
@@ -83,18 +66,12 @@ function observeLastItem() {
   observer.observe(lastItem);
 }
 
-// -------------------------------
-// Fetch images from Supabase Storage
-// -------------------------------
+// Fetch images from Supabase storage
 async function fetchGallery() {
   try {
     showSkeleton();
 
-    const { data, error } = await supabase
-      .storage
-      .from('gallery')
-      .list('', { limit: 100, sortBy: { column: 'name', order: 'asc' } });
-
+    const { data, error } = await supabase.storage.from('gallery').list('', { limit: 100, sortBy: { column: 'name', order: 'asc' } });
     if (error) throw error;
 
     allImages = data.map(file => {
@@ -104,14 +81,10 @@ async function fetchGallery() {
       if (nameLower.startsWith('appetizer')) { category = 'appetizer'; emoji = '🥗'; }
       if (nameLower.startsWith('dessert')) { category = 'dessert'; emoji = '🍰'; }
 
-      const name = file.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '')
-                            .replace(/_/g, ' ')
-                            .replace(/\b(appetizer|main|dessert)\b/i, '')
-                            .trim();
-
+      const name = file.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '').replace(/_/g, ' ').replace(/\b(appetizer|main|dessert)\b/i, '').trim();
       const url = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
 
-      return { url, name, category, emoji, recipeLink: null }; // add recipeLink if needed
+      return { url, name, category, emoji };
     });
 
     filteredImages = allImages;
@@ -125,9 +98,7 @@ async function fetchGallery() {
   }
 }
 
-// -------------------------------
 // Filter buttons
-// -------------------------------
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
@@ -144,18 +115,14 @@ filterButtons.forEach(btn => {
   });
 });
 
-// -------------------------------
-// Fade-in animation CSS
-// -------------------------------
+// Fade-in CSS
 const style = document.createElement('style');
 style.innerHTML = `
   .fade-in { opacity: 0; transform: translateY(20px); animation: fadeInUp 0.6s forwards; }
   @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-  .skeleton { background: #eee; min-height: 200px; border-radius: 15px; }
+  .skeleton { background: #eee; min-height: 250px; border-radius: 15px; }
 `;
 document.head.appendChild(style);
 
-// -------------------------------
 // Initialize
-// -------------------------------
 fetchGallery();
