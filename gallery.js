@@ -6,6 +6,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
+
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -36,7 +37,6 @@ async function fetchGallery() {
     const { data: files = [], error: fileError } = await supabase.storage.from('gallery').list();
     if (fileError) throw fileError;
 
-    // Map files to metadata
     allImages = files
       .filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
       .map(f => {
@@ -50,8 +50,6 @@ async function fetchGallery() {
           description: meta?.description || 'No description yet.'
         };
       });
-
-    console.log('Mapped Images:', allImages); // ✅ confirm description
 
     filteredImages = allImages;
     loadedCount = 0;
@@ -71,10 +69,10 @@ function renderBatch(data) {
     const link = document.createElement('a');
     link.href = img.url;
     link.className = 'glightbox';
-    link.setAttribute('data-title', ${img.emoji} ${img.name});
+    link.setAttribute('data-title', `${img.emoji} ${img.name}`);
     link.setAttribute('data-description', img.description);
 
-    link.innerHTML = 
+    link.innerHTML = `
       <div class="gallery-item fade-in" style="animation-delay:${i*50}ms">
         <img src="${img.url}" alt="${img.name}" loading="lazy">
         <div class="overlay">
@@ -82,23 +80,23 @@ function renderBatch(data) {
           <div class="description">${img.description}</div>
         </div>
       </div>
-    ;
+    `;
 
     gallery.appendChild(link);
   });
 
   loadedCount += batch.length;
 
-if (glightbox) glightbox.reload();
-else {
+  if (glightbox) glightbox.reload();
+  else {
     glightbox = GLightbox({
-        selector: '.glightbox',
-        openEffect: 'zoom',
-        slideEffect: 'slide',
-        zoomable: true,
-        loop: true
+      selector: '.glightbox',
+      openEffect: 'zoom',
+      slideEffect: 'slide',
+      zoomable: true,
+      loop: true
     });
-}
+  }
 
   observeLastImage();
 }
@@ -132,5 +130,5 @@ filterButtons.forEach(btn => {
   });
 });
 
-// ---------------- Init ----------------
+// Initialize gallery
 fetchGallery();
