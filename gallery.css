@@ -134,3 +134,75 @@
     padding: 0 20px;
   }
 }
+
+
+
+
+
+
+
+
+/* -------- Center Overlay (Instagram-style) -------- */
+.custom-slide {
+  position: relative;
+}
+
+/* Dark overlay */
+.custom-slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+}
+
+/* Center text container */
+.center-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  text-align: center;
+  color: #b9fbc0; /* light green */
+  z-index: 2;
+  
+  max-width: 80%;
+}
+
+/* Title */
+.center-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  
+  letter-spacing: 0.5px;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
+/* Description */
+.center-description {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.6;
+  
+  opacity: 0.95;
+  text-shadow: 0 2px 15px rgba(0,0,0,0.6);
+}
+
+/* Smooth fade-in animation */
+.center-overlay {
+  animation: fadeCenter 0.4s ease;
+}
+
+@keyframes fadeCenter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
