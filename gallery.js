@@ -97,23 +97,6 @@ glightbox = GLightbox({
   loop: true
 });
 
-// After lightbox opens → inject centered content
-glightbox.on('open', () => {
-  setTimeout(() => {
-    document.querySelectorAll('.gslide').forEach(slide => {
-      const title = slide.querySelector('.gslide-title')?.innerText || '';
-      const desc = slide.querySelector('.gslide-desc')?.innerText || '';
-
-      slide.innerHTML += `
-        <div class="center-overlay">
-          <div class="center-title">${title}</div>
-          <div class="center-description">${desc}</div>
-        </div>
-      `;
-    });
-  }, 100);
-});
-
 }
 
   observeLastImage();
