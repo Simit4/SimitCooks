@@ -5,7 +5,11 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
+const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
+const supabaseKey = 'YOUR_ANON_KEY'; // Replace with your actual anon key
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
@@ -88,13 +92,22 @@ function renderBatch(data) {
 
   if (glightbox) glightbox.reload();
   else {
-   glightbox = GLightbox({
-  selector: '.glightbox',
-  openEffect: 'zoom',
-  slideEffect: 'fade',
-  zoomable: false,
-  loop: true
-});
+    glightbox = GLightbox({
+      selector: '.glightbox',
+      openEffect: 'zoom',
+      slideEffect: 'slide',
+      zoomable: false,
+      loop: true,
+      renderSlide: slide => `
+        <div class="gslide">
+          <img src="${slide.href}" alt="${slide.title}">
+          <div class="gslide-overlay">
+            <div class="gslide-title">${slide.title}</div>
+            <div class="gslide-description">${slide.description || ''}</div>
+          </div>
+        </div>
+      `
+    });
   }
 
   observeLastImage();
