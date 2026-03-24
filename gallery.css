@@ -396,6 +396,8 @@ h1, h2, h3, h4, h5 {
   font-size: 1.1rem;
   color: #2c3e50;
   line-height: 1.5;
+  text-align: center;
+
 }
 
 /* ---------- Responsive Breakpoints ---------- */
