@@ -33,7 +33,7 @@ function renderBatch(data) {
     link.href = `recipes.html?img=${encodeURIComponent(img.name)}`;
     link.className = 'glightbox';
     link.innerHTML = `
-      <div class="gallery-item">
+      <div class="gallery-item fade-in">
         <img src="${img.url}" alt="${img.name}">
         <div class="overlay">${img.emoji} ${img.name}</div>
       </div>
@@ -41,6 +41,8 @@ function renderBatch(data) {
     gallery.appendChild(link);
   });
   loadedCount += batch.length;
+
+  // Initialize or refresh GLightbox
   GLightbox({ selector: '.glightbox' });
   observeLastImage();
 }
@@ -71,18 +73,21 @@ async function fetchGallery() {
     const { data, error } = await supabase.storage.from('gallery').list();
     if (error) throw error;
 
-    allImages = data.map(file => {
-      const nameLower = file.name.toLowerCase();
-      let category = 'main', emoji = '🍲';
-      if (nameLower.startsWith('appetizer')) { category = 'appetizer'; emoji = '🥗'; }
-      if (nameLower.startsWith('dessert')) { category = 'dessert'; emoji = '🍰'; }
-      const url = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
-      const name = file.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '')
-                            .replace(/_/g, ' ')
-                            .replace(/\b(appetizer|main|dessert)\b/i, '')
-                            .trim();
-      return { url, name, category, emoji };
-    });
+    // Only process actual image files
+    allImages = data
+      .filter(file => /\.(jpg|jpeg|png|webp|gif)$/i.test(file.name)) // <-- ignore folders & non-images
+      .map(file => {
+        const nameLower = file.name.toLowerCase();
+        let category = 'main', emoji = '🍲';
+        if (nameLower.startsWith('appetizer')) { category = 'appetizer'; emoji = '🥗'; }
+        if (nameLower.startsWith('dessert')) { category = 'dessert'; emoji = '🍰'; }
+        const url = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
+        const name = file.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '')
+                              .replace(/_/g, ' ')
+                              .replace(/\b(appetizer|main|dessert)\b/i, '')
+                              .trim();
+        return { url, name, category, emoji };
+      });
 
     filteredImages = allImages;
     loadedCount = 0;
