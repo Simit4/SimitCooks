@@ -6,6 +6,12 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+// Supabase setup
+const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
@@ -15,14 +21,7 @@ let filteredImages = [];
 let loadedCount = 0;
 const BATCH = 12;
 let glightbox = null;
-let currentObserver = null;
 
-// Helper function to extract filename without extension
-function getFileNameWithoutExtension(filename) {
-  return filename.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '').replace(/_/g, ' ').trim();
-}
-
-// Show skeleton loader
 function showSkeleton(count = BATCH) {
   if (!gallery) return;
   gallery.innerHTML = '';
@@ -33,67 +32,34 @@ function showSkeleton(count = BATCH) {
   }
 }
 
-// Show error message
-function showError(message) {
-  if (!gallery) return;
-  gallery.innerHTML = `
-    <div style="text-align:center;padding:2rem;">
-      <p style="color:#dc2626;margin-bottom:1rem;">❌ ${message}</p>
-      <button onclick="location.reload()" style="padding:0.5rem 1rem;background:#3b82f6;color:white;border:none;border-radius:0.375rem;cursor:pointer;">
-        Retry
-      </button>
-    </div>
-  `;
-}
-
-// Initialize or refresh GLightbox
 function initGLightbox() {
-  // Destroy existing instance if it exists
+  // Destroy existing instance
   if (glightbox) {
     glightbox.destroy();
-    glightbox = null;
   }
   
-  // Create new GLightbox instance
+  // Create new instance
   glightbox = GLightbox({
     selector: '.glightbox',
     openEffect: 'zoom',
     closeEffect: 'zoom',
-    slideEffect: 'slide',
     zoomable: true,
     loop: true,
-    autoplayVideos: false,
     touchNavigation: true,
     keyboardNavigation: true,
     closeButton: true,
     draggable: true,
-    dragToleranceX: 40,
-    dragToleranceY: 65,
-    width: '90vw',
+    width: 'auto',
     height: 'auto',
-    className: 'glightbox-container',
-    skin: 'clean',
-    moreText: 'See more',
-    moreLength: 60,
-    touchFollowAxis: true,
-    preload: true,
-    slideTransition: 'slide',
-    openEffectTiming: 300,
-    closeEffectTiming: 300,
-    slideEffectTiming: 300,
-    // Ensure it opens as a modal
-    modal: true,
-    // Position at center
-    position: 'center'
+    className: 'glightbox-clean',
+    skin: 'clean'
   });
 }
 
-// Fetch images from Supabase
 async function fetchGallery() {
   showSkeleton();
 
   try {
-    // Fetch metadata and files in parallel for better performance
     const [metadataResult, filesResult] = await Promise.all([
       supabase.from('gallery_metadata').select('file_name, description, emoji, category'),
       supabase.storage.from('gallery').list()
@@ -105,7 +71,6 @@ async function fetchGallery() {
     const metadata = metadataResult.data || [];
     const files = filesResult.data || [];
 
-    // Create a map for faster metadata lookup
     const metadataMap = new Map();
     metadata.forEach(meta => {
       metadataMap.set(meta.file_name.toLowerCase(), meta);
@@ -119,146 +84,86 @@ async function fetchGallery() {
         
         return {
           url: publicUrl,
-          name: getFileNameWithoutExtension(f.name),
+          name: f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '').replace(/_/g, ' ').trim(),
           category: meta?.category || 'main',
           emoji: meta?.emoji || '🍲',
-          description: meta?.description || 'No description yet.',
-          originalName: f.name
+          description: meta?.description || 'No description yet.'
         };
       })
       .sort((a, b) => a.name.localeCompare(b.name));
 
     if (allImages.length === 0) {
-      showError('No images found in the gallery.');
+      gallery.innerHTML = "<p style='text-align:center;color:red'>No images found.</p>";
       return;
     }
 
     filteredImages = [...allImages];
     loadedCount = 0;
-    if (gallery) gallery.innerHTML = '';
+    gallery.innerHTML = '';
     renderBatch(filteredImages);
 
   } catch (err) {
     console.error('Gallery fetch error:', err);
-    showError('Failed to load gallery. Please try again later.');
+    gallery.innerHTML = "<p style='text-align:center;color:red'>Failed to load gallery.</p>";
   }
 }
 
-// Escape HTML to prevent XSS
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-// Render a batch of images
 function renderBatch(data) {
   if (!gallery) return;
   
   const batch = data.slice(loadedCount, loadedCount + BATCH);
   if (batch.length === 0) return;
 
-  const fragment = document.createDocumentFragment();
-
   batch.forEach((img, i) => {
     const link = document.createElement('a');
     link.href = img.url;
     link.className = 'glightbox';
     link.setAttribute('data-gallery', 'gallery');
-    link.setAttribute('data-title', `${img.emoji} ${img.name}`);
-    link.setAttribute('data-description', img.description);
-    
-    // Add data attributes for GLightbox
-    link.setAttribute('data-glightbox', `title: ${escapeHtml(img.emoji + ' ' + img.name)}; description: ${escapeHtml(img.description)}`);
-
     link.innerHTML = `
       <div class="gallery-item fade-in" style="animation-delay:${i * 50}ms">
-        <img src="${img.url}" alt="${escapeHtml(img.name)}" loading="lazy">
+        <img src="${img.url}" alt="${img.name}" loading="lazy">
         <div class="overlay">
-          <div class="title">${escapeHtml(img.emoji)} ${escapeHtml(img.name)}</div>
-          <div class="description">${escapeHtml(img.description)}</div>
+          <div class="title">${img.emoji} ${img.name}</div>
+          <div class="description">${img.description}</div>
         </div>
       </div>
     `;
-
-    fragment.appendChild(link);
+    gallery.appendChild(link);
   });
 
-  gallery.appendChild(fragment);
   loadedCount += batch.length;
-
-  // Initialize or refresh GLightbox after adding new elements
-  initGLightbox();
-
-  // Setup infinite scroll
-  setupInfiniteScroll();
+  initGLightbox(); // Re-initialize GLightbox for new images
+  observeLastImage();
 }
 
-// Setup intersection observer for infinite scroll
-function setupInfiniteScroll() {
-  if (currentObserver) {
-    currentObserver.disconnect();
-  }
+function observeLastImage() {
+  const imgs = document.querySelectorAll('.gallery-item');
+  const lastImg = imgs[imgs.length - 1];
+  if (!lastImg) return;
 
-  const lastItems = document.querySelectorAll('.gallery-item');
-  const lastItem = lastItems[lastItems.length - 1];
-  
-  if (!lastItem) return;
-
-  currentObserver = new IntersectionObserver(entries => {
+  const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting && loadedCount < filteredImages.length) {
-        currentObserver.disconnect();
         renderBatch(filteredImages);
+        observer.disconnect();
       }
     });
   }, { rootMargin: '250px' });
 
-  currentObserver.observe(lastItem);
+  observer.observe(lastImg);
 }
 
-// Handle filter button clicks
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
-    // Update active button state
     document.querySelector('.filter-btn.active')?.classList.remove('active');
     btn.classList.add('active');
-    
-    // Filter images
     const category = btn.dataset.category;
-    filteredImages = category === 'all' 
-      ? [...allImages] 
-      : allImages.filter(img => img.category === category);
-    
-    // Reset and re-render
-    if (gallery) gallery.innerHTML = '';
+    filteredImages = category === 'all' ? allImages : allImages.filter(img => img.category === category);
+    gallery.innerHTML = '';
     loadedCount = 0;
     renderBatch(filteredImages);
-    
-    // Scroll to top when filtering
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 });
 
-// Add debounced resize handler for GLightbox
-let resizeTimeout;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(() => {
-    if (glightbox) {
-      glightbox.reload();
-    }
-  }, 250);
-});
-
-// Initialize gallery when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-  fetchGallery();
-});
-
-// Optional: Add keyboard navigation
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && glightbox) {
-    glightbox.close();
-  }
-});
+fetchGallery();
