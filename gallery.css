@@ -108,6 +108,22 @@
   color: #fff;
   font-family: 'Open Sans', sans-serif;
 }
+.gslide-description {
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  width: 100%;
+  max-width: 700px;
+  
+  text-align: center !important;
+  background: none !important;
+  padding: 0 !important;
+  z-index: 5;
+}
+
+/* Title styling */
 .gslide-title {
   display: block !important;
   font-family: 'Poppins', sans-serif;
@@ -117,18 +133,8 @@
   margin-bottom: 12px;
   
   text-shadow: 0 4px 20px rgba(0,0,0,0.7);
-
 }
-.gslide-description {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 1.2rem;
-  color: #b9fbc0;
-  line-height: 1.6;
-  opacity: 0.95;
 
-  text-shadow: 0 2px 15px rgba(0,0,0,0.7);
-
-}
 
 /* ---------- Responsive Breakpoints ---------- */
 @media (max-width: 1024px) {
