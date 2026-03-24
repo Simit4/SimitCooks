@@ -86,24 +86,28 @@ function renderBatch(data) {
 
   loadedCount += batch.length;
 
-  if (glightbox) glightbox.reload();
+  if (glig
+      htbox) glightbox.reload();
   else {
-    glightbox = GLightbox({
-      selector: '.glightbox',
-      openEffect: 'zoom',
-      slideEffect: 'slide',
-      zoomable: false,
-      loop: true,
-      renderSlide: slide => `
-        <div class="gslide">
-          <img src="${slide.href}" alt="${slide.title}">
-          <div class="gslide-overlay">
-            <div class="gslide-title">${slide.title}</div>
-            <div class="gslide-description">${slide.description || ''}</div>
-          </div>
-        </div>
-      `
-    });
+glightbox = GLightbox({
+  selector: '.glightbox',
+  openEffect: 'zoom',
+  slideEffect: 'fade',
+  zoomable: false,
+  loop: true,
+  renderSlide: slide => `
+    <div class="gslide custom-slide">
+      <img src="${slide.href}" alt="${slide.title}">
+      
+      <div class="center-overlay">
+        <div class="center-title">${slide.title}</div>
+        <div class="center-description">${slide.description || ''}</div>
+      </div>
+    </div>
+  `
+});
+
+    
   }
 
   observeLastImage();
