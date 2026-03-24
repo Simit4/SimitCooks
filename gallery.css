@@ -393,6 +393,41 @@ h1, h2, h3, h4, h5 {
 
 
 
+/* GLightbox custom styles */
+.glightbox-container {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 999999 !important;
+}
+
+.glightbox-container .glightbox-clean .gslide-description {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+}
+
+.glightbox-container .glightbox-clean .gslide-title {
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Ensure gallery items have proper cursor */
+.gallery-item {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item:hover {
+  transform: scale(1.02);
+}
+
+
+
+
+
 
 
 
