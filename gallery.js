@@ -7,8 +7,9 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-
-// DOM
+// -------------------------------
+// DOM elements
+// -------------------------------
 const container = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -17,7 +18,9 @@ let filteredImages = [];
 let loadedCount = 0;
 const BATCH = 12;
 
+// -------------------------------
 // Skeleton loader
+// -------------------------------
 function showSkeleton(count = BATCH) {
   container.innerHTML = '';
   for (let i = 0; i < count; i++) {
@@ -27,7 +30,9 @@ function showSkeleton(count = BATCH) {
   }
 }
 
+// -------------------------------
 // Render batch
+// -------------------------------
 function renderBatch(data) {
   const fragment = document.createDocumentFragment();
   const batch = data.slice(loadedCount, loadedCount + BATCH);
@@ -44,11 +49,12 @@ function renderBatch(data) {
 
   container.appendChild(fragment);
   loadedCount += batch.length;
-
   observeLastItem();
 }
 
+// -------------------------------
 // Infinite scroll
+// -------------------------------
 function observeLastItem() {
   const items = container.querySelectorAll('.gallery-item');
   const lastItem = items[items.length - 1];
@@ -66,48 +72,54 @@ function observeLastItem() {
   observer.observe(lastItem);
 }
 
-// Fetch images from Supabase storage
+// -------------------------------
+// Fetch images from Supabase
+// -------------------------------
 async function fetchGallery() {
-  try {
-    showSkeleton();
+  showSkeleton();
 
-    const { data, error } = await supabase.storage.from('gallery').list('', { limit: 100, sortBy: { column: 'name', order: 'asc' } });
-    if (error) throw error;
+  const { data, error } = await supabase.storage.from('gallery').list('', {
+    limit: 100,
+    sortBy: { column: 'name', order: 'asc' }
+  });
 
-    allImages = data.map(file => {
-      const nameLower = file.name.toLowerCase();
-      let category = 'main', emoji = '🍲';
-
-      if (nameLower.startsWith('appetizer')) { category = 'appetizer'; emoji = '🥗'; }
-      if (nameLower.startsWith('dessert')) { category = 'dessert'; emoji = '🍰'; }
-
-      const name = file.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '').replace(/_/g, ' ').replace(/\b(appetizer|main|dessert)\b/i, '').trim();
-      const url = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
-
-      return { url, name, category, emoji };
-    });
-
-    filteredImages = allImages;
-    loadedCount = 0;
-    container.innerHTML = '';
-    renderBatch(filteredImages);
-
-  } catch (err) {
-    console.error('❌ Gallery fetch error:', err);
-    container.innerHTML = "<p class='error-message'>Failed to load gallery.</p>";
+  if (error) {
+    console.error('❌ Gallery fetch error:', error);
+    container.innerHTML = "<p>Failed to load gallery.</p>";
+    return;
   }
+
+  allImages = data.map(file => {
+    const nameLower = file.name.toLowerCase();
+    let category = 'main', emoji = '🍲';
+    if (nameLower.startsWith('appetizer')) { category = 'appetizer'; emoji = '🥗'; }
+    if (nameLower.startsWith('dessert')) { category = 'dessert'; emoji = '🍰'; }
+
+    const name = file.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '')
+                          .replace(/_/g, ' ')
+                          .replace(/\b(appetizer|main|dessert)\b/i, '')
+                          .trim();
+
+    const url = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
+    return { url, name, category, emoji };
+  });
+
+  filteredImages = allImages;
+  loadedCount = 0;
+  container.innerHTML = '';
+  renderBatch(filteredImages);
 }
 
+// -------------------------------
 // Filter buttons
+// -------------------------------
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
     btn.classList.add('active');
 
     const filter = btn.dataset.category;
-    filteredImages = filter === 'all'
-      ? allImages
-      : allImages.filter(img => img.category === filter);
+    filteredImages = filter === 'all' ? allImages : allImages.filter(img => img.category === filter);
 
     container.innerHTML = '';
     loadedCount = 0;
@@ -115,14 +127,7 @@ filterButtons.forEach(btn => {
   });
 });
 
-// Fade-in CSS
-const style = document.createElement('style');
-style.innerHTML = `
-  .fade-in { opacity: 0; transform: translateY(20px); animation: fadeInUp 0.6s forwards; }
-  @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-  .skeleton { background: #eee; min-height: 250px; border-radius: 15px; }
-`;
-document.head.appendChild(style);
-
+// -------------------------------
 // Initialize
+// -------------------------------
 fetchGallery();
