@@ -94,17 +94,24 @@ glightbox = GLightbox({
   openEffect: 'zoom',
   slideEffect: 'fade',
   zoomable: false,
-  loop: true,
-  renderSlide: slide => `
-    <div class="gslide custom-slide">
-      <img src="${slide.href}" alt="${slide.title}">
-      
-      <div class="center-overlay">
-        <div class="center-title">${slide.title}</div>
-        <div class="center-description">${slide.description || ''}</div>
-      </div>
-    </div>
-  `
+  loop: true
+});
+
+// After lightbox opens → inject centered content
+glightbox.on('open', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.gslide').forEach(slide => {
+      const title = slide.querySelector('.gslide-title')?.innerText || '';
+      const desc = slide.querySelector('.gslide-desc')?.innerText || '';
+
+      slide.innerHTML += `
+        <div class="center-overlay">
+          <div class="center-title">${title}</div>
+          <div class="center-description">${desc}</div>
+        </div>
+      `;
+    });
+  }, 100);
 });
 
 }
