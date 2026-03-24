@@ -1,6 +1,5 @@
-
 /* -------------------------------------------------
-   Global Variables â€“ easy theming
+   Global Variables – easy theming
 -------------------------------------------------- */
 :root {
   --primary:      #27ae60;   /* fresh green */
@@ -113,7 +112,7 @@ h1, h2, h3, h4, h5 {
 
 /* Navbar Links */
 .nav-links {
-  display: flex;          /* desktop nav visible */
+  display: flex;
   gap: 2rem;
   list-style: none;
 }
@@ -169,17 +168,11 @@ h1, h2, h3, h4, h5 {
   transform: rotate(-45deg) translate(5px, -5px);
 }
 
-
-
-
-
-
-
 /* -------------------------------------------------
    Hero Section – Modern Soft
 -------------------------------------------------- */
 .hero {
-  background: linear-gradient(135deg, #f0f8f2, #eaf3e0); /* soft pastel gradient */
+  background: linear-gradient(135deg, #f0f8f2, #eaf3e0);
   min-height: 30vh;
   display: flex;
   align-items: center;
@@ -187,7 +180,7 @@ h1, h2, h3, h4, h5 {
   position: relative;
   text-align: center;
   padding: 2rem;
-  border-radius: 20px; /* soft curved edges */
+  border-radius: 20px;
   overflow: hidden;
 }
 
@@ -240,25 +233,19 @@ h1, h2, h3, h4, h5 {
   animation: fadeInUp 1.2s ease forwards;
 }
 
-
-
 /* Subtle Fade-In Animation */
 @keyframes fadeInUp {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
-
-
-
-
-/* ------------------------------------------------- Gallary -------------------------------------------------- */
+/* ------------------------------------------------- Gallery -------------------------------------------------- */
 
 /* ---------- Gallery Container ---------- */
 .gallery-container {
   max-width: 1600px;
   margin: 50px auto;
-  padding: 0 40px; /* consistent side padding */
+  padding: 0 40px;
 }
 .gallery-title {
   text-align: center;
@@ -294,7 +281,7 @@ h1, h2, h3, h4, h5 {
 /* ---------- Gallery Grid ---------- */
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* desktop: 3 images */
+  grid-template-columns: repeat(3, 1fr);
   gap: 25px;
 }
 
@@ -354,83 +341,199 @@ h1, h2, h3, h4, h5 {
   100% { opacity: 1; transform: translateY(0);}
 }
 
-/* Lightbox overlay style */
+/* ---------- GLightbox Styles (Fixed Popup) ---------- */
+.glightbox-container {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 999999 !important;
+  background: rgba(0, 0, 0, 0.95) !important;
+}
+
+.glightbox-container .gslide {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh !important;
+}
+
+.glightbox-container .gslide-media {
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+  margin: auto !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.glightbox-container .gslide-media img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: 85vh !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+/* Caption/Description styles */
+.glightbox-container .gslide-description {
+  position: absolute !important;
+  bottom: 30px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  text-align: center !important;
+  background: rgba(0, 0, 0, 0.8) !important;
+  color: white !important;
+  padding: 15px 25px !important;
+  border-radius: 12px !important;
+  font-size: 16px !important;
+  font-family: 'Open Sans', sans-serif !important;
+  backdrop-filter: blur(10px) !important;
+  max-width: 80% !important;
+  z-index: 1000000 !important;
+}
+
+.glightbox-container .gslide-title {
+  font-size: 1.3rem !important;
+  font-weight: bold !important;
+  margin-bottom: 8px !important;
+  color: white !important;
+}
+
+.glightbox-container .gslide-desc {
+  font-size: 1rem !important;
+  color: #f0f0f0 !important;
+  line-height: 1.5 !important;
+}
+
+/* Navigation arrows */
+.glightbox-container .gnext,
+.glightbox-container .gprev {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 50px !important;
+  height: 50px !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  z-index: 1000000 !important;
+}
+
+.glightbox-container .gnext {
+  right: 30px !important;
+}
+
+.glightbox-container .gprev {
+  left: 30px !important;
+}
+
+.glightbox-container .gnext:hover,
+.glightbox-container .gprev:hover {
+  background: rgba(0, 0, 0, 0.9) !important;
+  transform: translateY(-50%) scale(1.1) !important;
+}
+
+/* Close button */
+.glightbox-container .gclose {
+  position: absolute !important;
+  top: 30px !important;
+  right: 30px !important;
+  width: 45px !important;
+  height: 45px !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  z-index: 1000000 !important;
+}
+
+.glightbox-container .gclose:hover {
+  background: rgba(0, 0, 0, 0.9) !important;
+  transform: scale(1.1) !important;
+}
+
+/* Remove any conflicting overlay styles */
 .gslide-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 20px;
-  background: rgba(0,0,0,0.7);
-  color: #fff;
-  font-family: 'Open Sans', sans-serif;
+  display: none !important;
 }
-.gslide-title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 5px;
+
+/* Skeleton loader */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 20px;
+  height: 250px;
+  width: 100%;
 }
-.gslide-description {
-  font-size: 1.1rem;
-  font-weight: 400;
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* ---------- Responsive Breakpoints ---------- */
 @media (max-width: 1024px) {
   .gallery-grid {
-    grid-template-columns: repeat(2, 1fr); /* tablet: 2 images */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 640px) {
   .gallery-grid {
-    grid-template-columns: 1fr; /* mobile: 1 image */
+    grid-template-columns: 1fr;
   }
   .gallery-container {
     padding: 0 20px;
   }
+  
+  /* Adjust GLightbox for mobile */
+  .glightbox-container .gnext,
+  .glightbox-container .gprev {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .glightbox-container .gnext {
+    right: 15px !important;
+  }
+  
+  .glightbox-container .gprev {
+    left: 15px !important;
+  }
+  
+  .glightbox-container .gclose {
+    top: 15px !important;
+    right: 15px !important;
+    width: 35px !important;
+    height: 35px !important;
+  }
+  
+  .glightbox-container .gslide-description {
+    bottom: 15px !important;
+    padding: 10px 15px !important;
+    font-size: 14px !important;
+  }
+  
+  .glightbox-container .gslide-title {
+    font-size: 1rem !important;
+  }
+  
+  .glightbox-container .gslide-desc {
+    font-size: 0.85rem !important;
+  }
 }
-
-
-
-/* GLightbox custom styles */
-.glightbox-container {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  z-index: 999999 !important;
-}
-
-.glightbox-container .glightbox-clean .gslide-description {
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-}
-
-.glightbox-container .glightbox-clean .gslide-title {
-  color: white;
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-}
-
-/* Ensure gallery items have proper cursor */
-.gallery-item {
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.gallery-item:hover {
-  transform: scale(1.02);
-}
-
-
-
-
-
-
-
-
 
 /* ------------------------------------------------- Footer -------------------------------------------------- */
 
@@ -502,10 +605,6 @@ h1, h2, h3, h4, h5 {
   font-size: 0.8rem;
   color: #888;
 }
-
-
-
-
 
 /* -------------------------------------------------
    Mobile Responsive – Cleaned & Optimized
@@ -618,8 +717,6 @@ h1, h2, h3, h4, h5 {
   }
 }
 
-
-
 /* Extra small screens */
 @media (max-width: 480px) {
   /* Hero */
@@ -640,11 +737,7 @@ h1, h2, h3, h4, h5 {
     font-size: 0.95rem;
     padding: 0.5rem 1.3rem;
   }
-
 }
-
-
-
 
 /* -------------------------------------------------
    Mobile Responsive – Horizontal Scroll
@@ -673,50 +766,50 @@ h1, h2, h3, h4, h5 {
     flex: 0 0 220px;
     scroll-snap-align: start;
     min-width: 220px;
-    height: auto;               /* fixed uniform height */
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
   }
 
- /* Thumbnail wrapper – 16:9 ratio */
-.thumbnail-wrapper {
-  width: 100%;
-  aspect-ratio: 16 / 9;       /* maintains 16:9 ratio */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: #f9f9f9;
-  border-radius: 10px;
-}
+  /* Thumbnail wrapper – 16:9 ratio */
+  .thumbnail-wrapper {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #f9f9f9;
+    border-radius: 10px;
+  }
 
-/* Image inside thumbnail */
-.thumbnail-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;          /* fills the 16:9 box, crops excess */
-  display: block;
-}
+  /* Image inside thumbnail */
+  .thumbnail-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
 
-/* Placeholder */
-.momo-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85rem;
-  color: #777;
-  background: #eaeaea;
-  border-radius: 10px;
-}
+  /* Placeholder */
+  .momo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: #777;
+    background: #eaeaea;
+    border-radius: 10px;
+  }
 
   .card-body { 
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;  /* keep h3 and p together */
-  padding: 2px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 2px;
   }
 
   .recipe-card h3 { 
@@ -726,27 +819,31 @@ h1, h2, h3, h4, h5 {
 
   /* Description: show only 2 lines */
   .recipe-card p {
-  display: block;   /* normal block */
-  line-height: 1.3rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    display: block;
+    line-height: 1.3rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
-
-
 @media (max-width: 480px) {
-  #Featured-Recipes-h2 {     font-size: 1.5rem;
-    padding: 15px 10px;   /* even closer for small screens */
-      text-align: center;         /* aligns with the container/cards */
- }
-  .recipe-card { flex: 0 0 180px; min-width: 180px; }
-  .thumbnail-wrapper, .momo-placeholder { height: auto; }
-  .card-body h3 { font-size: 0.95rem; }
-  .recipe-card p { font-size: 0.7rem; }
+  #Featured-Recipes-h2 {
+    font-size: 1.5rem;
+    padding: 15px 10px;
+    text-align: center;
+  }
+  .recipe-card { 
+    flex: 0 0 180px; 
+    min-width: 180px; 
+  }
+  .thumbnail-wrapper, 
+  .momo-placeholder { 
+    height: auto; 
+  }
+  .card-body h3 { 
+    font-size: 0.95rem; 
+  }
+  .recipe-card p { 
+    font-size: 0.7rem; 
+  }
 }
-
-
-
-
-
