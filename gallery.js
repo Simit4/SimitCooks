@@ -34,15 +34,13 @@ function renderBatch(data) {
     const link = document.createElement('a');
     link.href = img.url;
     link.className = 'glightbox';
-    link.setAttribute('data-title', `${img.emoji || '🍲'} ${img.name}`);
-    link.setAttribute('data-description', img.description || ''); // <--- DESCRIPTION
+    link.setAttribute('data-title', `${img.name}`);
 
     link.innerHTML = `
       <div class="gallery-item fade-in" style="animation-delay:${i*70}ms">
         <img loading="lazy" src="${img.url}" alt="${img.name}">
         <div class="overlay">
-          <div>${img.emoji || '🍲'} ${img.name}</div>
-          <div class="description">${img.description || ''}</div>
+          <div>${img.name}</div>
         </div>
       </div>
     `;
