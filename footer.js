@@ -8,7 +8,7 @@ export function renderFooter() {
     <a href="index.html">       
         <h2 class="logo">
           <span class="logo-modern">Simit's</span>
-          <span class="logo-traditional">Swaad</span>
+          <span class="logo-traditional">Cooks</span>
         </h2>
         </a>
         <p>Simple, home-style recipes made with love.</p>
