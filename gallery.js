@@ -6,6 +6,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
+
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -64,20 +65,23 @@ function renderBatch(data) {
   const batch = data.slice(loadedCount, loadedCount + BATCH);
 
   batch.forEach((img, i) => {
-    const item = document.createElement('div');
-    item.className = 'gallery-item fade-in';
-    item.style.animationDelay = `${i*50}ms`;
+    const link = document.createElement('a');
+    link.href = img.url;
+    link.className = 'glightbox';
+    link.setAttribute('data-title', `${img.emoji} ${img.name}`);
+    link.setAttribute('data-description', img.description);
 
-    item.innerHTML = `
-      <a href="${img.url}" class="glightbox" data-title="${img.emoji} ${img.name}" data-description="${img.description}"></a>
-      <img src="${img.url}" alt="${img.name}" loading="lazy">
-      <div class="overlay">
-        <div class="title">${img.emoji} ${img.name}</div>
-        <div class="description">${img.description}</div>
+    link.innerHTML = `
+      <div class="gallery-item fade-in" style="animation-delay:${i*50}ms">
+        <img src="${img.url}" alt="${img.name}" loading="lazy">
+        <div class="overlay">
+          <div class="title">${img.emoji} ${img.name}</div>
+          <div class="description">${img.description}</div>
+        </div>
       </div>
     `;
 
-    gallery.appendChild(item);
+    gallery.appendChild(link);
   });
 
   loadedCount += batch.length;
@@ -88,8 +92,17 @@ function renderBatch(data) {
       selector: '.glightbox',
       openEffect: 'zoom',
       slideEffect: 'slide',
-      zoomable: true,
-      loop: true
+      zoomable: false,
+      loop: true,
+      renderSlide: slide => `
+        <div class="gslide">
+          <img src="${slide.href}" alt="${slide.title}">
+          <div class="gslide-overlay">
+            <div class="gslide-title">${slide.title}</div>
+            <div class="gslide-description">${slide.description || ''}</div>
+          </div>
+        </div>
+      `
     });
   }
 
@@ -117,10 +130,8 @@ filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
     btn.classList.add('active');
-
     const category = btn.dataset.category;
     filteredImages = category === 'all' ? allImages : allImages.filter(img => img.category === category);
-
     gallery.innerHTML = '';
     loadedCount = 0;
     renderBatch(filteredImages);
