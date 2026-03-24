@@ -1,139 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />  
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gallery | Simit Cooks</title>
 
 <!-- Fonts & Icons -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Open+Sans&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="index.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Open+Sans&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="gallery.css">
 
 <!-- Lightbox CSS -->
-<link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet" />
-
-<style>
-/* ----- Gallery Container ----- */
-.gallery-container {
-  max-width: 1400px;
-  margin: 50px auto;
-  padding: 0 20px;
-}
-.gallery-title {
-  text-align: center;
-  color: #ff6b6b;
-  margin-bottom: 30px;
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-/* Category Buttons */
-.category-buttons {
-  text-align: center;
-  margin-bottom: 40px;
-}
-.category-buttons button {
-  background: #fff;
-  border: 2px solid #ff6b6b;
-  color: #ff6b6b;
-  padding: 8px 20px;
-  margin: 0 10px 10px 0;
-  border-radius: 25px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.category-buttons button.active,
-.category-buttons button:hover {
-  background: #ff6b6b;
-  color: #fff;
-}
-
-/* Gallery Grid */
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-/* Gallery Item */
-.gallery-item {
-  position: relative;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-.gallery-item img {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.3s;
-}
-.gallery-item:hover img {
-  transform: scale(1.05);
-}
-
-/* Overlay */
-.overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0,0,0,0.6);
-  color: #fff;
-  padding: 10px 15px;
-  font-weight: 600;
-  font-size: 16px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.gallery-item:hover .overlay {
-  opacity: 1;
-}
-
-/* Skeleton Loader */
-.skeleton {
-  background: #e0e0e0;
-  border-radius: 15px;
-  height: 250px;
-  animation: pulse 1.5s infinite;
-}
-@keyframes pulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-</style>
+<link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet">
 </head>
 <body>
 
 <!-- HEADER -->
 <header class="main-header">
   <div class="container header-wrapper">
-    <a href="index.html">
-      <div class="logo" aria-label="Simit Cooks">
-        <span class="logo-modern">Simit's</span>
-        <span class="logo-traditional">Cooks</span>
-      </div>
+    <a href="index.html" class="logo">
+      <span class="logo-modern">Simit's</span>
+      <span class="logo-traditional">Cooks</span>
     </a>
     <nav class="navbar">
       <ul class="nav-links">
         <li><a href="recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
         <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
         <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
-        <li><a href="gallery.html"><i class="fas fa-image"></i> Gallery</a></li>
+        <li><a href="gallery.html" class="active"><i class="fas fa-image"></i> Gallery</a></li>
       </ul>
-      <button class="hamburger">
-        <span></span><span></span><span></span>
-      </button>
+      <button class="hamburger"><span></span><span></span><span></span></button>
     </nav>
   </div>
 </header>
@@ -161,125 +57,9 @@
   </div>
 </footer>
 
-<!-- Lightbox JS -->
+<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
-
-<!-- Supabase JS -->
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-const gallery = document.getElementById('gallery');
-const filterButtons = document.querySelectorAll('.filter-btn');
-
-let allImages = [];
-let filteredImages = [];
-let loadedCount = 0;
-const BATCH = 12;
-
-// ---------------- Skeleton Loader ----------------
-function showSkeleton(count = BATCH) {
-  gallery.innerHTML = '';
-  for (let i = 0; i < count; i++) {
-    const sk = document.createElement('div');
-    sk.className = 'skeleton';
-    gallery.appendChild(sk);
-  }
-}
-
-// ---------------- Render Batch ----------------
-function renderBatch(data) {
-  const batch = data.slice(loadedCount, loadedCount + BATCH);
-  batch.forEach(img => {
-    const link = document.createElement('a');
-    link.href = `recipes.html?img=${encodeURIComponent(img.name)}`; // click → recipe page
-    link.className = 'glightbox';
-    link.innerHTML = `
-      <div class="gallery-item">
-        <img src="${img.url}" alt="${img.name}">
-        <div class="overlay">${img.emoji} ${img.name}</div>
-      </div>
-    `;
-    gallery.appendChild(link);
-  });
-  loadedCount += batch.length;
-  GLightbox({ selector: '.glightbox' });
-}
-
-// ---------------- Infinite Scroll ----------------
-function observeLastImage() {
-  const imgs = document.querySelectorAll('.gallery-item');
-  const lastImg = imgs[imgs.length - 1];
-  if (!lastImg) return;
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && loadedCount < filteredImages.length) {
-        renderBatch(filteredImages);
-        observer.disconnect();
-      }
-    });
-  }, { rootMargin: '200px' });
-
-  observer.observe(lastImg);
-}
-
-// ---------------- Fetch Gallery ----------------
-async function fetchGallery() {
-  try {
-    showSkeleton();
-
-    const { data, error } = await supabase.storage.from('gallery').list();
-    if (error) throw error;
-
-    allImages = data.map(file => {
-      const nameLower = file.name.toLowerCase();
-      let category = 'main', emoji = '🍲';
-      if (nameLower.startsWith('appetizer')) { category = 'appetizer'; emoji = '🥗'; }
-      if (nameLower.startsWith('dessert')) { category = 'dessert'; emoji = '🍰'; }
-      const url = supabase.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
-      const name = file.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '')
-                            .replace(/_/g, ' ')
-                            .replace(/\b(appetizer|main|dessert)\b/i, '')
-                            .trim();
-      return { url, name, category, emoji };
-    });
-
-    filteredImages = allImages;
-    loadedCount = 0;
-    gallery.innerHTML = '';
-    renderBatch(filteredImages);
-
-  } catch (err) {
-    console.error(err);
-    gallery.innerHTML = "<p style='text-align:center;color:red'>Failed to load gallery.</p>";
-  }
-}
-
-// ---------------- Filter Buttons ----------------
-filterButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelector('.filter-btn.active')?.classList.remove('active');
-    btn.classList.add('active');
-    const category = btn.dataset.category;
-    filteredImages = category === 'all'
-      ? allImages
-      : allImages.filter(img => img.category === category);
-
-    gallery.innerHTML = '';
-    loadedCount = 0;
-    renderBatch(filteredImages);
-  });
-});
-
-// ---------------- Initialize ----------------
-fetchGallery();
-</script>
-
-<!-- Mobile Menu Script -->
+<script type="module" src="gallery.js"></script>
 <script type="module" src="mobile-menu.js"></script>
 </body>
 </html>
