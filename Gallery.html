@@ -144,24 +144,31 @@
     </div>
   </footer>
 
+  
 <script>
+document.addEventListener("DOMContentLoaded", async () => {
+
 const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 
+  const { createClient } = supabase;
+  const client = createClient(supabaseUrl, supabaseKey);
 
-const { createClient } = supabase;
-const client = createClient(supabaseUrl, supabaseKey);
+  const gallery = document.getElementById('gallery');
 
-async function loadGallery() {
-  const { data, error } = await client.storage.from('gallery').list();
-
-  if (error) {
-    console.error('Error:', error);
+  if (!gallery) {
+    console.error("❌ Gallery div not found");
     return;
   }
 
-  const gallery = document.getElementById('gallery');
-  gallery.innerHTML = '';
+  const { data, error } = await client.storage.from('gallery').list();
+
+  if (error) {
+    console.error('❌ Supabase error:', error);
+    return;
+  }
+
+  console.log('✅ Files:', data);
 
   data.forEach(file => {
     const url = client.storage
@@ -170,7 +177,6 @@ async function loadGallery() {
 
     console.log('Image URL:', url);
 
-    // 🔥 IMPORTANT: direct image first (no lightbox wrapper)
     const div = document.createElement('div');
     div.className = 'gallery-item';
 
@@ -181,9 +187,8 @@ async function loadGallery() {
 
     gallery.appendChild(div);
   });
-}
 
-loadGallery();
+});
 </script>
 
   <!-- Your existing mobile menu script -->
