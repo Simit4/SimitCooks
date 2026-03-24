@@ -116,95 +116,49 @@
 
 
   
-<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", async () => {
+  
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-  const gallery = document.getElementById('gallery');
-  const BATCH_SIZE = 6; // images per scroll
-  let allImages = [];
-  let displayedCount = 0;
-
-  // Fetch images from Supabase
-  async function fetchImages() {
+const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 
-    const client = supabase.createClient(supabaseUrl, supabaseKey);
 
-    const { data, error } = await client.storage.from('gallery').list();
+  // Fetch images from Supabase
+async function loadGallery() {
+  const { data, error } = await supabase
+    .storage
+    .from('gallery')
+    .list('', { limit: 100 });
 
-    if (error) { console.error(error); return; }
-
-    // Map images with category + emoji + name
-    allImages = data.map(file => {
-      const url = client.storage.from('gallery').getPublicUrl(file.name).data.publicUrl;
-      let category = 'main', emoji = '🍲';
-      if (file.name.startsWith('dessert')) { category = 'dessert'; emoji = '🍰'; }
-      if (file.name.startsWith('appetizer')) { category = 'appetizer'; emoji = '🥗'; }
-
-      const name = file.name.replace(/\.(jpg|jpeg|png)/i,'').replace(/_/g,' ').replace(/(main|dessert|appetizer)/,'').trim();
-
-      // Optional: create slug for recipe page
-      const slug = name.toLowerCase().replace(/\s+/g,'-');
-
-      return { url, name, category, emoji, slug };
-    });
-
-    displayNextBatch('all');
+  if (error) {
+    console.error('❌ Supabase error:', error);
+    return;
   }
 
-  // Display next batch for infinite scroll
-  function displayNextBatch(category) {
-    const filtered = category === 'all' ? allImages : allImages.filter(img => img.category === category);
-    const nextBatch = filtered.slice(displayedCount, displayedCount + BATCH_SIZE);
+  console.log('✅ Fetched files:', data);
 
-    nextBatch.forEach(img => {
-      const link = document.createElement('a');
-      link.href = `/recipes/${img.slug}`; // click → recipe page
-      link.className = 'glightbox';
-      link.setAttribute('data-title', `${img.emoji} ${img.name}`);
+  data.forEach(file => {
+    const publicUrl = supabase
+      .storage
+      .from('gallery')
+      .getPublicUrl(file.name).data.publicUrl;
 
-      link.innerHTML = `
-        <div class="gallery-item skeleton">
-          <img src="${img.url}" alt="${img.name}" loading="lazy">
-          <div class="overlay">${img.emoji} ${img.name}</div>
-        </div>
-      `;
-      gallery.appendChild(link);
+    console.log('IMAGE URL:', publicUrl);
 
-      // remove skeleton after image loads
-      const imgEl = link.querySelector('img');
-      imgEl.onload = () => link.querySelector('.gallery-item').classList.remove('skeleton');
-    });
-
-    displayedCount += nextBatch.length;
-
-    // Initialize or refresh lightbox
-    GLightbox({ selector: '.glightbox' });
-  }
-
-  // Filter buttons
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      gallery.innerHTML = '';
-      displayedCount = 0;
-      displayNextBatch(btn.dataset.category);
-    });
+    // Now append to your gallery
+    const div = document.createElement('div');
+    div.className = 'gallery-item';
+    div.innerHTML = `
+      <img src="${publicUrl}" alt="${file.name}" loading="lazy">
+      <div class="overlay">${file.name}</div>
+    `;
+    document.getElementById('gallery').appendChild(div);
   });
+}
 
-  // Infinite scroll
-  window.addEventListener('scroll', () => {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
-      const activeCategory = document.querySelector('.filter-btn.active').dataset.category;
-      displayNextBatch(activeCategory);
-    }
-  });
-
-  await fetchImages();
-});
+loadGallery();
 </script>
 
 
