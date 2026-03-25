@@ -1053,49 +1053,40 @@ h1, h2, h3, h4, h5 {
     margin-top: 2rem;
   }
 
+   
   .footer-content {
     display: flex;
     flex-direction: column;
-    align-items: center;  /* Centers sections horizontally */
-    text-align: center;   /* Centers text */
+    align-items: center;  /* Centers each section horizontally */
   }
 
   .footer-section {
-    text-align: center;   /* Center text in each section */
+    text-align: left;
     width: 100%;
+    max-width: 300px;  /* Limits width so it doesn't stretch full width */
   }
 
   .footer-section h3 {
-    text-align: center;   /* Center heading */
+    text-align: left;
   }
 
   .footer-section h3::after {
-    left: 50%;            /* Center the underline */
-    transform: translateX(-50%);
+    left: 0;
+    transform: none;
   }
 
   .footer-nav {
-    align-items: center;  /* Center the links */
-    text-align: center;
+    align-items: flex-start;
+    text-align: left;
   }
 
   .footer-nav a {
-    justify-content: center;  /* Center icon+text */
+    justify-content: flex-start;
   }
 
   .social-icons {
-    justify-content: center;  /* Center social icons */
+    justify-content: flex-start;
   }
-
-  .footer-bottom {
-    text-align: center;   /* Center bottom text */
-    align-items: center;
-  }
-
-  .footer-bottom-links {
-    justify-content: center;  /* Center privacy/terms links */
-  }
-
 
  
   .back-to-top {
