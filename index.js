@@ -17,7 +17,7 @@ const MAX_RECIPES = 3;
 // 🔹 Helper Functions
 // =================================================
 
-// Safe text formatting - handles null, undefined, and non-string values
+// Safe text formatting
 const safeText = (value, defaultValue = '') => {
   if (value === null || value === undefined) return defaultValue;
   if (typeof value === 'string') return value.trim() || defaultValue;
@@ -40,7 +40,7 @@ const escapeHtml = (text) => {
   return safe.replace(/[&<>"'/`=]/g, char => map[char]);
 };
 
-// Extract YouTube video ID
+// Extract YouTube video ID from various URL formats
 const getYouTubeId = (url) => {
   if (!url || typeof url !== 'string') return null;
   
@@ -57,19 +57,24 @@ const getYouTubeId = (url) => {
   return null;
 };
 
-// Get thumbnail from video URL
+// Get thumbnail from video URL - EXACT same as recipes page
 const getVideoThumbnail = (videoUrl) => {
   const videoId = getYouTubeId(videoUrl);
   return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
 };
 
-// Get recipe thumbnail with fallback
+// Get recipe thumbnail - EXACT same as recipes page
 const getRecipeThumbnail = (recipe) => {
+  // First priority: thumbnail_url
   if (recipe.thumbnail_url && typeof recipe.thumbnail_url === 'string' && recipe.thumbnail_url.trim()) {
     return recipe.thumbnail_url;
   }
+  
+  // Second priority: video thumbnail
   const videoThumb = getVideoThumbnail(recipe.video_url);
   if (videoThumb) return videoThumb;
+  
+  // Third priority: fallback image
   return FALLBACK_IMAGE;
 };
 
@@ -139,7 +144,7 @@ const getRecipeCategories = (recipe) => {
 // 🔹 UI Components
 // =================================================
 
-// Show loading skeleton (same as recipes page)
+// Show loading skeleton
 const showLoadingSkeleton = () => {
   const container = document.getElementById('recipes-container');
   if (!container) return;
@@ -163,7 +168,7 @@ const showLoadingSkeleton = () => {
   }
 };
 
-// Create recipe card (IDENTICAL to recipes page)
+// Create recipe card - IDENTICAL to recipes page
 const createRecipeCard = (recipe) => {
   if (!isValidRecipe(recipe)) return null;
   
@@ -173,6 +178,12 @@ const createRecipeCard = (recipe) => {
   const primaryCategory = categories[0] || '';
   const slug = safeText(recipe.slug);
   const thumbnail = getRecipeThumbnail(recipe);
+  
+  // Debug log to see what thumbnail is being used
+  console.log(`Recipe: ${title}`);
+  console.log(`  - thumbnail_url: ${recipe.thumbnail_url}`);
+  console.log(`  - video_url: ${recipe.video_url}`);
+  console.log(`  - final thumbnail: ${thumbnail}`);
   
   const card = document.createElement('div');
   card.className = 'recipe-card';
@@ -284,6 +295,8 @@ const fetchFeaturedRecipes = async () => {
       return;
     }
     
+    console.log('Fetched recipes:', data);
+    
     // Filter out invalid recipes
     const validRecipes = data.filter(isValidRecipe);
     
@@ -353,5 +366,7 @@ init();
 window.indexDebug = {
   fetchFeaturedRecipes,
   createRecipeCard,
-  getRecipeCategories
+  getRecipeCategories,
+  getRecipeThumbnail,
+  getYouTubeId
 };
