@@ -18,11 +18,11 @@ export function renderHeader() {
       </a>
       <nav class="navbar">
         <ul class="nav-links" id="navLinks">
-          <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-          <li><a href="recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
-          <li><a href="gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
-          <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
-          <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
+          <li><a href="/index.html"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="/recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
+          <li><a href="/gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
+          <li><a href="/equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
+          <li><a href="/about.html"><i class="fas fa-address-card"></i> About</a></li>
         </ul>
         <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
           <span></span>
@@ -63,12 +63,12 @@ export function renderFooter() {
       <!-- Quick Links -->
       <div class="footer-section">
         <h3>Quick Links</h3>
-        <div class="footer-nav">
-          <a href="index.html"><i class="fas fa-home"></i> Home</a>
-          <a href="recipes.html"><i class="fas fa-utensils"></i> Recipes</a>
-          <a href="gallery.html"><i class="fas fa-images"></i> Gallery</a>
-          <a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a>
-          <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+        <div class="/footer-nav">
+          <a href="/index.html"><i class="fas fa-home"></i> Home</a>
+          <a href="/recipes.html"><i class="fas fa-utensils"></i> Recipes</a>
+          <a href="/gallery.html"><i class="fas fa-images"></i> Gallery</a>
+          <a href="/equipment.html"><i class="fas fa-blender"></i> Equipment</a>
+          <a href="/about.html"><i class="fas fa-info-circle"></i> About</a>
         </div>
       </div>
 
