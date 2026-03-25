@@ -1,5 +1,35 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
+// =================================================
+// 🔹 CHECK IF THIS IS ACTUALLY A RECIPE PAGE
+// =================================================
+function isRecipeDetailPage() {
+  const pathParts = window.location.pathname.split('/').filter(Boolean);
+  const params = new URLSearchParams(window.location.search);
+  
+  // Format 1: /recipe/slug-name
+  if (pathParts[0] === 'recipe' && pathParts[1]) {
+    return true;
+  }
+  
+  // Format 2: recipe.html?slug=something
+  if (window.location.pathname.includes('recipe.html') && params.get('slug')) {
+    return true;
+  }
+  
+  return false;
+}
+
+// If not a recipe page, exit completely
+if (!isRecipeDetailPage()) {
+  console.log('Not a recipe page - recipe.js not executing');
+  // Exit without doing anything
+  throw new Error('Not a recipe page');
+}
+
+// If we get here, it IS a recipe page - proceed normally
+console.log('Recipe page detected - loading recipe');
+
 // Initialize Supabase
 const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
@@ -9,28 +39,20 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // 🔹 Helper Functions
 // =================================================
 
-// Get slug from URL - FIXED to work with both formats
+// Get slug from URL
 function getSlugFromUrl() {
   const currentUrl = window.location.href;
   console.log('Current URL:', currentUrl);
   
-  // Try to get from pathname (clean URL: /recipe/slug)
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   console.log('Path parts:', pathParts);
   
-  // Check if we have a recipe path
+  // Check for /recipe/slug format
   if (pathParts[0] === 'recipe' && pathParts[1]) {
     return pathParts[1];
   }
   
-  // Check if we have recipe.html?slug=something
-  if (pathParts[0] === 'recipe.html') {
-    const params = new URLSearchParams(window.location.search);
-    const slug = params.get('slug');
-    if (slug) return slug;
-  }
-  
-  // Try query parameter as fallback
+  // Check for recipe.html?slug=something
   const params = new URLSearchParams(window.location.search);
   const slugParam = params.get('slug');
   if (slugParam) {
@@ -210,7 +232,6 @@ async function fetchEquipmentByIds(ids) {
   container.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading equipment...</div>';
   
   try {
-    // Convert string IDs to numbers if needed
     const numericIds = ids.map(id => typeof id === 'string' ? parseInt(id) : id);
     
     const { data, error } = await supabase
