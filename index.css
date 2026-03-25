@@ -1053,42 +1053,51 @@ h1, h2, h3, h4, h5 {
     margin-top: 2rem;
   }
 
-@media (max-width: 768px) {
-  /* Footer Section - Center the container, keep text left-aligned */
   .footer-content {
     display: flex;
     flex-direction: column;
-    align-items: center;  /* Centers each section horizontally */
+    align-items: center;  /* Centers sections horizontally */
+    text-align: center;   /* Centers text */
   }
 
   .footer-section {
-    text-align: left;
+    text-align: center;   /* Center text in each section */
     width: 100%;
-    max-width: 300px;  /* Limits width so it doesn't stretch full width */
   }
 
   .footer-section h3 {
-    text-align: left;
+    text-align: center;   /* Center heading */
   }
 
   .footer-section h3::after {
-    left: 0;
-    transform: none;
+    left: 50%;            /* Center the underline */
+    transform: translateX(-50%);
   }
 
   .footer-nav {
-    align-items: flex-start;
-    text-align: left;
+    align-items: center;  /* Center the links */
+    text-align: center;
   }
 
   .footer-nav a {
-    justify-content: flex-start;
+    justify-content: center;  /* Center icon+text */
   }
 
   .social-icons {
-    justify-content: flex-start;
+    justify-content: center;  /* Center social icons */
   }
-}
+
+  .footer-bottom {
+    text-align: center;   /* Center bottom text */
+    align-items: center;
+  }
+
+  .footer-bottom-links {
+    justify-content: center;  /* Center privacy/terms links */
+  }
+
+
+ 
   .back-to-top {
     bottom: 20px;
     right: 20px;
