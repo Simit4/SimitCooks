@@ -8,9 +8,11 @@
   <title>Home | Simit Cooks</title>
 
   <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Open+Sans&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="index.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600;700&family=Unbounded:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="index.css" />
 
   <!-- Google Site Verification -->
   <meta name="google-site-verification" content="Jow-GqIKPShIoRiDlcSZwir2bmZCdgdrcNCFm1OrPQA" />
@@ -21,79 +23,86 @@
   <meta name="author" content="Simit Cooks" />
 
   <!-- Open Graph / Social Sharing -->
-  <meta property="og:title" content="Home | Simit Cooks" />
+  <meta property="og:title" content="Simit Cooks | Home" />
   <meta property="og:description" content="Try delicious home-style recipes made with love. Simple, tasty, and perfect for every day!" />
   <meta property="og:image" content="https://yourwebsite.com/your-thumbnail.jpg" />
   <meta property="og:url" content="https://yourwebsite.com/" />
   <meta name="twitter:card" content="summary_large_image" />
 
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-SL2G2MYTZX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-SL2G2MYTZX');
-</script>
-  
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SL2G2MYTZX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SL2G2MYTZX');
+  </script>
 </head>
 
-
 <body>
-  
+
 <header class="main-header">
   <div class="container header-wrapper">
     <a href="index.html">
-    <div class="logo" aria-label="Simit Cooks">
-      <span class="logo-modern">Simit's</span>
-      <span class="logo-traditional">Cooks</span>
-    </div> 
+      <div class="logo" aria-label="Simit Cooks">
+        <span class="logo-modern">Simit’s</span>
+        <span class="logo-traditional">Cooks</span>
+      </div> 
     </a>
 
-<nav class="navbar">
-  <ul class="nav-links">
-    <li><a href="recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
-    <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
-    <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
-    <li><a href="gallery.html"><i class="fas fa-image"></i> Gallery</a></li>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
+        <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
+        <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
+        <li><a href="gallery.html"><i class="fas fa-image"></i> Gallery</a></li>
+      </ul>
 
-  </ul>
-
-  <!-- Hamburger -->
-  <button class="hamburger">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-</nav>
-
+      <!-- Hamburger -->
+      <button class="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
   </div>
 </header>
 
-  
+<!-- Hero Section -->
 <section class="hero">
   <div class="hero-content container">
-    <h1>Discover Home-Cooked Magic </h1>
-    <p>Authentic, flavorful, and heartwarming recipes from our kitchen to yours. Made with love, for every day and every occasion.</p>
+    <h1>Welcome to Simit's Kitchen</h1>
+    <p>Discover authentic Nepali recipes made with love and tradition</p>
   </div>
 </section>
 
-
-
-  
-  <main>
+<!-- Featured Recipes Section -->
+<section class="featured-recipes">
+  <div class="container">
     <h2 id="Featured-Recipes-h2">Featured Recipes</h2>
     <div id="recipes-container" class="recipes-grid"></div>
-  </main>
+  </div>
+</section>
 
+<!-- About Preview Section -->
+<section class="about-preview">
+  <div class="container">
+    <div class="about-content">
+      <h2>About Simit Cooks</h2>
+      <p>Simit Cooks is your go-to destination for authentic Nepali and home-style recipes. From traditional momos to modern fusion dishes, we bring you recipes that are easy to follow and delicious to taste. Join us on this culinary journey!</p>
+      <a href="about.html" class="btn-primary">Learn More <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="about-image">
+      <i class="fas fa-utensils"></i>
+    </div>
+  </div>
+</section>
 
-<!-- Lightbox JS -->
-<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+<!-- Scripts -->
+<script type="module" src="index.js"></script>
 <script type="module" src="mobile-menu.js"></script>
-<script type="module" src="featured.js"></script>
 <script type="module" src="footer.js"></script>
-
 
 </body>
 </html>
