@@ -34,26 +34,44 @@ function initGLightbox() {
       window.glightboxInstance.destroy();
     }
     
-    // Create new instance
+    // Create new instance with enhanced mobile support
     window.glightboxInstance = GLightbox({
       selector: '.glightbox',
       openEffect: 'fade',
       closeEffect: 'fade',
       slideEffect: 'fade',
-      zoomable: false,
+      zoomable: true,  // Enable zoom for better mobile experience
       loop: true,
       touchNavigation: true,
       keyboardNavigation: true,
-      closeButton: true,
-      draggable: false,
-      width: 'auto',
+      closeButton: true,  // Ensure close button is enabled
+      draggable: true,  // Enable dragging on mobile
+      width: '90vw',  // Responsive width
       height: 'auto',
       preload: true,
       autoplayVideos: false,
+      css: 'https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css',  // Ensure CSS is loaded
       plyr: {
         css: '',
         js: '',
         config: {}
+      },
+      // Mobile-specific settings
+      touchMovement: true,
+      closeOnOutsideClick: true,  // Close when clicking outside
+      dragToleranceX: 150,
+      dragToleranceY: 150,
+      doubleTapZoom: true,  // Enable double tap zoom on mobile
+      // Custom styles to ensure close button is visible
+      beforeOpen: function() {
+        // Ensure close button is visible on mobile
+        setTimeout(() => {
+          const closeBtn = document.querySelector('.glightbox-clean .gclose');
+          if (closeBtn) {
+            closeBtn.style.display = 'flex';
+            closeBtn.style.zIndex = '1000';
+          }
+        }, 50);
       }
     });
   }
