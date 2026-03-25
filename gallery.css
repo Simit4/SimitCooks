@@ -1,4 +1,3 @@
-
 /* -------------------------------------------------
    Gallery Section
 -------------------------------------------------- */
@@ -202,13 +201,14 @@
 }
 
 /* Close button - ALWAYS VISIBLE AND CLICKABLE */
-.glightbox-container .gclose {
+.glightbox-container .gclose,
+.glightbox-clean .gclose {
   position: fixed !important;
   top: 25px !important;
   right: 25px !important;
   width: 45px !important;
   height: 45px !important;
-  background: rgba(0, 0, 0, 0.7) !important;
+  background: rgba(0, 0, 0, 0.8) !important;
   border-radius: 50% !important;
   display: flex !important;
   align-items: center !important;
@@ -217,12 +217,29 @@
   transition: all 0.3s ease !important;
   z-index: 1000001 !important;
   color: white !important;
-  font-size: 24px !important;
+  font-size: 0 !important;
   border: 2px solid rgba(255, 255, 255, 0.3) !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-.glightbox-container .gclose:hover {
+/* Create the X symbol */
+.glightbox-container .gclose::before,
+.glightbox-clean .gclose::before {
+  content: "✕" !important;
+  font-size: 24px !important;
+  font-weight: normal !important;
+  color: white !important;
+  display: block !important;
+  line-height: 1 !important;
+}
+
+.glightbox-container .gclose:hover,
+.glightbox-clean .gclose:hover {
   background: #ff6b6b !important;
   transform: scale(1.1) !important;
   border-color: white !important;
@@ -247,6 +264,8 @@
   color: white !important;
   font-size: 28px !important;
   border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .glightbox-container .gnext {
@@ -273,8 +292,7 @@
 
 /* Remove any overlays that block interaction */
 .gslide-overlay,
-.gslide-media-overlay,
-.glightbox-mobile .gclose {
+.gslide-media-overlay {
   display: none !important;
 }
 
@@ -299,10 +317,6 @@
   to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-
-
-
-
 /* -------------------------------------------------
    Responsive Design
 -------------------------------------------------- */
@@ -310,13 +324,9 @@
   .gallery-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
-
-  }
 }
 
 @media (max-width: 768px) {
-
   .gallery-container {
     padding: 0 20px;
     margin: 30px auto;
@@ -328,12 +338,17 @@
     margin: 0 8px 8px 0;
   }
   
-  /* GLightbox mobile */
-  .glightbox-container .gclose {
+  /* Mobile close button positioning */
+  .glightbox-container .gclose,
+  .glightbox-clean .gclose {
     top: 15px !important;
     right: 15px !important;
     width: 40px !important;
     height: 40px !important;
+  }
+  
+  .glightbox-container .gclose::before,
+  .glightbox-clean .gclose::before {
     font-size: 20px !important;
   }
   
@@ -363,27 +378,12 @@
   .glightbox-container .gslide-desc {
     font-size: 0.85rem !important;
   }
-
- .glightbox-clean .gclose {
-    top: 10px !important;
-    right: 10px !important;
-    width: 40px !important;
-    height: 40px !important;
-    background: rgba(0, 0, 0, 0.8) !important;
-  }
-  
-  .glightbox-clean .gclose:before {
-    font-size: 20px !important;
-  }
-  
 }
 
 @media (max-width: 640px) {
   .gallery-grid {
     grid-template-columns: 1fr;
   }
-  
-
   
   .gallery-item img {
     height: 220px;
@@ -394,8 +394,3 @@
     max-height: 80vh !important;
   }
 }
-
-@media (max-width: 480px) {
-
-  }
-
