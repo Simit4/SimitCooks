@@ -363,6 +363,18 @@
   .glightbox-container .gslide-desc {
     font-size: 0.85rem !important;
   }
+
+ .glightbox-clean .gclose {
+    top: 10px !important;
+    right: 10px !important;
+    width: 40px !important;
+    height: 40px !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .glightbox-clean .gclose:before {
+    font-size: 20px !important;
+  }
   
 }
 
