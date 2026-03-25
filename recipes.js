@@ -9,64 +9,39 @@ const CONFIG = {
   fallbackImage: 'https://i.ibb.co/4p4mR3N/momo-graphic.png',
   debounceDelay: 300,
   skeletonCount: 6,
-  debug: false // Set to false to reduce console logs
+  debug: false
 };
 
 // =================================================
 // 🔹 Category Mapping - Group similar categories
 // =================================================
 const CATEGORY_MAP = {
-  // Main Dishes
   'main': 'Main',
   'main dish': 'Main',
   'entree': 'Main',
   'curry': 'Main',
   'rice': 'Main',
   'noodle': 'Main',
-  
-  // Sauces & Dips
   'sauce': 'Sauce',
   'dip': 'Sauce',
   'chutney': 'Sauce',
   'condiment': 'Sauce',
   'jhol': 'Sauce',
-  
-  // Side Dishes
   'side': 'Side',
   'accompaniment': 'Side',
   'salad': 'Side',
-  'vegetable': 'Side',
-  
-  // Desserts
   'dessert': 'Dessert',
   'sweet': 'Dessert',
-  'cake': 'Dessert',
-  
-  // Snacks
   'snack': 'Snack',
   'appetizer': 'Snack',
   'starter': 'Snack',
   'street food': 'Snack',
-  
-  // Breakfast
   'breakfast': 'Breakfast',
-  'brunch': 'Breakfast',
-  
-  // Beverages
   'beverage': 'Beverage',
   'drink': 'Beverage',
-  'juice': 'Beverage',
-  'tea': 'Beverage',
-  
-  // Festival Specials
   'festival': 'Festival',
-  'special': 'Festival',
-  'celebration': 'Festival',
-  'traditional': 'Festival'
+  'special': 'Festival'
 };
-
-// Main categories to display (in order)
-const MAIN_CATEGORIES = ['Main', 'Sauce', 'Side', 'Dessert', 'Snack', 'Breakfast', 'Beverage', 'Festival'];
 
 // =================================================
 // 🔹 Initialize Supabase
@@ -105,7 +80,21 @@ const safeText = (value, defaultValue = '') => {
   return String(value) || defaultValue;
 };
 
-// Get recipe categories and map them to main categories
+// Get mapped category for a raw category
+const getMappedCategory = (rawCategory) => {
+  const lowerCat = safeText(rawCategory).toLowerCase();
+  const mapped = CATEGORY_MAP[lowerCat];
+  if (mapped) return mapped;
+  
+  // If no mapping, check if it's a main category
+  const capitalized = lowerCat.charAt(0).toUpperCase() + lowerCat.slice(1);
+  if (['Main', 'Sauce', 'Side', 'Dessert', 'Snack', 'Breakfast', 'Beverage', 'Festival'].includes(capitalized)) {
+    return capitalized;
+  }
+  return null;
+};
+
+// Get recipe categories (mapped to main categories)
 const getRecipeCategories = (recipe) => {
   if (!recipe.category) return [];
   
@@ -116,24 +105,20 @@ const getRecipeCategories = (recipe) => {
     rawCategories = [recipe.category];
   }
   
-  // Map to main categories
+  // Map to main categories and filter out nulls
   const mappedCategories = new Set();
   rawCategories.forEach(cat => {
-    const lowerCat = safeText(cat).toLowerCase();
-    const mappedCat = CATEGORY_MAP[lowerCat];
-    if (mappedCat) {
-      mappedCategories.add(mappedCat);
-    } else if (lowerCat) {
-      // If no mapping, use the original but capitalize first letter
-      mappedCategories.add(lowerCat.charAt(0).toUpperCase() + lowerCat.slice(1));
+    const mapped = getMappedCategory(cat);
+    if (mapped) {
+      mappedCategories.add(mapped);
     }
   });
   
   return Array.from(mappedCategories);
 };
 
-// Extract all unique MAIN categories from recipes
-const extractAllCategories = (recipes) => {
+// Extract only the categories that actually exist in recipes
+const extractExistingCategories = (recipes) => {
   const categorySet = new Set();
   
   recipes.forEach(recipe => {
@@ -145,14 +130,22 @@ const extractAllCategories = (recipes) => {
     });
   });
   
-  // Sort by the MAIN_CATEGORIES order, then alphabetically
+  // Sort categories in a logical order
+  const orderPriority = {
+    'Main': 1,
+    'Sauce': 2,
+    'Side': 3,
+    'Dessert': 4,
+    'Snack': 5,
+    'Breakfast': 6,
+    'Beverage': 7,
+    'Festival': 8
+  };
+  
   const sortedCategories = Array.from(categorySet).sort((a, b) => {
-    const indexA = MAIN_CATEGORIES.indexOf(a);
-    const indexB = MAIN_CATEGORIES.indexOf(b);
-    
-    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-    if (indexA !== -1) return -1;
-    if (indexB !== -1) return 1;
+    const priorityA = orderPriority[a] || 99;
+    const priorityB = orderPriority[b] || 99;
+    if (priorityA !== priorityB) return priorityA - priorityB;
     return a.localeCompare(b);
   });
   
@@ -228,7 +221,9 @@ const createFilterButtons = () => {
   allButton.textContent = 'All';
   elements.filterContainer.appendChild(allButton);
   
-  // Add category buttons (only main categories)
+  // Add category buttons (only categories that exist in recipes)
+  console.log('Creating buttons for categories:', state.categories);
+  
   state.categories.forEach(category => {
     const button = document.createElement('button');
     button.className = 'filter-btn';
@@ -239,8 +234,6 @@ const createFilterButtons = () => {
   
   // Re-attach event listeners
   attachFilterListeners();
-  
-  console.log(`Created ${state.categories.length + 1} filter buttons: All, ${state.categories.join(', ')}`);
 };
 
 // Attach filter button event listeners
@@ -470,8 +463,10 @@ const fetchRecipes = async () => {
     
     state.recipes = data.filter(isValidRecipe);
     
-    // Extract all unique MAIN categories from recipes
-    state.categories = extractAllCategories(state.recipes);
+    // Extract only categories that actually exist in recipes
+    state.categories = extractExistingCategories(state.recipes);
+    
+    console.log('Found categories in database:', state.categories);
     
     // Create dynamic filter buttons
     createFilterButtons();
@@ -547,5 +542,5 @@ window.recipesDebug = {
   state,
   CONFIG,
   getRecipeCategories,
-  CATEGORY_MAP
+  extractExistingCategories
 };
