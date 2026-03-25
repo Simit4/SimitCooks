@@ -1,110 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Recipes | Simit Cooks</title>
+  <title>Recipe | Simit Cooks</title>
 
   <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600;700&family=Unbounded:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
-  <!-- Main CSS -->
-  <link rel="stylesheet" href="recipes.css" />
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="recipe.css" />
   <link rel="stylesheet" href="style.css" />
-
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Explore delicious Nepali and home-style recipes from Simit Cooks — from curry to chowmein, and everything in between." />
-  <meta name="keywords" content="Nepali recipes, home cooking, vegetarian recipes, curry, chowmein, roti" />
-  <meta name="author" content="Simit Cooks" />
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="Recipes | Simit Cooks" />
-  <meta property="og:description" content="Discover authentic and easy-to-make recipes from Simit Cooks kitchen." />
-  <meta property="og:image" content="https://yourwebsite.com/recipes-thumbnail.jpg" />
-  <meta property="og:url" content="https://yourwebsite.com/recipes.html" />
-  <meta name="twitter:card" content="summary_large_image" />
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-SL2G2MYTZX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
+    function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-SL2G2MYTZX');
   </script>
 </head>
-
-
-  
 <body>
 
-  <!-- Header and Footer will be added by style.js -->
-  
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-content container">
-      <h1>Recipe Details</h1>
-      <p>Discover the art of cooking with our detailed recipes</p>
-    </div>
-  </section>
-
   <!-- Recipe Content -->
-  <section class="recipe-page">
-    <h1 id="recipe-title"></h1>
+  <main class="recipe-page">
+    <div class="container">
+      <h1 id="recipe-title">Loading recipe...</h1>
 
-    <div class="recipe-meta">
-      <span><i class="fas fa-clock"></i> <strong>Prep:</strong> <span id="prep-time"></span></span>
-      <span><i class="fas fa-utensils"></i> <strong>Cook:</strong> <span id="cook-time"></span></span>
-      <span><i class="fas fa-users"></i> <strong>Serves:</strong> <span id="servings"></span></span>
-    </div>
-
-    <p class="description" id="recipe-description">Loading recipe details...</p>
-
-    <div class="recipe-layout">
-      <div class="recipe-left">
-        <h3><i class="fas fa-list-ul"></i> Ingredients</h3>
-        <ul id="ingredients-list"></ul>
-
-        <h3><i class="fas fa-step-forward"></i> Method</h3>
-        <ol id="method-list"></ol>
-
-        <h3><i class="fas fa-chart-line"></i> Nutrition</h3>
-        <div id="nutrition"></div>
-
-        <div class="recipe-info">
-          <p><strong><i class="fas fa-tags"></i> Tags:</strong> <span id="tags"></span></p>
-          <p><strong><i class="fas fa-globe"></i> Cuisine:</strong> <span id="cuisine"></span></p>
-          <p><strong><i class="fas fa-folder"></i> Category:</strong> <span id="category"></span></p>
-        </div>
-
-        <h3><i class="fas fa-pencil-alt"></i> Notes</h3>
-        <p id="notes"></p>
-
-        <h3><i class="fas fa-lightbulb"></i> Fun Fact</h3>
-        <p id="facts"></p>
-
-        <button class="btn-print" onclick="window.print()">
-          <i class="fas fa-print"></i> Print Recipe
-        </button>
+      <div class="recipe-meta">
+        <span><i class="fas fa-clock"></i> <strong>Prep:</strong> <span id="prep-time">--</span></span>
+        <span><i class="fas fa-utensils"></i> <strong>Cook:</strong> <span id="cook-time">--</span></span>
+        <span><i class="fas fa-users"></i> <strong>Serves:</strong> <span id="servings">--</span></span>
       </div>
 
-      <div class="recipe-right">
-        <div class="recipe-video">
-          <iframe id="recipe-video" src="" allowfullscreen title="Recipe Video"></iframe>
+      <p class="description" id="recipe-description">Loading recipe details...</p>
+
+      <div class="recipe-layout">
+        <div class="recipe-left">
+          <h3><i class="fas fa-list-ul"></i> Ingredients</h3>
+          <ul id="ingredients-list"></ul>
+
+          <h3><i class="fas fa-step-forward"></i> Method</h3>
+          <ol id="method-list"></ol>
+
+          <h3><i class="fas fa-chart-line"></i> Nutrition</h3>
+          <div id="nutrition"></div>
+
+          <div class="recipe-info">
+            <p><strong><i class="fas fa-tags"></i> Tags:</strong> <span id="tags"></span></p>
+            <p><strong><i class="fas fa-globe"></i> Cuisine:</strong> <span id="cuisine"></span></p>
+            <p><strong><i class="fas fa-folder"></i> Category:</strong> <span id="category"></span></p>
+          </div>
+
+          <h3><i class="fas fa-pencil-alt"></i> Notes</h3>
+          <p id="notes"></p>
+
+          <h3><i class="fas fa-lightbulb"></i> Fun Fact</h3>
+          <p id="facts"></p>
+
+          <button class="btn-print" onclick="window.print()">
+            <i class="fas fa-print"></i> Print Recipe
+          </button>
+        </div>
+
+        <div class="recipe-right">
+          <div class="recipe-video">
+            <iframe id="recipe-video" src="" allowfullscreen title="Recipe Video"></iframe>
+          </div>
         </div>
       </div>
     </div>
-  </section>
+  </main>
 
   <!-- Equipment Section -->
   <section class="equipment-page">
-    <h2 class="section-title">Recommended Kitchen Tools</h2>
-    <p class="section-subtitle">
-      Handpicked tools to make cooking easier and enjoyable.
-    </p>
-    <div class="equipment-grid" id="equipment-container"></div>
+    <div class="container">
+      <h2 class="section-title">Recommended Kitchen Tools</h2>
+      <p class="section-subtitle">
+        Handpicked tools to make cooking easier and enjoyable.
+      </p>
+      <div class="equipment-grid" id="equipment-container"></div>
+    </div>
   </section>
 
   <!-- Scripts -->
