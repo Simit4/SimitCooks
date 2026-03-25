@@ -5,6 +5,8 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+
+
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -12,7 +14,6 @@ let allImages = [];
 let filteredImages = [];
 let loadedCount = 0;
 const BATCH = 12;
-let glightbox = null;
 
 // Show skeleton loader
 function showSkeleton(count = BATCH) {
@@ -25,33 +26,37 @@ function showSkeleton(count = BATCH) {
   }
 }
 
-// Initialize GLightbox with zoom disabled
+// Initialize GLightbox with proper settings
 function initGLightbox() {
-  if (glightbox) {
-    glightbox.destroy();
-    glightbox = null;
-  }
-  
-  setTimeout(() => {
-    if (typeof GLightbox !== 'undefined') {
-      glightbox = GLightbox({
-        selector: '.glightbox',
-        openEffect: 'zoom',
-        closeEffect: 'zoom',
-        slideEffect: 'slide',
-        zoomable: false,
-        loop: true,
-        touchNavigation: true,
-        keyboardNavigation: true,
-        closeButton: true,
-        draggable: false,
-        width: '90vw',
-        height: '90vh',
-        preload: true,
-        autoplayVideos: false
-      });
+  if (typeof GLightbox !== 'undefined') {
+    // Destroy any existing instance
+    if (window.glightboxInstance) {
+      window.glightboxInstance.destroy();
     }
-  }, 100);
+    
+    // Create new instance
+    window.glightboxInstance = GLightbox({
+      selector: '.glightbox',
+      openEffect: 'fade',
+      closeEffect: 'fade',
+      slideEffect: 'fade',
+      zoomable: false,
+      loop: true,
+      touchNavigation: true,
+      keyboardNavigation: true,
+      closeButton: true,
+      draggable: false,
+      width: 'auto',
+      height: 'auto',
+      preload: true,
+      autoplayVideos: false,
+      plyr: {
+        css: '',
+        js: '',
+        config: {}
+      }
+    });
+  }
 }
 
 // Fetch images from Supabase
@@ -121,7 +126,6 @@ function renderBatch(data) {
     link.setAttribute('data-gallery', 'simit-gallery');
     link.setAttribute('data-title', `${img.emoji} ${img.name}`);
     link.setAttribute('data-description', img.description);
-    link.setAttribute('data-glightbox', `title: ${img.emoji} ${img.name}; description: ${img.description}`);
     
     link.innerHTML = `
       <div class="gallery-item fade-in" style="animation-delay:${i * 50}ms">
@@ -136,7 +140,12 @@ function renderBatch(data) {
   });
 
   loadedCount += batch.length;
-  initGLightbox();
+  
+  // Re-initialize GLightbox for new images
+  setTimeout(() => {
+    initGLightbox();
+  }, 100);
+  
   observeLastImage();
 }
 
