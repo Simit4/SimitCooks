@@ -236,9 +236,13 @@ h1, h2, h3, h4, h5 {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
 }
+
+
 /* =================================================
-   🔹 Featured Recipes Section
+   🔹 Recipe Cards - Same as Recipes Page
 ================================================= */
+
+/* Featured Recipes Section */
 .featured-recipes {
   padding: 4rem 0;
   background: var(--bg);
@@ -265,14 +269,17 @@ h1, h2, h3, h4, h5 {
   border-radius: 2px;
 }
 
-/* Recipes Grid - Vertical Scroll on Mobile */
+/* Recipes Grid - Same as recipes page */
 .recipes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  margin-top: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
+/* Recipe Card - IDENTICAL to recipes page */
 .recipe-card {
   background: #fff;
   border-radius: 20px;
@@ -341,6 +348,185 @@ h1, h2, h3, h4, h5 {
   margin-top: 0.5rem;
 }
 
+/* Skeleton Loader - Same as recipes page */
+.skeleton-card {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-thumbnail {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  height: 220px;
+  width: 100%;
+}
+
+.skeleton-title {
+  height: 24px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.skeleton-text {
+  height: 40px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 4px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Error & No Results States */
+.error-message,
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+  grid-column: 1 / -1;
+}
+
+.error-message i,
+.no-results i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.error-message i {
+  color: #dc2626;
+}
+
+.no-results i {
+  color: var(--muted);
+}
+
+.error-message h3,
+.no-results h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.error-message p,
+.no-results p {
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.retry-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.retry-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* =================================================
+   🔹 Responsive Design for Homepage Cards
+================================================= */
+
+@media (max-width: 1024px) {
+  .recipes-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .recipes-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+  
+  .recipe-card {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .thumbnail-wrapper {
+    height: 200px;
+  }
+  
+  .recipe-card h3 {
+    font-size: 1.1rem;
+  }
+  
+  .recipe-card p {
+    font-size: 0.85rem;
+  }
+  
+  #Featured-Recipes-h2 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .recipes-grid {
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .thumbnail-wrapper {
+    height: 180px;
+  }
+  
+  .recipe-card h3 {
+    font-size: 1rem;
+  }
+  
+  .recipe-card p {
+    font-size: 0.8rem;
+  }
+  
+  #Featured-Recipes-h2 {
+    font-size: 1.5rem;
+  }
+}
 
 
 /* =================================================
