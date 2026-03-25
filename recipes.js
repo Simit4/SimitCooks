@@ -23,7 +23,7 @@ const supabase = createClient(CONFIG.supabaseUrl, CONFIG.supabaseKey);
 const elements = {
   container: document.getElementById('recipes-container'),
   searchInput: document.getElementById('search-input'),
-  filterButtons: document.querySelectorAll('.filter-btn')
+  filterContainer: document.querySelector('.filters')
 };
 
 // =================================================
@@ -32,6 +32,7 @@ const elements = {
 const state = {
   recipes: [],
   filteredRecipes: [],
+  categories: [],
   currentFilter: 'all',
   currentSearch: '',
   isLoading: false,
@@ -57,21 +58,36 @@ const safeText = (value, defaultValue = '') => {
   return String(value) || defaultValue;
 };
 
-// Handle array categories - FIXED for your database structure
+// Handle array categories
 const getRecipeCategories = (recipe) => {
-  // category is an array in your database
   if (recipe.category && Array.isArray(recipe.category)) {
     return recipe.category.map(cat => safeText(cat).toLowerCase());
   }
-  // If it's a string, convert to array
   if (recipe.category && typeof recipe.category === 'string') {
     return [safeText(recipe.category).toLowerCase()];
   }
   return [];
 };
 
+// Extract all unique categories from recipes
+const extractAllCategories = (recipes) => {
+  const categorySet = new Set();
+  
+  recipes.forEach(recipe => {
+    const categories = getRecipeCategories(recipe);
+    categories.forEach(cat => {
+      if (cat && cat !== '') {
+        categorySet.add(cat);
+      }
+    });
+  });
+  
+  return Array.from(categorySet).sort();
+};
+
 // Check if recipe matches a category
 const matchesCategory = (recipe, filterValue) => {
+  if (filterValue === 'all') return true;
   const categories = getRecipeCategories(recipe);
   return categories.includes(filterValue.toLowerCase());
 };
@@ -120,19 +136,82 @@ const isValidRecipe = (recipe) => {
   return recipe && typeof recipe === 'object' && (recipe.title || recipe.slug);
 };
 
-// Format ingredients and method from JSON arrays
-const formatArray = (arr) => {
-  if (!arr) return [];
-  if (Array.isArray(arr)) return arr;
-  try {
-    return JSON.parse(arr);
-  } catch {
-    return [];
+// =================================================
+// 🔹 UI Components - Dynamic Filter Buttons
+// =================================================
+
+// Create filter buttons dynamically
+const createFilterButtons = () => {
+  if (!elements.filterContainer) return;
+  
+  debugLog('Creating filter buttons with categories:', state.categories);
+  
+  // Clear existing buttons
+  elements.filterContainer.innerHTML = '';
+  
+  // Add "All" button first
+  const allButton = document.createElement('button');
+  allButton.className = 'filter-btn active';
+  allButton.setAttribute('data-filter', 'all');
+  allButton.textContent = 'All';
+  elements.filterContainer.appendChild(allButton);
+  
+  // Add category buttons
+  state.categories.forEach(category => {
+    const button = document.createElement('button');
+    button.className = 'filter-btn';
+    button.setAttribute('data-filter', category);
+    // Capitalize first letter
+    button.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+    elements.filterContainer.appendChild(button);
+  });
+  
+  // Re-attach event listeners
+  attachFilterListeners();
+};
+
+// Attach filter button event listeners
+const attachFilterListeners = () => {
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  
+  filterButtons.forEach(btn => {
+    btn.removeEventListener('click', handleFilterClick);
+    btn.addEventListener('click', handleFilterClick);
+  });
+  
+  debugLog(`Attached listeners to ${filterButtons.length} filter buttons`);
+};
+
+// Handle filter button click
+const handleFilterClick = (e) => {
+  const btn = e.currentTarget;
+  const filterValue = btn.getAttribute('data-filter');
+  
+  if (!filterValue) return;
+  
+  debugLog(`Filter clicked: ${filterValue}`);
+  
+  // Update active state
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  
+  // Update state
+  state.currentFilter = filterValue;
+  
+  // Clear search when changing filter
+  if (elements.searchInput) {
+    elements.searchInput.value = '';
+    state.currentSearch = '';
   }
+  
+  // Re-render
+  renderRecipes();
 };
 
 // =================================================
-// 🔹 UI Components
+// 🔹 UI Components - Cards and Loading
 // =================================================
 
 const createSkeleton = () => {
@@ -241,7 +320,7 @@ const showError = (message) => {
 };
 
 // =================================================
-// 🔹 Filtering Logic - FIXED for array categories
+// 🔹 Filtering Logic
 // =================================================
 
 const applyFilters = () => {
@@ -252,35 +331,21 @@ const applyFilters = () => {
   
   let filtered = [...state.recipes];
   
-  // Debug: Show all categories from recipes
-  const allCategories = [];
-  state.recipes.forEach(recipe => {
-    const categories = getRecipeCategories(recipe);
-    categories.forEach(cat => {
-      if (!allCategories.includes(cat)) allCategories.push(cat);
-    });
-  });
-  debugLog('Available categories in database:', allCategories);
-  
-  // Apply category filter - FIXED for array categories
+  // Apply category filter
   if (state.currentFilter !== 'all') {
     const filterValue = state.currentFilter.toLowerCase();
     debugLog(`Filtering by category: "${filterValue}"`);
     
     filtered = filtered.filter(recipe => {
       const matches = matchesCategory(recipe, filterValue);
-      
       if (matches) {
         const categories = getRecipeCategories(recipe);
         debugLog(`✓ Matched: ${recipe.title} (categories: ${categories.join(', ')})`);
       }
-      
       return matches;
     });
     
     debugLog(`Found ${filtered.length} recipes matching filter "${filterValue}"`);
-  } else {
-    debugLog('Showing all recipes');
   }
   
   // Apply search filter
@@ -373,24 +438,15 @@ const fetchRecipes = async () => {
     
     debugLog(`Fetched ${data.length} recipes from database`);
     
-    // Log sample recipe categories
-    debugLog('Sample recipes with categories:');
-    data.slice(0, 3).forEach(r => {
-      debugLog(`- ${r.title}: categories =`, r.category);
-    });
-    
     // Validate and store recipes
     state.recipes = data.filter(isValidRecipe);
     
-    // Log all unique categories
-    const allCategories = [];
-    state.recipes.forEach(recipe => {
-      const categories = getRecipeCategories(recipe);
-      categories.forEach(cat => {
-        if (!allCategories.includes(cat)) allCategories.push(cat);
-      });
-    });
-    debugLog('All unique categories in database:', allCategories);
+    // Extract all unique categories from recipes
+    state.categories = extractAllCategories(state.recipes);
+    debugLog('All unique categories found:', state.categories);
+    
+    // Create dynamic filter buttons
+    createFilterButtons();
     
     if (state.recipes.length === 0) {
       showNoResults();
@@ -410,31 +466,8 @@ const fetchRecipes = async () => {
 };
 
 // =================================================
-// 🔹 Event Handlers
+// 🔹 Search Handler
 // =================================================
-
-const handleFilterClick = (btn) => {
-  const filterValue = btn.getAttribute('data-filter');
-  if (!filterValue) return;
-  
-  debugLog(`Filter button clicked: ${filterValue}`);
-  
-  // Update active state
-  elements.filterButtons.forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  
-  // Update state
-  state.currentFilter = filterValue;
-  
-  // Clear search when changing filter
-  if (elements.searchInput) {
-    elements.searchInput.value = '';
-    state.currentSearch = '';
-  }
-  
-  // Re-render
-  renderRecipes();
-};
 
 const handleSearch = (value) => {
   debugLog(`Search input changed: "${value}"`);
@@ -442,7 +475,6 @@ const handleSearch = (value) => {
   renderRecipes();
 };
 
-// Debounce function
 const debounce = (func, delay) => {
   let timeoutId;
   return (...args) => {
@@ -456,24 +488,6 @@ const debounce = (func, delay) => {
 // =================================================
 
 const initEventListeners = () => {
-  debugLog('Initializing event listeners...');
-  debugLog('Filter buttons found:', elements.filterButtons.length);
-  
-  // Filter buttons
-  if (elements.filterButtons?.length) {
-    elements.filterButtons.forEach((btn, index) => {
-      const filterValue = btn.getAttribute('data-filter');
-      debugLog(`Button ${index}: data-filter="${filterValue}"`);
-      
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        handleFilterClick(btn);
-      });
-    });
-  } else {
-    debugLog('No filter buttons found on the page!');
-  }
-  
   // Search input
   if (elements.searchInput) {
     const debouncedSearch = debounce(handleSearch, CONFIG.debounceDelay);
@@ -489,7 +503,7 @@ const initEventListeners = () => {
 // =================================================
 
 const init = () => {
-  debugLog('Initializing Recipes App...');
+  debugLog('Initializing Recipes App with dynamic filters...');
   
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
@@ -512,5 +526,5 @@ window.recipesDebug = {
   applyFilters,
   renderRecipes,
   getRecipeCategories,
-  matchesCategory
+  extractAllCategories
 };
