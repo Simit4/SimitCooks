@@ -179,20 +179,21 @@ h1, h2, h3, h4, h5 {
 }
 
 /* -------------------------------------------------
-   Hero Section – About Page
+   Hero Section – Modern Soft
 -------------------------------------------------- */
 .hero {
   background: linear-gradient(135deg, #f0f8f2, #eaf3e0);
-  min-height: 40vh;
+  min-height: 30vh;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   text-align: center;
-  padding: 3rem 2rem;
+  padding: 2rem;
   overflow: hidden;
 }
 
+/* Subtle abstract shapes */
 .hero::before {
   content: "";
   position: absolute;
@@ -217,7 +218,7 @@ h1, h2, h3, h4, h5 {
   z-index: 0;
 }
 
-.hero {
+.hero-content {
   position: relative;
   z-index: 1;
   max-width: 800px;
@@ -228,7 +229,7 @@ h1, h2, h3, h4, h5 {
   color: var(--primary);
   font-weight: 900;
   font-size: 2.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   line-height: 1.2;
   text-shadow: 0 2px 6px rgba(0,0,0,0.08);
   animation: fadeInUp 1s ease forwards;
@@ -237,6 +238,7 @@ h1, h2, h3, h4, h5 {
 .hero p {
   font-size: 1.15rem;
   color: var(--muted);
+  margin-bottom: 1.5rem;
   line-height: 1.6;
   animation: fadeInUp 1.2s ease forwards;
 }
@@ -246,7 +248,6 @@ h1, h2, h3, h4, h5 {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
 }
-
 /* -------------------------------------------------
    Timeline Section – Ultra Modern Minimal
 -------------------------------------------------- */
