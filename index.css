@@ -244,7 +244,7 @@ h1, h2, h3, h4, h5 {
 
 
 /* =================================================
-   🔹 Featured Recipes Section - EXACT COPY of recipes page
+   🔹 Featured Recipes Section - EXACT same as recipes page
 ================================================= */
 .featured-recipes {
   padding: 4rem 0;
@@ -272,17 +272,17 @@ h1, h2, h3, h4, h5 {
   border-radius: 2px;
 }
 
-/* Recipes Grid - EXACT same as recipes page */
+/* Recipes Grid - FORCE 3 columns exactly */
 .recipes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  padding: 2rem 8%;
+  padding: 2rem;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-/* Recipe Card - EXACT SAME as recipes page */
+/* Recipe Card */
 .recipe-card {
   background: #fff;
   border-radius: 20px;
@@ -300,7 +300,7 @@ h1, h2, h3, h4, h5 {
   box-shadow: var(--shadow-md);
 }
 
-/* Thumbnail Wrapper - EXACT same size */
+/* Thumbnail Wrapper - Fixed height */
 .thumbnail-wrapper {
   width: 100%;
   height: 220px;
@@ -322,7 +322,7 @@ h1, h2, h3, h4, h5 {
   transform: scale(1.05);
 }
 
-/* Card Body - EXACT same padding */
+/* Card Body */
 .card-body {
   padding: 1.2rem;
   text-align: center;
@@ -369,15 +369,15 @@ h1, h2, h3, h4, h5 {
 }
 
 /* =================================================
-   🔹 Responsive - EXACT same as recipes page
+   🔹 Responsive
 ================================================= */
 
 /* Tablet: 2 columns */
 @media (max-width: 1024px) {
   .recipes-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
-    padding: 1.5rem 5%;
+    padding: 1.5rem;
   }
   
   .thumbnail-wrapper {
