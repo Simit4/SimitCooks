@@ -1053,25 +1053,22 @@ h1, h2, h3, h4, h5 {
     margin-top: 2rem;
   }
 
+@media (max-width: 768px) {
+  /* Footer Section - Center the container, keep text left-aligned */
   .footer-content {
-   display: flex;
-   flex-direction: column;
-    gap: 1.5rem;
-  align-items: center;  
-     
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* Centers each section horizontally */
   }
 
   .footer-section {
     text-align: left;
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;  /* Centers the content block */
+    max-width: 300px;  /* Limits width so it doesn't stretch full width */
   }
 
   .footer-section h3 {
-    width: 100%;
-    text-align: left;  /* Heading left-aligned */
+    text-align: left;
   }
 
   .footer-section h3::after {
@@ -1080,20 +1077,18 @@ h1, h2, h3, h4, h5 {
   }
 
   .footer-nav {
-    align-items: flex-start;  /* Links start from left */
+    align-items: flex-start;
     text-align: left;
-    width: 100%;
   }
 
   .footer-nav a {
-    justify-content: flex-start;  /* Icon+text start from left */
+    justify-content: flex-start;
   }
 
   .social-icons {
-    justify-content: flex-start;  /* Icons start from left */
-    width: 100%;
+    justify-content: flex-start;
   }
-
+}
   .back-to-top {
     bottom: 20px;
     right: 20px;
