@@ -1067,7 +1067,7 @@ h1, h2, h3, h4, h5 {
   }
 
   .footer-section h3 {
-    text-align: left;
+    text-align: center;
   }
 
   .footer-section h3::after {
@@ -1077,7 +1077,7 @@ h1, h2, h3, h4, h5 {
 
   .footer-nav {
     align-items: flex-start;
-    text-align: left;
+    text-align: center;
   }
 
   .footer-nav a {
