@@ -979,16 +979,18 @@ h1, h2, h3, h4, h5 {
   }
 
   .hero {
-    min-height: 40vh;
-    padding: 1.5rem;
+    padding: 1.5rem 1rem;
+    min-height: auto;
   }
-
   .hero h1 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    margin-bottom: 0.3rem;
+    line-height: 1.25;
   }
-
   .hero p {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.4;
   }
 
   /* Featured Recipes - Vertical Scroll (NOT horizontal) */
@@ -1091,12 +1093,16 @@ h1, h2, h3, h4, h5 {
     padding: 0 1rem;
   }
 
-  .hero h1 {
-    font-size: 1.3rem;
+ .hero {
+    padding: 1.2rem 0.8rem;
   }
-
+  .hero h1 {
+    font-size: 1.45rem;
+    margin-bottom: 0.2rem;
+  }
   .hero p {
     font-size: 0.85rem;
+    margin-bottom: 0.6rem;
   }
 
   #Featured-Recipes-h2 {
