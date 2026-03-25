@@ -6,6 +6,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
+
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -26,27 +27,33 @@ function showSkeleton(count = BATCH) {
   }
 }
 
-// Initialize GLightbox
+// Initialize GLightbox with proper configuration
 function initGLightbox() {
   if (glightbox) {
     glightbox.destroy();
+    glightbox = null;
   }
   
-  if (typeof GLightbox !== 'undefined') {
-    glightbox = GLightbox({
-      selector: '.glightbox',
-      openEffect: 'zoom',
-      closeEffect: 'zoom',
-      zoomable: true,
-      loop: true,
-      touchNavigation: true,
-      keyboardNavigation: true,
-      closeButton: true,
-      draggable: true,
-      width: 'auto',
-      height: 'auto'
-    });
-  }
+  setTimeout(() => {
+    if (typeof GLightbox !== 'undefined') {
+      glightbox = GLightbox({
+        selector: '.glightbox',
+        openEffect: 'zoom',
+        closeEffect: 'zoom',
+        slideEffect: 'slide',
+        zoomable: true,
+        loop: true,
+        touchNavigation: true,
+        keyboardNavigation: true,
+        closeButton: true,
+        draggable: true,
+        width: '90vw',
+        height: '90vh',
+        preload: true,
+        autoplayVideos: false
+      });
+    }
+  }, 100);
 }
 
 // Fetch images from Supabase
@@ -113,13 +120,20 @@ function renderBatch(data) {
     const link = document.createElement('a');
     link.href = img.url;
     link.className = 'glightbox';
-    link.setAttribute('data-gallery', 'gallery');
+    link.setAttribute('data-gallery', 'simit-gallery');
+    link.setAttribute('data-title', `${img.emoji} ${img.name}`);
+    link.setAttribute('data-description', img.description);
+    link.setAttribute('data-glightbox', `title: ${img.emoji} ${img.name}; description: ${img.description}`);
+    
     link.innerHTML = `
       <div class="gallery-item fade-in" style="animation-delay:${i * 50}ms">
         <img src="${img.url}" alt="${img.name.replace(/[<>]/g, '')}" loading="lazy">
         <div class="overlay">
           <div class="title">${img.emoji} ${img.name.replace(/[<>]/g, '')}</div>
           <div class="description">${img.description.replace(/[<>]/g, '')}</div>
+        </div>
+        <div class="zoom-icon">
+          <i class="fas fa-search-plus"></i>
         </div>
       </div>
     `;
