@@ -18,8 +18,8 @@ function getSlugFromUrl() {
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   console.log('Path parts:', pathParts);
   
-  // Check for /recipe/slug format
-  if (pathParts[0] === 'recipe' && pathParts[1]) {
+  // Check for /recipe/slug format (like /recipe/chocolate-cake)
+  if (pathParts[0] === 'recipe' && pathParts[1] && pathParts[1] !== 'index.html') {
     return pathParts[1];
   }
   
@@ -30,9 +30,18 @@ function getSlugFromUrl() {
     return slugParam;
   }
   
+  // If we're at /recipe/index.html or /recipe/, check if there's a hash or something else
+  if (pathParts[0] === 'recipe' && (!pathParts[1] || pathParts[1] === 'index.html')) {
+    // Try to get slug from query parameter if it exists
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const hashSlug = hashParams.get('slug');
+    if (hashSlug) {
+      return hashSlug;
+    }
+  }
+  
   return null;
 }
-
 // Convert YouTube URL to embed URL
 function convertToEmbedUrl(url) {
   if (!url) return '';
