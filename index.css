@@ -241,8 +241,10 @@ h1, h2, h3, h4, h5 {
 
 
 
+
+
 /* =================================================
-   🔹 Featured Recipes Section - EXACTLY like Recipes Page
+   🔹 Featured Recipes Section - EXACT COPY of recipes page
 ================================================= */
 .featured-recipes {
   padding: 4rem 0;
@@ -273,14 +275,14 @@ h1, h2, h3, h4, h5 {
 /* Recipes Grid - EXACT same as recipes page */
 .recipes-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
-  padding: 2rem 8%;  /* Same padding as recipes page */
+  padding: 2rem 8%;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-/* Recipe Card - EXACT SAME dimensions */
+/* Recipe Card - EXACT SAME as recipes page */
 .recipe-card {
   background: #fff;
   border-radius: 20px;
@@ -298,10 +300,10 @@ h1, h2, h3, h4, h5 {
   box-shadow: var(--shadow-md);
 }
 
-/* Thumbnail Wrapper - Same aspect ratio */
+/* Thumbnail Wrapper - EXACT same size */
 .thumbnail-wrapper {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 220px;
   overflow: hidden;
   background: #fafafa;
   position: relative;
@@ -320,7 +322,7 @@ h1, h2, h3, h4, h5 {
   transform: scale(1.05);
 }
 
-/* Card Body */
+/* Card Body - EXACT same padding */
 .card-body {
   padding: 1.2rem;
   text-align: center;
@@ -367,15 +369,19 @@ h1, h2, h3, h4, h5 {
 }
 
 /* =================================================
-   🔹 Responsive - MATCH recipes page exactly
+   🔹 Responsive - EXACT same as recipes page
 ================================================= */
 
 /* Tablet: 2 columns */
 @media (max-width: 1024px) {
   .recipes-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
     padding: 1.5rem 5%;
+  }
+  
+  .thumbnail-wrapper {
+    height: 200px;
   }
 }
 
@@ -387,9 +393,8 @@ h1, h2, h3, h4, h5 {
     padding: 1.5rem;
   }
   
-  .recipe-card {
-    max-width: 100%;
-    margin: 0 auto;
+  .thumbnail-wrapper {
+    height: 200px;
   }
   
   .recipe-card h3 {
@@ -410,6 +415,10 @@ h1, h2, h3, h4, h5 {
   .recipes-grid {
     gap: 1rem;
     padding: 1rem;
+  }
+  
+  .thumbnail-wrapper {
+    height: 180px;
   }
   
   .recipe-card h3 {
