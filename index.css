@@ -954,7 +954,7 @@ h1, h2, h3, h4, h5 {
 @media (max-width: 768px) {
   .logo {
     font-size: 2rem;
-    padding: 3rem 1rem;
+    padding: 1rem 1rem;
   }
 
   .hamburger {
