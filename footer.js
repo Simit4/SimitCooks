@@ -28,43 +28,22 @@ export function renderFooter() {
         </div>
       </div>
 
-      <!-- Contact Info -->
+      <!-- Social Media Section -->
       <div class="footer-section">
-        <h3>Contact Info</h3>
-        <ul class="contact-info">
-          <li><i class="fas fa-map-marker-alt"></i> Kathmandu, Nepal</li>
-          <li><i class="fas fa-envelope"></i> <a href="mailto:simitcooks@gmail.com">simitcooks@gmail.com</a></li>
-          <li><i class="fas fa-phone"></i> <a href="tel:+9771234567890">+977 1234567890</a></li>
-          <li><i class="fas fa-clock"></i> Mon - Fri: 9:00 AM - 6:00 PM</li>
-        </ul>
-      </div>
-
-      <!-- Newsletter & Social -->
-      <div class="footer-section">
-        <h3>Stay Connected</h3>
+        <h3>Follow Us</h3>
         <div class="social-icons">
           <a href="https://www.youtube.com/channel/UCSNQHlvnpKrVDuLtiVAzMHQ" target="_blank" aria-label="YouTube">
             <i class="fab fa-youtube"></i>
           </a>
-          <a href="#" target="_blank" aria-label="Instagram">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <a href="#" target="_blank" aria-label="Facebook">
+          <a href="https://www.facebook.com/simitcooks" target="_blank" aria-label="Facebook">
             <i class="fab fa-facebook-f"></i>
           </a>
-          <a href="#" target="_blank" aria-label="Pinterest">
-            <i class="fab fa-pinterest"></i>
+          <a href="https://www.tiktok.com/@simitcooks" target="_blank" aria-label="TikTok">
+            <i class="fab fa-tiktok"></i>
           </a>
-          <a href="#" target="_blank" aria-label="Twitter">
-            <i class="fab fa-twitter"></i>
+          <a href="https://www.instagram.com/simitcooks" target="_blank" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
           </a>
-        </div>
-        <div class="newsletter">
-          <p>Subscribe for weekly recipes!</p>
-          <form class="newsletter-form" id="newsletterForm">
-            <input type="email" placeholder="Your email address" class="newsletter-input" required>
-            <button type="submit" class="newsletter-btn">Subscribe</button>
-          </form>
         </div>
       </div>
     </div>
@@ -104,24 +83,6 @@ export function renderFooter() {
   backToTopButton.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-
-  // Newsletter form submission
-  const newsletterForm = document.getElementById('newsletterForm');
-  if (newsletterForm) {
-    newsletterForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const emailInput = newsletterForm.querySelector('.newsletter-input');
-      const email = emailInput.value;
-      
-      if (email) {
-        // Here you can add your newsletter API integration
-        alert(`Thank you for subscribing! We'll send recipes to ${email}`);
-        emailInput.value = '';
-      } else {
-        alert('Please enter a valid email address.');
-      }
-    });
-  }
 }
 
 // Auto-render footer when DOM is loaded
