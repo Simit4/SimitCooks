@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="google-site-verification" content="LnPzqNhuaGlF2M9762b2ESN7eWzJtw-CnatXSGeN_yM" />  
-  
   <title>Recipe | Simit Cooks</title>
 
   <!-- Fonts & Icons -->
@@ -12,24 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
   <!-- Main CSS -->
-  <link rel="stylesheet" href="/recipe.css" />
-  <link rel="stylesheet" href="/style.css" />
-
-  
-  <!-- Google Site Verification -->
-  <meta name="google-site-verification" content="Jow-GqIKPShIoRiDlcSZwir2bmZCdgdrcNCFm1OrPQA" />
-
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Easy and delicious home-style recipes like chowmein, curry, and more. Try them now!" />
-  <meta name="keywords" content="Nepali recipes, easy recipes, home cooking, vegetarian curry, chowmein, roti sabzi" />
-  <meta name="author" content="Simit Cooks" />
-
-  <!-- Open Graph / Social Sharing -->
-  <meta property="og:title" content="Recipe | Simit Cooks" />
-  <meta property="og:description" content="Try delicious home-style recipes made with love. Simple, tasty, and perfect for every day!" />
-  <meta property="og:image" content="https://yourwebsite.com/your-thumbnail.jpg" />
-  <meta property="og:url" content="https://yourwebsite.com/recipe.html" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="recipe.css" />
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-SL2G2MYTZX"></script>
@@ -40,74 +21,78 @@
     gtag('config', 'G-SL2G2MYTZX');
   </script>
 </head>
-
 <body>
 
+  <!-- Header and Footer will be added by style.js -->
+  
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content container">
+      <h1>Recipe Details</h1>
+      <p>Discover the art of cooking with our detailed recipes</p>
+    </div>
+  </section>
 
+  <!-- Recipe Content -->
+  <section class="recipe-page">
+    <h1 id="recipe-title"></h1>
 
-<!-- Recipe Content -->
-<section class="recipe-page">
-  <h1 id="recipe-title"></h1>
-
-  <div class="recipe-meta">
-    <span><i class="fas fa-clock"></i> <strong>Prep:</strong> <span id="prep-time"></span></span>
-    <span><i class="fas fa-utensils"></i> <strong>Cook:</strong> <span id="cook-time"></span></span>
-    <span><i class="fas fa-users"></i> <strong>Serves:</strong> <span id="servings"></span></span>
-  </div>
-
-  <p class="description" id="recipe-description">Loading recipe details...</p>
-
-  <div class="recipe-layout">
-    <div class="recipe-left">
-      <h3><i class="fas fa-list-ul"></i> Ingredients</h3>
-      <ul id="ingredients-list"></ul>
-
-      <h3><i class="fas fa-step-forward"></i> Method</h3>
-      <ol id="method-list"></ol>
-
-      <h3><i class="fas fa-chart-line"></i> Nutrition</h3>
-      <div id="nutrition"></div>
-
-      <div class="recipe-info">
-        <p><strong><i class="fas fa-tags"></i> Tags:</strong> <span id="tags"></span></p>
-        <p><strong><i class="fas fa-globe"></i> Cuisine:</strong> <span id="cuisine"></span></p>
-        <p><strong><i class="fas fa-folder"></i> Category:</strong> <span id="category"></span></p>
-      </div>
-
-      <h3><i class="fas fa-pencil-alt"></i> Notes</h3>
-      <p id="notes"></p>
-
-      <h3><i class="fas fa-lightbulb"></i> Fun Fact</h3>
-      <p id="facts"></p>
-
-      <button class="btn-print" onclick="window.print()">
-        <i class="fas fa-print"></i> Print Recipe
-      </button>
+    <div class="recipe-meta">
+      <span><i class="fas fa-clock"></i> <strong>Prep:</strong> <span id="prep-time"></span></span>
+      <span><i class="fas fa-utensils"></i> <strong>Cook:</strong> <span id="cook-time"></span></span>
+      <span><i class="fas fa-users"></i> <strong>Serves:</strong> <span id="servings"></span></span>
     </div>
 
-    <div class="recipe-right">
-      <div class="recipe-video">
-        <iframe id="recipe-video" src="" allowfullscreen title="Recipe Video"></iframe>
+    <p class="description" id="recipe-description">Loading recipe details...</p>
+
+    <div class="recipe-layout">
+      <div class="recipe-left">
+        <h3><i class="fas fa-list-ul"></i> Ingredients</h3>
+        <ul id="ingredients-list"></ul>
+
+        <h3><i class="fas fa-step-forward"></i> Method</h3>
+        <ol id="method-list"></ol>
+
+        <h3><i class="fas fa-chart-line"></i> Nutrition</h3>
+        <div id="nutrition"></div>
+
+        <div class="recipe-info">
+          <p><strong><i class="fas fa-tags"></i> Tags:</strong> <span id="tags"></span></p>
+          <p><strong><i class="fas fa-globe"></i> Cuisine:</strong> <span id="cuisine"></span></p>
+          <p><strong><i class="fas fa-folder"></i> Category:</strong> <span id="category"></span></p>
+        </div>
+
+        <h3><i class="fas fa-pencil-alt"></i> Notes</h3>
+        <p id="notes"></p>
+
+        <h3><i class="fas fa-lightbulb"></i> Fun Fact</h3>
+        <p id="facts"></p>
+
+        <button class="btn-print" onclick="window.print()">
+          <i class="fas fa-print"></i> Print Recipe
+        </button>
+      </div>
+
+      <div class="recipe-right">
+        <div class="recipe-video">
+          <iframe id="recipe-video" src="" allowfullscreen title="Recipe Video"></iframe>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Equipment Section -->
-<section class="equipment-page">
-  <h2 class="section-title">Premium Kitchen Tools</h2>
-  <p class="section-subtitle">
-    Handpicked tools to make cooking easier and enjoyable. All links are affiliate.
-  </p>
+  <!-- Equipment Section -->
+  <section class="equipment-page">
+    <h2 class="section-title">Recommended Kitchen Tools</h2>
+    <p class="section-subtitle">
+      Handpicked tools to make cooking easier and enjoyable.
+    </p>
+    <div class="equipment-grid" id="equipment-container"></div>
+  </section>
 
-  <div class="equipment-grid" id="equipment-container">
-    <!-- Equipment cards injected here via JS -->
-  </div>
-</section>
-
-<!-- Scripts -->
-<script type="module" src="/recipe.js"></script>
-<script type="module" src="/style.js"></script>
+  <!-- Scripts -->
+  <script type="module" src="style.js"></script>
+  <script type="module" src="recipe.js"></script>
 
 </body>
 </html>
