@@ -353,77 +353,6 @@ h1, h2, h3, h4, h5 {
 
 
 
-/* ------------------------------------------------- Footer -------------------------------------------------- */
-
-/* ===== Base Footer Styling ===== */
-.site-footer {
-  background: #121212;
-  color: #ddd;
-  padding: 2rem 1rem;
-  font-size: 0.9rem;
-}
-
-/* Footer main container */
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* ===== Footer Brand / Logo ===== */
-.footer-brand .logo {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.footer-brand p {
-  font-size: 0.85rem;
-  color: #aaa;
-}
-
-/* ===== Footer Navigation ===== */
-.footer-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.footer-nav a {
-  color: #ddd;
-  text-decoration: none;
-  transition: color 0.3s;
-  font-size: 0.9rem;
-}
-
-.footer-nav a:hover {
-  color: #ff0000;
-}
-
-/* ===== Social Icons ===== */
-.footer-social a {
-  font-size: 1.3rem;
-  color: #ff0000;
-  transition: opacity 0.3s;
-}
-
-.footer-social a:hover {
-  opacity: 0.8;
-}
-
-/* ===== Footer Bottom / Copyright ===== */
-.footer-bottom {
-  text-align: center;
-  padding-top: 1rem;
-  margin-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.8rem;
-  color: #888;
-}
-
 
 
 
@@ -508,35 +437,6 @@ h1, h2, h3, h4, h5 {
     max-width: 100%;
   }
    
-  /* Footer Adjustments */
-  .site-footer {
-    padding: 1.2rem 0.8rem;
-  }
-
-  .footer-content {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 1rem;
-  }
-
-  .footer-brand .logo {
-    font-size: 1.2rem;
-  }
-
-  .footer-nav {
-    justify-content: center;
-    gap: 0.8rem;
-  }
-
-  .footer-nav a {
-    font-size: 0.85rem;
-  }
-
-  .footer-social a {
-    font-size: 1.2rem;
-  }
-}
 
 
 
@@ -665,3 +565,37 @@ h1, h2, h3, h4, h5 {
   .card-body h3 { font-size: 0.95rem; }
   .recipe-card p { font-size: 0.7rem; }
 }
+
+
+
+
+     /* Footer Adjustments */
+  .site-footer {
+    padding: 1.2rem 0.8rem;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .footer-brand .logo {
+    font-size: 1.2rem;
+  }
+
+  .footer-nav {
+    justify-content: center;
+    gap: 0.8rem;
+  }
+
+  .footer-nav a {
+    font-size: 0.85rem;
+  }
+
+  .footer-social a {
+    font-size: 1.2rem;
+  }
+}
+
