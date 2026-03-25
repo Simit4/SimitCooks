@@ -5,9 +5,6 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-
-
-
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -28,7 +25,7 @@ function showSkeleton(count = BATCH) {
   }
 }
 
-// Initialize GLightbox with proper configuration
+// Initialize GLightbox with zoom disabled
 function initGLightbox() {
   if (glightbox) {
     glightbox.destroy();
@@ -42,12 +39,12 @@ function initGLightbox() {
         openEffect: 'zoom',
         closeEffect: 'zoom',
         slideEffect: 'slide',
-        zoomable: true,
+        zoomable: false,
         loop: true,
         touchNavigation: true,
         keyboardNavigation: true,
         closeButton: true,
-        draggable: true,
+        draggable: false,
         width: '90vw',
         height: '90vh',
         preload: true,
