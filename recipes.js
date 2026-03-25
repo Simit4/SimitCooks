@@ -5,26 +5,42 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-// DOM Elements
+
+
+// =================================================
+// 🔹 DOM Elements
+// =================================================
 const recipesContainer = document.getElementById('recipes-container');
 const searchInput = document.getElementById('search-input');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
-// State
+// =================================================
+// 🔹 State
+// =================================================
 let allRecipes = [];
 let currentFilter = 'all';
 let currentSearch = '';
+let isLoading = false;
 
-// Constants
+// =================================================
+// 🔹 Constants
+// =================================================
 const FALLBACK_IMAGE = 'https://i.ibb.co/4p4mR3N/momo-graphic.png';
+const DEBOUNCE_DELAY = 300;
+let debounceTimeout;
 
-// Helper Functions
+// =================================================
+// 🔹 Helper Functions
+// =================================================
+
+// Safe text formatting - handles null, undefined, and non-string values
 const safeText = (value, defaultValue = '') => {
-  if (!value && value !== 0) return defaultValue;
+  if (value === null || value === undefined) return defaultValue;
   if (typeof value === 'string') return value.trim() || defaultValue;
   return String(value) || defaultValue;
 };
 
+// Escape HTML to prevent XSS
 const escapeHtml = (text) => {
   const safe = safeText(text);
   const map = {
@@ -32,63 +48,116 @@ const escapeHtml = (text) => {
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;',
-    "'": '&#39;'
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
   };
-  return safe.replace(/[&<>"']/g, char => map[char]);
+  return safe.replace(/[&<>"'/`=]/g, char => map[char]);
 };
 
+// Extract YouTube video ID from various URL formats
 const getYouTubeId = (url) => {
   if (!url || typeof url !== 'string') return null;
-  const match = url.match(/(?:v=|v\/|vi\/|youtu\.be\/|\/embed\/|\/v\/|\/e\/)([a-zA-Z0-9_-]{11})/);
-  return match ? match[1] : null;
+  
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]{11})/,
+    /^([a-zA-Z0-9_-]{11})$/
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match && match[1]) return match[1];
+  }
+  return null;
 };
 
+// Get thumbnail from video URL
 const getVideoThumbnail = (videoUrl) => {
   const videoId = getYouTubeId(videoUrl);
   return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
 };
 
+// Get recipe thumbnail with fallback chain
 const getRecipeThumbnail = (recipe) => {
-  if (recipe.thumbnail_url && typeof recipe.thumbnail_url === 'string') {
+  // Try thumbnail_url first
+  if (recipe.thumbnail_url && typeof recipe.thumbnail_url === 'string' && recipe.thumbnail_url.trim()) {
     return recipe.thumbnail_url;
   }
+  
+  // Try video thumbnail
   const videoThumb = getVideoThumbnail(recipe.video_url);
   if (videoThumb) return videoThumb;
+  
+  // Return fallback
   return FALLBACK_IMAGE;
 };
 
-// Show Loading Skeleton
+// Validate recipe data
+const isValidRecipe = (recipe) => {
+  return recipe && typeof recipe === 'object' && (recipe.title || recipe.slug);
+};
+
+// =================================================
+// 🔹 UI Components
+// =================================================
+
+// Show loading skeleton
 const showLoadingSkeleton = () => {
-  if (!recipesContainer) return;
+  if (!recipesContainer || isLoading) return;
+  isLoading = true;
+  
   recipesContainer.innerHTML = '';
+  recipesContainer.classList.add('loading');
+  
+  // Show 6 skeletons (2 rows of 3)
   for (let i = 0; i < 6; i++) {
     const skeleton = document.createElement('div');
     skeleton.className = 'recipe-card skeleton-card';
+    skeleton.setAttribute('aria-label', 'Loading recipe...');
     skeleton.innerHTML = `
       <div class="thumbnail-wrapper skeleton-thumbnail"></div>
       <div class="card-body">
         <div class="skeleton-title"></div>
         <div class="skeleton-text"></div>
+        <div class="skeleton-text" style="width: 60%"></div>
       </div>
     `;
     recipesContainer.appendChild(skeleton);
   }
 };
 
-// Create Recipe Card
+// Hide loading skeleton
+const hideLoadingSkeleton = () => {
+  if (!recipesContainer) return;
+  isLoading = false;
+  recipesContainer.classList.remove('loading');
+};
+
+// Create recipe card element
 const createRecipeCard = (recipe) => {
+  if (!isValidRecipe(recipe)) return null;
+  
   const title = safeText(recipe.title, 'Untitled Recipe');
   const description = safeText(recipe.description, 'Delicious home-style recipe made with love.');
   const category = safeText(recipe.category);
   const slug = safeText(recipe.slug);
   const thumbnail = getRecipeThumbnail(recipe);
-
+  
   const card = document.createElement('div');
   card.className = 'recipe-card';
-  card.addEventListener('click', () => {
-    if (slug) window.location.href = `/recipe/${slug}`;
+  card.setAttribute('data-slug', slug);
+  card.setAttribute('data-category', category);
+  
+  // Add click handler
+  card.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (slug) {
+      window.location.href = `/recipe/${slug}`;
+    }
   });
-
+  
   card.innerHTML = `
     <div class="thumbnail-wrapper">
       <img 
@@ -104,22 +173,23 @@ const createRecipeCard = (recipe) => {
       ${category ? `<span class="recipe-category">${escapeHtml(category)}</span>` : ''}
     </div>
   `;
+  
   return card;
 };
 
-// Render Recipes
+// Render recipes to DOM
 const renderRecipes = () => {
   if (!recipesContainer) return;
-
+  
   let filteredRecipes = [...allRecipes];
-
+  
   // Apply category filter
   if (currentFilter !== 'all') {
     filteredRecipes = filteredRecipes.filter(recipe => 
       safeText(recipe.category).toLowerCase() === currentFilter.toLowerCase()
     );
   }
-
+  
   // Apply search filter
   if (currentSearch.trim()) {
     const searchTerm = currentSearch.toLowerCase().trim();
@@ -129,14 +199,17 @@ const renderRecipes = () => {
       safeText(recipe.category).toLowerCase().includes(searchTerm)
     );
   }
-
+  
+  // Clear container
   recipesContainer.innerHTML = '';
-
+  
+  // Show no results message
   if (filteredRecipes.length === 0) {
     recipesContainer.innerHTML = `
       <div class="no-results">
         <i class="fas fa-utensils"></i>
-        <p>No recipes found matching your criteria.</p>
+        <h3>No Recipes Found</h3>
+        <p>We couldn't find any recipes matching "${escapeHtml(currentSearch || currentFilter)}".</p>
         <button onclick="location.reload()" class="retry-btn">
           <i class="fas fa-sync-alt"></i> Show All Recipes
         </button>
@@ -144,69 +217,184 @@ const renderRecipes = () => {
     `;
     return;
   }
-
+  
+  // Render cards using document fragment for better performance
   const fragment = document.createDocumentFragment();
   filteredRecipes.forEach(recipe => {
     const card = createRecipeCard(recipe);
-    fragment.appendChild(card);
+    if (card) fragment.appendChild(card);
   });
   recipesContainer.appendChild(fragment);
+  
+  // Scroll to top when filters change (optional)
+  if (window.innerWidth <= 768) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 };
 
-// Fetch Recipes from Supabase
+// =================================================
+// 🔹 Data Fetching
+// =================================================
+
+// Fetch recipes from Supabase
 const fetchRecipes = async () => {
   showLoadingSkeleton();
-
+  
   try {
-    const { data, error } = await supabase
+    const { data, error, status } = await supabase
       .from('recipe_db')
       .select('title, description, category, slug, thumbnail_url, video_url')
       .order('created_at', { ascending: false });
-
-    if (error) throw error;
-
+    
+    if (error) {
+      console.error('Supabase error:', error);
+      throw new Error(error.message || 'Database error');
+    }
+    
+    if (status !== 200) {
+      throw new Error(`HTTP ${status}: Failed to fetch recipes`);
+    }
+    
     if (!data || data.length === 0) {
       recipesContainer.innerHTML = `
         <div class="no-results">
           <i class="fas fa-utensils"></i>
-          <p>No recipes found. Check back soon!</p>
+          <h3>No Recipes Yet</h3>
+          <p>Check back soon for delicious recipes!</p>
         </div>
       `;
+      hideLoadingSkeleton();
       return;
     }
-
-    allRecipes = data;
+    
+    // Filter out invalid recipes
+    const validRecipes = data.filter(isValidRecipe);
+    
+    if (validRecipes.length === 0) {
+      recipesContainer.innerHTML = `
+        <div class="no-results">
+          <i class="fas fa-exclamation-circle"></i>
+          <p>No valid recipes found.</p>
+        </div>
+      `;
+      hideLoadingSkeleton();
+      return;
+    }
+    
+    allRecipes = validRecipes;
     renderRecipes();
+    hideLoadingSkeleton();
+    
   } catch (error) {
-    console.error('Error fetching recipes:', error);
+    console.error('Failed to fetch recipes:', {
+      message: error.message,
+      stack: error.stack
+    });
+    
     recipesContainer.innerHTML = `
       <div class="error-message">
         <i class="fas fa-exclamation-circle"></i>
-        <p>Failed to load recipes. Please try again later.</p>
+        <h3>Unable to Load Recipes</h3>
+        <p>${escapeHtml(error.message) || 'Please check your internet connection and try again.'}</p>
         <button onclick="location.reload()" class="retry-btn">
           <i class="fas fa-sync-alt"></i> Try Again
         </button>
       </div>
     `;
+    hideLoadingSkeleton();
   }
 };
 
-// Event Listeners
+// =================================================
+// 🔹 Event Listeners with Debounce
+// =================================================
+
+// Debounced search input
 if (searchInput) {
   searchInput.addEventListener('input', (e) => {
-    currentSearch = e.target.value;
-    renderRecipes();
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+      currentSearch = e.target.value;
+      renderRecipes();
+    }, DEBOUNCE_DELAY);
   });
 }
 
+// Filter buttons with smooth transition
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
+    // Update active state
     filterButtons.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    
+    // Update current filter
     currentFilter = btn.getAttribute('data-filter');
+    
+    // Clear search input when changing filter (optional)
+    if (searchInput && currentSearch) {
+      searchInput.value = '';
+      currentSearch = '';
+    }
+    
+    // Re-render with new filter
     renderRecipes();
   });
 });
 
-// Initialize
-fetchRecipes();
+// =================================================
+// 🔹 Lazy Loading with Intersection Observer
+// =================================================
+
+const initLazyLoading = () => {
+  if ('IntersectionObserver' in window) {
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          const src = img.getAttribute('data-src');
+          if (src) {
+            img.src = src;
+            img.removeAttribute('data-src');
+          }
+          observer.unobserve(img);
+        }
+      });
+    }, {
+      rootMargin: '50px',
+      threshold: 0.1
+    });
+    
+    // Observe all images with data-src attribute
+    document.querySelectorAll('img[data-src]').forEach(img => {
+      imageObserver.observe(img);
+    });
+  } else {
+    // Fallback for older browsers
+    document.querySelectorAll('img[data-src]').forEach(img => {
+      img.src = img.getAttribute('data-src');
+    });
+  }
+};
+
+// =================================================
+// 🔹 Initialize
+// =================================================
+
+// Wait for DOM to be ready
+const init = () => {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchRecipes();
+      initLazyLoading();
+    });
+  } else {
+    fetchRecipes();
+    initLazyLoading();
+  }
+};
+
+// Start the app
+init();
+
+// Export for testing (if needed)
+export { fetchRecipes, createRecipeCard, isValidRecipe, renderRecipes };
