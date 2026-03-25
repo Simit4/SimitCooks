@@ -167,12 +167,12 @@ h1, h2, h3, h4, h5 {
   transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* =================================================
-   🔹 Hero Section
-================================================= */
+/* -------------------------------------------------
+   Hero Section
+-------------------------------------------------- */
 .hero {
   background: linear-gradient(135deg, #f0f8f2, #eaf3e0);
-  min-height: 50vh;
+  min-height: 30vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -217,8 +217,9 @@ h1, h2, h3, h4, h5 {
   color: var(--primary);
   font-weight: 900;
   font-size: 2.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   line-height: 1.2;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.08);
   animation: fadeInUp 1s ease forwards;
 }
 
@@ -226,20 +227,15 @@ h1, h2, h3, h4, h5 {
   font-size: 1.15rem;
   color: var(--muted);
   margin-bottom: 1.5rem;
+  line-height: 1.6;
   animation: fadeInUp 1.2s ease forwards;
 }
 
+/* Fade-in Animation */
 @keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
-
 /* =================================================
    🔹 Featured Recipes Section
 ================================================= */
