@@ -5,20 +5,32 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Get slug from URL
+// SIMPLE: Get slug from URL
 function getSlugFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('slug');
+    // Method 1: Check query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    let slug = urlParams.get('slug');
+    
+    if (slug) {
+        console.log('✅ Found slug in query params:', slug);
+        return slug;
+    }
+    
+    // Method 2: Check if URL has /recipe/slug format
+    const pathParts = window.location.pathname.split('/');
+    const lastPart = pathParts[pathParts.length - 1];
+    if (lastPart && lastPart !== 'index.html' && !lastPart.includes('.')) {
+        console.log('✅ Found slug in path:', lastPart);
+        return lastPart;
+    }
+    
+    console.log('❌ No slug found in URL');
+    console.log('Current URL:', window.location.href);
+    console.log('Search params:', window.location.search);
+    return null;
 }
 
-// Convert YouTube URL to embed URL
-function convertToEmbedUrl(url) {
-    if (!url) return '';
-    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
-    return match ? `https://www.youtube.com/embed/${match[1]}` : '';
-}
-
-// Show error message
+// Show error with URL info
 function showError(message) {
     const container = document.querySelector('.recipe-page');
     if (container) {
@@ -27,23 +39,26 @@ function showError(message) {
                 <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #dc2626;"></i>
                 <h2 style="margin-top: 1rem;">Recipe Not Found</h2>
                 <p>${message}</p>
-                <p style="font-size: 0.9rem; color: #666; margin-top: 1rem;">
-                    Try: /recipe/index.html?slug=simple-egg-roll
-                </p>
+                <div style="background: #f5f5f5; padding: 1rem; margin: 1rem; border-radius: 8px; text-align: left;">
+                    <strong>Debug Info:</strong><br>
+                    Current URL: ${window.location.href}<br>
+                    Search String: "${window.location.search}"<br>
+                    Pathname: ${window.location.pathname}<br>
+                    Try adding: ?slug=simple-egg-roll
+                </div>
                 <a href="/recipes.html" style="display: inline-block; margin-top: 1rem; padding: 0.8rem 1.5rem; background: #27ae60; color: white; border-radius: 25px; text-decoration: none;">
-                    <i class="fas fa-arrow-left"></i> Browse All Recipes
+                    Browse All Recipes
                 </a>
             </div>
         `;
     }
 }
 
-// Load and display recipe
+// Load recipe
 async function loadRecipe() {
-    console.log('🚀 Recipe page loading...');
+    console.log('=== LOADING RECIPE PAGE ===');
     
     const slug = getSlugFromUrl();
-    console.log('📝 Slug from URL:', slug);
     
     if (!slug) {
         showError('No recipe specified. Please add ?slug=recipe-name to the URL');
@@ -51,12 +66,8 @@ async function loadRecipe() {
     }
     
     try {
-        // Show loading state
-        const titleEl = document.getElementById('recipe-title');
-        if (titleEl) titleEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading recipe...';
+        console.log('Fetching recipe with slug:', slug);
         
-        // Fetch recipe from Supabase
-        console.log('📡 Fetching recipe:', slug);
         const { data: recipe, error } = await supabase
             .from('recipe_db')
             .select('*')
@@ -64,240 +75,103 @@ async function loadRecipe() {
             .single();
         
         if (error) {
-            console.error('❌ Supabase error:', error);
+            console.error('Supabase error:', error);
             showError(`Error: ${error.message}`);
             return;
         }
         
         if (!recipe) {
-            console.error('❌ No recipe found for slug:', slug);
-            showError(`Recipe "${slug}" not found`);
+            console.error('No recipe found');
+            showError(`Recipe "${slug}" not found in database`);
             return;
         }
         
-        console.log('✅ Recipe loaded:', recipe.title);
+        console.log('Recipe found:', recipe.title);
         
-        // Set page title
+        // Display recipe
         document.title = `${recipe.title} | Simit Cooks`;
+        document.getElementById('recipe-title').textContent = recipe.title;
+        document.getElementById('recipe-description').textContent = recipe.description || '';
+        document.getElementById('prep-time').textContent = recipe.prep_time || 'N/A';
+        document.getElementById('cook-time').textContent = recipe.cook_time || 'N/A';
+        document.getElementById('servings').textContent = recipe.servings || 'N/A';
         
-        // =================================================
-        // 🔹 Basic Info
-        // =================================================
-        
-        if (titleEl) titleEl.textContent = recipe.title;
-        
-        const descEl = document.getElementById('recipe-description');
-        if (descEl) descEl.textContent = recipe.description || '';
-        
-        const prepEl = document.getElementById('prep-time');
-        if (prepEl) prepEl.textContent = recipe.prep_time || 'N/A';
-        
-        const cookEl = document.getElementById('cook-time');
-        if (cookEl) cookEl.textContent = recipe.cook_time || 'N/A';
-        
-        const servingsEl = document.getElementById('servings');
-        if (servingsEl) servingsEl.textContent = recipe.servings || 'N/A';
-        
-        // =================================================
-        // 🔹 Ingredients
-        // =================================================
-        
+        // Ingredients
         const ingredientsList = document.getElementById('ingredients-list');
-        if (ingredientsList) {
-            ingredientsList.innerHTML = '';
-            let ingredients = recipe.ingredients;
-            
-            if (typeof ingredients === 'string') {
-                try {
-                    ingredients = JSON.parse(ingredients);
-                } catch(e) {
-                    console.error('Failed to parse ingredients:', e);
-                    ingredients = [];
-                }
-            }
-            
-            if (Array.isArray(ingredients) && ingredients.length > 0) {
-                ingredients.forEach(item => {
-                    const li = document.createElement('li');
-                    li.textContent = item;
-                    ingredientsList.appendChild(li);
-                });
-            } else {
-                ingredientsList.innerHTML = '<li>No ingredients listed</li>';
-            }
-        }
+        ingredientsList.innerHTML = '';
+        let ingredients = recipe.ingredients;
+        if (typeof ingredients === 'string') ingredients = JSON.parse(ingredients);
+        ingredients.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            ingredientsList.appendChild(li);
+        });
         
-        // =================================================
-        // 🔹 Method
-        // =================================================
-        
+        // Method
         const methodList = document.getElementById('method-list');
-        if (methodList) {
-            methodList.innerHTML = '';
-            let methods = recipe.method;
-            
-            if (typeof methods === 'string') {
-                try {
-                    methods = JSON.parse(methods);
-                } catch(e) {
-                    console.error('Failed to parse method:', e);
-                    methods = [];
-                }
-            }
-            
-            if (Array.isArray(methods) && methods.length > 0) {
-                methods.forEach(step => {
-                    const li = document.createElement('li');
-                    li.textContent = step;
-                    methodList.appendChild(li);
-                });
-            } else {
-                methodList.innerHTML = '<li>No instructions available</li>';
-            }
-        }
+        methodList.innerHTML = '';
+        let methods = recipe.method;
+        if (typeof methods === 'string') methods = JSON.parse(methods);
+        methods.forEach(step => {
+            const li = document.createElement('li');
+            li.textContent = step;
+            methodList.appendChild(li);
+        });
         
-        // =================================================
-        // 🔹 Nutrition
-        // =================================================
-        
+        // Nutrition
+        let nutrition = recipe.nutritional_info;
+        if (typeof nutrition === 'string') nutrition = JSON.parse(nutrition);
         const nutritionDiv = document.getElementById('nutrition');
-        if (nutritionDiv && recipe.nutritional_info) {
-            let nutrition = recipe.nutritional_info;
-            
-            if (typeof nutrition === 'string') {
-                try {
-                    nutrition = JSON.parse(nutrition);
-                } catch(e) {
-                    console.error('Failed to parse nutrition:', e);
-                    nutrition = {};
+        if (nutrition) {
+            nutritionDiv.innerHTML = `
+                <strong>Nutrition Information:</strong><br>
+                Calories: ${nutrition.calories || 'N/A'}<br>
+                Protein: ${nutrition.protein || 'N/A'}<br>
+                Carbs: ${nutrition.carbohydrates || 'N/A'}<br>
+                Fat: ${nutrition.fat || 'N/A'}
+            `;
+        }
+        
+        // Tags
+        let tags = recipe.tags;
+        if (typeof tags === 'string') tags = JSON.parse(tags);
+        document.getElementById('tags').textContent = tags ? tags.join(', ') : 'N/A';
+        
+        // Cuisine
+        let cuisine = recipe.cuisine;
+        if (typeof cuisine === 'string') cuisine = JSON.parse(cuisine);
+        document.getElementById('cuisine').textContent = cuisine ? cuisine.join(', ') : 'N/A';
+        
+        // Category
+        let category = recipe.category;
+        if (typeof category === 'string') category = JSON.parse(category);
+        document.getElementById('category').textContent = category ? category.join(', ') : 'N/A';
+        
+        // Notes
+        document.getElementById('notes').textContent = recipe.notes || 'No notes available';
+        document.getElementById('facts').textContent = recipe.facts || 'No fun facts available';
+        
+        // Video
+        if (recipe.video_url) {
+            const videoMatch = recipe.video_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+            if (videoMatch) {
+                const embedUrl = `https://www.youtube.com/embed/${videoMatch[1]}`;
+                const videoContainer = document.querySelector('.recipe-video');
+                if (videoContainer) {
+                    videoContainer.innerHTML = `<iframe src="${embedUrl}" frameborder="0" allowfullscreen style="width:100%; height:100%;"></iframe>`;
                 }
             }
-            
-            if (nutrition && Object.keys(nutrition).length > 0) {
-                nutritionDiv.innerHTML = `
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.75rem;">
-                        ${nutrition.calories ? `<div><strong>🔥 Calories:</strong><br>${nutrition.calories}</div>` : ''}
-                        ${nutrition.protein ? `<div><strong>💪 Protein:</strong><br>${nutrition.protein}</div>` : ''}
-                        ${nutrition.carbohydrates ? `<div><strong>🍚 Carbs:</strong><br>${nutrition.carbohydrates}</div>` : ''}
-                        ${nutrition.fat ? `<div><strong>🥑 Fat:</strong><br>${nutrition.fat}</div>` : ''}
-                        ${nutrition.fiber ? `<div><strong>🌾 Fiber:</strong><br>${nutrition.fiber}</div>` : ''}
-                    </div>
-                `;
-            }
         }
         
-        // =================================================
-        // 🔹 Tags, Cuisine, Category
-        // =================================================
-        
-        const tagsSpan = document.getElementById('tags');
-        if (tagsSpan && recipe.tags) {
-            let tags = recipe.tags;
-            if (typeof tags === 'string') tags = JSON.parse(tags);
-            tagsSpan.textContent = Array.isArray(tags) ? tags.join(', ') : 'Not available';
-        }
-        
-        const cuisineSpan = document.getElementById('cuisine');
-        if (cuisineSpan && recipe.cuisine) {
-            let cuisine = recipe.cuisine;
-            if (typeof cuisine === 'string') cuisine = JSON.parse(cuisine);
-            cuisineSpan.textContent = Array.isArray(cuisine) ? cuisine.join(', ') : 'Not available';
-        }
-        
-        const categorySpan = document.getElementById('category');
-        if (categorySpan && recipe.category) {
-            let category = recipe.category;
-            if (typeof category === 'string') category = JSON.parse(category);
-            categorySpan.textContent = Array.isArray(category) ? category.join(', ') : 'Not available';
-        }
-        
-        // =================================================
-        // 🔹 Notes & Facts
-        // =================================================
-        
-        const notesEl = document.getElementById('notes');
-        if (notesEl) notesEl.textContent = recipe.notes || 'No additional notes available.';
-        
-        const factsEl = document.getElementById('facts');
-        if (factsEl) factsEl.textContent = recipe.facts || 'No fun facts found.';
-        
-        // =================================================
-        // 🔹 Video
-        // =================================================
-        
-        const embedUrl = convertToEmbedUrl(recipe.video_url);
-        const videoContainer = document.querySelector('.recipe-video');
-        if (videoContainer) {
-            if (embedUrl) {
-                videoContainer.innerHTML = `
-                    <iframe 
-                        src="${embedUrl}" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                `;
-                videoContainer.style.display = 'block';
-            } else {
-                videoContainer.style.display = 'none';
-            }
-        }
-        
-        // =================================================
-        // 🔹 Equipment
-        // =================================================
-        
-        if (recipe.equipment_ids && recipe.equipment_ids.length > 0) {
-            try {
-                const { data: equipment, error: equipError } = await supabase
-                    .from('equipment_db')
-                    .select('*')
-                    .in('id', recipe.equipment_ids);
-                
-                const equipmentContainer = document.getElementById('equipment-container');
-                if (equipmentContainer && equipment && !equipError && equipment.length > 0) {
-                    equipmentContainer.innerHTML = '';
-                    equipment.forEach(item => {
-                        const equipmentDiv = document.createElement('div');
-                        equipmentDiv.className = 'equipment-item';
-                        equipmentDiv.innerHTML = `
-                            <div class="image-wrapper">
-                                ${item.image_url ? `<img src="${item.image_url}" alt="${item.name}">` : '<div style="padding: 2rem; text-align: center;">No image</div>'}
-                                <div class="overlay">
-                                    <p>${item.description || 'Essential kitchen tool'}</p>
-                                </div>
-                            </div>
-                            <h3>${item.name}</h3>
-                            ${item.affiliate_link ? `<a href="${item.affiliate_link}" target="_blank" rel="noopener noreferrer" class="btn-buy">Buy Now →</a>` : ''}
-                        `;
-                        equipmentContainer.appendChild(equipmentDiv);
-                    });
-                }
-            } catch (err) {
-                console.error('Error loading equipment:', err);
-            }
-        }
-        
-        // =================================================
-        // 🔹 Update View Count
-        // =================================================
-        
-        supabase
-            .from('recipe_db')
-            .update({ views: (recipe.views || 0) + 1 })
-            .eq('id', recipe.id)
-            .then(() => console.log('✅ View count updated'))
-            .catch(err => console.error('Error updating views:', err));
-        
-        console.log('🎉 Recipe rendered successfully');
+        console.log('✅ Recipe displayed successfully');
         
     } catch (error) {
-        console.error('❌ Error:', error);
+        console.error('Error:', error);
         showError(`Failed to load recipe: ${error.message}`);
     }
 }
 
-// Initialize
+// Start
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', loadRecipe);
 } else {
