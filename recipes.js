@@ -7,6 +7,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 
+
 // =================================================
 // 🔹 DOM Elements
 // =================================================
@@ -181,13 +182,21 @@ const createRecipeCard = (recipe) => {
 const renderRecipes = () => {
   if (!recipesContainer) return;
   
+  console.log('Rendering recipes with filter:', currentFilter);
+  console.log('Total recipes:', allRecipes.length);
+  
   let filteredRecipes = [...allRecipes];
   
-  // Apply category filter
+  // Apply category filter - FIXED: Check if filter is not 'all'
   if (currentFilter !== 'all') {
-    filteredRecipes = filteredRecipes.filter(recipe => 
-      safeText(recipe.category).toLowerCase() === currentFilter.toLowerCase()
-    );
+    filteredRecipes = filteredRecipes.filter(recipe => {
+      const recipeCategory = safeText(recipe.category).toLowerCase();
+      const filterValue = currentFilter.toLowerCase();
+      const matches = recipeCategory === filterValue;
+      
+      console.log(`Recipe: ${recipe.title}, Category: ${recipeCategory}, Filter: ${filterValue}, Matches: ${matches}`);
+      return matches;
+    });
   }
   
   // Apply search filter
@@ -199,6 +208,8 @@ const renderRecipes = () => {
       safeText(recipe.category).toLowerCase().includes(searchTerm)
     );
   }
+  
+  console.log('Filtered recipes count:', filteredRecipes.length);
   
   // Clear container
   recipesContainer.innerHTML = '';
@@ -267,6 +278,9 @@ const fetchRecipes = async () => {
       return;
     }
     
+    console.log('Fetched recipes:', data);
+    console.log('Recipe categories:', data.map(r => r.category));
+    
     // Filter out invalid recipes
     const validRecipes = data.filter(isValidRecipe);
     
@@ -306,7 +320,7 @@ const fetchRecipes = async () => {
 };
 
 // =================================================
-// 🔹 Event Listeners with Debounce
+// 🔹 Event Listeners
 // =================================================
 
 // Debounced search input
@@ -320,26 +334,36 @@ if (searchInput) {
   });
 }
 
-// Filter buttons with smooth transition
-filterButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    // Update active state
-    filterButtons.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    // Update current filter
-    currentFilter = btn.getAttribute('data-filter');
-    
-    // Clear search input when changing filter (optional)
-    if (searchInput && currentSearch) {
-      searchInput.value = '';
-      currentSearch = '';
-    }
-    
-    // Re-render with new filter
-    renderRecipes();
+// Filter buttons - FIXED: Proper event handling
+if (filterButtons && filterButtons.length > 0) {
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      // Get the filter value from data-filter attribute
+      const filterValue = btn.getAttribute('data-filter');
+      console.log('Filter button clicked:', filterValue);
+      
+      // Update active state
+      filterButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      // Update current filter
+      currentFilter = filterValue;
+      
+      // Clear search input when changing filter for better UX
+      if (searchInput && currentSearch) {
+        searchInput.value = '';
+        currentSearch = '';
+      }
+      
+      // Re-render with new filter
+      renderRecipes();
+    });
   });
-});
+} else {
+  console.warn('No filter buttons found on the page');
+}
 
 // =================================================
 // 🔹 Lazy Loading with Intersection Observer
