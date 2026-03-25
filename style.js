@@ -1,5 +1,5 @@
 // =================================================
-// 🔹 Hamburger Menu Toggle
+// 🔹 Hamburger Menu Toggle (Header)
 // =================================================
 const hamburger = document.getElementById('hamburgerBtn');
 const navLinks = document.getElementById('navLinks');
@@ -20,7 +20,7 @@ if (hamburger && navLinks) {
 }
 
 // =================================================
-// 🔹 Back to Top Button
+// 🔹 Back to Top Button (Footer)
 // =================================================
 const backTop = document.getElementById('backToTop');
 
