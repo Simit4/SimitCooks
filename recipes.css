@@ -319,11 +319,11 @@ h5 {
 }
 
 /* =================================================
-   🔹 Recipes Grid - Vertical Layout on All Devices
+   🔹 Recipes Grid - 3 per row on desktop
 ================================================= */
 .recipes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   padding: 2rem;
   max-width: 1400px;
@@ -732,19 +732,23 @@ h5 {
 }
 
 /* =================================================
-   🔹 Responsive Design - Vertical Scroll on Mobile
+   🔹 Responsive Design - 3 per row on desktop, 2 on tablet, 1 on mobile
 ================================================= */
+
+/* Tablet: 2 columns */
 @media (max-width: 1024px) {
   .hero h1 {
     font-size: 2rem;
   }
   
   .recipes-grid {
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
     padding: 1.5rem;
   }
 }
 
+/* Mobile: 1 column */
 @media (max-width: 768px) {
   .logo {
     font-size: 2rem;
@@ -807,9 +811,8 @@ h5 {
     max-width: 300px;
   }
 
-  /* IMPORTANT: Vertical scroll - NOT horizontal */
+  /* Mobile: 1 column */
   .recipes-grid {
-    display: grid;
     grid-template-columns: 1fr;
     gap: 1.5rem;
     padding: 1.5rem;
@@ -878,6 +881,7 @@ h5 {
   }
 }
 
+/* Small Mobile */
 @media (max-width: 480px) {
   .container {
     padding: 0 1rem;
