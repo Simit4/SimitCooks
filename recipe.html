@@ -1,35 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Recipes | Simit Cooks</title>
+  <meta name="google-site-verification" content="LnPzqNhuaGlF2M9762b2ESN7eWzJtw-CnatXSGeN_yM" />  
+  
+  <title>Recipe | Simit Cooks</title>
 
   <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600;700&family=Unbounded:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
   <!-- Main CSS -->
-  <link rel="stylesheet" href="recipes.css" />
+  <link rel="stylesheet" href="/recipe.css" />
+
+  <!-- Google Site Verification -->
+  <meta name="google-site-verification" content="Jow-GqIKPShIoRiDlcSZwir2bmZCdgdrcNCFm1OrPQA" />
 
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Explore delicious Nepali and home-style recipes from Simit Cooks — from curry to chowmein, and everything in between." />
-  <meta name="keywords" content="Nepali recipes, home cooking, vegetarian recipes, curry, chowmein, roti" />
+  <meta name="description" content="Easy and delicious home-style recipes like chowmein, curry, and more. Try them now!" />
+  <meta name="keywords" content="Nepali recipes, easy recipes, home cooking, vegetarian curry, chowmein, roti sabzi" />
   <meta name="author" content="Simit Cooks" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Recipes | Simit Cooks" />
-  <meta property="og:description" content="Discover authentic and easy-to-make recipes from Simit Cooks kitchen." />
-  <meta property="og:image" content="https://yourwebsite.com/recipes-thumbnail.jpg" />
-  <meta property="og:url" content="https://yourwebsite.com/recipes.html" />
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:title" content="Recipe | Simit Cooks" />
+  <meta property="og:description" content="Try delicious home-style recipes made with love. Simple, tasty, and perfect for every day!" />
+  <meta property="og:image" content="https://yourwebsite.com/your-thumbnail.jpg" />
+  <meta property="og:url" content="https://yourwebsite.com/recipe.html" />
   <meta name="twitter:card" content="summary_large_image" />
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-SL2G2MYTZX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
+    function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-SL2G2MYTZX');
   </script>
@@ -37,66 +41,106 @@
 
 <body>
 
-  <!-- ================= Header ================= -->
-  <header class="main-header">
-    <div class="container header-wrapper">
-      <a href="index.html">
-        <div class="logo" aria-label="Simit Cooks">
-          <span class="logo-modern">Simit’s</span>
-          <span class="logo-traditional">Cooks</span>
-        </div>
-      </a>
-      <nav class="navbar">
-        <ul class="nav-links">
-          <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-          <li><a href="recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
-          <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
-          <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
-          <li><a href="gallery.html"><i class="fas fa-image"></i> Gallery</a></li>
-        </ul>
-        <!-- Hamburger for mobile -->
-        <button class="hamburger" aria-label="Menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      </nav>
-    </div>
-  </header>
+<header class="main-header">
+  <div class="container header-wrapper">
+    <a href="index.html">
+      <div class="logo" aria-label="Simit Cooks">
+        <span class="logo-modern">Simit’s</span>
+        <span class="logo-traditional">Cooks</span>
+      </div> 
+    </a>
 
-  <!-- ================= Hero Section ================= -->
-  <section class="hero">
-    <div class="hero-content container">
-      <h1>Delicious Recipes for Every Occasion</h1>
-      <p>Authentic Nepali & world flavors, simple to make at home.</p>
-    </div>
-  </section>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="recipes.html"><i class="fas fa-book"></i> Recipes</a></li>
+        <li><a href="equipment.html"><i class="fas fa-blender"></i> Equipment</a></li>
+        <li><a href="about.html"><i class="fas fa-address-card"></i> About</a></li>
+        <li><a href="gallery.html"><i class="fas fa-image"></i> Gallery</a></li>
+      </ul>
 
-  <!-- ================= Filters & Search ================= -->
-  <section class="controls">
-    <div class="filters">
-      <button class="filter-btn active" data-filter="all">All Recipes</button>
-      <button class="filter-btn" data-filter="main">Main Dishes</button>
-      <button class="filter-btn" data-filter="snack">Snacks</button>
-      <button class="filter-btn" data-filter="dessert">Desserts</button>
-      <button class="filter-btn" data-filter="festival">Festival Specials</button>
-    </div>
-    <div class="search-wrapper">
-      <i class="fas fa-search"></i>
-      <input type="text" id="search-input" placeholder="Search recipes..." />
-    </div>
-  </section>
+      <!-- Hamburger -->
+      <button class="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+  </div>
+</header>
 
-  <!-- ================= Recipe Cards ================= -->
-  <main>
-    <div id="recipes-container" class="recipes-grid"></div>
-  </main>
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content container">
+    <h1>Recipe Details</h1>
+    <p>Discover the art of cooking with our detailed recipes</p>
+  </div>
+</section>
 
-  <!-- ================= Scripts ================= -->
-  <script type="module" src="recipes.js"></script>
-  <script type="module" src="footer.js"></script>
-  <script type="module" src="mobile-menu.js"></script>
+<!-- Recipe Content -->
+<section class="recipe-page">
+  <h1 id="recipe-title"></h1>
+
+  <div class="recipe-meta">
+    <span><i class="fas fa-clock"></i> <strong>Prep:</strong> <span id="prep-time"></span></span>
+    <span><i class="fas fa-utensils"></i> <strong>Cook:</strong> <span id="cook-time"></span></span>
+    <span><i class="fas fa-users"></i> <strong>Serves:</strong> <span id="servings"></span></span>
+  </div>
+
+  <p class="description" id="recipe-description">Loading recipe details...</p>
+
+  <div class="recipe-layout">
+    <div class="recipe-left">
+      <h3><i class="fas fa-list-ul"></i> Ingredients</h3>
+      <ul id="ingredients-list"></ul>
+
+      <h3><i class="fas fa-step-forward"></i> Method</h3>
+      <ol id="method-list"></ol>
+
+      <h3><i class="fas fa-chart-line"></i> Nutrition</h3>
+      <div id="nutrition"></div>
+
+      <div class="recipe-info">
+        <p><strong><i class="fas fa-tags"></i> Tags:</strong> <span id="tags"></span></p>
+        <p><strong><i class="fas fa-globe"></i> Cuisine:</strong> <span id="cuisine"></span></p>
+        <p><strong><i class="fas fa-folder"></i> Category:</strong> <span id="category"></span></p>
+      </div>
+
+      <h3><i class="fas fa-pencil-alt"></i> Notes</h3>
+      <p id="notes"></p>
+
+      <h3><i class="fas fa-lightbulb"></i> Fun Fact</h3>
+      <p id="facts"></p>
+
+      <button class="btn-print" onclick="window.print()">
+        <i class="fas fa-print"></i> Print Recipe
+      </button>
+    </div>
+
+    <div class="recipe-right">
+      <div class="recipe-video">
+        <iframe id="recipe-video" src="" allowfullscreen title="Recipe Video"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Equipment Section -->
+<section class="equipment-page">
+  <h2 class="section-title">Premium Kitchen Tools</h2>
+  <p class="section-subtitle">
+    Handpicked tools to make cooking easier and enjoyable. All links are affiliate.
+  </p>
+
+  <div class="equipment-grid" id="equipment-container">
+    <!-- Equipment cards injected here via JS -->
+  </div>
+</section>
+
+<!-- Scripts -->
+<script type="module" src="/mobile-menu.js"></script>
+<script type="module" src="/footer.js"></script>
+<script type="module" src="/recipe.js"></script>
 
 </body>
-
 </html>
