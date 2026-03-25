@@ -8,8 +8,8 @@ const CONFIG = {
   supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ',
   fallbackImage: 'https://i.ibb.co/4p4mR3N/momo-graphic.png',
   debounceDelay: 300,
-  itemsPerPage: 12,
-  skeletonCount: 6
+  skeletonCount: 6,
+  debug: true
 };
 
 // =================================================
@@ -39,17 +39,43 @@ const state = {
 };
 
 // =================================================
+// 🔹 Debug Logger
+// =================================================
+const debugLog = (...args) => {
+  if (CONFIG.debug) {
+    console.log('[Recipes Debug]:', ...args);
+  }
+};
+
+// =================================================
 // 🔹 Utility Functions
 // =================================================
 
-// Safe text formatting
 const safeText = (value, defaultValue = '') => {
   if (value === null || value === undefined) return defaultValue;
   if (typeof value === 'string') return value.trim() || defaultValue;
   return String(value) || defaultValue;
 };
 
-// Enhanced XSS protection
+// Handle array categories - FIXED for your database structure
+const getRecipeCategories = (recipe) => {
+  // category is an array in your database
+  if (recipe.category && Array.isArray(recipe.category)) {
+    return recipe.category.map(cat => safeText(cat).toLowerCase());
+  }
+  // If it's a string, convert to array
+  if (recipe.category && typeof recipe.category === 'string') {
+    return [safeText(recipe.category).toLowerCase()];
+  }
+  return [];
+};
+
+// Check if recipe matches a category
+const matchesCategory = (recipe, filterValue) => {
+  const categories = getRecipeCategories(recipe);
+  return categories.includes(filterValue.toLowerCase());
+};
+
 const escapeHtml = (text) => {
   const safe = safeText(text);
   const htmlEscapeMap = {
@@ -65,7 +91,6 @@ const escapeHtml = (text) => {
   return safe.replace(/[&<>"'/`=]/g, char => htmlEscapeMap[char]);
 };
 
-// YouTube ID extraction
 const extractYouTubeId = (url) => {
   if (!url || typeof url !== 'string') return null;
   
@@ -82,7 +107,6 @@ const extractYouTubeId = (url) => {
   return null;
 };
 
-// Get thumbnail URL
 const getThumbnail = (recipe) => {
   if (recipe.thumbnail_url?.trim()) return recipe.thumbnail_url;
   
@@ -92,25 +116,25 @@ const getThumbnail = (recipe) => {
   return CONFIG.fallbackImage;
 };
 
-// Validate recipe
 const isValidRecipe = (recipe) => {
   return recipe && typeof recipe === 'object' && (recipe.title || recipe.slug);
 };
 
-// Debounce function
-const debounce = (func, delay) => {
-  let timeoutId;
-  return (...args) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func.apply(this, args), delay);
-  };
+// Format ingredients and method from JSON arrays
+const formatArray = (arr) => {
+  if (!arr) return [];
+  if (Array.isArray(arr)) return arr;
+  try {
+    return JSON.parse(arr);
+  } catch {
+    return [];
+  }
 };
 
 // =================================================
 // 🔹 UI Components
 // =================================================
 
-// Create loading skeleton
 const createSkeleton = () => {
   const skeleton = document.createElement('div');
   skeleton.className = 'recipe-card skeleton-card';
@@ -126,7 +150,6 @@ const createSkeleton = () => {
   return skeleton;
 };
 
-// Show loading state
 const showLoading = () => {
   if (!elements.container || state.isLoading) return;
   
@@ -139,27 +162,26 @@ const showLoading = () => {
   }
 };
 
-// Hide loading state
 const hideLoading = () => {
   if (!elements.container) return;
   state.isLoading = false;
   elements.container.classList.remove('loading');
 };
 
-// Create recipe card
 const createRecipeCard = (recipe) => {
   if (!isValidRecipe(recipe)) return null;
   
   const title = safeText(recipe.title, 'Untitled Recipe');
   const description = safeText(recipe.description, 'Delicious home-style recipe made with love.');
-  const category = safeText(recipe.category);
+  const categories = getRecipeCategories(recipe);
+  const primaryCategory = categories[0] || '';
   const slug = safeText(recipe.slug);
   const thumbnail = getThumbnail(recipe);
   
   const card = document.createElement('div');
   card.className = 'recipe-card';
   card.setAttribute('data-slug', slug);
-  card.setAttribute('data-category', category);
+  card.setAttribute('data-categories', categories.join(','));
   
   card.addEventListener('click', (e) => {
     e.preventDefault();
@@ -178,14 +200,13 @@ const createRecipeCard = (recipe) => {
     <div class="card-body">
       <h3>${escapeHtml(title)}</h3>
       <p>${escapeHtml(description)}</p>
-      ${category ? `<span class="recipe-category">${escapeHtml(category)}</span>` : ''}
+      ${primaryCategory ? `<span class="recipe-category">${escapeHtml(primaryCategory)}</span>` : ''}
     </div>
   `;
   
   return card;
 };
 
-// Show no results message
 const showNoResults = () => {
   if (!elements.container) return;
   
@@ -204,7 +225,6 @@ const showNoResults = () => {
   `;
 };
 
-// Show error message
 const showError = (message) => {
   if (!elements.container) return;
   
@@ -221,35 +241,76 @@ const showError = (message) => {
 };
 
 // =================================================
-// 🔹 Filtering Logic
+// 🔹 Filtering Logic - FIXED for array categories
 // =================================================
 
-// Apply all filters to recipes
 const applyFilters = () => {
+  debugLog('Applying filters...');
+  debugLog('Current filter:', state.currentFilter);
+  debugLog('Current search:', state.currentSearch);
+  debugLog('Total recipes:', state.recipes.length);
+  
   let filtered = [...state.recipes];
   
-  // Apply category filter
+  // Debug: Show all categories from recipes
+  const allCategories = [];
+  state.recipes.forEach(recipe => {
+    const categories = getRecipeCategories(recipe);
+    categories.forEach(cat => {
+      if (!allCategories.includes(cat)) allCategories.push(cat);
+    });
+  });
+  debugLog('Available categories in database:', allCategories);
+  
+  // Apply category filter - FIXED for array categories
   if (state.currentFilter !== 'all') {
-    filtered = filtered.filter(recipe => 
-      safeText(recipe.category).toLowerCase() === state.currentFilter.toLowerCase()
-    );
+    const filterValue = state.currentFilter.toLowerCase();
+    debugLog(`Filtering by category: "${filterValue}"`);
+    
+    filtered = filtered.filter(recipe => {
+      const matches = matchesCategory(recipe, filterValue);
+      
+      if (matches) {
+        const categories = getRecipeCategories(recipe);
+        debugLog(`✓ Matched: ${recipe.title} (categories: ${categories.join(', ')})`);
+      }
+      
+      return matches;
+    });
+    
+    debugLog(`Found ${filtered.length} recipes matching filter "${filterValue}"`);
+  } else {
+    debugLog('Showing all recipes');
   }
   
   // Apply search filter
   if (state.currentSearch.trim()) {
     const searchTerm = state.currentSearch.toLowerCase().trim();
-    filtered = filtered.filter(recipe =>
-      safeText(recipe.title).toLowerCase().includes(searchTerm) ||
-      safeText(recipe.description).toLowerCase().includes(searchTerm) ||
-      safeText(recipe.category).toLowerCase().includes(searchTerm)
-    );
+    debugLog(`Searching for: "${searchTerm}"`);
+    
+    filtered = filtered.filter(recipe => {
+      const title = safeText(recipe.title).toLowerCase();
+      const description = safeText(recipe.description).toLowerCase();
+      const categories = getRecipeCategories(recipe).join(' ').toLowerCase();
+      
+      const matches = title.includes(searchTerm) || 
+                      description.includes(searchTerm) || 
+                      categories.includes(searchTerm);
+      
+      if (matches) {
+        debugLog(`✓ Search matched: ${recipe.title}`);
+      }
+      
+      return matches;
+    });
+    
+    debugLog(`Found ${filtered.length} recipes matching search "${searchTerm}"`);
   }
   
   state.filteredRecipes = filtered;
   return filtered;
 };
 
-// Render recipes to DOM
 const renderRecipes = () => {
   if (!elements.container) return;
   
@@ -260,7 +321,6 @@ const renderRecipes = () => {
     return;
   }
   
-  // Use document fragment for better performance
   const fragment = document.createDocumentFragment();
   
   filteredRecipes.forEach(recipe => {
@@ -275,38 +335,62 @@ const renderRecipes = () => {
   if (window.innerWidth <= 768 && (state.currentFilter !== 'all' || state.currentSearch)) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+  
+  debugLog(`Rendered ${filteredRecipes.length} recipes`);
 };
 
 // =================================================
 // 🔹 Data Fetching
 // =================================================
 
-// Fetch recipes from Supabase
 const fetchRecipes = async () => {
   showLoading();
   
   try {
+    debugLog('Fetching recipes from Supabase...');
+    
     const { data, error, status } = await supabase
       .from('recipe_db')
-      .select('title, description, category, slug, thumbnail_url, video_url')
+      .select('*')
       .order('created_at', { ascending: false });
     
     if (error) {
+      debugLog('Supabase error:', error);
       throw new Error(error.message);
     }
     
     if (status !== 200) {
+      debugLog('HTTP error:', status);
       throw new Error(`HTTP ${status}: Failed to fetch recipes`);
     }
     
     if (!data?.length) {
+      debugLog('No recipes found in database');
       showNoResults();
       hideLoading();
       return;
     }
     
+    debugLog(`Fetched ${data.length} recipes from database`);
+    
+    // Log sample recipe categories
+    debugLog('Sample recipes with categories:');
+    data.slice(0, 3).forEach(r => {
+      debugLog(`- ${r.title}: categories =`, r.category);
+    });
+    
     // Validate and store recipes
     state.recipes = data.filter(isValidRecipe);
+    
+    // Log all unique categories
+    const allCategories = [];
+    state.recipes.forEach(recipe => {
+      const categories = getRecipeCategories(recipe);
+      categories.forEach(cat => {
+        if (!allCategories.includes(cat)) allCategories.push(cat);
+      });
+    });
+    debugLog('All unique categories in database:', allCategories);
     
     if (state.recipes.length === 0) {
       showNoResults();
@@ -319,7 +403,7 @@ const fetchRecipes = async () => {
     hideLoading();
     
   } catch (error) {
-    console.error('Fetch error:', error);
+    debugLog('Fetch error:', error);
     showError(error.message || 'Unable to load recipes. Please check your connection.');
     hideLoading();
   }
@@ -329,10 +413,11 @@ const fetchRecipes = async () => {
 // 🔹 Event Handlers
 // =================================================
 
-// Handle filter button clicks
 const handleFilterClick = (btn) => {
   const filterValue = btn.getAttribute('data-filter');
   if (!filterValue) return;
+  
+  debugLog(`Filter button clicked: ${filterValue}`);
   
   // Update active state
   elements.filterButtons.forEach(b => b.classList.remove('active'));
@@ -351,73 +436,52 @@ const handleFilterClick = (btn) => {
   renderRecipes();
 };
 
-// Handle search input with debounce
-const handleSearch = debounce((value) => {
+const handleSearch = (value) => {
+  debugLog(`Search input changed: "${value}"`);
   state.currentSearch = value;
   renderRecipes();
-}, CONFIG.debounceDelay);
+};
+
+// Debounce function
+const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func.apply(this, args), delay);
+  };
+};
 
 // =================================================
 // 🔹 Initialize Event Listeners
 // =================================================
 
 const initEventListeners = () => {
+  debugLog('Initializing event listeners...');
+  debugLog('Filter buttons found:', elements.filterButtons.length);
+  
   // Filter buttons
   if (elements.filterButtons?.length) {
-    elements.filterButtons.forEach(btn => {
+    elements.filterButtons.forEach((btn, index) => {
+      const filterValue = btn.getAttribute('data-filter');
+      debugLog(`Button ${index}: data-filter="${filterValue}"`);
+      
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         handleFilterClick(btn);
       });
     });
+  } else {
+    debugLog('No filter buttons found on the page!');
   }
   
   // Search input
   if (elements.searchInput) {
+    const debouncedSearch = debounce(handleSearch, CONFIG.debounceDelay);
     elements.searchInput.addEventListener('input', (e) => {
-      handleSearch(e.target.value);
+      debouncedSearch(e.target.value);
     });
+    debugLog('Search input listener attached');
   }
-};
-
-// =================================================
-// 🔹 Lazy Loading Images
-// =================================================
-
-const initLazyLoading = () => {
-  if (!('IntersectionObserver' in window)) return;
-  
-  const imageObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const img = entry.target;
-        const src = img.getAttribute('data-src');
-        if (src) {
-          img.src = src;
-          img.removeAttribute('data-src');
-        }
-        imageObserver.unobserve(img);
-      }
-    });
-  }, { rootMargin: '50px', threshold: 0.1 });
-  
-  // Observe images that will be added dynamically
-  const observeImages = () => {
-    document.querySelectorAll('img[data-src]').forEach(img => {
-      imageObserver.observe(img);
-    });
-  };
-  
-  // Set up a mutation observer to watch for new images
-  const mutationObserver = new MutationObserver((mutations) => {
-    mutations.forEach(() => observeImages());
-  });
-  
-  if (elements.container) {
-    mutationObserver.observe(elements.container, { childList: true, subtree: true });
-  }
-  
-  observeImages();
 };
 
 // =================================================
@@ -425,29 +489,28 @@ const initLazyLoading = () => {
 // =================================================
 
 const init = () => {
+  debugLog('Initializing Recipes App...');
+  
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       initEventListeners();
       fetchRecipes();
-      initLazyLoading();
     });
   } else {
     initEventListeners();
     fetchRecipes();
-    initLazyLoading();
   }
 };
 
 // Start the app
 init();
 
-// =================================================
-// 🔹 Export for testing (if needed)
-// =================================================
-export { 
-  fetchRecipes, 
-  renderRecipes, 
-  applyFilters,
+// Export for debugging
+window.recipesDebug = {
   state,
-  CONFIG
+  CONFIG,
+  applyFilters,
+  renderRecipes,
+  getRecipeCategories,
+  matchesCategory
 };
