@@ -57,7 +57,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* =================================================
-   🔹 Header & Navbar (SAME FOR ALL PAGES)
+   🔹 HEADER (Same for all pages)
 ================================================= */
 .main-header {
   background: var(--light);
@@ -168,7 +168,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* =================================================
-   🔹 Hero Section (SAME FOR ALL PAGES)
+   🔹 HERO (Same for all pages)
 ================================================= */
 .hero {
   background: linear-gradient(135deg, #f0f8f2, #eaf3e0);
@@ -237,7 +237,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* =================================================
-   🔹 Footer (SAME FOR ALL PAGES)
+   🔹 FOOTER (Same for all pages)
 ================================================= */
 .site-footer {
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
@@ -443,10 +443,8 @@ h1, h2, h3, h4, h5 {
 }
 
 /* =================================================
-   🔹 Responsive Design (SAME FOR ALL PAGES)
+   🔹 RESPONSIVE (Mobile fixes for header, hero, footer)
 ================================================= */
-
-/* Mobile */
 @media (max-width: 768px) {
   .logo {
     font-size: 2rem;
@@ -475,7 +473,7 @@ h1, h2, h3, h4, h5 {
     display: flex;
   }
 
-  /* Hero Mobile Fix - Reduced Gaps */
+  /* Hero Mobile Fix */
   .hero {
     padding: 1.5rem 1rem;
     min-height: auto;
@@ -549,7 +547,6 @@ h1, h2, h3, h4, h5 {
   }
 }
 
-/* Small Mobile */
 @media (max-width: 480px) {
   .hero {
     padding: 1.2rem 0.8rem;
