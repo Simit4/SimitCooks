@@ -1061,7 +1061,7 @@ h1, h2, h3, h4, h5 {
   }
 
   .footer-section {
-    text-align: left;
+    text-align: center;
     width: 100%;
     max-width: 300px;  /* Limits width so it doesn't stretch full width */
   }
