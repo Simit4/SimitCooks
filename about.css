@@ -181,7 +181,7 @@ h1, h2, h3, h4, h5 {
 /* -------------------------------------------------
    Hero Section – About Page
 -------------------------------------------------- */
-.about-hero-simple {
+.hero {
   background: linear-gradient(135deg, #f0f8f2, #eaf3e0);
   min-height: 40vh;
   display: flex;
@@ -193,7 +193,7 @@ h1, h2, h3, h4, h5 {
   overflow: hidden;
 }
 
-.about-hero-simple::before {
+.hero::before {
   content: "";
   position: absolute;
   top: -50px;
@@ -205,7 +205,7 @@ h1, h2, h3, h4, h5 {
   z-index: 0;
 }
 
-.about-hero-simple::after {
+.hero::after {
   content: "";
   position: absolute;
   bottom: -60px;
@@ -217,13 +217,13 @@ h1, h2, h3, h4, h5 {
   z-index: 0;
 }
 
-.hero-simple-container {
+.hero {
   position: relative;
   z-index: 1;
   max-width: 800px;
 }
 
-.hero-simple-container h1 {
+.hero h1 {
   font-family: 'Poppins', sans-serif;
   color: var(--primary);
   font-weight: 900;
@@ -234,7 +234,7 @@ h1, h2, h3, h4, h5 {
   animation: fadeInUp 1s ease forwards;
 }
 
-.hero-simple-container p {
+.hero p {
   font-size: 1.15rem;
   color: var(--muted);
   line-height: 1.6;
