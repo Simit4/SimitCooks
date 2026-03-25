@@ -1070,7 +1070,14 @@ h1, h2, h3, h4, h5 {
 
   .footer-nav {
     align-items: center;
+    text-align: center;   /* Add this */
+
   }
+
+     .footer-nav a {
+    justify-content: center;  /* Add this - centers the icon+text */
+  }
+
 
   .social-icons {
     justify-content: center;
