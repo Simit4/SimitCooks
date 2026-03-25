@@ -50,9 +50,9 @@ h5 {
 }
 
 .container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin-inline: auto;
-  padding: 1rem;
+  padding: 0 2rem;
 }
 
 .text-center {
@@ -319,13 +319,13 @@ h5 {
 }
 
 /* =================================================
-   🔹 Recipes Grid
+   🔹 Recipes Grid - Vertical Layout on All Devices
 ================================================= */
 .recipes-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
-  padding: 2rem 8%;
+  padding: 2rem;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -341,7 +341,7 @@ h5 {
 }
 
 .recipe-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-5px);
   box-shadow: var(--shadow-md);
 }
 
@@ -379,10 +379,6 @@ h5 {
   transition: transform 0.3s;
 }
 
-.recipe-card:hover .momo-placeholder img {
-  transform: scale(1.05);
-}
-
 .card-body {
   padding: 1.2rem;
   text-align: center;
@@ -406,7 +402,7 @@ h5 {
   margin-bottom: 0.5rem;
 }
 
-.recipe-card .recipe-category {
+.recipe-category {
   display: inline-block;
   background: #f0f0f0;
   padding: 0.25rem 0.8rem;
@@ -415,6 +411,112 @@ h5 {
   color: var(--primary);
   font-weight: 600;
   margin-top: 0.5rem;
+}
+
+/* =================================================
+   🔹 Skeleton Loader Styles
+================================================= */
+.skeleton-card {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-thumbnail {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  height: 220px;
+  width: 100%;
+}
+
+.skeleton-title {
+  height: 24px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.skeleton-text {
+  height: 40px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 4px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* =================================================
+   🔹 Error & No Results States
+================================================= */
+.error-message,
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+  grid-column: 1 / -1;
+}
+
+.error-message i,
+.no-results i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.error-message i {
+  color: #dc2626;
+}
+
+.no-results i {
+  color: var(--muted);
+}
+
+.retry-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
 }
 
 /* =================================================
@@ -630,7 +732,7 @@ h5 {
 }
 
 /* =================================================
-   🔹 Responsive Design
+   🔹 Responsive Design - Vertical Scroll on Mobile
 ================================================= */
 @media (max-width: 1024px) {
   .hero h1 {
@@ -638,8 +740,8 @@ h5 {
   }
   
   .recipes-grid {
-    padding: 2rem 5%;
     gap: 1.5rem;
+    padding: 1.5rem;
   }
 }
 
@@ -705,25 +807,22 @@ h5 {
     max-width: 300px;
   }
 
+  /* IMPORTANT: Vertical scroll - NOT horizontal */
   .recipes-grid {
-    display: flex !important;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
     padding: 1.5rem;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
   }
 
   .recipe-card {
-    flex: 0 0 260px;
-    scroll-snap-align: start;
-    min-width: 260px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
   }
 
-  .thumbnail-wrapper,
-  .momo-placeholder {
-    height: 160px;
+  .thumbnail-wrapper {
+    height: 200px;
   }
 
   .card-body {
@@ -731,11 +830,11 @@ h5 {
   }
 
   .recipe-card h3 {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .recipe-card p {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
   }
 
   .site-footer {
@@ -780,6 +879,10 @@ h5 {
 }
 
 @media (max-width: 480px) {
+  .container {
+    padding: 0 1rem;
+  }
+
   .hero h1 {
     font-size: 1.5rem;
   }
@@ -793,13 +896,21 @@ h5 {
     font-size: 0.75rem;
   }
 
-  .recipe-card {
-    flex: 0 0 220px;
-    min-width: 220px;
+  .recipes-grid {
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .thumbnail-wrapper {
+    height: 180px;
   }
 
   .recipe-card h3 {
-    font-size: 0.9rem;
+    font-size: 1rem;
+  }
+
+  .recipe-card p {
+    font-size: 0.8rem;
   }
 
   .footer-section h3 {
@@ -820,39 +931,4 @@ h5 {
     flex-direction: column;
     gap: 0.5rem;
   }
-}
-
-/* Loading State */
-.loading {
-  text-align: center;
-  padding: 2rem;
-  color: var(--muted);
-}
-
-.loading i {
-  font-size: 2rem;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* No Results State */
-.no-results {
-  text-align: center;
-  padding: 3rem;
-  color: var(--muted);
-  grid-column: 1 / -1;
-}
-
-.no-results i {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  opacity: 0.5;
 }
