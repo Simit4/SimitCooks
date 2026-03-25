@@ -1,123 +1,4 @@
 /* -------------------------------------------------
-   Gallery Section
--------------------------------------------------- */
-.gallery-container {
-  max-width: 1600px;
-  margin: 50px auto;
-  padding: 0 40px;
-}
-
-/* Category Buttons */
-.category-buttons {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.category-buttons button {
-  background: #fff;
-  border: 2px solid #ff6b6b;
-  color: #ff6b6b;
-  padding: 10px 25px;
-  margin: 0 10px 10px 0;
-  border-radius: 30px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1rem;
-}
-
-.category-buttons button.active,
-.category-buttons button:hover {
-  background: #ff6b6b;
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-}
-
-/* Gallery Grid */
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-}
-
-/* Gallery Item */
-.gallery-item {
-  position: relative;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: #fff;
-}
-
-.gallery-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 35px rgba(0,0,0,0.25);
-}
-
-.gallery-item img {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.4s ease;
-}
-
-.gallery-item:hover img {
-  transform: scale(1.08);
-}
-
-/* Overlay */
-.overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-  color: #fff;
-  padding: 20px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.gallery-item:hover .overlay {
-  opacity: 1;
-}
-
-.overlay .title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  font-family: 'Poppins', sans-serif;
-}
-
-.overlay .description {
-  font-size: 0.85rem;
-  font-weight: 400;
-  opacity: 0.9;
-  line-height: 1.4;
-}
-
-/* Skeleton Loader */
-.skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: 20px;
-  height: 250px;
-  width: 100%;
-}
-
-@keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-/* -------------------------------------------------
    GLightbox - COMPLETELY WORKING VERSION
 -------------------------------------------------- */
 
@@ -130,6 +11,60 @@
   height: 100% !important;
   z-index: 999999 !important;
   background: rgba(0, 0, 0, 0.92) !important;
+}
+
+/* Hide the default GLightbox close button content but keep the button */
+.glightbox-container .gclose {
+  position: fixed !important;
+  top: 25px !important;
+  right: 25px !important;
+  width: 45px !important;
+  height: 45px !important;
+  background: rgba(0, 0, 0, 0.8) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  z-index: 1000001 !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Remove any default text or content from the close button */
+.glightbox-container .gclose svg,
+.glightbox-container .gclose span,
+.glightbox-container .gclose img {
+  display: none !important;
+}
+
+/* Add our custom X */
+.glightbox-container .gclose::before {
+  content: "✕" !important;
+  font-size: 24px !important;
+  font-weight: normal !important;
+  color: white !important;
+  display: block !important;
+  line-height: 1 !important;
+  position: relative !important;
+  z-index: 1000002 !important;
+}
+
+.glightbox-container .gclose:hover {
+  background: #ff6b6b !important;
+  transform: scale(1.1) !important;
+  border-color: white !important;
+}
+
+/* Also handle any other potential close button classes */
+.glightbox-clean .gclose {
+  display: none !important;
 }
 
 /* Slide wrapper */
@@ -200,51 +135,6 @@
   line-height: 1.5 !important;
 }
 
-/* Close button - ALWAYS VISIBLE AND CLICKABLE */
-.glightbox-container .gclose,
-.glightbox-clean .gclose {
-  position: fixed !important;
-  top: 25px !important;
-  right: 25px !important;
-  width: 45px !important;
-  height: 45px !important;
-  background: rgba(0, 0, 0, 0.8) !important;
-  border-radius: 50% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  cursor: pointer !important;
-  transition: all 0.3s ease !important;
-  z-index: 1000001 !important;
-  color: white !important;
-  font-size: 0 !important;
-  border: 2px solid rgba(255, 255, 255, 0.3) !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Create the X symbol */
-.glightbox-container .gclose::before,
-.glightbox-clean .gclose::before {
-  content: "✕" !important;
-  font-size: 24px !important;
-  font-weight: normal !important;
-  color: white !important;
-  display: block !important;
-  line-height: 1 !important;
-}
-
-.glightbox-container .gclose:hover,
-.glightbox-clean .gclose:hover {
-  background: #ff6b6b !important;
-  transform: scale(1.1) !important;
-  border-color: white !important;
-}
-
 /* Navigation arrows */
 .glightbox-container .gnext,
 .glightbox-container .gprev {
@@ -281,6 +171,27 @@
   background: #ff6b6b !important;
   transform: translateY(-50%) scale(1.1) !important;
   border-color: white !important;
+}
+
+/* Remove navigation arrow icons if any */
+.glightbox-container .gnext svg,
+.glightbox-container .gprev svg,
+.glightbox-container .gnext span,
+.glightbox-container .gprev span {
+  display: none !important;
+}
+
+/* Add custom arrow symbols */
+.glightbox-container .gnext::before {
+  content: "→" !important;
+  font-size: 28px !important;
+  color: white !important;
+}
+
+.glightbox-container .gprev::before {
+  content: "←" !important;
+  font-size: 28px !important;
+  color: white !important;
 }
 
 /* Disable zoom functionality */
@@ -339,16 +250,14 @@
   }
   
   /* Mobile close button positioning */
-  .glightbox-container .gclose,
-  .glightbox-clean .gclose {
+  .glightbox-container .gclose {
     top: 15px !important;
     right: 15px !important;
     width: 40px !important;
     height: 40px !important;
   }
   
-  .glightbox-container .gclose::before,
-  .glightbox-clean .gclose::before {
+  .glightbox-container .gclose::before {
     font-size: 20px !important;
   }
   
@@ -356,6 +265,10 @@
   .glightbox-container .gprev {
     width: 40px !important;
     height: 40px !important;
+  }
+  
+  .glightbox-container .gnext::before,
+  .glightbox-container .gprev::before {
     font-size: 22px !important;
   }
   
