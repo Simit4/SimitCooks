@@ -954,6 +954,7 @@ h1, h2, h3, h4, h5 {
 @media (max-width: 768px) {
   .logo {
     font-size: 2rem;
+    padding: 3rem 1rem;
   }
 
   .hamburger {
@@ -980,7 +981,7 @@ h1, h2, h3, h4, h5 {
   }
 
   .hero {
-    padding: 1.5rem 1rem;
+    padding: 3rem 1rem;
     min-height: auto;
   }
   .hero h1 {
