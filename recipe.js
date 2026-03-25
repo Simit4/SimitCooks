@@ -9,6 +9,37 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // 🔹 Helper Functions
 // =================================================
 
+// Get slug from URL - FIXED to work with both formats
+function getSlugFromUrl() {
+  const currentUrl = window.location.href;
+  console.log('Current URL:', currentUrl);
+  
+  // Try to get from pathname (clean URL: /recipe/slug)
+  const pathParts = window.location.pathname.split('/').filter(Boolean);
+  console.log('Path parts:', pathParts);
+  
+  // Check if we have a recipe path
+  if (pathParts[0] === 'recipe' && pathParts[1]) {
+    return pathParts[1];
+  }
+  
+  // Check if we have recipe.html?slug=something
+  if (pathParts[0] === 'recipe.html') {
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get('slug');
+    if (slug) return slug;
+  }
+  
+  // Try query parameter as fallback
+  const params = new URLSearchParams(window.location.search);
+  const slugParam = params.get('slug');
+  if (slugParam) {
+    return slugParam;
+  }
+  
+  return null;
+}
+
 // Convert YouTube URL to embed URL
 function convertToEmbedUrl(url) {
   if (!url) return '';
@@ -26,33 +57,16 @@ function convertToEmbedUrl(url) {
   return '';
 }
 
-// Get slug from URL
-function getSlugFromUrl() {
-  // Try to get from pathname (clean URL: /recipe/slug)
-  const pathParts = window.location.pathname.split('/').filter(Boolean);
-  
-  console.log('Path parts:', pathParts);
-  console.log('Current URL:', window.location.href);
-  
-  // Check if we have a recipe path
-  if (pathParts[0] === 'recipe' && pathParts[1]) {
-    return pathParts[1];
-  }
-  
-  // Try query parameter as fallback
-  const params = new URLSearchParams(window.location.search);
-  const slugParam = params.get('slug');
-  if (slugParam) {
-    return slugParam;
-  }
-  
-  return null;
-}
-
 // Show loading state
 function showLoading() {
-  document.getElementById('recipe-title').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading recipe...';
-  document.getElementById('recipe-description').innerHTML = 'Please wait while we fetch the recipe details.';
+  const titleEl = document.getElementById('recipe-title');
+  if (titleEl) {
+    titleEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading recipe...';
+  }
+  const descEl = document.getElementById('recipe-description');
+  if (descEl) {
+    descEl.innerHTML = 'Please wait while we fetch the recipe details.';
+  }
 }
 
 // Show error message
@@ -60,11 +74,11 @@ function showError(message) {
   const container = document.querySelector('.recipe-page');
   if (container) {
     container.innerHTML = `
-      <div class="error-message" style="text-align: center; padding: 3rem;">
+      <div style="text-align: center; padding: 3rem;">
         <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #dc2626;"></i>
         <h2 style="margin-top: 1rem;">Recipe Not Found</h2>
         <p>${message}</p>
-        <a href="/recipes.html" class="btn-primary" style="display: inline-block; margin-top: 1rem;">
+        <a href="/recipes.html" style="display: inline-block; margin-top: 1rem; padding: 0.8rem 1.5rem; background: #27ae60; color: white; border-radius: 25px; text-decoration: none;">
           <i class="fas fa-arrow-left"></i> Browse All Recipes
         </a>
       </div>
@@ -89,77 +103,97 @@ function renderRecipe(recipe) {
   document.title = `${recipe.title} | Simit Cooks`;
   
   // Basic info
-  document.getElementById('recipe-title').innerText = recipe.title;
-  document.getElementById('recipe-description').innerText = recipe.description || 'Delicious home-style recipe.';
-  document.getElementById('prep-time').innerText = recipe.prep_time || 'N/A';
-  document.getElementById('cook-time').innerText = recipe.cook_time || 'N/A';
-  document.getElementById('servings').innerText = recipe.servings || 'N/A';
+  const titleEl = document.getElementById('recipe-title');
+  if (titleEl) titleEl.innerText = recipe.title;
+  
+  const descEl = document.getElementById('recipe-description');
+  if (descEl) descEl.innerText = recipe.description || 'Delicious home-style recipe.';
+  
+  const prepEl = document.getElementById('prep-time');
+  if (prepEl) prepEl.innerText = recipe.prep_time || 'N/A';
+  
+  const cookEl = document.getElementById('cook-time');
+  if (cookEl) cookEl.innerText = recipe.cook_time || 'N/A';
+  
+  const servingsEl = document.getElementById('servings');
+  if (servingsEl) servingsEl.innerText = recipe.servings || 'N/A';
 
   // Ingredients
   const ingredientsList = document.getElementById('ingredients-list');
-  ingredientsList.innerHTML = '';
-  if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
-    recipe.ingredients.forEach(item => {
-      const li = document.createElement('li');
-      li.textContent = item;
-      ingredientsList.appendChild(li);
-    });
-  } else {
-    ingredientsList.innerHTML = '<li>No ingredients listed.</li>';
+  if (ingredientsList) {
+    ingredientsList.innerHTML = '';
+    if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
+      recipe.ingredients.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        ingredientsList.appendChild(li);
+      });
+    } else {
+      ingredientsList.innerHTML = '<li>No ingredients listed.</li>';
+    }
   }
 
   // Method
   const methodList = document.getElementById('method-list');
-  methodList.innerHTML = '';
-  if (recipe.method && Array.isArray(recipe.method)) {
-    recipe.method.forEach(step => {
-      const li = document.createElement('li');
-      li.textContent = step;
-      methodList.appendChild(li);
-    });
-  } else {
-    methodList.innerHTML = '<li>No instructions available.</li>';
+  if (methodList) {
+    methodList.innerHTML = '';
+    if (recipe.method && Array.isArray(recipe.method)) {
+      recipe.method.forEach(step => {
+        const li = document.createElement('li');
+        li.textContent = step;
+        methodList.appendChild(li);
+      });
+    } else {
+      methodList.innerHTML = '<li>No instructions available.</li>';
+    }
   }
 
   // Nutrition
   const nutrition = recipe.nutritional_info;
   const nutritionDiv = document.getElementById('nutrition');
-  if (nutrition && typeof nutrition === 'object') {
-    nutritionDiv.innerHTML = `
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.5rem;">
-        ${nutrition.calories ? `<div><strong>🔥 Calories:</strong> ${nutrition.calories}</div>` : ''}
-        ${nutrition.protein ? `<div><strong>💪 Protein:</strong> ${nutrition.protein}</div>` : ''}
-        ${nutrition.carbohydrates ? `<div><strong>🍚 Carbs:</strong> ${nutrition.carbohydrates}</div>` : ''}
-        ${nutrition.fiber ? `<div><strong>🌾 Fiber:</strong> ${nutrition.fiber}</div>` : ''}
-        ${nutrition.fat ? `<div><strong>🥑 Fat:</strong> ${nutrition.fat}</div>` : ''}
-      </div>
-    `;
-  } else {
-    nutritionDiv.innerHTML = '<p>Nutrition information not available.</p>';
+  if (nutritionDiv) {
+    if (nutrition && typeof nutrition === 'object') {
+      nutritionDiv.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.5rem;">
+          ${nutrition.calories ? `<div><strong>🔥 Calories:</strong> ${nutrition.calories}</div>` : ''}
+          ${nutrition.protein ? `<div><strong>💪 Protein:</strong> ${nutrition.protein}</div>` : ''}
+          ${nutrition.carbohydrates ? `<div><strong>🍚 Carbs:</strong> ${nutrition.carbohydrates}</div>` : ''}
+          ${nutrition.fiber ? `<div><strong>🌾 Fiber:</strong> ${nutrition.fiber}</div>` : ''}
+          ${nutrition.fat ? `<div><strong>🥑 Fat:</strong> ${nutrition.fat}</div>` : ''}
+        </div>
+      `;
+    } else {
+      nutritionDiv.innerHTML = '<p>Nutrition information not available.</p>';
+    }
   }
 
   // Tags, Cuisine, Category
   const tagsSpan = document.getElementById('tags');
-  tagsSpan.textContent = recipe.tags?.join(', ') || 'Not available';
+  if (tagsSpan) tagsSpan.textContent = recipe.tags?.join(', ') || 'Not available';
   
   const cuisineSpan = document.getElementById('cuisine');
-  cuisineSpan.textContent = recipe.cuisine?.join(', ') || 'Not available';
+  if (cuisineSpan) cuisineSpan.textContent = recipe.cuisine?.join(', ') || 'Not available';
   
   const categorySpan = document.getElementById('category');
-  categorySpan.textContent = recipe.category?.join(', ') || 'Not available';
+  if (categorySpan) categorySpan.textContent = recipe.category?.join(', ') || 'Not available';
 
   // Notes & Fun Facts
-  document.getElementById('notes').textContent = recipe.notes || 'No additional notes available.';
-  document.getElementById('facts').textContent = recipe.facts || 'No fun facts found.';
+  const notesEl = document.getElementById('notes');
+  if (notesEl) notesEl.textContent = recipe.notes || 'No additional notes available.';
+  
+  const factsEl = document.getElementById('facts');
+  if (factsEl) factsEl.textContent = recipe.facts || 'No fun facts found.';
 
   // Video
   const embedUrl = convertToEmbedUrl(recipe.video_url);
   const videoContainer = document.querySelector('.recipe-video');
-  if (embedUrl) {
-    videoContainer.innerHTML = `<iframe src="${embedUrl}" allowfullscreen title="${recipe.title} video"></iframe>`;
-    videoContainer.style.display = 'block';
-  } else {
-    videoContainer.style.display = 'none';
+  if (videoContainer) {
+    if (embedUrl) {
+      videoContainer.innerHTML = `<iframe src="${embedUrl}" allowfullscreen title="${recipe.title} video" style="width:100%; height:100%; border:none;"></iframe>`;
+      videoContainer.style.display = 'block';
+    } else {
+      videoContainer.style.display = 'none';
+    }
   }
 
   // Equipment
