@@ -9,7 +9,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 function getSlugFromUrl() {
   const params = new URLSearchParams(window.location.search);
   const slug = params.get('slug');
-  console.log('URL:', window.location.href);
+  console.log('Current URL:', window.location.href);
   console.log('Slug from URL:', slug);
   return slug;
 }
@@ -18,54 +18,76 @@ function getSlugFromUrl() {
 function convertToEmbedUrl(url) {
   if (!url) return '';
   const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
-  return match ? `https://www.youtube.com/embed/${match[1]}` : '';
+  if (match) {
+    return `https://www.youtube.com/embed/${match[1]}`;
+  }
+  return '';
 }
 
-// Show error
+// Show error message
 function showError(message) {
   const container = document.querySelector('.recipe-page');
   if (container) {
     container.innerHTML = `
       <div style="text-align: center; padding: 3rem;">
         <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #dc2626;"></i>
-        <h2>Recipe Not Found</h2>
+        <h2 style="margin-top: 1rem;">Recipe Not Found</h2>
         <p>${message}</p>
-        <p style="font-size: 0.9rem; color: #666; margin-top: 1rem;">Current URL: ${window.location.href}</p>
+        <p style="font-size: 0.9rem; color: #666; margin-top: 1rem;">
+          Try: /recipe/index.html?slug=simple-egg-roll
+        </p>
         <a href="/recipes.html" style="display: inline-block; margin-top: 1rem; padding: 0.8rem 1.5rem; background: #27ae60; color: white; border-radius: 25px; text-decoration: none;">
-          Browse All Recipes
+          <i class="fas fa-arrow-left"></i> Browse All Recipes
         </a>
       </div>
     `;
   }
 }
 
-// Fetch and render recipe
+// Fetch equipment details
+async function fetchEquipment(equipmentIds) {
+  if (!equipmentIds || equipmentIds.length === 0) return [];
+  
+  try {
+    const { data, error } = await supabase
+      .from('equipment_db')
+      .select('*')
+      .in('id', equipmentIds);
+    
+    if (error) {
+      console.error('Error fetching equipment:', error);
+      return [];
+    }
+    
+    return data || [];
+  } catch (error) {
+    console.error('Error:', error);
+    return [];
+  }
+}
+
+// Main function to load and render recipe
 async function loadRecipe() {
-  console.log('loadRecipe() started');
+  console.log('Loading recipe...');
   
   const slug = getSlugFromUrl();
-  console.log('Detected slug:', slug);
   
   if (!slug) {
-    showError('No recipe specified. Please use ?slug=recipe-name in the URL.');
+    showError('No recipe specified. Please add ?slug=recipe-name to the URL');
     return;
   }
-
+  
   try {
-    console.log('Fetching recipe with slug:', slug);
-    
+    // Fetch recipe from Supabase
     const { data: recipe, error } = await supabase
       .from('recipe_db')
       .select('*')
       .eq('slug', slug)
       .single();
-
-    console.log('Recipe data:', recipe);
-    console.log('Error:', error);
-
+    
     if (error) {
       console.error('Supabase error:', error);
-      showError(`Error: ${error.message}`);
+      showError(`Error loading recipe: ${error.message}`);
       return;
     }
     
@@ -73,137 +95,167 @@ async function loadRecipe() {
       showError(`Recipe "${slug}" not found in database.`);
       return;
     }
-
-    console.log('Rendering recipe:', recipe.title);
     
-    // Set page title
+    console.log('Recipe loaded:', recipe.title);
+    
+    // Update page title
     document.title = `${recipe.title} | Simit Cooks`;
     
-    // Fill in the HTML
+    // Fill basic info
     const titleEl = document.getElementById('recipe-title');
-    if (titleEl) titleEl.innerText = recipe.title;
+    if (titleEl) titleEl.textContent = recipe.title;
     
     const descEl = document.getElementById('recipe-description');
-    if (descEl) descEl.innerText = recipe.description || '';
+    if (descEl) descEl.textContent = recipe.description || '';
     
     const prepEl = document.getElementById('prep-time');
-    if (prepEl) prepEl.innerText = recipe.prep_time || 'N/A';
+    if (prepEl) prepEl.textContent = recipe.prep_time || 'N/A';
     
     const cookEl = document.getElementById('cook-time');
-    if (cookEl) cookEl.innerText = recipe.cook_time || 'N/A';
+    if (cookEl) cookEl.textContent = recipe.cook_time || 'N/A';
     
     const servingsEl = document.getElementById('servings');
-    if (servingsEl) servingsEl.innerText = recipe.servings || 'N/A';
+    if (servingsEl) servingsEl.textContent = recipe.servings || 'N/A';
     
     // Ingredients
     const ingredientsList = document.getElementById('ingredients-list');
-    if (ingredientsList) {
+    if (ingredientsList && recipe.ingredients) {
       ingredientsList.innerHTML = '';
-      if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
-        recipe.ingredients.forEach(item => {
-          const li = document.createElement('li');
-          li.textContent = item;
-          ingredientsList.appendChild(li);
-        });
-      } else {
-        ingredientsList.innerHTML = '<li>No ingredients listed.</li>';
-      }
+      const ingredients = typeof recipe.ingredients === 'string' 
+        ? JSON.parse(recipe.ingredients) 
+        : recipe.ingredients;
+      
+      ingredients.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        ingredientsList.appendChild(li);
+      });
     }
     
-    // Method
+    // Method/Instructions
     const methodList = document.getElementById('method-list');
-    if (methodList) {
+    if (methodList && recipe.method) {
       methodList.innerHTML = '';
-      if (recipe.method && Array.isArray(recipe.method)) {
-        recipe.method.forEach(step => {
-          const li = document.createElement('li');
-          li.textContent = step;
-          methodList.appendChild(li);
-        });
-      } else {
-        methodList.innerHTML = '<li>No instructions available.</li>';
-      }
+      const methods = typeof recipe.method === 'string' 
+        ? JSON.parse(recipe.method) 
+        : recipe.method;
+      
+      methods.forEach(step => {
+        const li = document.createElement('li');
+        li.textContent = step;
+        methodList.appendChild(li);
+      });
     }
     
-    // Nutrition
-    const nutrition = recipe.nutritional_info;
+    // Nutrition info
     const nutritionDiv = document.getElementById('nutrition');
-    if (nutritionDiv && nutrition && typeof nutrition === 'object') {
+    if (nutritionDiv && recipe.nutritional_info) {
+      const nutrition = typeof recipe.nutritional_info === 'string'
+        ? JSON.parse(recipe.nutritional_info)
+        : recipe.nutritional_info;
+      
       nutritionDiv.innerHTML = `
-        ${nutrition.calories ? `<div><strong>Calories:</strong> ${nutrition.calories}</div>` : ''}
-        ${nutrition.protein ? `<div><strong>Protein:</strong> ${nutrition.protein}</div>` : ''}
-        ${nutrition.carbohydrates ? `<div><strong>Carbs:</strong> ${nutrition.carbohydrates}</div>` : ''}
-        ${nutrition.fat ? `<div><strong>Fat:</strong> ${nutrition.fat}</div>` : ''}
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem;">
+          ${nutrition.calories ? `<div><strong>🔥 Calories:</strong> ${nutrition.calories}</div>` : ''}
+          ${nutrition.protein ? `<div><strong>💪 Protein:</strong> ${nutrition.protein}</div>` : ''}
+          ${nutrition.carbohydrates ? `<div><strong>🍚 Carbs:</strong> ${nutrition.carbohydrates}</div>` : ''}
+          ${nutrition.fat ? `<div><strong>🥑 Fat:</strong> ${nutrition.fat}</div>` : ''}
+          ${nutrition.fiber ? `<div><strong>🌾 Fiber:</strong> ${nutrition.fiber}</div>` : ''}
+        </div>
       `;
     }
     
-    // Tags, Cuisine, Category
+    // Tags
     const tagsSpan = document.getElementById('tags');
-    if (tagsSpan) tagsSpan.textContent = recipe.tags?.join(', ') || 'Not available';
+    if (tagsSpan && recipe.tags) {
+      const tags = typeof recipe.tags === 'string' ? JSON.parse(recipe.tags) : recipe.tags;
+      tagsSpan.textContent = tags.join(', ');
+    }
     
+    // Cuisine
     const cuisineSpan = document.getElementById('cuisine');
-    if (cuisineSpan) cuisineSpan.textContent = recipe.cuisine?.join(', ') || 'Not available';
+    if (cuisineSpan && recipe.cuisine) {
+      const cuisine = typeof recipe.cuisine === 'string' ? JSON.parse(recipe.cuisine) : recipe.cuisine;
+      cuisineSpan.textContent = cuisine.join(', ');
+    }
     
+    // Category
     const categorySpan = document.getElementById('category');
-    if (categorySpan) categorySpan.textContent = recipe.category?.join(', ') || 'Not available';
+    if (categorySpan && recipe.category) {
+      const category = typeof recipe.category === 'string' ? JSON.parse(recipe.category) : recipe.category;
+      categorySpan.textContent = category.join(', ');
+    }
     
+    // Notes
     const notesEl = document.getElementById('notes');
-    if (notesEl) notesEl.textContent = recipe.notes || 'No notes available.';
+    if (notesEl) notesEl.textContent = recipe.notes || 'No additional notes available.';
     
+    // Fun Facts
     const factsEl = document.getElementById('facts');
     if (factsEl) factsEl.textContent = recipe.facts || 'No fun facts found.';
     
     // Video
     const embedUrl = convertToEmbedUrl(recipe.video_url);
     const videoContainer = document.querySelector('.recipe-video');
-    if (embedUrl && videoContainer) {
-      videoContainer.innerHTML = `<iframe src="${embedUrl}" allowfullscreen style="width:100%; height:100%; border:none;"></iframe>`;
-      videoContainer.style.display = 'block';
-    } else if (videoContainer) {
-      videoContainer.style.display = 'none';
-    }
-    
-    // Equipment
-    if (recipe.equipment_ids && recipe.equipment_ids.length) {
-      try {
-        const { data: equipment } = await supabase
-          .from('equipment_db')
-          .select('*')
-          .in('id', recipe.equipment_ids);
-        
-        const equipmentContainer = document.getElementById('equipment-container');
-        if (equipmentContainer && equipment && equipment.length) {
-          equipmentContainer.innerHTML = '';
-          equipment.forEach(item => {
-            equipmentContainer.innerHTML += `
-              <div class="equipment-item">
-                ${item.image_url ? `<img src="${item.image_url}" alt="${item.name}">` : ''}
-                <h4>${item.name}</h4>
-                <p>${item.description || ''}</p>
-              </div>
-            `;
-          });
-        }
-      } catch (err) {
-        console.error('Error loading equipment:', err);
+    if (videoContainer) {
+      if (embedUrl) {
+        videoContainer.innerHTML = `
+          <iframe 
+            src="${embedUrl}" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen
+            style="width: 100%; height: 100%; border-radius: 8px;">
+          </iframe>
+        `;
+        videoContainer.style.display = 'block';
+      } else {
+        videoContainer.style.display = 'none';
       }
     }
     
-    // Update view count (don't await, just fire and forget)
+    // Equipment
+    if (recipe.equipment_ids && recipe.equipment_ids.length > 0) {
+      const equipmentList = await fetchEquipment(recipe.equipment_ids);
+      const equipmentContainer = document.getElementById('equipment-container');
+      
+      if (equipmentContainer && equipmentList.length > 0) {
+        equipmentContainer.innerHTML = '';
+        equipmentList.forEach(item => {
+          const equipmentDiv = document.createElement('div');
+          equipmentDiv.className = 'equipment-item';
+          equipmentDiv.innerHTML = `
+            <div class="image-wrapper">
+              ${item.image_url ? `<img src="${item.image_url}" alt="${item.name}" style="width: 100%; height: 200px; object-fit: cover;">` : ''}
+            </div>
+            <div class="card-body">
+              <h4 class="equipment-title">${item.name}</h4>
+              ${item.description ? `<p>${item.description}</p>` : ''}
+              ${item.affiliate_link ? `<a href="${item.affiliate_link}" target="_blank" rel="noopener noreferrer" class="btn-buy">Buy Now →</a>` : ''}
+            </div>
+          `;
+          equipmentContainer.appendChild(equipmentDiv);
+        });
+      }
+    }
+    
+    // Update view count (fire and forget)
     supabase
       .from('recipe_db')
       .update({ views: (recipe.views || 0) + 1 })
       .eq('id', recipe.id)
       .then(() => console.log('View count updated'))
       .catch(err => console.error('Error updating views:', err));
-      
+    
+    console.log('Recipe rendered successfully');
+    
   } catch (error) {
-    console.error('Error in loadRecipe:', error);
+    console.error('Error loading recipe:', error);
     showError(`Failed to load recipe: ${error.message}`);
   }
 }
 
-// Start when DOM is ready
+// Start loading when page is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', loadRecipe);
 } else {
