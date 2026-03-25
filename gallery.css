@@ -317,34 +317,6 @@ h1, h2, h3, h4, h5 {
   transform: scale(1.08);
 }
 
-/* Zoom Icon */
-.zoom-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 50px;
-  height: 50px;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: all 0.3s ease;
-  pointer-events: none;
-  z-index: 5;
-}
-
-.zoom-icon i {
-  font-size: 24px;
-  color: white;
-}
-
-.gallery-item:hover .zoom-icon {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
 
 /* Overlay */
 .overlay {
