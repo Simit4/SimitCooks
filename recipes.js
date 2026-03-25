@@ -9,8 +9,64 @@ const CONFIG = {
   fallbackImage: 'https://i.ibb.co/4p4mR3N/momo-graphic.png',
   debounceDelay: 300,
   skeletonCount: 6,
-  debug: true
+  debug: false // Set to false to reduce console logs
 };
+
+// =================================================
+// 🔹 Category Mapping - Group similar categories
+// =================================================
+const CATEGORY_MAP = {
+  // Main Dishes
+  'main': 'Main',
+  'main dish': 'Main',
+  'entree': 'Main',
+  'curry': 'Main',
+  'rice': 'Main',
+  'noodle': 'Main',
+  
+  // Sauces & Dips
+  'sauce': 'Sauce',
+  'dip': 'Sauce',
+  'chutney': 'Sauce',
+  'condiment': 'Sauce',
+  'jhol': 'Sauce',
+  
+  // Side Dishes
+  'side': 'Side',
+  'accompaniment': 'Side',
+  'salad': 'Side',
+  'vegetable': 'Side',
+  
+  // Desserts
+  'dessert': 'Dessert',
+  'sweet': 'Dessert',
+  'cake': 'Dessert',
+  
+  // Snacks
+  'snack': 'Snack',
+  'appetizer': 'Snack',
+  'starter': 'Snack',
+  'street food': 'Snack',
+  
+  // Breakfast
+  'breakfast': 'Breakfast',
+  'brunch': 'Breakfast',
+  
+  // Beverages
+  'beverage': 'Beverage',
+  'drink': 'Beverage',
+  'juice': 'Beverage',
+  'tea': 'Beverage',
+  
+  // Festival Specials
+  'festival': 'Festival',
+  'special': 'Festival',
+  'celebration': 'Festival',
+  'traditional': 'Festival'
+};
+
+// Main categories to display (in order)
+const MAIN_CATEGORIES = ['Main', 'Sauce', 'Side', 'Dessert', 'Snack', 'Breakfast', 'Beverage', 'Festival'];
 
 // =================================================
 // 🔹 Initialize Supabase
@@ -40,15 +96,6 @@ const state = {
 };
 
 // =================================================
-// 🔹 Debug Logger
-// =================================================
-const debugLog = (...args) => {
-  if (CONFIG.debug) {
-    console.log('[Recipes Debug]:', ...args);
-  }
-};
-
-// =================================================
 // 🔹 Utility Functions
 // =================================================
 
@@ -58,18 +105,34 @@ const safeText = (value, defaultValue = '') => {
   return String(value) || defaultValue;
 };
 
-// Handle array categories
+// Get recipe categories and map them to main categories
 const getRecipeCategories = (recipe) => {
-  if (recipe.category && Array.isArray(recipe.category)) {
-    return recipe.category.map(cat => safeText(cat).toLowerCase());
+  if (!recipe.category) return [];
+  
+  let rawCategories = [];
+  if (Array.isArray(recipe.category)) {
+    rawCategories = recipe.category;
+  } else if (typeof recipe.category === 'string') {
+    rawCategories = [recipe.category];
   }
-  if (recipe.category && typeof recipe.category === 'string') {
-    return [safeText(recipe.category).toLowerCase()];
-  }
-  return [];
+  
+  // Map to main categories
+  const mappedCategories = new Set();
+  rawCategories.forEach(cat => {
+    const lowerCat = safeText(cat).toLowerCase();
+    const mappedCat = CATEGORY_MAP[lowerCat];
+    if (mappedCat) {
+      mappedCategories.add(mappedCat);
+    } else if (lowerCat) {
+      // If no mapping, use the original but capitalize first letter
+      mappedCategories.add(lowerCat.charAt(0).toUpperCase() + lowerCat.slice(1));
+    }
+  });
+  
+  return Array.from(mappedCategories);
 };
 
-// Extract all unique categories from recipes
+// Extract all unique MAIN categories from recipes
 const extractAllCategories = (recipes) => {
   const categorySet = new Set();
   
@@ -82,14 +145,25 @@ const extractAllCategories = (recipes) => {
     });
   });
   
-  return Array.from(categorySet).sort();
+  // Sort by the MAIN_CATEGORIES order, then alphabetically
+  const sortedCategories = Array.from(categorySet).sort((a, b) => {
+    const indexA = MAIN_CATEGORIES.indexOf(a);
+    const indexB = MAIN_CATEGORIES.indexOf(b);
+    
+    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+    if (indexA !== -1) return -1;
+    if (indexB !== -1) return 1;
+    return a.localeCompare(b);
+  });
+  
+  return sortedCategories;
 };
 
 // Check if recipe matches a category
 const matchesCategory = (recipe, filterValue) => {
   if (filterValue === 'all') return true;
   const categories = getRecipeCategories(recipe);
-  return categories.includes(filterValue.toLowerCase());
+  return categories.includes(filterValue);
 };
 
 const escapeHtml = (text) => {
@@ -144,8 +218,6 @@ const isValidRecipe = (recipe) => {
 const createFilterButtons = () => {
   if (!elements.filterContainer) return;
   
-  debugLog('Creating filter buttons with categories:', state.categories);
-  
   // Clear existing buttons
   elements.filterContainer.innerHTML = '';
   
@@ -156,18 +228,19 @@ const createFilterButtons = () => {
   allButton.textContent = 'All';
   elements.filterContainer.appendChild(allButton);
   
-  // Add category buttons
+  // Add category buttons (only main categories)
   state.categories.forEach(category => {
     const button = document.createElement('button');
     button.className = 'filter-btn';
     button.setAttribute('data-filter', category);
-    // Capitalize first letter
-    button.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+    button.textContent = category;
     elements.filterContainer.appendChild(button);
   });
   
   // Re-attach event listeners
   attachFilterListeners();
+  
+  console.log(`Created ${state.categories.length + 1} filter buttons: All, ${state.categories.join(', ')}`);
 };
 
 // Attach filter button event listeners
@@ -178,8 +251,6 @@ const attachFilterListeners = () => {
     btn.removeEventListener('click', handleFilterClick);
     btn.addEventListener('click', handleFilterClick);
   });
-  
-  debugLog(`Attached listeners to ${filterButtons.length} filter buttons`);
 };
 
 // Handle filter button click
@@ -188,8 +259,6 @@ const handleFilterClick = (e) => {
   const filterValue = btn.getAttribute('data-filter');
   
   if (!filterValue) return;
-  
-  debugLog(`Filter clicked: ${filterValue}`);
   
   // Update active state
   document.querySelectorAll('.filter-btn').forEach(b => {
@@ -324,52 +393,26 @@ const showError = (message) => {
 // =================================================
 
 const applyFilters = () => {
-  debugLog('Applying filters...');
-  debugLog('Current filter:', state.currentFilter);
-  debugLog('Current search:', state.currentSearch);
-  debugLog('Total recipes:', state.recipes.length);
-  
   let filtered = [...state.recipes];
   
   // Apply category filter
   if (state.currentFilter !== 'all') {
-    const filterValue = state.currentFilter.toLowerCase();
-    debugLog(`Filtering by category: "${filterValue}"`);
-    
-    filtered = filtered.filter(recipe => {
-      const matches = matchesCategory(recipe, filterValue);
-      if (matches) {
-        const categories = getRecipeCategories(recipe);
-        debugLog(`✓ Matched: ${recipe.title} (categories: ${categories.join(', ')})`);
-      }
-      return matches;
-    });
-    
-    debugLog(`Found ${filtered.length} recipes matching filter "${filterValue}"`);
+    const filterValue = state.currentFilter;
+    filtered = filtered.filter(recipe => matchesCategory(recipe, filterValue));
   }
   
   // Apply search filter
   if (state.currentSearch.trim()) {
     const searchTerm = state.currentSearch.toLowerCase().trim();
-    debugLog(`Searching for: "${searchTerm}"`);
-    
     filtered = filtered.filter(recipe => {
       const title = safeText(recipe.title).toLowerCase();
       const description = safeText(recipe.description).toLowerCase();
       const categories = getRecipeCategories(recipe).join(' ').toLowerCase();
       
-      const matches = title.includes(searchTerm) || 
-                      description.includes(searchTerm) || 
-                      categories.includes(searchTerm);
-      
-      if (matches) {
-        debugLog(`✓ Search matched: ${recipe.title}`);
-      }
-      
-      return matches;
+      return title.includes(searchTerm) || 
+             description.includes(searchTerm) || 
+             categories.includes(searchTerm);
     });
-    
-    debugLog(`Found ${filtered.length} recipes matching search "${searchTerm}"`);
   }
   
   state.filteredRecipes = filtered;
@@ -400,8 +443,6 @@ const renderRecipes = () => {
   if (window.innerWidth <= 768 && (state.currentFilter !== 'all' || state.currentSearch)) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  
-  debugLog(`Rendered ${filteredRecipes.length} recipes`);
 };
 
 // =================================================
@@ -412,38 +453,25 @@ const fetchRecipes = async () => {
   showLoading();
   
   try {
-    debugLog('Fetching recipes from Supabase...');
-    
     const { data, error, status } = await supabase
       .from('recipe_db')
       .select('*')
       .order('created_at', { ascending: false });
     
-    if (error) {
-      debugLog('Supabase error:', error);
-      throw new Error(error.message);
-    }
+    if (error) throw new Error(error.message);
     
-    if (status !== 200) {
-      debugLog('HTTP error:', status);
-      throw new Error(`HTTP ${status}: Failed to fetch recipes`);
-    }
+    if (status !== 200) throw new Error(`HTTP ${status}: Failed to fetch recipes`);
     
     if (!data?.length) {
-      debugLog('No recipes found in database');
       showNoResults();
       hideLoading();
       return;
     }
     
-    debugLog(`Fetched ${data.length} recipes from database`);
-    
-    // Validate and store recipes
     state.recipes = data.filter(isValidRecipe);
     
-    // Extract all unique categories from recipes
+    // Extract all unique MAIN categories from recipes
     state.categories = extractAllCategories(state.recipes);
-    debugLog('All unique categories found:', state.categories);
     
     // Create dynamic filter buttons
     createFilterButtons();
@@ -459,7 +487,7 @@ const fetchRecipes = async () => {
     hideLoading();
     
   } catch (error) {
-    debugLog('Fetch error:', error);
+    console.error('Fetch error:', error);
     showError(error.message || 'Unable to load recipes. Please check your connection.');
     hideLoading();
   }
@@ -470,7 +498,6 @@ const fetchRecipes = async () => {
 // =================================================
 
 const handleSearch = (value) => {
-  debugLog(`Search input changed: "${value}"`);
   state.currentSearch = value;
   renderRecipes();
 };
@@ -488,13 +515,11 @@ const debounce = (func, delay) => {
 // =================================================
 
 const initEventListeners = () => {
-  // Search input
   if (elements.searchInput) {
     const debouncedSearch = debounce(handleSearch, CONFIG.debounceDelay);
     elements.searchInput.addEventListener('input', (e) => {
       debouncedSearch(e.target.value);
     });
-    debugLog('Search input listener attached');
   }
 };
 
@@ -503,8 +528,6 @@ const initEventListeners = () => {
 // =================================================
 
 const init = () => {
-  debugLog('Initializing Recipes App with dynamic filters...');
-  
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       initEventListeners();
@@ -523,8 +546,6 @@ init();
 window.recipesDebug = {
   state,
   CONFIG,
-  applyFilters,
-  renderRecipes,
   getRecipeCategories,
-  extractAllCategories
+  CATEGORY_MAP
 };
