@@ -1059,32 +1059,36 @@ h1, h2, h3, h4, h5 {
   }
 
   .footer-section {
-    text-align: center;
+    text-align: left;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* Centers the content block */
+  }
+
+  .footer-section h3 {
+    width: 100%;
+    text-align: left;  /* Heading left-aligned */
   }
 
   .footer-section h3::after {
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    transform: none;
   }
 
   .footer-nav {
-    align-items: flex-start;
+    align-items: flex-start;  /* Links start from left */
     text-align: left;
+    width: 100%;
   }
 
   .footer-nav a {
-    justify-content: flex-start;
+    justify-content: flex-start;  /* Icon+text start from left */
   }
-
 
   .social-icons {
-    justify-content: center;
-  }
-
-  .footer-bottom {
-    flex-direction: column;
-    text-align: center;
+    justify-content: flex-start;  /* Icons start from left */
+    width: 100%;
   }
 
   .back-to-top {
