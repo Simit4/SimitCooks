@@ -317,7 +317,6 @@ h1, h2, h3, h4, h5 {
   transform: scale(1.08);
 }
 
-
 /* Overlay */
 .overlay {
   position: absolute;
@@ -367,7 +366,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* -------------------------------------------------
-   GLightbox Styles (Fixed Popup)
+   GLightbox Styles - Description at Bottom, No Zoom
 -------------------------------------------------- */
 .glightbox-container {
   position: fixed !important;
@@ -397,6 +396,7 @@ h1, h2, h3, h4, h5 {
   overflow: hidden !important;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
   background: transparent !important;
+  cursor: default !important;
 }
 
 .glightbox-container .gslide-media img {
@@ -419,24 +419,26 @@ h1, h2, h3, h4, h5 {
   display: block !important;
 }
 
-/* Caption/Description styles */
+/* Caption/Description styles - Positioned at BOTTOM */
 .glightbox-container .gslide-description {
   position: absolute !important;
-  bottom: 30px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
   text-align: center !important;
-  background: rgba(0, 0, 0, 0.85) !important;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7), transparent) !important;
   color: white !important;
-  padding: 15px 25px !important;
-  border-radius: 12px !important;
+  padding: 30px 25px 20px !important;
   font-family: 'Open Sans', sans-serif !important;
-  backdrop-filter: blur(10px) !important;
-  max-width: 80% !important;
+  backdrop-filter: blur(5px) !important;
+  max-width: 100% !important;
   z-index: 1000000 !important;
   pointer-events: none !important;
   visibility: visible !important;
   opacity: 1 !important;
+  border-radius: 0 !important;
+  transform: none !important;
+  margin: 0 !important;
 }
 
 .glightbox-container .gslide-title {
@@ -445,12 +447,22 @@ h1, h2, h3, h4, h5 {
   margin-bottom: 8px !important;
   color: white !important;
   font-family: 'Poppins', sans-serif !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
 }
 
 .glightbox-container .gslide-desc {
   font-size: 1rem !important;
   color: #f0f0f0 !important;
   line-height: 1.5 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Remove any zoom icon in lightbox */
+.glightbox-container .gzoom-in,
+.glightbox-container .gzoom-out,
+.glightbox-container .zoom-icon,
+.glightbox-container [class*="zoom"] {
+  display: none !important;
 }
 
 /* Navigation arrows */
@@ -850,9 +862,7 @@ h1, h2, h3, h4, h5 {
   }
   
   .glightbox-container .gslide-description {
-    bottom: 15px !important;
-    padding: 12px 20px !important;
-    max-width: 90% !important;
+    padding: 20px 20px 15px !important;
   }
   
   .glightbox-container .gslide-title {
