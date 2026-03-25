@@ -8,9 +8,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Get slug from URL
 function getSlugFromUrl() {
     const params = new URLSearchParams(window.location.search);
-    const slug = params.get('slug');
-    console.log('🔍 Slug from URL:', slug);
-    return slug;
+    return params.get('slug');
 }
 
 // Convert YouTube URL to embed URL
@@ -27,10 +25,10 @@ function showError(message) {
         container.innerHTML = `
             <div style="text-align: center; padding: 3rem;">
                 <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #dc2626;"></i>
-                <h2 style="margin-top: 1rem; color: #dc2626;">Recipe Not Found</h2>
-                <p style="margin: 1rem 0;">${message}</p>
-                <p style="font-size: 0.9rem; color: #666; margin: 1rem 0;">
-                    <strong>Try:</strong> /recipe/index.html?slug=simple-egg-roll
+                <h2 style="margin-top: 1rem;">Recipe Not Found</h2>
+                <p>${message}</p>
+                <p style="font-size: 0.9rem; color: #666; margin-top: 1rem;">
+                    Try: /recipe/index.html?slug=simple-egg-roll
                 </p>
                 <a href="/recipes.html" style="display: inline-block; margin-top: 1rem; padding: 0.8rem 1.5rem; background: #27ae60; color: white; border-radius: 25px; text-decoration: none;">
                     <i class="fas fa-arrow-left"></i> Browse All Recipes
@@ -42,9 +40,10 @@ function showError(message) {
 
 // Load and display recipe
 async function loadRecipe() {
-    console.log('🚀 Recipe page loaded');
+    console.log('🚀 Recipe page loading...');
     
     const slug = getSlugFromUrl();
+    console.log('📝 Slug from URL:', slug);
     
     if (!slug) {
         showError('No recipe specified. Please add ?slug=recipe-name to the URL');
@@ -53,10 +52,11 @@ async function loadRecipe() {
     
     try {
         // Show loading state
-        document.getElementById('recipe-title').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading recipe...';
+        const titleEl = document.getElementById('recipe-title');
+        if (titleEl) titleEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading recipe...';
         
         // Fetch recipe from Supabase
-        console.log('📡 Fetching recipe with slug:', slug);
+        console.log('📡 Fetching recipe:', slug);
         const { data: recipe, error } = await supabase
             .from('recipe_db')
             .select('*')
@@ -71,28 +71,24 @@ async function loadRecipe() {
         
         if (!recipe) {
             console.error('❌ No recipe found for slug:', slug);
-            showError(`Recipe "${slug}" not found in database`);
+            showError(`Recipe "${slug}" not found`);
             return;
         }
         
-        console.log('✅ Recipe found:', recipe.title);
+        console.log('✅ Recipe loaded:', recipe.title);
         
-        // Update page title
+        // Set page title
         document.title = `${recipe.title} | Simit Cooks`;
         
         // =================================================
-        // 🔹 Basic Recipe Info
+        // 🔹 Basic Info
         // =================================================
         
-        // Title
-        const titleEl = document.getElementById('recipe-title');
         if (titleEl) titleEl.textContent = recipe.title;
         
-        // Description
         const descEl = document.getElementById('recipe-description');
         if (descEl) descEl.textContent = recipe.description || '';
         
-        // Meta info
         const prepEl = document.getElementById('prep-time');
         if (prepEl) prepEl.textContent = recipe.prep_time || 'N/A';
         
@@ -111,7 +107,6 @@ async function loadRecipe() {
             ingredientsList.innerHTML = '';
             let ingredients = recipe.ingredients;
             
-            // Parse if string
             if (typeof ingredients === 'string') {
                 try {
                     ingredients = JSON.parse(ingredients);
@@ -121,7 +116,6 @@ async function loadRecipe() {
                 }
             }
             
-            // Render ingredients
             if (Array.isArray(ingredients) && ingredients.length > 0) {
                 ingredients.forEach(item => {
                     const li = document.createElement('li');
@@ -134,7 +128,7 @@ async function loadRecipe() {
         }
         
         // =================================================
-        // 🔹 Method/Instructions
+        // 🔹 Method
         // =================================================
         
         const methodList = document.getElementById('method-list');
@@ -142,7 +136,6 @@ async function loadRecipe() {
             methodList.innerHTML = '';
             let methods = recipe.method;
             
-            // Parse if string
             if (typeof methods === 'string') {
                 try {
                     methods = JSON.parse(methods);
@@ -152,7 +145,6 @@ async function loadRecipe() {
                 }
             }
             
-            // Render method steps
             if (Array.isArray(methods) && methods.length > 0) {
                 methods.forEach(step => {
                     const li = document.createElement('li');
@@ -165,14 +157,13 @@ async function loadRecipe() {
         }
         
         // =================================================
-        // 🔹 Nutrition Info
+        // 🔹 Nutrition
         // =================================================
         
         const nutritionDiv = document.getElementById('nutrition');
         if (nutritionDiv && recipe.nutritional_info) {
             let nutrition = recipe.nutritional_info;
             
-            // Parse if string
             if (typeof nutrition === 'string') {
                 try {
                     nutrition = JSON.parse(nutrition);
@@ -182,7 +173,6 @@ async function loadRecipe() {
                 }
             }
             
-            // Render nutrition
             if (nutrition && Object.keys(nutrition).length > 0) {
                 nutritionDiv.innerHTML = `
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.75rem;">
@@ -193,8 +183,6 @@ async function loadRecipe() {
                         ${nutrition.fiber ? `<div><strong>🌾 Fiber:</strong><br>${nutrition.fiber}</div>` : ''}
                     </div>
                 `;
-            } else {
-                nutritionDiv.innerHTML = '<p>Nutrition information not available</p>';
             }
         }
         
@@ -202,7 +190,6 @@ async function loadRecipe() {
         // 🔹 Tags, Cuisine, Category
         // =================================================
         
-        // Tags
         const tagsSpan = document.getElementById('tags');
         if (tagsSpan && recipe.tags) {
             let tags = recipe.tags;
@@ -210,7 +197,6 @@ async function loadRecipe() {
             tagsSpan.textContent = Array.isArray(tags) ? tags.join(', ') : 'Not available';
         }
         
-        // Cuisine
         const cuisineSpan = document.getElementById('cuisine');
         if (cuisineSpan && recipe.cuisine) {
             let cuisine = recipe.cuisine;
@@ -218,7 +204,6 @@ async function loadRecipe() {
             cuisineSpan.textContent = Array.isArray(cuisine) ? cuisine.join(', ') : 'Not available';
         }
         
-        // Category
         const categorySpan = document.getElementById('category');
         if (categorySpan && recipe.category) {
             let category = recipe.category;
@@ -227,7 +212,7 @@ async function loadRecipe() {
         }
         
         // =================================================
-        // 🔹 Notes & Fun Facts
+        // 🔹 Notes & Facts
         // =================================================
         
         const notesEl = document.getElementById('notes');
@@ -307,12 +292,12 @@ async function loadRecipe() {
         console.log('🎉 Recipe rendered successfully');
         
     } catch (error) {
-        console.error('❌ Error loading recipe:', error);
+        console.error('❌ Error:', error);
         showError(`Failed to load recipe: ${error.message}`);
     }
 }
 
-// Initialize when page loads
+// Initialize
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', loadRecipe);
 } else {
