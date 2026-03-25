@@ -1075,6 +1075,13 @@ h1, h2, h3, h4, h5 {
   text-align: center;     /* Fallback for text centering */
 }
 
+   .footer-nav a {
+  display: inline-flex;   /* Makes link a flex container */
+  align-items: center;    /* Vertically centers icon with text */
+  gap: 8px;               /* Space between icon and text */
+  justify-content: center; /* Centers the icon+text pair inside the link */
+}
+
 
   .social-icons {
     justify-content: center;
