@@ -12,7 +12,7 @@ export function renderHeader() {
     <div class="container header-wrapper">
       <a href="index.html">
         <div class="logo" aria-label="Simit Cooks">
-          <span class="logo-modern">Simit's</span>
+          <span class="logo-modern">Simit</span>
           <span class="logo-traditional">Cooks</span>
         </div>
       </a>
