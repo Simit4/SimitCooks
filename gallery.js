@@ -5,6 +5,12 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+// Supabase setup
+const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
@@ -26,66 +32,27 @@ function showSkeleton(count = BATCH) {
   }
 }
 
-// Initialize GLightbox with proper configuration
+// Initialize GLightbox
 function initGLightbox() {
-  // Destroy existing instance
   if (glightbox) {
     glightbox.destroy();
-    glightbox = null;
   }
   
-  // Wait a bit for DOM to update
-  setTimeout(() => {
-    if (typeof GLightbox !== 'undefined') {
-      glightbox = GLightbox({
-        selector: '.glightbox',
-        openEffect: 'fade',
-        closeEffect: 'fade',
-        slideEffect: 'slide',
-        zoomable: true,
-        loop: true,
-        touchNavigation: true,
-        keyboardNavigation: true,
-        closeButton: true,
-        draggable: true,
-        width: '90vw',
-        height: '90vh',
-        preload: true,
-        autoplayVideos: false,
-        moreLength: 0,
-        plyr: {
-          css: '',
-          js: '',
-          config: {}
-        },
-        // Fix for zoom issue
-        zoom: {
-          enabled: true,
-          level: 2,
-          maxLevel: 4
-        },
-        // Ensure images load properly
-        onOpen: function() {
-          // Force image to be visible
-          const container = document.querySelector('.glightbox-container');
-          if (container) {
-            container.style.opacity = '1';
-            container.style.visibility = 'visible';
-          }
-        },
-        onSlideAfter: function() {
-          // Ensure each slide shows properly
-          const activeSlide = document.querySelector('.gslide.active');
-          if (activeSlide) {
-            const img = activeSlide.querySelector('img');
-            if (img && img.complete) {
-              activeSlide.style.opacity = '1';
-            }
-          }
-        }
-      });
-    }
-  }, 100);
+  if (typeof GLightbox !== 'undefined') {
+    glightbox = GLightbox({
+      selector: '.glightbox',
+      openEffect: 'zoom',
+      closeEffect: 'zoom',
+      zoomable: true,
+      loop: true,
+      touchNavigation: true,
+      keyboardNavigation: true,
+      closeButton: true,
+      draggable: true,
+      width: 'auto',
+      height: 'auto'
+    });
+  }
 }
 
 // Fetch images from Supabase
@@ -152,22 +119,13 @@ function renderBatch(data) {
     const link = document.createElement('a');
     link.href = img.url;
     link.className = 'glightbox';
-    link.setAttribute('data-gallery', 'simit-gallery');
-    // Add title and description for lightbox
-    link.setAttribute('data-title', `${img.emoji} ${img.name}`);
-    link.setAttribute('data-description', img.description);
-    // Add data-glightbox attribute for better compatibility
-    link.setAttribute('data-glightbox', `title: ${img.emoji} ${img.name}; description: ${img.description}`);
-    
+    link.setAttribute('data-gallery', 'gallery');
     link.innerHTML = `
       <div class="gallery-item fade-in" style="animation-delay:${i * 50}ms">
-        <img src="${img.url}" alt="${img.name.replace(/[<>]/g, '')}" loading="lazy" onerror="this.style.opacity='0.5'">
+        <img src="${img.url}" alt="${img.name.replace(/[<>]/g, '')}" loading="lazy">
         <div class="overlay">
           <div class="title">${img.emoji} ${img.name.replace(/[<>]/g, '')}</div>
           <div class="description">${img.description.replace(/[<>]/g, '')}</div>
-        </div>
-        <div class="zoom-icon">
-          <i class="fas fa-search-plus"></i>
         </div>
       </div>
     `;
