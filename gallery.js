@@ -7,6 +7,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 
+
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -131,9 +132,6 @@ function renderBatch(data) {
         <div class="overlay">
           <div class="title">${img.emoji} ${img.name.replace(/[<>]/g, '')}</div>
           <div class="description">${img.description.replace(/[<>]/g, '')}</div>
-        </div>
-        <div class="zoom-icon">
-          <i class="fas fa-search-plus"></i>
         </div>
       </div>
     `;
