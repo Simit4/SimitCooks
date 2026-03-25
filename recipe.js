@@ -1,34 +1,5 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// =================================================
-// 🔹 CHECK IF THIS IS ACTUALLY A RECIPE PAGE
-// =================================================
-function isRecipeDetailPage() {
-  const pathParts = window.location.pathname.split('/').filter(Boolean);
-  const params = new URLSearchParams(window.location.search);
-  
-  // Format 1: /recipe/slug-name
-  if (pathParts[0] === 'recipe' && pathParts[1]) {
-    return true;
-  }
-  
-  // Format 2: recipe.html?slug=something
-  if (window.location.pathname.includes('recipe.html') && params.get('slug')) {
-    return true;
-  }
-  
-  return false;
-}
-
-// If not a recipe page, exit completely
-if (!isRecipeDetailPage()) {
-  console.log('Not a recipe page - recipe.js not executing');
-  // Exit without doing anything
-  throw new Error('Not a recipe page');
-}
-
-// If we get here, it IS a recipe page - proceed normally
-console.log('Recipe page detected - loading recipe');
 
 // Initialize Supabase
 const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
