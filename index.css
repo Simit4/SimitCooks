@@ -238,8 +238,11 @@ h1, h2, h3, h4, h5 {
 }
 
 
+
+
+
 /* =================================================
-   🔹 Featured Recipes Section - Same as Recipes Page
+   🔹 Featured Recipes Section - EXACTLY like Recipes Page
 ================================================= */
 .featured-recipes {
   padding: 4rem 0;
@@ -267,17 +270,17 @@ h1, h2, h3, h4, h5 {
   border-radius: 2px;
 }
 
-/* Recipes Grid - IDENTICAL to recipes page */
+/* Recipes Grid - EXACT same as recipes page */
 .recipes-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  padding: 2rem;
+  padding: 2rem 8%;  /* Same padding as recipes page */
   max-width: 1400px;
   margin: 0 auto;
 }
 
-/* Recipe Card - EXACT SAME as recipes page */
+/* Recipe Card - EXACT SAME dimensions */
 .recipe-card {
   background: #fff;
   border-radius: 20px;
@@ -295,7 +298,7 @@ h1, h2, h3, h4, h5 {
   box-shadow: var(--shadow-md);
 }
 
-/* Thumbnail Wrapper - FIXED: Use aspect-ratio to maintain proper proportions */
+/* Thumbnail Wrapper - Same aspect ratio */
 .thumbnail-wrapper {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -363,133 +366,8 @@ h1, h2, h3, h4, h5 {
   align-self: center;
 }
 
-/* Skeleton Loader - Same aspect ratio */
-.skeleton-card {
-  background: #fff;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  animation: pulse 1.5s ease-in-out infinite;
-  display: flex;
-  flex-direction: column;
-}
-
-.skeleton-thumbnail {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  aspect-ratio: 16 / 9;
-  width: 100%;
-  flex-shrink: 0;
-}
-
-.skeleton-title {
-  height: 24px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: 4px;
-  margin-bottom: 12px;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.skeleton-text {
-  height: 40px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: 4px;
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 8px;
-}
-
-.skeleton-text:last-child {
-  width: 60%;
-  margin-bottom: 0;
-}
-
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-/* Error & No Results States */
-.error-message,
-.no-results {
-  text-align: center;
-  padding: 3rem;
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: var(--shadow-sm);
-  grid-column: 1 / -1;
-}
-
-.error-message i,
-.no-results i {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.error-message i {
-  color: #dc2626;
-}
-
-.no-results i {
-  color: var(--muted);
-}
-
-.error-message h3,
-.no-results h3 {
-  font-size: 1.3rem;
-  margin-bottom: 0.5rem;
-  color: var(--text);
-}
-
-.error-message p,
-.no-results p {
-  color: var(--muted);
-  margin-bottom: 1rem;
-}
-
-.retry-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.2rem;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 25px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 0.5rem;
-}
-
-.retry-btn:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
-}
-
 /* =================================================
-   🔹 Responsive - Same as Recipes Page
+   🔹 Responsive - MATCH recipes page exactly
 ================================================= */
 
 /* Tablet: 2 columns */
@@ -497,7 +375,7 @@ h1, h2, h3, h4, h5 {
   .recipes-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
-    padding: 1.5rem;
+    padding: 1.5rem 5%;
   }
 }
 
@@ -506,22 +384,16 @@ h1, h2, h3, h4, h5 {
   .recipes-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
-    padding: 1rem;
+    padding: 1.5rem;
   }
   
   .recipe-card {
     max-width: 100%;
     margin: 0 auto;
-    width: 100%;
-  }
-  
-  .thumbnail-wrapper {
-    aspect-ratio: 16 / 9;
   }
   
   .recipe-card h3 {
     font-size: 1.1rem;
-    min-height: auto;
   }
   
   .recipe-card p {
