@@ -4,6 +4,8 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon/public key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+
+
 // Show loading skeleton
 function showLoadingSkeleton() {
   const container = document.getElementById('recipes-container');
@@ -24,6 +26,19 @@ function showLoadingSkeleton() {
   }
 }
 
+// Escape HTML to prevent XSS - FIXED to handle non-string values
+function escapeHtml(str) {
+  if (!str) return '';
+  if (typeof str !== 'string') return String(str);
+  
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // Fetch featured recipes
 async function fetchFeaturedRecipes() {
   const container = document.getElementById('recipes-container');
@@ -36,7 +51,7 @@ async function fetchFeaturedRecipes() {
     const { data, error } = await supabase
       .from('recipe_db')
       .select('*')
-      .order('views', { ascending: true })
+      .order('views', { ascending: true, nullsFirst: false })
       .limit(3);
 
     if (error) throw error;
@@ -61,30 +76,44 @@ function renderFeaturedRecipes(recipes) {
   container.innerHTML = '';
 
   recipes.forEach(recipe => {
-    const thumb = recipe.thumbnail_url || getVideoThumbnail(recipe.video_url) || 'https://i.ibb.co/4p4mR3N/momo-graphic.png';
+    // Safely get values with fallbacks
+    const title = recipe.title || 'Untitled Recipe';
+    const description = recipe.description || 'Delicious home-style recipe made with love.';
+    const category = recipe.category || '';
+    const slug = recipe.slug || '';
     
-    // Fallback image handling
+    // Get thumbnail with fallback
+    let thumb = recipe.thumbnail_url;
+    if (!thumb) {
+      thumb = getVideoThumbnail(recipe.video_url);
+    }
+    if (!thumb) {
+      thumb = 'https://i.ibb.co/4p4mR3N/momo-graphic.png';
+    }
+    
     const fallbackImage = 'https://i.ibb.co/4p4mR3N/momo-graphic.png';
     
     const card = document.createElement('div');
     card.className = 'recipe-card';
     card.onclick = () => {
-      window.location.href = `/recipe/${recipe.slug}`;
+      if (slug) {
+        window.location.href = `/recipe/${slug}`;
+      }
     };
     
     card.innerHTML = `
       <div class="thumbnail-wrapper">
         <img 
           src="${thumb}" 
-          alt="${recipe.title || 'Recipe thumbnail'}"
+          alt="${escapeHtml(title)}"
           loading="lazy"
           onerror="this.src='${fallbackImage}'"
         />
       </div>
       <div class="card-body">
-        <h3>${escapeHtml(recipe.title) || 'Untitled Recipe'}</h3>
-        <p>${escapeHtml(recipe.description) || 'Delicious home-style recipe made with love.'}</p>
-        ${recipe.category ? `<span class="recipe-category">${escapeHtml(recipe.category)}</span>` : ''}
+        <h3>${escapeHtml(title)}</h3>
+        <p>${escapeHtml(description)}</p>
+        ${category ? `<span class="recipe-category">${escapeHtml(category)}</span>` : ''}
       </div>
     `;
     container.appendChild(card);
@@ -93,7 +122,7 @@ function renderFeaturedRecipes(recipes) {
 
 // Get YouTube thumbnail from video URL
 function getVideoThumbnail(url) {
-  if (!url) return null;
+  if (!url || typeof url !== 'string') return null;
   
   const patterns = [
     /(?:v=|v\/|vi\/|youtu\.be\/|\/embed\/|\/v\/|\/e\/)([a-zA-Z0-9_-]{11})/,
@@ -103,22 +132,11 @@ function getVideoThumbnail(url) {
   
   for (const pattern of patterns) {
     const match = url.match(pattern);
-    if (match) {
+    if (match && match[1]) {
       return `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg`;
     }
   }
   return null;
-}
-
-// Escape HTML to prevent XSS
-function escapeHtml(str) {
-  if (!str) return '';
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
 }
 
 // Render error message
@@ -129,7 +147,7 @@ function renderError(message) {
   container.innerHTML = `
     <div class="error-message">
       <i class="fas fa-exclamation-circle"></i>
-      <p>Failed to load recipes: ${escapeHtml(message)}</p>
+      <p>Failed to load recipes. Please try again later.</p>
       <button onclick="location.reload()" class="retry-btn">
         <i class="fas fa-sync-alt"></i> Try Again
       </button>
@@ -151,6 +169,10 @@ function renderNoResults() {
 }
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    fetchFeaturedRecipes();
+  });
+} else {
   fetchFeaturedRecipes();
-});
+}
