@@ -52,7 +52,7 @@ export function renderFooter() {
       <div class="footer-section footer-brand">
         <a href="index.html" style="text-decoration: none;">
           <div class="logo">
-            <span class="logo-modern">Simit's</span>
+            <span class="logo-modern">Simit</span>
             <span class="logo-traditional">Cooks</span>
           </div>
         </a>
