@@ -5,13 +5,13 @@ const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-
 const container = document.getElementById('equipment-container');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
 let allEquipment = [];
 let filteredEquipment = [];
-let loadedCount = 0; const BATCH = 20;
+let loadedCount = 0; 
+const BATCH = 20;
 
 // -------------------------------
 // Skeleton loader
@@ -44,11 +44,11 @@ function renderBatch(data) {
 
     card.innerHTML = `
       <div class="image-wrapper">
-        <img src="${item.image_url}" alt="${item.name}">
+        <img src="${item.image_url}" alt="${item.name}" loading="lazy">
         ${item.category ? `<span class="category-badge">${item.category}</span>` : ''}
         <div class="overlay">
           <p>${shortDesc}</p>
-          ${item.affiliate_link ? `<a href="${item.affiliate_link}" target="_blank" class="btn-buy">Buy Now</a>` : ''}
+          ${item.affiliate_link ? `<a href="${item.affiliate_link}" target="_blank" class="btn-buy" rel="noopener noreferrer">Buy Now</a>` : ''}
         </div>
       </div>
       <div class="card-body">
@@ -76,6 +76,9 @@ function renderBatch(data) {
 
   if (loadedImages === images.length) matchCardHeights();
   observeLastCard();
+  
+  // Add mobile tap functionality to newly rendered cards
+  addMobileTapToCards();
 }
 
 // -------------------------------
@@ -92,6 +95,71 @@ function matchCardHeights() {
 
   cards.forEach(card => card.style.height = maxHeight + 'px');
 }
+
+// -------------------------------
+// Mobile Tap Functionality - Make overlay work on mobile
+// -------------------------------
+function addMobileTapToCards() {
+  const cards = document.querySelectorAll('.equipment-card');
+  
+  // Remove existing event listeners to avoid duplicates
+  cards.forEach(card => {
+    card.removeEventListener('click', handleCardClick);
+    card.addEventListener('click', handleCardClick);
+  });
+}
+
+// Handle card click/tap
+function handleCardClick(e) {
+  // Don't trigger if clicking on buy button
+  if (e.target.closest('.btn-buy')) {
+    e.stopPropagation();
+    return;
+  }
+  
+  const clickedCard = this;
+  const allCards = document.querySelectorAll('.equipment-card');
+  
+  // Close all other overlays
+  allCards.forEach(card => {
+    if (card !== clickedCard) {
+      card.classList.remove('active');
+    }
+  });
+  
+  // Toggle active class on clicked card
+  clickedCard.classList.toggle('active');
+  
+  // Optional: Auto close after 3 seconds
+  if (clickedCard.classList.contains('active')) {
+    if (clickedCard.timeoutId) clearTimeout(clickedCard.timeoutId);
+    clickedCard.timeoutId = setTimeout(() => {
+      clickedCard.classList.remove('active');
+    }, 3000);
+  }
+}
+
+// Close overlay when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.equipment-card')) {
+    const allCards = document.querySelectorAll('.equipment-card');
+    allCards.forEach(card => {
+      card.classList.remove('active');
+      if (card.timeoutId) clearTimeout(card.timeoutId);
+    });
+  }
+});
+
+// Close overlay when pressing Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const allCards = document.querySelectorAll('.equipment-card');
+    allCards.forEach(card => {
+      card.classList.remove('active');
+      if (card.timeoutId) clearTimeout(card.timeoutId);
+    });
+  }
+});
 
 // -------------------------------
 // Fetch equipment from Supabase
@@ -176,6 +244,35 @@ style.innerHTML = `
   }
   @keyframes fadeInUp {
     to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Mobile tap overlay styles */
+  .equipment-card.active .overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Visual feedback for tap */
+  .equipment-card.active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  /* Ensure buy button clicks work properly */
+  .btn-buy {
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+  }
+  
+  /* Make overlay click-through on mobile */
+  @media (max-width: 768px) {
+    .overlay {
+      pointer-events: none;
+    }
+    .equipment-card.active .overlay {
+      pointer-events: auto;
+    }
   }
 `;
 document.head.appendChild(style);
