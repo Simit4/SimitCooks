@@ -333,27 +333,75 @@ h1, h2, h3, h4, h5 {
 .footer-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
 .footer-nav a {
-  color: #e0e0e0;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.9375rem;
+  font-weight: 500;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .footer-nav a i {
-  width: 20px;
-  transition: transform 0.3s ease;
+  width: 24px;
+  font-size: 1.125rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover effect with underline animation */
+.footer-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .footer-nav a:hover {
-  color: #ff6b6b;
-  transform: translateX(5px);
+  color: #ffffff;
+  transform: translateX(8px);
 }
+
+.footer-nav a:hover i {
+  transform: translateX(4px);
+  color: #ff6b6b;
+}
+
+.footer-nav a:hover::after {
+  width: 100%;
+}
+
+/* Active state for better accessibility */
+.footer-nav a:active {
+  transform: translateX(4px);
+  transition: transform 0.05s;
+}
+
+/* Focus state for keyboard navigation */
+.footer-nav a:focus-visible {
+  outline: 2px solid #ff6b6b;
+  outline-offset: 4px;
+  border-radius: 4px;
+  color: #ffffff;
+}
+
+/* Optional: Add subtle separation between items */
+.footer-nav a:not(:last-child) {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+
+
 
 .social-icons {
   display: flex;
@@ -517,11 +565,38 @@ h1, h2, h3, h4, h5 {
   }
   
   .footer-nav {
-    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .footer-nav a {
+    font-size: 0.9375rem;
+    padding: 10px 12px;
+    margin: 0 -12px;
+    border-radius: 8px;
+  }
+  
+  .footer-nav a i {
+    width: 24px;
+    font-size: 1.125rem;
   }
   
   .footer-nav a:hover {
-    transform: translateX(0);
+    background-color: rgba(255, 107, 107, 0.08);
+    transform: translateX(4px);
+  }
+  
+  .footer-nav a:hover i {
+    transform: translateX(4px);
+    color: #ff6b6b;
+  }
+  
+  .footer-nav a:hover::after {
+    transform: scaleX(1);
+  }
+  
+  .footer-nav a:active {
+    transform: translateX(2px);
+    background-color: rgba(255, 107, 107, 0.15);
   }
   
   .social-icons {
