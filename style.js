@@ -132,14 +132,13 @@ function addBackToTopButton() {
 function initHamburgerMenu() {
   const hamburger = document.getElementById('hamburgerBtn');
   const navLinks = document.getElementById('navLinks');
-
+  
   if (hamburger && navLinks) {
     hamburger.addEventListener('click', () => {
       hamburger.classList.toggle('active');
       navLinks.classList.toggle('active');
     });
-
-    // Close menu when clicking a link
+    
     document.querySelectorAll('.nav-links a').forEach(link => {
       link.addEventListener('click', () => {
         hamburger.classList.remove('active');
@@ -147,6 +146,15 @@ function initHamburgerMenu() {
       });
     });
   }
+}
+
+// Then call it in your initStyle function
+export function initStyle() {
+  renderHeader();
+  renderFooter();
+  initHamburgerMenu();  // ← ADD THIS
+  initBackToTop();
+  highlightActiveLink();
 }
 
 // =================================================
