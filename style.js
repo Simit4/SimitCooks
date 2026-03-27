@@ -127,16 +127,26 @@ function addBackToTopButton() {
 }
 
 // =================================================
-// 🔹 Hamburger Menu Toggle
+// 🔹 Hamburger Menu Toggle - Enhanced Version
 // =================================================
 function initHamburgerMenu() {
   const hamburger = document.getElementById('hamburgerBtn');
   const navLinks = document.getElementById('navLinks');
+  const body = document.body;
 
   if (hamburger && navLinks) {
-    hamburger.addEventListener('click', () => {
+    // Toggle menu on hamburger click
+    hamburger.addEventListener('click', (e) => {
+      e.stopPropagation();
       hamburger.classList.toggle('active');
       navLinks.classList.toggle('active');
+      
+      // Lock scroll when menu is open
+      if (navLinks.classList.contains('active')) {
+        body.style.overflow = 'hidden';
+      } else {
+        body.style.overflow = '';
+      }
     });
 
     // Close menu when clicking a link
@@ -144,7 +154,37 @@ function initHamburgerMenu() {
       link.addEventListener('click', () => {
         hamburger.classList.remove('active');
         navLinks.classList.remove('active');
+        body.style.overflow = '';
       });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (navLinks.classList.contains('active') && 
+          !hamburger.contains(e.target) && 
+          !navLinks.contains(e.target)) {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        body.style.overflow = '';
+      }
+    });
+
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        body.style.overflow = '';
+      }
+    });
+
+    // Close menu on window resize (if screen becomes desktop)
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768 && navLinks.classList.contains('active')) {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        body.style.overflow = '';
+      }
     });
   }
 }
