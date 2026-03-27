@@ -380,7 +380,6 @@ h1, h2, h3, h4, h5 {
   color: #ff6b6b;
   position: relative;
   display: inline-block;
-  text-align: center; 
 }
 
 .footer-section h3::after {
@@ -428,7 +427,6 @@ h1, h2, h3, h4, h5 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.875rem;
-text-align: center; 
 
 }
 
@@ -444,7 +442,6 @@ text-align: center;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: fit-content;
   letter-spacing: 0.3px;
-   text-align: center; 
 
 }
 
