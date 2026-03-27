@@ -731,44 +731,27 @@ h1, h2, h3, h4, h5 {
     transform: translateX(-50%);
   }
   
-.footer-nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+ .footer-nav {
+    flex-direction: column;
     gap: 0.75rem;
+    align-items: flex-start;
   }
   
   .footer-nav a {
-    padding: 0.625rem 1.25rem;
-    background: rgba(255, 107, 107, 0.08);
-    border-radius: 100px;
-    width: auto;
-    text-align: center;
-    font-size: 0.875rem;
-    font-weight: 500;
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 107, 107, 0.15);
+    padding: 0.375rem 0;
+    font-size: 0.9375rem;
+    background: none;
+    border-radius: 0;
+    text-align: left;
   }
   
-  /* Hide desktop effects on mobile */
-  .footer-nav a::before,
   .footer-nav a::after {
-    display: none;
+    display: block;
   }
   
-  /* Mobile hover effect */
   .footer-nav a:hover {
-    transform: translateY(-2px);
-    background: rgba(255, 107, 107, 0.18);
-    color: #ff6b6b;
-    border-color: rgba(255, 107, 107, 0.3);
-    letter-spacing: normal;
-  }
-  
-  /* Tap feedback */
-  .footer-nav a:active {
-    transform: scale(0.96);
-    background: rgba(255, 107, 107, 0.25);
+    transform: translateX(6px);
+    background: none;
   }
   
   .social-icons {
@@ -842,12 +825,7 @@ h1, h2, h3, h4, h5 {
     gap: 0.5rem;
   }
   
- .footer-nav {
-    gap: 0.625rem;
-  }
-  
   .footer-nav a {
-    padding: 0.5rem 1rem;
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
   }
 }
