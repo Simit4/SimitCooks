@@ -743,7 +743,7 @@ text-align: center;  letter-spacing: 0.3px;
 }
 
 .footer-nav a {
-  padding: 0.5rem 0;
+  padding: 0.5rem 1;
   font-size: 0.9375rem;
   background: none;
   border-radius: 0;
