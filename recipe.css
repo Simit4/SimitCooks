@@ -351,7 +351,7 @@
   text-align: center;
 }
 
-.equipment-item h3 {
+.equipment-item h4 {
   font-size: 1rem;
   margin: 1rem 1rem 0.5rem;
   color: var(--primary);
