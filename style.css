@@ -261,7 +261,7 @@ h1, h2, h3, h4, h5 {
    🔹 HERO (Same for all pages)
 ================================================= */
 .hero {
-  background: linear-gradient(135deg, #f0f8f2, #eaf3e0);
+  background: linear-gradient(135deg, #fff5eb 0%, #ffe8e0 100%);
   min-height: 30vh;
   display: flex;
   align-items: center;
