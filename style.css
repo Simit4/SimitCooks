@@ -336,22 +336,38 @@ h1, h2, h3, h4, h5 {
 .footer-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.875rem;
 }
 
 .footer-nav a {
-  color: #94a3b8;
+  color: #cbd5e1;
   text-decoration: none;
   font-size: 0.9375rem;
   font-weight: 500;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   padding: 0.5rem 0;
   position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
   width: fit-content;
+  letter-spacing: 0.3px;
 }
 
-/* Animated underline effect */
+/* Elegant left border indicator */
+.footer-nav a::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  width: 0;
+  height: 2px;
+  background: #ff6b6b;
+  transform: translateY(-50%);
+  transition: width 0.25s ease, left 0.25s ease;
+  opacity: 0;
+}
+
+/* Premium underline effect */
 .footer-nav a::after {
   content: '';
   position: absolute;
@@ -359,27 +375,43 @@ h1, h2, h3, h4, h5 {
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+  background: linear-gradient(90deg, #ff6b6b, #ff8e53, #ff6b6b);
+  background-size: 200% 100%;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 2px;
 }
 
-/* HOVER EFFECTS - This is what you want */
+/* HOVER EFFECTS - Premium */
 .footer-nav a:hover {
   color: #ff6b6b;
   transform: translateX(8px);
+  letter-spacing: 0.5px;
+}
+
+.footer-nav a:hover::before {
+  width: 6px;
+  left: -8px;
+  opacity: 1;
 }
 
 .footer-nav a:hover::after {
   width: 100%;
+  animation: shimmerLine 1.5s ease infinite;
+}
+
+@keyframes shimmerLine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Active/Tap effect */
 .footer-nav a:active {
   transform: translateX(4px);
+  transition: transform 0.05s;
 }
 
-/* Focus for accessibility */
+/* Focus state for accessibility */
 .footer-nav a:focus-visible {
   outline: 2px solid #ff6b6b;
   outline-offset: 4px;
@@ -548,37 +580,44 @@ h1, h2, h3, h4, h5 {
     transform: translateX(-50%);
   }
   
-  /* Footer Navigation Mobile Styles */
- .footer-nav {
-    align-items: center;
+.footer-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 0.75rem;
-    width: 100%;
   }
   
   .footer-nav a {
-    padding: 0.75rem 1.25rem;
-    min-width: 160px;
-    text-align: center;
-    background: rgba(255, 107, 107, 0.05);
-    border-radius: 50px;
+    padding: 0.625rem 1.25rem;
+    background: rgba(255, 107, 107, 0.08);
+    border-radius: 100px;
     width: auto;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 107, 107, 0.15);
   }
   
-  /* Hide underline on mobile */
+  /* Hide desktop effects on mobile */
+  .footer-nav a::before,
   .footer-nav a::after {
     display: none;
   }
   
   /* Mobile hover effect */
   .footer-nav a:hover {
-    background: rgba(255, 107, 107, 0.15);
+    transform: translateY(-2px);
+    background: rgba(255, 107, 107, 0.18);
     color: #ff6b6b;
-    transform: translateX(0);
+    border-color: rgba(255, 107, 107, 0.3);
+    letter-spacing: normal;
   }
   
   /* Tap feedback */
   .footer-nav a:active {
-    transform: scale(0.98);
+    transform: scale(0.96);
+    background: rgba(255, 107, 107, 0.25);
   }
   
   .social-icons {
@@ -637,12 +676,11 @@ h1, h2, h3, h4, h5 {
   }
   
  .footer-nav {
-    gap: 0.5rem;
+    gap: 0.625rem;
   }
   
   .footer-nav a {
-    padding: 0.6rem 1rem;
-    min-width: 140px;
-    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
   }
 }
