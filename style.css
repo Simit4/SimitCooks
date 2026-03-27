@@ -424,8 +424,8 @@ h1, h2, h3, h4, h5 {
    🔹 FOOTER NAVIGATION - UPDATED & IMPROVED
 ================================================= */
 .footer-nav {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.875rem;
 }
 
