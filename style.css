@@ -353,19 +353,7 @@ h1, h2, h3, h4, h5 {
   letter-spacing: 0.3px;
 }
 
-/* Elegant left border indicator */
-.footer-nav a::before {
-  content: '';
-  position: absolute;
-  left: -12px;
-  top: 50%;
-  width: 0;
-  height: 2px;
-  background: #ff6b6b;
-  transform: translateY(-50%);
-  transition: width 0.25s ease, left 0.25s ease;
-  opacity: 0;
-}
+
 
 /* Premium underline effect */
 .footer-nav a::after {
