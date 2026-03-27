@@ -501,6 +501,7 @@ text-align: center;  letter-spacing: 0.3px;
 
 .social-icons {
   display: flex;
+  justify-content: center; /* center icons */
   gap: 1rem;
   margin-top: 0.5rem;
 }
@@ -733,23 +734,28 @@ text-align: center;  letter-spacing: 0.3px;
     transform: translateX(-50%);
   }
   
- .footer-nav {
-  grid-template-columns: 1fr;
-  justify-content: center;
-  }
-  
-  .footer-nav a {
-    padding: 0.5rem 0;
-    font-size: 0.9375rem;
-    background: none;
-    border-radius: 0;
-    width: fit-content;
-    text-align: left;
-    border: none;
-    backdrop-filter: none;
-    display: inline-flex;
-    letter-spacing: 0.3px;
-  }
+/* Footer nav - 2 columns and centered */
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(2, auto); /* 2 columns */
+  justify-content: center; /* center the grid */
+  gap: 0.875rem;
+}
+
+.footer-nav a {
+  padding: 0.5rem 0;
+  font-size: 0.9375rem;
+  background: none;
+  border-radius: 0;
+  width: fit-content;
+  text-align: center; /* center text */
+  border: none;
+  backdrop-filter: none;
+  display: inline-flex;
+  justify-content: center; /* center text horizontally */
+  letter-spacing: 0.3px;
+  margin: 0 auto;
+}
   
   /* Keep underline effect on mobile */
   .footer-nav a::after {
