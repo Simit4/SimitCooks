@@ -36,6 +36,8 @@ export function renderHeader() {
   document.body.insertBefore(header, document.body.firstChild);
 }
 
+
+
 // =================================================
 // 🔹 Render Footer HTML
 // =================================================
@@ -63,12 +65,12 @@ export function renderFooter() {
       <!-- Quick Links -->
       <div class="footer-section">
         <h3>Quick Links</h3>
-        <div class="/footer-nav">
+        <div class="footer-nav">  <!-- ✅ REMOVED THE SLASH -->
           <a href="/index.html">Home</a>
-          <a href="/recipes.html"> Recipes</a>
-          <a href="/gallery.html"> Gallery</a>
-          <a href="/equipment.html"> Equipment</a>
-          <a href="/about.html"> About</a>
+          <a href="/recipes.html">Recipes</a>
+          <a href="/gallery.html">Gallery</a>
+          <a href="/equipment.html">Equipment</a>
+          <a href="/about.html">About</a>
         </div>
       </div>
 
