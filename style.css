@@ -739,7 +739,7 @@ text-align: center;  letter-spacing: 0.3px;
   display: grid;
   grid-template-columns: repeat(2, auto); /* 2 columns */
   justify-content: center; /* center the grid */
-  gap: 0.875rem;
+  gap: 1.5rem;
 }
 
 .footer-nav a {
