@@ -65,10 +65,10 @@ export function renderFooter() {
         <h3>Quick Links</h3>
         <div class="/footer-nav">
           <a href="/index.html">Home</a>
-          <a href="/recipes.html">| Recipes</a>
-          <a href="/gallery.html">| Gallery</a>
-          <a href="/equipment.html">| Equipment</a>
-          <a href="/about.html">| About</a>
+          <a href="/recipes.html"> Recipes</a>
+          <a href="/gallery.html"> Gallery</a>
+          <a href="/equipment.html"> Equipment</a>
+          <a href="/about.html"> About</a>
         </div>
       </div>
 
