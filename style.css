@@ -373,13 +373,14 @@ h1, h2, h3, h4, h5 {
 }
 
 .footer-section h3 {
-  font-family: 'Poppins', sans-serif;
+ font-family: 'Poppins', sans-serif;
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 1.2rem;
   color: #ff6b6b;
   position: relative;
-  display: inline-block;
+  display: block;
+  text-align: center;
 }
 
 .footer-section h3::after {
@@ -391,6 +392,7 @@ h1, h2, h3, h4, h5 {
   height: 2px;
   background: #ff6b6b;
   transition: width 0.3s ease;
+   
 }
 
 .footer-section:hover h3::after {
@@ -425,8 +427,10 @@ h1, h2, h3, h4, h5 {
 ================================================= */
 .footer-nav {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.875rem;
+  grid-template-columns: repeat(2, max-content);
+  justify-content: center;
+  gap: 0.5rem 2rem;
+  text-align: center;
 
 }
 
@@ -440,8 +444,9 @@ h1, h2, h3, h4, h5 {
   padding: 0.5rem 0;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  width: fit-content;
-  letter-spacing: 0.3px;
+width: auto;
+justify-content: center;
+text-align: center;  letter-spacing: 0.3px;
 
 }
 
@@ -727,9 +732,8 @@ h1, h2, h3, h4, h5 {
   }
   
  .footer-nav {
-    flex-direction: column;
-    gap: 0.875rem;
-    align-items: flex-start;
+  grid-template-columns: 1fr;
+  justify-content: center;
   }
   
   .footer-nav a {
