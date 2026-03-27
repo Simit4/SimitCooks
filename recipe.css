@@ -448,61 +448,54 @@
   border: none;
 }
 
-/* =================================================
-   🔹 EQUIPMENT SECTION - PROFESSIONAL ENTERPRISE
-   ================================================= */
+=================================================
+   🔹 Equipment Section
+================================================= */
 .equipment-page {
   margin: 3rem auto;
-  background: var(--light);
-  border-radius: 28px;
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08);
-  max-width: 1280px;
-  padding: 3rem;
-  transition: all 0.3s ease;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: var(--shadow-md);
+  max-width: 1100px;
+  padding: 2rem;
 }
 
 .section-title {
-  font-size: 2.25rem;
-  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 2rem;
   text-align: center;
-  color: #1a2c3e;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .section-subtitle {
   text-align: center;
-  color: #5b6e8c;
-  font-size: 0.9375rem;
-  margin-bottom: 3rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #eef2f6;
-  display: inline-block;
-  width: auto;
-  margin-left: auto;
-  margin-right: auto;
+  color: var(--muted);
+  font-weight: 500;
+  margin-bottom: 2rem;
+  font-size: 1rem;
 }
 
 .equipment-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
 }
 
 .equipment-item {
-  background: var(--light);
-  border-radius: 24px;
+  background: #fff;
+  border-radius: 16px;
   overflow: hidden;
-  transition: all 0.35s cubic-bezier(0.2, 0.95, 0.4, 1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-  border: 1px solid #edf2f7;
-  position: relative;
+  transition: all 0.35s ease;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
 }
 
 .equipment-item:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.12);
-  border-color: rgba(39, 174, 96, 0.2);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
 }
 
 .image-wrapper {
@@ -512,13 +505,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #fafbfc;
+  background: #f9f9f9;
   overflow: hidden;
 }
 
 .image-wrapper img {
-  max-width: 75%;
-  max-height: 75%;
+  max-width: 85%;
+  max-height: 85%;
   object-fit: contain;
   transition: transform 0.4s ease;
 }
@@ -529,56 +522,54 @@
 
 .overlay {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent 60%);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 1.25rem;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  color: #fff;
+  padding: 1rem;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transform: translateY(100%);
+  transition: all 0.3s ease;
 }
 
 .equipment-item:hover .overlay {
   opacity: 1;
+  transform: translateY(0);
 }
 
 .overlay p {
-  color: white;
-  font-size: 0.8125rem;
-  text-align: center;
-  line-height: 1.5;
+  font-size: 0.85rem;
   margin: 0;
+  text-align: center;
 }
 
 .equipment-item h3 {
-  font-size: 1.125rem;
-  font-weight: 700;
-  margin: 1rem 1rem 0.5rem;
-  color: #1a2c3e;
+  font-size: 1.1rem;
+  margin: 1rem;
+  color: var(--primary);
   text-align: center;
 }
 
 .btn-buy {
-  display: block;
-  margin: 0.75rem 1rem 1.25rem;
-  padding: 0.625rem 1rem;
-  background: #f8fafc;
-  color: #27ae60;
-  border-radius: 60px;
+  display: inline-block;
+  margin: 0 1rem 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 25px;
   font-weight: 600;
-  font-size: 0.8125rem;
   text-align: center;
-  transition: all 0.25s ease;
-  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
 }
 
 .btn-buy:hover {
-  background: #27ae60;
-  color: white;
-  border-color: #27ae60;
-  transform: translateY(-1px);
+  background: var(--primary-dark);
+  transform: translateY(-2px);
 }
+
+
+
 
 /* =================================================
    🔹 RESPONSIVE - PROFESSIONAL BREAKPOINTS
