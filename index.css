@@ -9,21 +9,24 @@
   line-height: 1.2;
   text-shadow: 0 2px 6px rgba(0,0,0,0.08);
   animation: fadeInUp 1s ease forwards;
-  position: relative; /* ADD THIS - required for absolute positioning */
-  display: inline-block; /* ADD THIS - makes the underline only as wide as the text */
-  width: 100%; /* ADD THIS - keeps it centered */
+  position: relative;
+  display: inline-block; /* CHANGE THIS - makes width fit content */
+  left: 50%; /* ADD THIS - centers the element */
+  transform: translateX(-50%); /* ADD THIS - centers the element */
+  white-space: nowrap; /* ADD THIS - prevents text wrapping */
 }
 
 #Featured-Recipes-h2::after {
   content: '';
   position: absolute;
-  bottom: -8px;
+  bottom: -12px;
   left: 50%;
   transform: translateX(-50%);
   width: 0;
   height: 3px;
   background: var(--primary-gradient);
   transition: width 0.3s ease;
+  border-radius: 3px;
 }
 
 #Featured-Recipes-h2:hover::after {
