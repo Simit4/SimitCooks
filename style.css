@@ -474,7 +474,7 @@ text-align: center;  letter-spacing: 0.3px;
 }
 
 .footer-nav a:hover::after {
-  width: 100%;
+  width: 40%;
   animation: shimmerLine 1.5s ease infinite;
 }
 
