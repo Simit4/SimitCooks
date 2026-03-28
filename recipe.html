@@ -41,70 +41,69 @@
 <body>
 
 
-<!-- Recipe Content -->
+<!-- Recipe Card Section -->
 <section class="recipe-page">
-  <h1 id="recipe-title"></h1>
+  <div class="container">
+    <h1 id="recipe-title">Loading Recipe...</h1>
 
-  <!-- Meta Info Card -->
-  <div class="recipe-meta-card">
-    <span><i class="fas fa-clock"></i> Prep: <span id="prep-time"></span></span>
-    <span><i class="fas fa-utensils"></i> Cook: <span id="cook-time"></span></span>
-    <span><i class="fas fa-users"></i> Serves: <span id="servings"></span></span>
-  </div>
-
-  <!-- Description -->
-  <p class="description" id="recipe-description"></p>
-
-  <!-- Ingredients & Method -->
-  <div class="recipe-section">
-    <div class="ingredients">
-      <h3><i class="fas fa-list-ul"></i> Ingredients</h3>
-      <ul id="ingredients-list"></ul>
+    <div class="recipe-meta">
+      <span><i class="fas fa-clock"></i> <strong>Prep:</strong> <span id="prep-time"></span></span>
+      <span><i class="fas fa-utensils"></i> <strong>Cook:</strong> <span id="cook-time"></span></span>
+      <span><i class="fas fa-users"></i> <strong>Serves:</strong> <span id="servings"></span></span>
     </div>
 
-    <div class="method">
-      <h3><i class="fas fa-step-forward"></i> Method</h3>
-      <ol id="method-list"></ol>
+    <p class="description" id="recipe-description">Loading description...</p>
+
+    <div class="recipe-layout">
+      <div class="recipe-left">
+        <h3><i class="fas fa-list-ul"></i> Ingredients</h3>
+        <ul id="ingredients-list"></ul>
+
+        <h3><i class="fas fa-step-forward"></i> Method</h3>
+        <ol id="method-list"></ol>
+
+        <h3><i class="fas fa-chart-line"></i> Nutrition</h3>
+        <div id="nutrition"></div>
+
+        <div class="recipe-info">
+          <p><strong><i class="fas fa-tags"></i> Tags:</strong> <span id="tags"></span></p>
+          <p><strong><i class="fas fa-globe"></i> Cuisine:</strong> <span id="cuisine"></span></p>
+          <p><strong><i class="fas fa-folder"></i> Category:</strong> <span id="category"></span></p>
+        </div>
+
+        <h3><i class="fas fa-pencil-alt"></i> Notes</h3>
+        <p id="notes"></p>
+
+        <h3><i class="fas fa-lightbulb"></i> Fun Fact</h3>
+        <p id="facts"></p>
+
+        <button class="btn-print" onclick="window.print()">
+          <i class="fas fa-print"></i> Print Recipe
+        </button>
+      </div>
     </div>
-  </div>
 
-  <!-- Recipe Video -->
-  <div class="recipe-video" id="recipe-video-container"></div>
-
-  <!-- Nutrition Info -->
-  <div id="nutrition"></div>
-
-  <!-- Notes & Fun Facts -->
-  <div class="extra-info">
-    <h3><i class="fas fa-pencil-alt"></i> Notes</h3>
-    <p id="notes"></p>
-
-    <h3><i class="fas fa-lightbulb"></i> Fun Fact</h3>
-    <p id="facts"></p>
-  </div>
-
-  <!-- Tags / Cuisine / Category -->
-  <div class="recipe-tags">
-    <p><strong><i class="fas fa-tags"></i> Tags:</strong> <span id="tags"></span></p>
-    <p><strong><i class="fas fa-globe"></i> Cuisine:</strong> <span id="cuisine"></span></p>
-    <p><strong><i class="fas fa-folder"></i> Category:</strong> <span id="category"></span></p>
-  </div>
-
-  <!-- Action Buttons -->
-  <div class="recipe-actions">
-    <button class="btn-print" onclick="window.print()"><i class="fas fa-print"></i> Print Recipe</button>
-    <button class="btn-share" onclick="shareRecipe()"><i class="fas fa-share-alt"></i> Share</button>
-    <button class="btn-save" onclick="saveRecipe()"><i class="fas fa-heart"></i> Save</button>
+    <!-- Recipe Video -->
+    <div class="recipe-video-container">
+      <h3><i class="fas fa-video"></i> Video Tutorial</h3>
+      <div class="recipe-video" id="recipe-video-container">
+        <!-- Video iframe injected via JS -->
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- More Recipes Section -->
+<!-- More Recipes -->
 <section class="more-recipes">
-  <h2 class="section-title">More Recipes You’ll Love</h2>
-  <div class="more-recipes-grid" id="more-recipes-container">
-    <!-- Recipes injected via JS -->
+  <div class="container">
+    <h2 class="section-title">More Recipes</h2>
+    <div class="more-recipes-grid" id="more-recipes-grid">
+      <!-- JS will inject 3 recipe cards here -->
+    </div>
   </div>
 </section>
+
+  
 
   
 <!-- Scripts -->
