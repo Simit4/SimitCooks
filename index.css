@@ -13,17 +13,18 @@
 
 #Featured-Recipes-h2::after {
   content: '';
-  display: block;
-  width: 100px;
-  height: 4px;
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
   background: var(--primary-gradient);
-  margin: var(--space-md) auto 0;
-  border-radius: var(--radius-full);
-  transition: width var(--transition-base);
+  transition: width 0.3s ease;
 }
 
 #Featured-Recipes-h2:hover::after {
-  width: 150px;
+  width: 80px;
 }
 
 /* =================================================
