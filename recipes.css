@@ -158,7 +158,7 @@
 .recipe-card h3 {
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
-  color: var(--primary);
+  color: var(--secondary);
   font-weight: 700;
   transition: color var(--transition-base);
  
