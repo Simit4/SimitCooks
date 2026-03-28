@@ -494,7 +494,6 @@ h1, h2, h3, h4, h5, h6 {
    🔹 More Recipes - Centered Category Badges
 ================================================= */
 .more-recipes-section {
-  padding: var(--space-6xl) 0;
   background: linear-gradient(135deg, var(--neutral-50) 0%, #fff 100%);
 }
 
@@ -529,8 +528,9 @@ h1, h2, h3, h4, h5, h6 {
 .more-recipes-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--grid-gap);
-  max-width: var(--container-max);
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
