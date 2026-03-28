@@ -540,10 +540,11 @@ h1 {
 
 .more-recipes-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--grid-gap);
-  max-width: var(--container-max);
-  margin: 0 auto;
+  grid-template-columns: repeat(3, 1fr);  /* ADD THIS */
+  gap: 2rem;                               /* ADD THIS */
+  padding: 2rem;                           /* ADD THIS */
+  max-width: 1400px;                       /* ADD THIS */
+  margin: 0 auto;                          /* ADD THIS */
 }
 
 /* Recipe Cards */
@@ -570,11 +571,11 @@ h1 {
 
 /* Thumbnail */
 .thumbnail-wrapper {
-  position: relative;
   width: 100%;
-  padding-bottom: var(--aspect-16-9);
+  height: 220px;  /* CHANGE FROM 240px TO 220px */
   overflow: hidden;
-  background: linear-gradient(135deg, var(--neutral-100) 0%, var(--neutral-200) 100%);
+  background: #fafafa;
+  position: relative;
 }
 
 .thumbnail-wrapper::before {
