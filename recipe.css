@@ -455,46 +455,220 @@ h1 {
 /* =================================================
    🔹 Video Section
 ================================================= */
+/* =================================================
+   🔹 Video Section - Instagram Reels Style
+================================================= */
 .video-section {
   background: linear-gradient(135deg, #000 0%, #1a1a2e 100%);
-  padding: var(--space-6xl) 0;
+  padding: 4rem 0;
   position: relative;
+  overflow: hidden;
+}
+
+.video-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(230, 126, 34, 0.08) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .video-wrapper {
-  max-width: 900px;
+  max-width: 800px;
   margin: 0 auto;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .video-header {
-  margin-bottom: var(--space-3xl);
+  margin-bottom: 2rem;
 }
 
 .video-header h3 {
-  font-size: var(--text-5xl);
-  font-weight: 800;
+  font-size: 2rem;
+  font-weight: 700;
   background: linear-gradient(135deg, #fff 0%, var(--primary-light) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  margin-bottom: var(--space-sm);
+  margin-bottom: 0.5rem;
+  font-family: 'Poppins', sans-serif;
 }
 
 .video-header p {
   color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
 }
 
+/* Video Container - Instagram Style */
 .video-container {
   position: relative;
   width: 100%;
-  padding-bottom: var(--aspect-16-9);
+  max-width: 600px;
+  margin: 0 auto;
   background: #000;
-  border-radius: var(--radius-3xl);
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: var(--shadow-3xl);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.video-container:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Aspect ratio wrapper */
+.video-aspect {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  overflow: hidden;
+}
+
+/* Thumbnail */
+.video-thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.video-container:hover .video-thumbnail {
+  transform: scale(1.08);
+}
+
+/* Overlay Gradient - Instagram Style */
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.4) 100%);
+  transition: all 0.4s ease;
+  z-index: 2;
+}
+
+.video-container:hover .video-overlay {
+  background: linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.3) 100%);
+}
+
+/* Play Button - Instagram Reels Style */
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  z-index: 10;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+}
+
+.play-button::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(230, 126, 34, 0.3);
+  animation: ripple 2s infinite;
+}
+
+.play-button i {
+  color: var(--primary);
+  font-size: 1.8rem;
+  margin-left: 4px;
+  z-index: 2;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.video-container:hover .play-button {
+  transform: translate(-50%, -50%) scale(1.1);
+  background: var(--primary);
+  box-shadow: 0 0 30px rgba(230, 126, 34, 0.6);
+}
+
+.video-container:hover .play-button i {
+  color: white;
+  transform: scale(1.05);
+}
+
+/* Video Info Badge - Bottom Left */
+.video-info {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  padding: 0.4rem 1rem;
+  border-radius: 30px;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.video-info i {
+  color: var(--primary);
+  font-size: 0.75rem;
+}
+
+.video-container:hover .video-info {
+  transform: translateY(-2px);
+  background: rgba(0, 0, 0, 0.85);
+}
+
+/* Duration Badge - Bottom Right */
+.video-duration {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  padding: 0.4rem 1rem;
+  border-radius: 30px;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.video-duration i {
+  color: var(--primary);
+  font-size: 0.75rem;
+}
+
+.video-container:hover .video-duration {
+  transform: translateY(-2px);
+  background: rgba(0, 0, 0, 0.85);
+}
+
+/* YouTube Iframe */
 .video-container iframe {
   position: absolute;
   top: 0;
@@ -502,7 +676,50 @@ h1 {
   width: 100%;
   height: 100%;
   border: none;
+  z-index: 5;
 }
+
+/* Loading State */
+.video-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 4;
+  display: none;
+}
+
+.video-container.loading .video-loading {
+  display: block;
+}
+
+/* Animations */
+@keyframes ripple {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+
+
+
 
 /* =================================================
    🔹 More Recipes - Centered Category Badges
@@ -742,8 +959,39 @@ h1 {
     padding: var(--space-lg);
   }
   
+ .video-section {
+    padding: 3rem 0;
+  }
+  
+  .video-wrapper {
+    max-width: 90%;
+  }
+  
   .video-header h3 {
-    font-size: var(--text-3xl);
+    font-size: 1.5rem;
+  }
+  
+  .video-header p {
+    font-size: 0.85rem;
+  }
+  
+  .video-container {
+    max-width: 100%;
+  }
+  
+  .play-button {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .play-button i {
+    font-size: 1.4rem;
+  }
+  
+  .video-info,
+  .video-duration {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.7rem;
   }
 }
 
@@ -759,7 +1007,48 @@ h1 {
   .section-header h3 {
     font-size: var(--text-xl);
   }
+
+     .video-section {
+    padding: 2rem 0;
+  }
+  
+  .video-header h3 {
+    font-size: 1.25rem;
+  }
+  
+  .video-header p {
+    font-size: 0.8rem;
+  }
+  
+  .play-button {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .play-button i {
+    font-size: 1.2rem;
+  }
+  
+  .video-info,
+  .video-duration {
+    padding: 0.25rem 0.7rem;
+    font-size: 0.65rem;
+    bottom: 0.75rem;
+  }
+  
+  .video-info i,
+  .video-duration i {
+    font-size: 0.65rem;
+  }
 }
+
+/* Hover Effect for Touch Devices */
+@media (hover: hover) {
+  .video-container:hover {
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
 
 /* =================================================
    🔹 Print Styles
