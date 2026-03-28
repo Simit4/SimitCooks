@@ -735,13 +735,11 @@ text-align: center;  letter-spacing: 0.3px;
   
 /* Footer nav - 2 columns and centered */
 .footer-nav {
-    display: grid;
-    grid-template-columns: repeat(2, auto); /* 2 columns */
-    justify-content: center; /* center the whole grid */
-    column-gap: 2rem; /* space between columns */
-    row-gap: 0.875rem; /* space between rows */
-    text-align: center; /* center text in links */
-    width: 100%;
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+justify-content: center;
+gap: 0.5rem 2rem;
+text-align: left;
 }
 
 .footer-nav a {
