@@ -119,21 +119,6 @@ h1 {
   margin-bottom: var(--space-lg);
 }
 
-/* =================================================
-   🔹 Recipe Hero
-================================================= */
-.recipe-hero {
-  background: linear-gradient(135deg, #fff 0%, var(--neutral-50) 100%);
-  border-bottom: 1px solid var(--neutral-200);
-  padding: var(--space-6xl) 0 var(--space-5xl);
-  position: relative;
-}
-
-.hero-content {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-}
 
 #recipe-title {
   font-size: var(--text-7xl);
