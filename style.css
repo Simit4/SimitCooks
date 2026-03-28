@@ -427,11 +427,10 @@ h1, h2, h3, h4, h5 {
    🔹 FOOTER NAVIGATION - UPDATED & IMPROVED
 ================================================= */
 .footer-nav {
-  display: grid;
-  grid-template-columns: repeat(2, max-content);
-  justify-content: center;
-  gap: 0.5rem 2rem;
-  text-align: left;
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 0.5rem 2rem;
+text-align: left;
 
 }
 
