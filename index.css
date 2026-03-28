@@ -24,7 +24,7 @@
   transform: translateX(-50%);
   width: 60px;
   height: 3px;
-  background: var(--primary-gradient);
+  background: blue;
   transition: width 0.3s ease;
   border-radius: 3px;
 }
