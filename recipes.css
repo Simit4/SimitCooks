@@ -78,8 +78,9 @@
 .recipes-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--grid-gap);
-  max-width: var(--container-max);
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
