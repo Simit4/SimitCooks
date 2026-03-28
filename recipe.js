@@ -72,7 +72,7 @@ function extractYouTubeId(url) {
   return null;
 }
 
-// Instagram-Style Video Player
+// Video Player with Fixed Play Button
 function setupVideoPlayer(videoUrl) {
   const videoSection = document.getElementById('video-section');
   const videoContainer = document.getElementById('video-container');
@@ -90,38 +90,54 @@ function setupVideoPlayer(videoUrl) {
   
   videoContainer.innerHTML = `
     <div class="video-aspect">
-      <div class="video-thumbnail" style="background-image: url('${thumbnailUrl}');"></div>
+      <div class="video-thumbnail" style="background-image: url('${thumbnailUrl}'); background-size: cover; background-position: center;"></div>
       <div class="video-overlay"></div>
       <div class="play-button">
         <i class="fas fa-play"></i>
       </div>
       <div class="video-info">
         <i class="fas fa-video"></i>
-        <span>Video Tutorial</span>
+        <span>Watch Video Tutorial</span>
       </div>
       <div class="video-duration">
         <i class="fas fa-clock"></i>
-        <span>Watch Now</span>
+        <span>Step-by-Step Guide</span>
       </div>
       <div class="video-loading"></div>
     </div>
   `;
   
   const loadVideo = () => {
+    if (videoContainer.querySelector('iframe')) return;
+    
     videoContainer.classList.add('loading');
+    
     const iframe = document.createElement('iframe');
-    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0`;
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0&autohide=1`;
     iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
     iframe.allowfullscreen = true;
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.position = 'absolute';
+    iframe.style.top = '0';
+    iframe.style.left = '0';
+    iframe.style.border = 'none';
+    
     videoContainer.innerHTML = '';
     videoContainer.appendChild(iframe);
-    setTimeout(() => videoContainer.classList.remove('loading'), 500);
+    
+    setTimeout(() => {
+      videoContainer.classList.remove('loading');
+    }, 500);
   };
   
   const playBtn = videoContainer.querySelector('.play-button');
   const thumbnailDiv = videoContainer.querySelector('.video-thumbnail');
+  const overlay = videoContainer.querySelector('.video-overlay');
+  
   if (playBtn) playBtn.addEventListener('click', loadVideo);
   if (thumbnailDiv) thumbnailDiv.addEventListener('click', loadVideo);
+  if (overlay) overlay.addEventListener('click', loadVideo);
 }
 
 function renderRecipe(recipe) {
