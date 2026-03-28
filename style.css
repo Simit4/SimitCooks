@@ -270,6 +270,7 @@ h1, h2, h3, h4, h5 {
   text-align: center;
   padding: 2rem;
   overflow: hidden;
+  margin-top: 2.5rem;
 }
 
 .hero::before {
