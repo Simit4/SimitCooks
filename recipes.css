@@ -158,13 +158,17 @@
 
 .recipe-category {
   display: inline-block;
-  background: #f0f0f0;
-  padding: 0.25rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.7rem;
+  background: var(--primary-soft);
+  padding: var(--space-xs) var(--space-lg);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 700;
   color: var(--primary);
-  font-weight: 600;
-  margin-top: 0.5rem;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  margin: 0 auto;
 }
 
 .recipe-card:hover .recipe-category {
