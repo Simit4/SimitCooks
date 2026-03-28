@@ -13,7 +13,7 @@ function getSlug() {
 }
 
 function formatNutrition(nutrition) {
-  if (!nutrition) return '';
+  if (!nutrition) return '<div class="nutrition-item"><div class="nutrition-value">N/A</div><div class="nutrition-label">Coming Soon</div></div>';
   
   const items = [];
   if (nutrition.calories) items.push({ label: 'Calories', value: nutrition.calories });
@@ -22,10 +22,12 @@ function formatNutrition(nutrition) {
   if (nutrition.fat) items.push({ label: 'Fat', value: nutrition.fat });
   if (nutrition.fiber) items.push({ label: 'Fiber', value: nutrition.fiber });
   
+  if (items.length === 0) return '<div class="nutrition-item"><div class="nutrition-value">N/A</div><div class="nutrition-label">Coming Soon</div></div>';
+  
   return items.map(item => `
     <div class="nutrition-item">
-      <div class="nutrition-value">${item.value}</div>
-      <div class="nutrition-label">${item.label}</div>
+      <div class="nutrition-value">${escapeHtml(item.value)}</div>
+      <div class="nutrition-label">${escapeHtml(item.label)}</div>
     </div>
   `).join('');
 }
@@ -40,6 +42,33 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+function getRecipeThumbnail(recipe) {
+  if (recipe.thumbnail_url && recipe.thumbnail_url.trim()) {
+    return recipe.thumbnail_url;
+  }
+  
+  const videoId = extractYouTubeId(recipe.video_url);
+  if (videoId) return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  
+  return FALLBACK_IMAGE;
+}
+
+function extractYouTubeId(url) {
+  if (!url || typeof url !== 'string') return null;
+  
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]{11})/,
+    /^([a-zA-Z0-9_-]{11})$/
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match && match[1]) return match[1];
+  }
+  return null;
 }
 
 function renderRecipe(recipe) {
@@ -68,9 +97,9 @@ function renderRecipe(recipe) {
     method.innerHTML = '<li>No instructions available</li>';
   }
 
-  // Nutrition
+  // Nutrition - Clearly Visible
   const nutritionDiv = document.getElementById('nutrition');
-  nutritionDiv.innerHTML = formatNutrition(recipe.nutrition) || '<div class="nutrition-item"><div class="nutrition-value">N/A</div><div class="nutrition-label">Info coming soon</div></div>';
+  nutritionDiv.innerHTML = formatNutrition(recipe.nutrition);
 
   // Categories, Cuisine, Tags
   if (recipe.category && Array.isArray(recipe.category)) {
@@ -89,7 +118,7 @@ function renderRecipe(recipe) {
   document.getElementById('notes').innerText = recipe.notes || 'No additional notes.';
   document.getElementById('facts').innerText = recipe.facts || 'Did you know? This recipe is made with love!';
 
-  // Video - Separate section
+  // Video - Separate Section
   if (recipe.video_url) {
     const videoSection = document.getElementById('video-section');
     const videoContainer = document.getElementById('video-container');
@@ -104,58 +133,19 @@ function renderRecipe(recipe) {
           allowfullscreen>
         </iframe>
       `;
-    } else {
-      videoSection.style.display = 'none';
     }
   }
 
-  // Update page title and meta for SEO
+  // Update page title
   document.title = `${recipe.title} | Simit Cooks`;
-  updateMetaTags(recipe);
-}
-
-function extractYouTubeId(url) {
-  if (!url || typeof url !== 'string') return null;
-  
-  const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
-    /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]{11})/,
-    /^([a-zA-Z0-9_-]{11})$/
-  ];
-  
-  for (const pattern of patterns) {
-    const match = url.match(pattern);
-    if (match && match[1]) return match[1];
-  }
-  return null;
-}
-
-function updateMetaTags(recipe) {
-  // Update meta description
-  let metaDescription = document.querySelector('meta[name="description"]');
-  if (metaDescription) {
-    metaDescription.setAttribute('content', recipe.description || 'Delicious home-style recipe from Simit Cooks');
-  }
-  
-  // Update OG title
-  let ogTitle = document.querySelector('meta[property="og:title"]');
-  if (ogTitle) {
-    ogTitle.setAttribute('content', `${recipe.title} | Simit Cooks`);
-  }
-  
-  // Update OG description
-  let ogDescription = document.querySelector('meta[property="og:description"]');
-  if (ogDescription) {
-    ogDescription.setAttribute('content', recipe.description || 'Try this delicious recipe from Simit Cooks');
-  }
 }
 
 async function fetchMoreRecipes(currentSlug) {
   const { data: recipes, error } = await supabase
     .from('recipe_db')
-    .select('title, slug, thumbnail_url, video_url, prep_time, category')
+    .select('*')
     .neq('slug', currentSlug)
-    .limit(6);
+    .limit(3);
 
   const grid = document.getElementById('more-recipes-grid');
   
@@ -165,32 +155,25 @@ async function fetchMoreRecipes(currentSlug) {
   }
   
   grid.innerHTML = recipes.map(recipe => {
-    const thumbnail = recipe.thumbnail_url || getVideoThumbnail(recipe.video_url) || FALLBACK_IMAGE;
-    const category = recipe.category && Array.isArray(recipe.category) ? recipe.category[0] : 'Recipe';
+    const thumbnail = getRecipeThumbnail(recipe);
+    const title = recipe.title || 'Untitled';
+    const description = recipe.description || 'Delicious recipe';
+    const categories = recipe.category && Array.isArray(recipe.category) ? recipe.category : [];
+    const primaryCategory = categories[0] || '';
     
     return `
-      <div class="recipe-card-modern" onclick="window.location.href='/recipe/${recipe.slug}'">
-        <div class="card-image">
-          <img src="${thumbnail}" alt="${escapeHtml(recipe.title)}" loading="lazy">
-          <div class="card-overlay">
-            <span class="quick-view">Quick View →</span>
-          </div>
+      <div class="recipe-card" onclick="window.location.href='/recipe/${recipe.slug}'">
+        <div class="thumbnail-wrapper">
+          <img src="${thumbnail}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.src='${FALLBACK_IMAGE}'">
         </div>
-        <div class="card-content">
-          <h4>${escapeHtml(recipe.title)}</h4>
-          <div class="card-meta">
-            <span><i class="fas fa-tag"></i> ${escapeHtml(category)}</span>
-            ${recipe.prep_time ? `<span><i class="fas fa-clock"></i> ${recipe.prep_time}</span>` : ''}
-          </div>
+        <div class="card-body">
+          <h4>${escapeHtml(title)}</h4>
+          <p>${escapeHtml(description.substring(0, 80))}${description.length > 80 ? '...' : ''}</p>
+          ${primaryCategory ? `<span class="recipe-category">${escapeHtml(primaryCategory)}</span>` : ''}
         </div>
       </div>
     `;
   }).join('');
-}
-
-function getVideoThumbnail(videoUrl) {
-  const videoId = extractYouTubeId(videoUrl);
-  return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
 }
 
 // Initialize
@@ -217,7 +200,7 @@ async function init() {
   renderRecipe(recipe);
   fetchMoreRecipes(slug);
   
-  // Increment view count (optional)
+  // Increment view count
   await supabase
     .from('recipe_db')
     .update({ views: (recipe.views || 0) + 1 })
