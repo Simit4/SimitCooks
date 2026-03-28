@@ -802,6 +802,8 @@ h3 {
   transition: all var(--transition-base);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+   justify-content: center;
+
 }
 
 .recipe-card:hover .recipe-category {
