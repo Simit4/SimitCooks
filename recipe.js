@@ -72,7 +72,7 @@ function extractYouTubeId(url) {
   return null;
 }
 
-// Video Player with Fixed Play Button
+// Fixed Video Player - Now Shows Video Properly
 function setupVideoPlayer(videoUrl) {
   const videoSection = document.getElementById('video-section');
   const videoContainer = document.getElementById('video-container');
@@ -87,6 +87,9 @@ function setupVideoPlayer(videoUrl) {
   if (!videoContainer) return;
   
   const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  
+  // Store video ID for later use
+  videoContainer.setAttribute('data-video-id', videoId);
   
   videoContainer.innerHTML = `
     <div class="video-aspect">
@@ -108,29 +111,41 @@ function setupVideoPlayer(videoUrl) {
   `;
   
   const loadVideo = () => {
+    // Prevent multiple loads
     if (videoContainer.querySelector('iframe')) return;
     
+    const videoId = videoContainer.getAttribute('data-video-id');
+    if (!videoId) return;
+    
+    // Show loading state
     videoContainer.classList.add('loading');
     
+    // Create iframe with proper styling
     const iframe = document.createElement('iframe');
-    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0&autohide=1`;
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0&autohide=1&controls=1`;
     iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
     iframe.allowfullscreen = true;
-    iframe.style.width = '100%';
-    iframe.style.height = '100%';
+    
+    // Critical: Style the iframe to be visible
     iframe.style.position = 'absolute';
     iframe.style.top = '0';
     iframe.style.left = '0';
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
     iframe.style.border = 'none';
+    iframe.style.zIndex = '10';
     
+    // Clear container and add iframe
     videoContainer.innerHTML = '';
     videoContainer.appendChild(iframe);
     
+    // Remove loading state after video loads
     setTimeout(() => {
       videoContainer.classList.remove('loading');
     }, 500);
   };
   
+  // Add click handlers to all interactive elements
   const playBtn = videoContainer.querySelector('.play-button');
   const thumbnailDiv = videoContainer.querySelector('.video-thumbnail');
   const overlay = videoContainer.querySelector('.video-overlay');
@@ -138,6 +153,9 @@ function setupVideoPlayer(videoUrl) {
   if (playBtn) playBtn.addEventListener('click', loadVideo);
   if (thumbnailDiv) thumbnailDiv.addEventListener('click', loadVideo);
   if (overlay) overlay.addEventListener('click', loadVideo);
+  
+  // Also add click to entire container for better UX
+  videoContainer.addEventListener('click', loadVideo);
 }
 
 function renderRecipe(recipe) {
