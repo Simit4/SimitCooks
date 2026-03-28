@@ -112,17 +112,6 @@ h1, h2, h3, h4, h5, h6 {
 
 
 
-#recipe-title {
-  font-size: var(--text-7xl);
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin-bottom: var(--space-xl);
-  animation: fadeInUp 0.8s var(--transition-base);
-}
-
 .recipe-meta {
   display: flex;
   justify-content: center;
