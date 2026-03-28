@@ -423,8 +423,8 @@ h1, h2, h3, h4, h5, h6 {
 ================================================= */
 .video-section {
   background: linear-gradient(135deg, #fff7f0 0%, #ffe8d6 100%);
-  padding: var(--space-3xl) 0; /* smaller than 6xl */
-  position: relative;
+   padding: 1.5rem 0;
+   position: relative;
   overflow: hidden;
 }
 
