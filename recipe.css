@@ -110,14 +110,6 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
 }
 
-h1 {
-  font-size: var(--text-7xl);
-  background: var(--primary-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin-bottom: var(--space-lg);
-}
 
 
 #recipe-title {
