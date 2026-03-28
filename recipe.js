@@ -178,7 +178,7 @@ async function fetchMoreRecipes(currentSlug) {
   const grid = document.getElementById('more-recipes-grid');
   
   if (!recipes || recipes.length === 0) {
-    grid.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">More recipes coming soon!</p>';
+    grid.innerHTML = '<div class="no-results"><i class="fas fa-utensils"></i><h3>No More Recipes</h3><p>Check back soon for more delicious recipes!</p></div>';
     return;
   }
   
