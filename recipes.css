@@ -167,6 +167,12 @@
   margin-top: 0.5rem;
 }
 
+.recipe-category:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
 /* =================================================
    🔹 Skeleton Loader Styles
 ================================================= */
