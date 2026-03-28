@@ -156,13 +156,12 @@
 }
 
 .recipe-card h3 {
-  font-size: calc(var(--text-xl) * 1.75); /* increase by 30% */
-  margin-top: var(--space-md); /* 👈 adds space above */
-  font-weight: 800;
-  margin-bottom: var(--space-sm);
-  color: var(--secondary);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+  font-weight: 700;
   transition: color var(--transition-base);
-  text-align: center;
+ 
 }
 
 .recipe-card:hover h3 {
@@ -170,15 +169,15 @@
 }
 
 .recipe-card p {
-  font-size: var(--text-sm);
-  color: var(--neutral-500);
+  font-size: 0.85rem;
+  color: var(--muted);
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  line-height: 1.5;
-  margin-bottom: var(--space-md);
-  text-align: center;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+   
 }
 
 .recipe-category {
