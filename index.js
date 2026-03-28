@@ -10,80 +10,15 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // =================================================
 // 🔹 Constants
 // =================================================
-const FALLBACK_IMAGE = 'https://i.ibb.co/4p4mR3N/momo-graphic.png';
-const MAX_RECIPES = 3;
+const CONFIG = {
+  fallbackImage: 'https://i.ibb.co/4p4mR3N/momo-graphic.png',
+  maxRecipes: 3,
+  skeletonCount: 3
+};
 
 // =================================================
-// 🔹 Helper Functions
+// 🔹 Category Mapping - Same as second file
 // =================================================
-
-// Safe text formatting
-const safeText = (value, defaultValue = '') => {
-  if (value === null || value === undefined) return defaultValue;
-  if (typeof value === 'string') return value.trim() || defaultValue;
-  return String(value) || defaultValue;
-};
-
-// Escape HTML to prevent XSS
-const escapeHtml = (text) => {
-  const safe = safeText(text);
-  const map = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
-    '/': '&#x2F;',
-    '`': '&#x60;',
-    '=': '&#x3D;'
-  };
-  return safe.replace(/[&<>"'/`=]/g, char => map[char]);
-};
-
-// Extract YouTube video ID from various URL formats
-const getYouTubeId = (url) => {
-  if (!url || typeof url !== 'string') return null;
-  
-  const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
-    /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]{11})/,
-    /^([a-zA-Z0-9_-]{11})$/
-  ];
-  
-  for (const pattern of patterns) {
-    const match = url.match(pattern);
-    if (match && match[1]) return match[1];
-  }
-  return null;
-};
-
-// Get thumbnail from video URL - EXACT same as recipes page
-const getVideoThumbnail = (videoUrl) => {
-  const videoId = getYouTubeId(videoUrl);
-  return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
-};
-
-// Get recipe thumbnail - EXACT same as recipes page
-const getRecipeThumbnail = (recipe) => {
-  // First priority: thumbnail_url
-  if (recipe.thumbnail_url && typeof recipe.thumbnail_url === 'string' && recipe.thumbnail_url.trim()) {
-    return recipe.thumbnail_url;
-  }
-  
-  // Second priority: video thumbnail
-  const videoThumb = getVideoThumbnail(recipe.video_url);
-  if (videoThumb) return videoThumb;
-  
-  // Third priority: fallback image
-  return FALLBACK_IMAGE;
-};
-
-// Validate recipe data
-const isValidRecipe = (recipe) => {
-  return recipe && typeof recipe === 'object' && (recipe.title || recipe.slug);
-};
-
-// Category mapping (same as recipes page)
 const CATEGORY_MAP = {
   'main': 'Main',
   'main dish': 'Main',
@@ -91,18 +26,20 @@ const CATEGORY_MAP = {
   'curry': 'Main',
   'rice': 'Main',
   'noodle': 'Main',
-  'sauce': 'Sides & Sauces',
-  'dip': 'Sides & Sauces',
-  'chutney': 'Sides & Sauces',
-  'side': 'Sides & Sauces',
-  'accompaniment': 'Sides & Sauces',
-  'salad': 'Sides & Sauces',
-  'jhol': 'Sides & Sauces',
+  'sauce': 'Sauce',
+  'dip': 'Sauce',
+  'chutney': 'Sauce',
+  'condiment': 'Sauce',
+  'jhol': 'Sauce',
+  'side': 'Side',
+  'accompaniment': 'Side',
+  'salad': 'Side',
   'dessert': 'Dessert',
   'sweet': 'Dessert',
   'snack': 'Snack',
   'appetizer': 'Snack',
   'starter': 'Snack',
+  'street food': 'Snack',
   'breakfast': 'Breakfast',
   'beverage': 'Beverage',
   'drink': 'Beverage',
@@ -110,11 +47,27 @@ const CATEGORY_MAP = {
   'special': 'Festival'
 };
 
-// Get mapped category
+// =================================================
+// 🔹 Helper Functions
+// =================================================
+
+const safeText = (value, defaultValue = '') => {
+  if (value === null || value === undefined) return defaultValue;
+  if (typeof value === 'string') return value.trim() || defaultValue;
+  return String(value) || defaultValue;
+};
+
+// Get mapped category for a raw category
 const getMappedCategory = (rawCategory) => {
   const lowerCat = safeText(rawCategory).toLowerCase();
   const mapped = CATEGORY_MAP[lowerCat];
   if (mapped) return mapped;
+  
+  // If no mapping, check if it's a main category
+  const capitalized = lowerCat.charAt(0).toUpperCase() + lowerCat.slice(1);
+  if (['Main', 'Sauce', 'Side', 'Dessert', 'Snack', 'Breakfast', 'Beverage', 'Festival'].includes(capitalized)) {
+    return capitalized;
+  }
   return null;
 };
 
@@ -140,35 +93,94 @@ const getRecipeCategories = (recipe) => {
   return Array.from(mappedCategories);
 };
 
+const escapeHtml = (text) => {
+  const safe = safeText(text);
+  const htmlEscapeMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
+  };
+  return safe.replace(/[&<>"'/`=]/g, char => htmlEscapeMap[char]);
+};
+
+const extractYouTubeId = (url) => {
+  if (!url || typeof url !== 'string') return null;
+  
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]{11})/,
+    /^([a-zA-Z0-9_-]{11})$/
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match?.[1]) return match[1];
+  }
+  return null;
+};
+
+const getThumbnail = (recipe) => {
+  // First priority: thumbnail_url
+  if (recipe.thumbnail_url?.trim()) return recipe.thumbnail_url;
+  
+  // Second priority: video thumbnail
+  const videoId = extractYouTubeId(recipe.video_url);
+  if (videoId) return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  
+  // Third priority: fallback image
+  return CONFIG.fallbackImage;
+};
+
+const isValidRecipe = (recipe) => {
+  return recipe && typeof recipe === 'object' && (recipe.title || recipe.slug);
+};
+
 // =================================================
-// 🔹 UI Components
+// 🔹 UI Components - Same card styling as second file
 // =================================================
 
-// Show loading skeleton
-const showLoadingSkeleton = () => {
+// Create skeleton loader (same as second file)
+const createSkeleton = () => {
+  const skeleton = document.createElement('div');
+  skeleton.className = 'recipe-card skeleton-card';
+  skeleton.setAttribute('aria-label', 'Loading recipe...');
+  skeleton.innerHTML = `
+    <div class="thumbnail-wrapper skeleton-thumbnail"></div>
+    <div class="card-body">
+      <div class="skeleton-title"></div>
+      <div class="skeleton-text"></div>
+      <div class="skeleton-text" style="width: 60%"></div>
+    </div>
+  `;
+  return skeleton;
+};
+
+// Show loading skeletons
+const showLoading = () => {
   const container = document.getElementById('recipes-container');
   if (!container) return;
   
   container.innerHTML = '';
   container.classList.add('loading');
   
-  for (let i = 0; i < MAX_RECIPES; i++) {
-    const skeleton = document.createElement('div');
-    skeleton.className = 'recipe-card skeleton-card';
-    skeleton.setAttribute('aria-label', 'Loading recipe...');
-    skeleton.innerHTML = `
-      <div class="thumbnail-wrapper skeleton-thumbnail"></div>
-      <div class="card-body">
-        <div class="skeleton-title"></div>
-        <div class="skeleton-text"></div>
-        <div class="skeleton-text" style="width: 60%"></div>
-      </div>
-    `;
-    container.appendChild(skeleton);
+  for (let i = 0; i < CONFIG.skeletonCount; i++) {
+    container.appendChild(createSkeleton());
   }
 };
 
-// Create recipe card - IDENTICAL to recipes page
+// Hide loading
+const hideLoading = () => {
+  const container = document.getElementById('recipes-container');
+  if (!container) return;
+  container.classList.remove('loading');
+};
+
+// Create recipe card - IDENTICAL to second file's card structure
 const createRecipeCard = (recipe) => {
   if (!isValidRecipe(recipe)) return null;
   
@@ -177,13 +189,7 @@ const createRecipeCard = (recipe) => {
   const categories = getRecipeCategories(recipe);
   const primaryCategory = categories[0] || '';
   const slug = safeText(recipe.slug);
-  const thumbnail = getRecipeThumbnail(recipe);
-  
-  // Debug log to see what thumbnail is being used
-  console.log(`Recipe: ${title}`);
-  console.log(`  - thumbnail_url: ${recipe.thumbnail_url}`);
-  console.log(`  - video_url: ${recipe.video_url}`);
-  console.log(`  - final thumbnail: ${thumbnail}`);
+  const thumbnail = getThumbnail(recipe);
   
   const card = document.createElement('div');
   card.className = 'recipe-card';
@@ -192,9 +198,7 @@ const createRecipeCard = (recipe) => {
   
   card.addEventListener('click', (e) => {
     e.preventDefault();
-    if (slug) {
-      window.location.href = `/recipe/${slug}`;
-    }
+    if (slug) window.location.href = `/recipe/${slug}`;
   });
   
   card.innerHTML = `
@@ -203,7 +207,7 @@ const createRecipeCard = (recipe) => {
         src="${thumbnail}" 
         alt="${escapeHtml(title)}"
         loading="lazy"
-        onerror="this.src='${FALLBACK_IMAGE}'"
+        onerror="this.src='${CONFIG.fallbackImage}'"
       />
     </div>
     <div class="card-body">
@@ -216,6 +220,39 @@ const createRecipeCard = (recipe) => {
   return card;
 };
 
+// Show no results message
+const showNoResults = () => {
+  const container = document.getElementById('recipes-container');
+  if (!container) return;
+  
+  container.innerHTML = `
+    <div class="no-results">
+      <i class="fas fa-utensils"></i>
+      <h3>No Recipes Yet</h3>
+      <p>Check back soon for delicious recipes!</p>
+    </div>
+  `;
+  container.classList.remove('loading');
+};
+
+// Show error message
+const showError = (message) => {
+  const container = document.getElementById('recipes-container');
+  if (!container) return;
+  
+  container.innerHTML = `
+    <div class="error-message">
+      <i class="fas fa-exclamation-triangle"></i>
+      <h3>Unable to Load Recipes</h3>
+      <p>${escapeHtml(message)}</p>
+      <button onclick="location.reload()" class="retry-btn">
+        <i class="fas fa-sync-alt"></i> Try Again
+      </button>
+    </div>
+  `;
+  container.classList.remove('loading');
+};
+
 // Render featured recipes
 const renderFeaturedRecipes = (recipes) => {
   const container = document.getElementById('recipes-container');
@@ -225,13 +262,7 @@ const renderFeaturedRecipes = (recipes) => {
   container.classList.remove('loading');
   
   if (!recipes || recipes.length === 0) {
-    container.innerHTML = `
-      <div class="no-results">
-        <i class="fas fa-utensils"></i>
-        <h3>No Recipes Yet</h3>
-        <p>Check back soon for delicious recipes!</p>
-      </div>
-    `;
+    showNoResults();
     return;
   }
   
@@ -245,41 +276,22 @@ const renderFeaturedRecipes = (recipes) => {
   container.appendChild(fragment);
 };
 
-// Show error message
-const showError = (message) => {
-  const container = document.getElementById('recipes-container');
-  if (!container) return;
-  
-  container.innerHTML = `
-    <div class="error-message">
-      <i class="fas fa-exclamation-circle"></i>
-      <h3>Unable to Load Recipes</h3>
-      <p>${escapeHtml(message)}</p>
-      <button onclick="location.reload()" class="retry-btn">
-        <i class="fas fa-sync-alt"></i> Try Again
-      </button>
-    </div>
-  `;
-  container.classList.remove('loading');
-};
-
 // =================================================
-// 🔹 Data Fetching
+// 🔹 Data Fetching - Only fetch 3 recipes
 // =================================================
 
-// Fetch featured recipes from Supabase
 const fetchFeaturedRecipes = async () => {
   const container = document.getElementById('recipes-container');
   if (!container) return;
   
-  showLoadingSkeleton();
+  showLoading();
   
   try {
     const { data, error, status } = await supabase
       .from('recipe_db')
       .select('*')
       .order('views', { ascending: true, nullsFirst: false })
-      .limit(MAX_RECIPES);
+      .limit(CONFIG.maxRecipes);
     
     if (error) {
       console.error('Supabase error:', error);
@@ -291,21 +303,22 @@ const fetchFeaturedRecipes = async () => {
     }
     
     if (!data || data.length === 0) {
-      renderFeaturedRecipes([]);
+      showNoResults();
+      hideLoading();
       return;
     }
-    
-    console.log('Fetched recipes:', data);
     
     // Filter out invalid recipes
     const validRecipes = data.filter(isValidRecipe);
     
     if (validRecipes.length === 0) {
-      renderFeaturedRecipes([]);
+      showNoResults();
+      hideLoading();
       return;
     }
     
     renderFeaturedRecipes(validRecipes);
+    hideLoading();
     
   } catch (error) {
     console.error('Failed to fetch featured recipes:', error.message);
@@ -314,48 +327,16 @@ const fetchFeaturedRecipes = async () => {
 };
 
 // =================================================
-// 🔹 Lazy Loading with Intersection Observer
-// =================================================
-
-const initLazyLoading = () => {
-  if ('IntersectionObserver' in window) {
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const img = entry.target;
-          const src = img.getAttribute('data-src');
-          if (src) {
-            img.src = src;
-            img.removeAttribute('data-src');
-          }
-          observer.unobserve(img);
-        }
-      });
-    }, {
-      rootMargin: '50px',
-      threshold: 0.1
-    });
-    
-    document.querySelectorAll('img[data-src]').forEach(img => {
-      imageObserver.observe(img);
-    });
-  }
-};
-
-// =================================================
 // 🔹 Initialize
 // =================================================
 
-// Wait for DOM to be ready
 const init = () => {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       fetchFeaturedRecipes();
-      initLazyLoading();
     });
   } else {
     fetchFeaturedRecipes();
-    initLazyLoading();
   }
 };
 
@@ -363,10 +344,9 @@ const init = () => {
 init();
 
 // Export for debugging
-window.indexDebug = {
+window.featuredDebug = {
   fetchFeaturedRecipes,
   createRecipeCard,
   getRecipeCategories,
-  getRecipeThumbnail,
-  getYouTubeId
+  getThumbnail
 };
