@@ -45,62 +45,68 @@
 <section class="recipe-page">
   <h1 id="recipe-title"></h1>
 
-  <div class="recipe-meta">
-    <span><i class="fas fa-clock"></i> <strong>Prep:</strong> <span id="prep-time"></span></span>
-    <span><i class="fas fa-utensils"></i> <strong>Cook:</strong> <span id="cook-time"></span></span>
-    <span><i class="fas fa-users"></i> <strong>Serves:</strong> <span id="servings"></span></span>
+  <!-- Meta Info Card -->
+  <div class="recipe-meta-card">
+    <span><i class="fas fa-clock"></i> Prep: <span id="prep-time"></span></span>
+    <span><i class="fas fa-utensils"></i> Cook: <span id="cook-time"></span></span>
+    <span><i class="fas fa-users"></i> Serves: <span id="servings"></span></span>
   </div>
 
-  <p class="description" id="recipe-description">Loading recipe details...</p>
+  <!-- Description -->
+  <p class="description" id="recipe-description"></p>
 
-  <div class="recipe-layout">
-    <div class="recipe-left">
+  <!-- Ingredients & Method -->
+  <div class="recipe-section">
+    <div class="ingredients">
       <h3><i class="fas fa-list-ul"></i> Ingredients</h3>
       <ul id="ingredients-list"></ul>
+    </div>
 
+    <div class="method">
       <h3><i class="fas fa-step-forward"></i> Method</h3>
       <ol id="method-list"></ol>
-
-      <h3><i class="fas fa-chart-line"></i> Nutrition</h3>
-      <div id="nutrition"></div>
-
-      <div class="recipe-info">
-        <p><strong><i class="fas fa-tags"></i> Tags:</strong> <span id="tags"></span></p>
-        <p><strong><i class="fas fa-globe"></i> Cuisine:</strong> <span id="cuisine"></span></p>
-        <p><strong><i class="fas fa-folder"></i> Category:</strong> <span id="category"></span></p>
-      </div>
-
-      <h3><i class="fas fa-pencil-alt"></i> Notes</h3>
-      <p id="notes"></p>
-
-      <h3><i class="fas fa-lightbulb"></i> Fun Fact</h3>
-      <p id="facts"></p>
-
-      <button class="btn-print" onclick="window.print()">
-        <i class="fas fa-print"></i> Print Recipe
-      </button>
     </div>
+  </div>
 
-    <div class="recipe-right">
-      <div class="recipe-video">
-        <iframe id="recipe-video" src="" allowfullscreen title="Recipe Video"></iframe>
-      </div>
-    </div>
+  <!-- Recipe Video -->
+  <div class="recipe-video" id="recipe-video-container"></div>
+
+  <!-- Nutrition Info -->
+  <div id="nutrition"></div>
+
+  <!-- Notes & Fun Facts -->
+  <div class="extra-info">
+    <h3><i class="fas fa-pencil-alt"></i> Notes</h3>
+    <p id="notes"></p>
+
+    <h3><i class="fas fa-lightbulb"></i> Fun Fact</h3>
+    <p id="facts"></p>
+  </div>
+
+  <!-- Tags / Cuisine / Category -->
+  <div class="recipe-tags">
+    <p><strong><i class="fas fa-tags"></i> Tags:</strong> <span id="tags"></span></p>
+    <p><strong><i class="fas fa-globe"></i> Cuisine:</strong> <span id="cuisine"></span></p>
+    <p><strong><i class="fas fa-folder"></i> Category:</strong> <span id="category"></span></p>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="recipe-actions">
+    <button class="btn-print" onclick="window.print()"><i class="fas fa-print"></i> Print Recipe</button>
+    <button class="btn-share" onclick="shareRecipe()"><i class="fas fa-share-alt"></i> Share</button>
+    <button class="btn-save" onclick="saveRecipe()"><i class="fas fa-heart"></i> Save</button>
   </div>
 </section>
 
-<!-- Equipment Section -->
-<section class="equipment-page">
-  <h2 class="section-title">Premium Kitchen Tools</h2>
-  <p class="section-subtitle">
-    Handpicked tools to make cooking easier and enjoyable. All links are affiliate.
-  </p>
-
-  <div class="equipment-grid" id="equipment-container">
-    <!-- Equipment cards injected here via JS -->
+<!-- More Recipes Section -->
+<section class="more-recipes">
+  <h2 class="section-title">More Recipes You’ll Love</h2>
+  <div class="more-recipes-grid" id="more-recipes-container">
+    <!-- Recipes injected via JS -->
   </div>
 </section>
 
+  
 <!-- Scripts -->
 <script type="module" src="/style.js"></script>
 <script type="module" src="/recipe.js"></script>
