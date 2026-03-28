@@ -12,17 +12,42 @@ function getSlug() {
   return path[1] || new URLSearchParams(window.location.search).get('slug');
 }
 
-function formatNutrition(nutrition) {
-  if (!nutrition) return '<div class="nutrition-item"><div class="nutrition-value">N/A</div><div class="nutrition-label">Coming Soon</div></div>';
+// Format nutrition data from nutritional_info field
+function formatNutrition(nutritionalInfo) {
+  console.log('Nutritional Info received:', nutritionalInfo); // Debug log
+  
+  if (!nutritionalInfo) {
+    return `
+      <div class="nutrition-item">
+        <div class="nutrition-value">N/A</div>
+        <div class="nutrition-label">Coming Soon</div>
+      </div>
+    `;
+  }
   
   const items = [];
-  if (nutrition.calories) items.push({ label: 'Calories', value: nutrition.calories });
-  if (nutrition.protein) items.push({ label: 'Protein', value: nutrition.protein });
-  if (nutrition.carbs) items.push({ label: 'Carbs', value: nutrition.carbs });
-  if (nutrition.fat) items.push({ label: 'Fat', value: nutrition.fat });
-  if (nutrition.fiber) items.push({ label: 'Fiber', value: nutrition.fiber });
   
-  if (items.length === 0) return '<div class="nutrition-item"><div class="nutrition-value">N/A</div><div class="nutrition-label">Coming Soon</div></div>';
+  // Map your database fields to display labels
+  if (nutritionalInfo.calories) items.push({ label: 'Calories', value: nutritionalInfo.calories });
+  if (nutritionalInfo.protein) items.push({ label: 'Protein', value: nutritionalInfo.protein });
+  if (nutritionalInfo.carbohydrates) items.push({ label: 'Carbs', value: nutritionalInfo.carbohydrates });
+  if (nutritionalInfo.fat) items.push({ label: 'Fat', value: nutritionalInfo.fat });
+  if (nutritionalInfo.fiber) items.push({ label: 'Fiber', value: nutritionalInfo.fiber });
+  if (nutritionalInfo.sugar) items.push({ label: 'Sugar', value: nutritionalInfo.sugar });
+  if (nutritionalInfo.sodium) items.push({ label: 'Sodium', value: nutritionalInfo.sodium });
+  
+  // Also check for alternate field names
+  if (nutritionalInfo.carbs) items.push({ label: 'Carbs', value: nutritionalInfo.carbs });
+  if (nutritionalInfo.fats) items.push({ label: 'Fat', value: nutritionalInfo.fats });
+  
+  if (items.length === 0) {
+    return `
+      <div class="nutrition-item">
+        <div class="nutrition-value">N/A</div>
+        <div class="nutrition-label">Coming Soon</div>
+      </div>
+    `;
+  }
   
   return items.map(item => `
     <div class="nutrition-item">
@@ -45,13 +70,16 @@ function escapeHtml(text) {
 }
 
 function getRecipeThumbnail(recipe) {
+  // First priority: thumbnail_url
   if (recipe.thumbnail_url && recipe.thumbnail_url.trim()) {
     return recipe.thumbnail_url;
   }
   
+  // Second priority: video thumbnail
   const videoId = extractYouTubeId(recipe.video_url);
   if (videoId) return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
   
+  // Third priority: fallback image
   return FALLBACK_IMAGE;
 }
 
@@ -73,6 +101,8 @@ function extractYouTubeId(url) {
 
 function renderRecipe(recipe) {
   if (!recipe) return;
+
+  console.log('Full recipe data:', recipe); // Debug log
 
   // Update hero section
   document.getElementById('recipe-title').innerText = recipe.title || 'Untitled Recipe';
@@ -97,9 +127,24 @@ function renderRecipe(recipe) {
     method.innerHTML = '<li>No instructions available</li>';
   }
 
-  // Nutrition - Clearly Visible
+  // Nutrition - Using nutritional_info field from your database
   const nutritionDiv = document.getElementById('nutrition');
-  nutritionDiv.innerHTML = formatNutrition(recipe.nutrition);
+  const nutritionData = recipe.nutritional_info; // Changed from 'nutrition' to 'nutritional_info'
+  
+  console.log('Nutrition data from DB:', nutritionData); // Debug log
+  
+  // Handle if nutritional_info is stored as a string
+  let parsedNutrition = nutritionData;
+  if (typeof nutritionData === 'string') {
+    try {
+      parsedNutrition = JSON.parse(nutritionData);
+      console.log('Parsed nutrition string:', parsedNutrition);
+    } catch (e) {
+      console.error('Failed to parse nutrition data:', e);
+    }
+  }
+  
+  nutritionDiv.innerHTML = formatNutrition(parsedNutrition);
 
   // Categories, Cuisine, Tags
   if (recipe.category && Array.isArray(recipe.category)) {
@@ -182,8 +227,11 @@ async function init() {
   
   if (!slug) {
     console.error('No recipe slug found');
+    document.getElementById('recipe-title').innerText = 'Recipe Not Found';
     return;
   }
+  
+  console.log('Fetching recipe with slug:', slug);
   
   const { data: recipe, error } = await supabase
     .from('recipe_db')
@@ -194,8 +242,12 @@ async function init() {
   if (error || !recipe) {
     console.error('Recipe not found:', error);
     document.getElementById('recipe-title').innerText = 'Recipe Not Found';
+    document.getElementById('recipe-description').innerText = 'Sorry, we couldn\'t find this recipe.';
     return;
   }
+  
+  console.log('Recipe fetched successfully:', recipe);
+  console.log('Nutritional Info from DB:', recipe.nutritional_info);
   
   renderRecipe(recipe);
   fetchMoreRecipes(slug);
@@ -207,4 +259,13 @@ async function init() {
     .eq('slug', slug);
 }
 
+// Start the app
 init();
+
+// Export for debugging
+window.recipeDebug = {
+  supabase,
+  formatNutrition,
+  getSlug,
+  recipe: null
+};
