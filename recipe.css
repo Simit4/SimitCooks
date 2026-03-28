@@ -61,6 +61,8 @@
   --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: 500ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  --aspect-16-9: 56.25%;
 }
 
 * {
@@ -85,36 +87,7 @@ body {
 }
 
 /* =================================================
-   🔹 Typography - Elegant
-================================================= */
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Playfair Display', 'Times New Roman', serif;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-}
-
-h1 {
-  font-size: 3.5rem;
-  background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin-bottom: 1rem;
-}
-
-h2 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-h3 {
-  font-size: 1.75rem;
-  margin-bottom: 1rem;
-}
-
-/* =================================================
-   🔹 Recipe Hero Section - Stunning
+   🔹 Recipe Hero Section
 ================================================= */
 .recipe-hero {
   background: linear-gradient(135deg, #fff 0%, var(--gray-50) 100%);
@@ -199,7 +172,7 @@ h3 {
 }
 
 /* =================================================
-   🔹 Recipe Content - Premium Layout
+   🔹 Recipe Content
 ================================================= */
 .recipe-content {
   padding: 5rem 0;
@@ -213,7 +186,6 @@ h3 {
   align-items: start;
 }
 
-/* Cards - Premium Design */
 .ingredients-section,
 .method-section,
 .info-card {
@@ -312,11 +284,6 @@ h3 {
   color: var(--primary);
   font-weight: 700;
   font-size: 1rem;
-  transition: transform var(--transition-fast);
-}
-
-#ingredients-list li:hover::before {
-  transform: scale(1.2);
 }
 
 #method-list {
@@ -347,12 +314,7 @@ h3 {
   box-shadow: var(--shadow-sm);
 }
 
-#method-list li:hover::before {
-  transform: scale(1.1);
-  box-shadow: var(--shadow-glow);
-}
-
-/* Info Card - Sticky */
+/* Info Card */
 .info-card {
   position: sticky;
   top: 2rem;
@@ -394,7 +356,7 @@ h3 {
   transform: scaleX(1);
 }
 
-/* Nutrition - Modern Cards */
+/* Nutrition */
 .nutrition-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -510,11 +472,11 @@ h3 {
 }
 
 /* =================================================
-   🔹 Video Section - Instagram Style
+   🔹 Video Section - Larger & Better Background
 ================================================= */
 .video-section {
-  background: linear-gradient(135deg, #000 0%, #1a1a2e 100%);
-  padding: 5rem 0;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1e1e2a 50%, #0f0f1a 100%);
+  padding: 6rem 0;
   position: relative;
   overflow: hidden;
 }
@@ -522,19 +484,30 @@ h3 {
 .video-section::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(230, 126, 34, 0.08) 0%, transparent 70%);
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(230, 126, 34, 0.15) 0%, transparent 70%);
+  animation: rotateGradient 20s linear infinite;
   pointer-events: none;
-  animation: pulseGlow 4s ease-in-out infinite;
 }
 
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.6; }
+@keyframes rotateGradient {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.video-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, rgba(230, 126, 34, 0.02) 0px, rgba(230, 126, 34, 0.02) 2px, transparent 2px, transparent 8px);
+  pointer-events: none;
 }
 
 .video-wrapper {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   text-align: center;
   position: relative;
@@ -542,46 +515,47 @@ h3 {
 }
 
 .video-header {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .video-header h3 {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 800;
   background: linear-gradient(135deg, #fff 0%, var(--primary-light) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-family: 'Poppins', sans-serif;
 }
 
 .video-header p {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
 }
 
 .video-container {
   position: relative;
   width: 100%;
-  max-width: 600px;
+  max-width: 850px;
   margin: 0 auto;
   background: #000;
-  border-radius: var(--radius-2xl);
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(230, 126, 34, 0.2);
   cursor: pointer;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .video-container:hover {
-  transform: translateY(-12px) scale(1.02);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(230, 126, 34, 0.3);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(230, 126, 34, 0.4);
 }
 
 .video-aspect {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
   overflow: hidden;
 }
 
@@ -606,13 +580,13 @@ h3 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.5) 100%);
+  background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%);
   transition: all 0.5s ease;
   z-index: 2;
 }
 
 .video-container:hover .video-overlay {
-  background: linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.3) 100%);
+  background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.4) 100%);
 }
 
 .play-button {
@@ -620,8 +594,8 @@ h3 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 70px;
-  height: 70px;
+  width: 85px;
+  height: 85px;
   background: rgba(255, 255, 255, 0.95);
   border-radius: 50%;
   display: flex;
@@ -630,7 +604,7 @@ h3 {
   cursor: pointer;
   transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   z-index: 10;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(4px);
   animation: pulse 2s infinite;
 }
@@ -641,23 +615,33 @@ h3 {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: rgba(230, 126, 34, 0.4);
+  background: rgba(230, 126, 34, 0.5);
   animation: ripple 2s infinite;
+}
+
+.play-button::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(230, 126, 34, 0.3);
+  animation: ripple 2s infinite 0.5s;
 }
 
 .play-button i {
   color: var(--primary);
-  font-size: 1.75rem;
-  margin-left: 4px;
+  font-size: 2rem;
+  margin-left: 5px;
   z-index: 2;
   position: relative;
   transition: all 0.3s ease;
 }
 
 .video-container:hover .play-button {
-  transform: translate(-50%, -50%) scale(1.15);
+  transform: translate(-50%, -50%) scale(1.2);
   background: var(--primary);
-  box-shadow: 0 0 30px rgba(230, 126, 34, 0.8);
+  box-shadow: 0 0 40px rgba(230, 126, 34, 0.9);
   animation: none;
 }
 
@@ -669,39 +653,41 @@ h3 {
 .video-info,
 .video-duration {
   position: absolute;
-  bottom: 1rem;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(10px);
-  padding: 0.35rem 1rem;
-  border-radius: 30px;
+  bottom: 1.5rem;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(12px);
+  padding: 0.5rem 1.25rem;
+  border-radius: 40px;
   color: white;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 500;
   z-index: 3;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .video-info {
-  left: 1rem;
+  left: 1.5rem;
 }
 
 .video-duration {
-  right: 1rem;
+  right: 1.5rem;
 }
 
 .video-info i,
 .video-duration i {
   color: var(--primary);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
 }
 
 .video-container:hover .video-info,
 .video-container:hover .video-duration {
-  transform: translateY(-4px);
-  background: rgba(0, 0, 0, 0.85);
+  transform: translateY(-5px);
+  background: rgba(0, 0, 0, 0.9);
+  border-color: rgba(230, 126, 34, 0.3);
 }
 
 .video-container iframe {
@@ -719,8 +705,8 @@ h3 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border: 3px solid rgba(255, 255, 255, 0.3);
   border-top-color: var(--primary);
   border-radius: 50%;
@@ -734,7 +720,7 @@ h3 {
 }
 
 /* =================================================
-   🔹 More Recipes Section - Same as Recipes Page
+   🔹 More Recipes Section - 16:9 Cards
 ================================================= */
 .more-recipes-section {
   background: var(--section-bg);
@@ -787,15 +773,19 @@ h3 {
   box-shadow: var(--shadow-md);
 }
 
+/* 16:9 Aspect Ratio Thumbnail */
 .more-recipes-grid .thumbnail-wrapper {
+  position: relative;
   width: 100%;
-  height: 220px;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
   overflow: hidden;
   background: #fafafa;
-  position: relative;
 }
 
 .more-recipes-grid .thumbnail-wrapper img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -865,12 +855,6 @@ h3 {
   grid-column: 1 / -1;
 }
 
-.more-recipes-grid .no-results i {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  color: var(--muted);
-}
-
 /* =================================================
    🔹 Animations
 ================================================= */
@@ -890,7 +874,7 @@ h3 {
     box-shadow: 0 0 0 0 rgba(230, 126, 34, 0.7);
   }
   50% {
-    box-shadow: 0 0 0 20px rgba(230, 126, 34, 0);
+    box-shadow: 0 0 0 25px rgba(230, 126, 34, 0);
   }
 }
 
@@ -900,7 +884,7 @@ h3 {
     opacity: 1;
   }
   100% {
-    transform: scale(1.8);
+    transform: scale(1.6);
     opacity: 0;
   }
 }
@@ -930,12 +914,25 @@ h3 {
     padding: 1.5rem;
   }
   
-  .more-recipes-grid .thumbnail-wrapper {
-    height: 200px;
-  }
-  
   h1, #recipe-title {
     font-size: 2.5rem;
+  }
+  
+  .video-wrapper {
+    max-width: 90%;
+  }
+  
+  .video-container {
+    max-width: 100%;
+  }
+  
+  .play-button {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .play-button i {
+    font-size: 1.75rem;
   }
 }
 
@@ -985,33 +982,32 @@ h3 {
     padding: 1rem;
   }
   
-  .more-recipes-grid .thumbnail-wrapper {
-    height: 200px;
-  }
-  
-  .more-recipes-grid .card-body {
-    padding: 1rem;
-  }
-  
   .section-title {
     font-size: 1.8rem;
   }
   
   .video-section {
-    padding: 3rem 0;
+    padding: 4rem 0;
   }
   
   .video-header h3 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
   
   .play-button {
-    width: 55px;
-    height: 55px;
+    width: 60px;
+    height: 60px;
   }
   
   .play-button i {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
+  }
+  
+  .video-info,
+  .video-duration {
+    padding: 0.4rem 1rem;
+    font-size: 0.75rem;
+    bottom: 1rem;
   }
 }
 
@@ -1020,8 +1016,8 @@ h3 {
     grid-template-columns: 1fr;
   }
   
-  .more-recipes-grid .thumbnail-wrapper {
-    height: 180px;
+  .section-title {
+    font-size: 1.5rem;
   }
   
   .more-recipes-grid .card-body h4 {
@@ -1032,8 +1028,12 @@ h3 {
     font-size: 0.8rem;
   }
   
-  .section-title {
+  .video-header h3 {
     font-size: 1.5rem;
+  }
+  
+  .video-header p {
+    font-size: 0.85rem;
   }
   
   .play-button {
@@ -1042,13 +1042,13 @@ h3 {
   }
   
   .play-button i {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
   }
   
   .video-info,
   .video-duration {
-    padding: 0.25rem 0.7rem;
-    font-size: 0.65rem;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.7rem;
   }
 }
 
@@ -1065,18 +1065,10 @@ h3 {
   .recipe-hero {
     padding: 0;
   }
-  
-  .ingredients-section,
-  .method-section,
-  .info-card {
-    break-inside: avoid;
-    box-shadow: none;
-    border: 1px solid #ddd;
-  }
 }
 
 /* =================================================
-   🔹 Scrollbar - Custom
+   🔹 Scrollbar
 ================================================= */
 ::-webkit-scrollbar {
   width: 10px;
@@ -1097,13 +1089,7 @@ h3 {
   background: var(--primary-gradient-reverse);
 }
 
-/* Selection */
 ::selection {
-  background: var(--primary);
-  color: white;
-}
-
-::-moz-selection {
   background: var(--primary);
   color: white;
 }
