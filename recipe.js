@@ -12,34 +12,21 @@ function getSlug() {
   return path[1] || new URLSearchParams(window.location.search).get('slug');
 }
 
-// Format nutrition data from nutritional_info field
+// Format nutrition data
 function formatNutrition(nutritionalInfo) {
   if (!nutritionalInfo) {
-    return `
-      <div class="nutrition-item">
-        <div class="nutrition-value">N/A</div>
-        <div class="nutrition-label">Coming Soon</div>
-      </div>
-    `;
+    return `<div class="nutrition-item"><div class="nutrition-value">N/A</div><div class="nutrition-label">Coming Soon</div></div>`;
   }
   
   const items = [];
-  
   if (nutritionalInfo.calories) items.push({ label: 'Calories', value: nutritionalInfo.calories });
   if (nutritionalInfo.protein) items.push({ label: 'Protein', value: nutritionalInfo.protein });
   if (nutritionalInfo.carbohydrates) items.push({ label: 'Carbs', value: nutritionalInfo.carbohydrates });
   if (nutritionalInfo.fat) items.push({ label: 'Fat', value: nutritionalInfo.fat });
   if (nutritionalInfo.fiber) items.push({ label: 'Fiber', value: nutritionalInfo.fiber });
-  if (nutritionalInfo.sugar) items.push({ label: 'Sugar', value: nutritionalInfo.sugar });
-  if (nutritionalInfo.sodium) items.push({ label: 'Sodium', value: nutritionalInfo.sodium });
   
   if (items.length === 0) {
-    return `
-      <div class="nutrition-item">
-        <div class="nutrition-value">N/A</div>
-        <div class="nutrition-label">Coming Soon</div>
-      </div>
-    `;
+    return `<div class="nutrition-item"><div class="nutrition-value">N/A</div><div class="nutrition-label">Coming Soon</div></div>`;
   }
   
   return items.map(item => `
@@ -66,22 +53,18 @@ function getRecipeThumbnail(recipe) {
   if (recipe.thumbnail_url && recipe.thumbnail_url.trim()) {
     return recipe.thumbnail_url;
   }
-  
   const videoId = extractYouTubeId(recipe.video_url);
   if (videoId) return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-  
   return FALLBACK_IMAGE;
 }
 
 function extractYouTubeId(url) {
   if (!url || typeof url !== 'string') return null;
-  
   const patterns = [
     /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
     /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]{11})/,
     /^([a-zA-Z0-9_-]{11})$/
   ];
-  
   for (const pattern of patterns) {
     const match = url.match(pattern);
     if (match && match[1]) return match[1];
@@ -89,17 +72,67 @@ function extractYouTubeId(url) {
   return null;
 }
 
+// Instagram-Style Video Player
+function setupVideoPlayer(videoUrl) {
+  const videoSection = document.getElementById('video-section');
+  const videoContainer = document.getElementById('video-container');
+  const videoId = extractYouTubeId(videoUrl);
+  
+  if (!videoId) {
+    if (videoSection) videoSection.style.display = 'none';
+    return;
+  }
+  
+  if (videoSection) videoSection.style.display = 'block';
+  if (!videoContainer) return;
+  
+  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  
+  videoContainer.innerHTML = `
+    <div class="video-aspect">
+      <div class="video-thumbnail" style="background-image: url('${thumbnailUrl}');"></div>
+      <div class="video-overlay"></div>
+      <div class="play-button">
+        <i class="fas fa-play"></i>
+      </div>
+      <div class="video-info">
+        <i class="fas fa-video"></i>
+        <span>Video Tutorial</span>
+      </div>
+      <div class="video-duration">
+        <i class="fas fa-clock"></i>
+        <span>Watch Now</span>
+      </div>
+      <div class="video-loading"></div>
+    </div>
+  `;
+  
+  const loadVideo = () => {
+    videoContainer.classList.add('loading');
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0`;
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    iframe.allowfullscreen = true;
+    videoContainer.innerHTML = '';
+    videoContainer.appendChild(iframe);
+    setTimeout(() => videoContainer.classList.remove('loading'), 500);
+  };
+  
+  const playBtn = videoContainer.querySelector('.play-button');
+  const thumbnailDiv = videoContainer.querySelector('.video-thumbnail');
+  if (playBtn) playBtn.addEventListener('click', loadVideo);
+  if (thumbnailDiv) thumbnailDiv.addEventListener('click', loadVideo);
+}
+
 function renderRecipe(recipe) {
   if (!recipe) return;
 
-  // Update hero section
   document.getElementById('recipe-title').innerText = recipe.title || 'Untitled Recipe';
   document.getElementById('recipe-description').innerText = recipe.description || 'Delicious home-style recipe made with love.';
   document.getElementById('prep-time').innerText = recipe.prep_time || 'N/A';
   document.getElementById('cook-time').innerText = recipe.cook_time || 'N/A';
   document.getElementById('servings').innerText = recipe.servings || 'N/A';
 
-  // Ingredients
   const ingredients = document.getElementById('ingredients-list');
   if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
     ingredients.innerHTML = recipe.ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('');
@@ -107,7 +140,6 @@ function renderRecipe(recipe) {
     ingredients.innerHTML = '<li>No ingredients listed</li>';
   }
 
-  // Method
   const method = document.getElementById('method-list');
   if (recipe.method && Array.isArray(recipe.method)) {
     method.innerHTML = recipe.method.map(s => `<li>${escapeHtml(s)}</li>`).join('');
@@ -115,22 +147,13 @@ function renderRecipe(recipe) {
     method.innerHTML = '<li>No instructions available</li>';
   }
 
-  // Nutrition
   const nutritionDiv = document.getElementById('nutrition');
-  const nutritionData = recipe.nutritional_info;
-  
-  let parsedNutrition = nutritionData;
+  let nutritionData = recipe.nutritional_info;
   if (typeof nutritionData === 'string') {
-    try {
-      parsedNutrition = JSON.parse(nutritionData);
-    } catch (e) {
-      console.error('Failed to parse nutrition data:', e);
-    }
+    try { nutritionData = JSON.parse(nutritionData); } catch(e) {}
   }
-  
-  nutritionDiv.innerHTML = formatNutrition(parsedNutrition);
+  nutritionDiv.innerHTML = formatNutrition(nutritionData);
 
-  // Categories, Cuisine, Tags
   if (recipe.category && Array.isArray(recipe.category)) {
     document.getElementById('category').innerHTML = recipe.category.map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('');
   } else if (recipe.category) {
@@ -147,29 +170,15 @@ function renderRecipe(recipe) {
   document.getElementById('notes').innerText = recipe.notes || 'No additional notes.';
   document.getElementById('facts').innerText = recipe.facts || 'Did you know? This recipe is made with love!';
 
-  // Video
   if (recipe.video_url) {
-    const videoSection = document.getElementById('video-section');
-    const videoContainer = document.getElementById('video-container');
-    const videoId = extractYouTubeId(recipe.video_url);
-    
-    if (videoId) {
-      videoSection.style.display = 'block';
-      videoContainer.innerHTML = `
-        <iframe 
-          src="https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0&modestbranding=1" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-          allowfullscreen>
-        </iframe>
-      `;
-    }
+    setupVideoPlayer(recipe.video_url);
   }
 
   document.title = `${recipe.title} | Simit Cooks`;
 }
 
 async function fetchMoreRecipes(currentSlug) {
-  const { data: recipes, error } = await supabase
+  const { data: recipes } = await supabase
     .from('recipe_db')
     .select('*')
     .neq('slug', currentSlug)
@@ -206,9 +215,7 @@ async function fetchMoreRecipes(currentSlug) {
 
 async function init() {
   const slug = getSlug();
-  
   if (!slug) {
-    console.error('No recipe slug found');
     document.getElementById('recipe-title').innerText = 'Recipe Not Found';
     return;
   }
@@ -220,9 +227,7 @@ async function init() {
     .single();
   
   if (error || !recipe) {
-    console.error('Recipe not found:', error);
     document.getElementById('recipe-title').innerText = 'Recipe Not Found';
-    document.getElementById('recipe-description').innerText = 'Sorry, we couldn\'t find this recipe.';
     return;
   }
   
@@ -237,8 +242,4 @@ async function init() {
 
 init();
 
-window.recipeDebug = {
-  supabase,
-  formatNutrition,
-  getSlug
-};
+window.recipeDebug = { supabase, formatNutrition, getSlug, setupVideoPlayer };
