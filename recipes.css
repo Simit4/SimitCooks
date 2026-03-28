@@ -85,14 +85,13 @@
 }
 
 .recipe-card {
-  background: white;
-  border-radius: var(--radius-3xl);
+  background: #fff;
+  border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all 0.3s ease;
   box-shadow: var(--shadow-sm);
-  border: 1px solid var(--neutral-200);
-  animation: fadeInUp 0.6s var(--transition-base) backwards;
+  border: 1px solid var(--border);
 
 }
 
@@ -184,14 +183,13 @@
 
 .recipe-category {
   display: inline-block;
-  background: var(--primary-soft);
+  background: #f0f0f0;
   padding: 0.25rem 0.8rem;
   border-radius: 20px;
   font-size: 0.7rem;
   color: var(--primary);
   font-weight: 600;
   margin-top: 0.5rem;
-  transition: all var(--transition-base);
 
 
 }
