@@ -153,9 +153,9 @@
 }
 
 .recipe-card h3 {
-  font-size: calc(var(--text-xl) * 1.3); /* increase by 30% */
-  margin-top: 0.25rem; /* small space above */
-  font-weight: 1200;
+  font-size: calc(var(--text-xl) * 1.75); /* increase by 30% */
+  margin-top: var(--space-md); /* 👈 adds space above */
+  font-weight: 800;
   margin-bottom: var(--space-sm);
   color: var(--secondary);
   transition: color var(--transition-base);
@@ -188,6 +188,7 @@
   font-weight: 600;
   margin-top: 0.5rem;
   transition: all var(--transition-base);
+
 
 }
 
