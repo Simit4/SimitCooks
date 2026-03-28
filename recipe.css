@@ -451,7 +451,7 @@ h1, h2, h3, h4, h5, h6 {
 .video-header h3 {
   font-size: var(--text-5xl);
   font-weight: 800;
-  background: linear-gradient(135deg, #fff 0%, #ff9f43 50%, #ff6b00 100%);
+  color: var(--primary);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
