@@ -511,7 +511,7 @@
     }
 
     .footer-nav a:hover::after {
-      width: 40%;
+      width: 20%;
       animation: shimmerLine 1.5s ease infinite;
     }
 
