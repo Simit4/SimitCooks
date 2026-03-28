@@ -22,7 +22,7 @@
   bottom: -10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 60px;
+  width: 100px;
   height: 3px;
   background: linear-gradient(90deg, #ff6b6b, #ff8e53); /* fallback in case --primary-gradient is missing */
   transition: width 0.3s ease;
@@ -30,7 +30,7 @@
 }
 
 #Featured-Recipes-h2:hover::after {
-  width: 80px;
+  width: 150px;
 }
 
 
