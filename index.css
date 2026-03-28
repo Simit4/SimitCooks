@@ -9,6 +9,9 @@
   line-height: 1.2;
   text-shadow: 0 2px 6px rgba(0,0,0,0.08);
   animation: fadeInUp 1s ease forwards;
+  position: relative; /* ADD THIS - required for absolute positioning */
+  display: inline-block; /* ADD THIS - makes the underline only as wide as the text */
+  width: 100%; /* ADD THIS - keeps it centered */
 }
 
 #Featured-Recipes-h2::after {
