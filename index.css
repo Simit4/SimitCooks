@@ -54,12 +54,24 @@
   transition: all 0.3s ease;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border);
+
 }
 
+.recipe-card:nth-child(1) { animation-delay: 0.1s; }
+.recipe-card:nth-child(2) { animation-delay: 0.2s; }
+.recipe-card:nth-child(3) { animation-delay: 0.3s; }
+
 .recipe-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-12px);
+  box-shadow: var(--shadow-3xl);
+  border-color: var(--primary-light);
 }
+
+
+
+
+
+
 
 .thumbnail-wrapper {
   width: 100%;
@@ -80,6 +92,10 @@
   transform: scale(1.05);
 }
 
+
+
+
+
 .momo-placeholder {
   display: flex;
   justify-content: center;
@@ -96,15 +112,22 @@
 }
 
 .card-body {
-  padding: 1.2rem;
-  text-align: center;
+  padding: var(--space-xl);
+  background: white;
+  text-align: center; /* Center all content */
 }
 
 .recipe-card h3 {
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
-  color: var(--primary);
+  color: var(--secondary);
   font-weight: 700;
+  transition: color var(--transition-base);
+ 
+}
+
+.recipe-card:hover h3 {
+  color: var(--primary);
 }
 
 .recipe-card p {
@@ -116,6 +139,7 @@
   -webkit-box-orient: vertical;
   line-height: 1.4;
   margin-bottom: 0.5rem;
+   
 }
 
 .recipe-category {
@@ -127,8 +151,15 @@
   color: var(--primary);
   font-weight: 600;
   margin-top: 0.5rem;
+
+
 }
 
+.recipe-card:hover .recipe-category {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+}
 /* =================================================
    🔹 Skeleton Loader Styles
 ================================================= */
