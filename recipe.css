@@ -388,7 +388,7 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--secondary-gradient);
   color: white;
   border: none;
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-full); /* changed to full for rounder look */
   font-size: var(--text-base);
   font-weight: 600;
   cursor: pointer;
