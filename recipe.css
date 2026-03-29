@@ -384,32 +384,44 @@ font-size: var(--text-sm); /* slightly bigger */
 
 
 
+/* Container for share and print buttons */
 .share-print-section {
   display: flex;
-  gap: 0.5rem; /* space between buttons */
+  gap: 0.75rem; /* slightly more space between buttons */
   margin-top: 1rem;
+  flex-wrap: wrap; /* allows buttons to wrap on smaller screens */
+  justify-content: center; /* center buttons like Instagram feed actions */
 }
 
+/* Individual action buttons */
 .btn-action {
-  flex: 1; /* makes buttons equal width */
+  flex: 1; /* equal width */
+  min-width: 120px; /* ensures buttons don’t shrink too much */
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem; /* slightly bigger for touch */
+  font-size: 0.95rem;
+  font-weight: 600; /* bolder like Instagram labels */
   border: none;
-  border-radius: 5px;
-  background-color: #ff7f50;
+  border-radius: 50px; /* pill-shaped for modern look */
+  background: linear-gradient(45deg, #ff7f50, #ff6347); /* subtle gradient */
   color: #fff;
   cursor: pointer;
-  transition: background 0.3s;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* soft shadow */
+  transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
 }
 
 .btn-action:hover {
-  background-color: #ff6347;
+  background: linear-gradient(45deg, #ff6347, #ff4500); /* hover gradient */
+  transform: translateY(-2px); /* subtle lift */
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
 }
 
+.btn-action i {
+  font-size: 1.1rem; /* icon slightly larger */
+}
 
 
 
