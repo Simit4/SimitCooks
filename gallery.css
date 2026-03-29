@@ -274,12 +274,7 @@
   border-color: white !important;
 }
 
-/* Disable zoom functionality */
-.glightbox-container .gzoom-in,
-.glightbox-container .gzoom-out,
-.glightbox-container .zoom-icon {
-  display: none !important;
-}
+
 
 /* Remove any overlays that block interaction */
 .gslide-overlay,
