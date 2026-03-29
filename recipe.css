@@ -648,22 +648,9 @@ font-size: var(--text-sm); /* slightly bigger */
   margin-top: var(--space-sm);
 }
 
-/* Category Badge - CENTERED */
-.recipe-category {
-  display: inline-block;
-  background: var(--primary-soft);
-  padding: var(--space-xs) var(--space-lg);
-  border-radius: var(--radius-full);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  color: var(--primary);
-  transition: all var(--transition-base);
-  letter-spacing: 0.5px;
-  text-align: center;
-  margin: 0 auto;
-}
 
-.recipe-card:hover .recipe-category {
+
+.recipe-card:hover {
   background: var(--primary);
   color: white;
   transform: translateY(-2px);
