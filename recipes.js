@@ -341,7 +341,7 @@ const createRecipeCard = (recipe) => {
     <div class="card-body">
       <h3>${escapeHtml(title)}</h3>
       <p>${escapeHtml(description)}</p>
-      ${primaryCategory ? `<span class="recipe-category">${escapeHtml(primaryCategory)}</span>` : ''}
+      
     </div>
   `;
   
