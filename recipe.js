@@ -180,7 +180,7 @@ async function fetchMoreRecipes(slug) {
     const cat = Array.isArray(r.category) ? r.category[0] : r.category || '';
     return `<div class="recipe-card" onclick="window.location.href='/recipe/${r.slug}'">
       <div class="thumbnail-wrapper"><img src="${thumb}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.src='${FALLBACK_IMAGE}'"></div>
-      <div class="card-body"><h4>${escapeHtml(title)}</h4><p>${escapeHtml(desc.substring(0,80))}${desc.length>80?'...':''}</p>${cat?`<span class="recipe-category">${escapeHtml(cat)}</span>`:''}</div>
+      <div class="card-body"><h4>${escapeHtml(title)}</h4><p>${escapeHtml(desc.substring(0,80))}${desc.length>80?'...':''}</p></div>
     </div>`;
   }).join('');
 }
