@@ -81,25 +81,22 @@ function renderRecipe(recipe) {
   document.getElementById('cook-time').innerText = recipe.cook_time || 'N/A';
   document.getElementById('servings').innerText = recipe.servings || 'N/A';
 
-  // Ingredients with sections
-// Ingredients
-const ingList = document.getElementById('ingredients-list');
-if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
-  // Check if first element is an object with `items` (sectioned)
-  if (typeof recipe.ingredients[0] === 'object' && recipe.ingredients[0].items) {
-    ingList.innerHTML = recipe.ingredients.map(section => {
-      const title = escapeHtml(section.section || '');
-      const items = (section.items || []).map(i => `<li>${escapeHtml(i)}</li>`).join('');
-      return `<div class="ingredients-section">${title ? `<h4>${title}</h4>` : ''}<ul class="green-bullets">${items}</ul></div>`;
-    }).join('');
+  // Ingredients
+  const ingList = document.getElementById('ingredients-list');
+  if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
+    if (typeof recipe.ingredients[0] === 'object' && recipe.ingredients[0].items) {
+      ingList.innerHTML = recipe.ingredients.map(section => {
+        const title = escapeHtml(section.section || '');
+        const items = (section.items || []).map(i => `<li>${escapeHtml(i)}</li>`).join('');
+        return `<div class="ingredients-section">${title ? `<h4>${title}</h4>` : ''}<ul class="green-bullets">${items}</ul></div>`;
+      }).join('');
+    } else {
+      const items = recipe.ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('');
+      ingList.innerHTML = `<ul class="green-bullets">${items}</ul>`;
+    }
   } else {
-    // Plain array of strings
-    const items = recipe.ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('');
-    ingList.innerHTML = `<ul class="green-bullets">${items}</ul>`;
+    ingList.innerHTML = '<li>No ingredients listed</li>';
   }
-} else {
-  ingList.innerHTML = '<li>No ingredients listed</li>';
-}
 
   // Method
   const methodList = document.getElementById('method-list');
@@ -116,18 +113,15 @@ if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
   const cuisineDiv = document.getElementById('cuisine');
   if (recipe.cuisine) cuisineDiv.innerHTML = Array.isArray(recipe.cuisine) ? recipe.cuisine.map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('') : `<span class="tag">${escapeHtml(recipe.cuisine)}</span>`;
 
-
-
   // Notes & Facts
   document.getElementById('notes').innerText = recipe.notes || 'No additional notes.';
   document.getElementById('facts').innerText = recipe.facts || 'Did you know? This recipe is made with love!';
 
-
-// -------------------------------
-// Share Button Functionality
-// -------------------------------
-document.addEventListener('DOMContentLoaded', () => {
+  // -------------------------------
+  // Print + Share Buttons
+  // -------------------------------
   const shareButton = document.getElementById('universal-share');
+  const printButton = document.querySelector('.btn-action[onclick*="window.print"]');
 
   if (shareButton) {
     shareButton.addEventListener('click', async () => {
@@ -149,11 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-});
 
-
-
-  
+  if (printButton) {
+    printButton.addEventListener('click', () => {
+      window.print();
+    });
+  }
 
   // Video
   if (recipe.video_url) {
@@ -207,12 +202,8 @@ async function init() {
   await supabase.from('recipe_db').update({ views: (recipe.views || 0) + 1 }).eq('slug', slug);
 }
 
+// Initialize the page
 init();
 
-// Debugging
+// Debugging helpers
 window.recipeDebug = { supabase, getSlug, escapeHtml, extractYouTubeId, getRecipeThumbnail, renderRecipe };
-
-
-
-
-
