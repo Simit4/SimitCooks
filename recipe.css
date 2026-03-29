@@ -343,44 +343,14 @@ h1, h2, h3, h4, h5, h6 {
   transform: scaleX(1);
 }
 
-/* Nutrition */
-.nutrition-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-md);
+/* History & Overview */
+.history-overview p {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--neutral-600);
+  margin-top: var(--space-sm);
 }
 
-.nutrition-item {
-  text-align: center;
-  padding: var(--space-lg);
-  background: linear-gradient(135deg, var(--neutral-50) 0%, white 100%);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--neutral-200);
-  transition: all var(--transition-base);
-}
-
-.nutrition-item:hover {
-  transform: translateY(-4px);
-  border-color: var(--primary-light);
-  box-shadow: var(--shadow-lg);
-}
-
-.nutrition-value {
-  font-size: var(--text-2xl);
-  font-weight: 800;
-  background: var(--primary-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.nutrition-label {
-  font-size: var(--text-xs);
-  color: var(--neutral-500);
-  margin-top: var(--space-xs);
-  font-weight: 600;
-  text-transform: uppercase;
-}
 
 /* Tags */
 .tag-group {
