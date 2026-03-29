@@ -286,11 +286,11 @@ const fetchFeaturedRecipes = async () => {
   showLoading();
   
   try {
-    const { data, error, status } = await supabase
-      .from('recipe_db')
-      .select('*')
-      .order('views', { ascending: true, nullsFirst: false })
-      .limit(CONFIG.maxRecipes);
+const { data, error, status } = await supabase
+  .from('recipe_db')
+  .select('*')
+  .order('created_at', { ascending: false }) // newest first
+  .limit(CONFIG.maxRecipes);
     
     if (error) {
       console.error('Supabase error:', error);
