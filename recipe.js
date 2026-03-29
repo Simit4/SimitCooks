@@ -82,14 +82,24 @@ function renderRecipe(recipe) {
   document.getElementById('servings').innerText = recipe.servings || 'N/A';
 
   // Ingredients with sections
-  const ingList = document.getElementById('ingredients-list');
-  if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
+// Ingredients
+const ingList = document.getElementById('ingredients-list');
+if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
+  // Check if first element is an object with `items` (sectioned)
+  if (typeof recipe.ingredients[0] === 'object' && recipe.ingredients[0].items) {
     ingList.innerHTML = recipe.ingredients.map(section => {
       const title = escapeHtml(section.section || '');
       const items = (section.items || []).map(i => `<li>${escapeHtml(i)}</li>`).join('');
-      return `<div class="ingredients-section">${title ? `<h4>${title}</h4>` : ''}<ul>${items}</ul></div>`;
+      return `<div class="ingredients-section">${title ? `<h4>${title}</h4>` : ''}<ul class="green-bullets">${items}</ul></div>`;
     }).join('');
-  } else ingList.innerHTML = '<li>No ingredients listed</li>';
+  } else {
+    // Plain array of strings
+    const items = recipe.ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('');
+    ingList.innerHTML = `<ul class="green-bullets">${items}</ul>`;
+  }
+} else {
+  ingList.innerHTML = '<li>No ingredients listed</li>';
+}
 
   // Method
   const methodList = document.getElementById('method-list');
