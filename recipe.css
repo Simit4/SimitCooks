@@ -406,6 +406,36 @@ font-size: var(--text-sm); /* slightly bigger */
   box-shadow: var(--shadow-xl);
 }
 
+
+.share-print-section {
+  display: flex;
+  gap: 0.5rem; /* space between buttons */
+  margin-top: 1rem;
+}
+
+.btn-action {
+  flex: 1; /* makes buttons equal width */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #ff7f50;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-action:hover {
+  background-color: #ff6347;
+}
+
+
+
+
 /* =================================================
    🔹 Video Section - Cinematic Experience
 ================================================= */
