@@ -40,7 +40,6 @@ function initGLightbox() {
       openEffect: 'fade',
       closeEffect: 'fade',
       slideEffect: 'fade',
-      zoomable: true,  // Enable zoom for better mobile experience
       loop: true,
       touchNavigation: true,
       keyboardNavigation: true,
@@ -61,8 +60,6 @@ function initGLightbox() {
       closeOnOutsideClick: true,  // Close when clicking outside
       dragToleranceX: 150,
       dragToleranceY: 150,
-      doubleTapZoom: true,  // Enable double tap zoom on mobile
-      // Custom styles to ensure close button is visible
       beforeOpen: function() {
         // Ensure close button is visible on mobile
         setTimeout(() => {
