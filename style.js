@@ -84,10 +84,10 @@ export function renderFooter() {
           <a href="https://www.facebook.com/simitcooks" target="_blank" aria-label="Facebook" rel="noopener noreferrer">
             <i class="fab fa-facebook-f"></i>
           </a>
-          <a href="https://www.tiktok.com/@simitcooks" target="_blank" aria-label="TikTok" rel="noopener noreferrer">
+          <a href="https://www.tiktok.com/@simit_cooks" target="_blank" aria-label="TikTok" rel="noopener noreferrer">
             <i class="fab fa-tiktok"></i>
           </a>
-          <a href="https://www.instagram.com/simitcooks" target="_blank" aria-label="Instagram" rel="noopener noreferrer">
+          <a href="https://www.instagram.com/simit_cooks/" target="_blank" aria-label="Instagram" rel="noopener noreferrer">
             <i class="fab fa-instagram"></i>
           </a>
         </div>
