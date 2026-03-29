@@ -106,9 +106,8 @@ if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
   if (recipe.method?.length) methodList.innerHTML = recipe.method.map(s => `<li>${escapeHtml(s)}</li>`).join('');
   else methodList.innerHTML = '<li>No instructions available</li>';
 
-  // Nutrition
-  const nutritionDiv = document.getElementById('nutrition');
-  nutritionDiv.innerHTML = formatNutrition(recipe.nutritional_info);
+  // History & Overview
+  document.getElementById("history-overview").textContent = recipe.history_overview;
 
   // Categories & Cuisine
   const catDiv = document.getElementById('category');
