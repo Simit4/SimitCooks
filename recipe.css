@@ -236,6 +236,27 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--neutral-800);
 }
 
+
+
+
+/* Green round bullets for ingredients */
+.green-bullets {
+  list-style-type: disc;
+  list-style-position: inside;
+  padding-left: 1rem;
+  color: #28a745; /* green color */
+}
+
+.green-bullets li {
+  margin-bottom: 0.5rem;
+  color: #000; /* keep text black */
+}
+
+.green-bullets li::marker {
+  color: #28a745; /* green bullet */
+}
+
+
 /* Lists */
 #ingredients-list,
 #method-list {
@@ -243,7 +264,6 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0;
 }
 
-#ingredients-list li,
 #method-list li {
   padding: var(--space-md) 0 var(--space-md) var(--space-xl);
   position: relative;
@@ -252,18 +272,11 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: 1px solid var(--neutral-100);
 }
 
-#ingredients-list li:last-child,
 #method-list li:last-child {
   border-bottom: none;
 }
 
-#ingredients-list li::before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  color: var(--primary);
-  font-weight: 700;
-}
+
 
 #method-list {
   counter-reset: step;
