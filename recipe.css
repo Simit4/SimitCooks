@@ -352,14 +352,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
-/* Tags */
+/* Tag group container */
 .tag-group {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
 }
 
-.tag {
+/* Individual tags inside the tag group */
+.tag-group > * {
   display: inline-block;
   padding: var(--space-xs) var(--space-lg);
   background: var(--neutral-100);
@@ -368,9 +369,10 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   color: var(--neutral-600);
   transition: all var(--transition-base);
+  cursor: default;
 }
 
-.tag:hover {
+.tag-group > *:hover {
   background: var(--primary);
   color: white;
   transform: translateY(-2px);
