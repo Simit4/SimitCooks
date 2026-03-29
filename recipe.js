@@ -116,8 +116,7 @@ if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
   const cuisineDiv = document.getElementById('cuisine');
   if (recipe.cuisine) cuisineDiv.innerHTML = Array.isArray(recipe.cuisine) ? recipe.cuisine.map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('') : `<span class="tag">${escapeHtml(recipe.cuisine)}</span>`;
 
-  // Tags
-  document.getElementById('tags').innerHTML = formatTags(recipe.tags);
+
 
   // Notes & Facts
   document.getElementById('notes').innerText = recipe.notes || 'No additional notes.';
