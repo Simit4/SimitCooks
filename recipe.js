@@ -122,6 +122,39 @@ if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
   document.getElementById('notes').innerText = recipe.notes || 'No additional notes.';
   document.getElementById('facts').innerText = recipe.facts || 'Did you know? This recipe is made with love!';
 
+
+// -------------------------------
+// Share Button Functionality
+// -------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  const shareButton = document.getElementById('universal-share');
+
+  if (shareButton) {
+    shareButton.addEventListener('click', async () => {
+      const recipeTitle = document.getElementById('recipe-title').textContent;
+      const recipeUrl = window.location.href;
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: recipeTitle,
+            text: `Check out this recipe: ${recipeTitle}`,
+            url: recipeUrl,
+          });
+        } catch (err) {
+          console.error('Error sharing:', err);
+        }
+      } else {
+        prompt('Copy this link to share:', recipeUrl);
+      }
+    });
+  }
+});
+
+
+
+  
+
   // Video
   if (recipe.video_url) {
     const vidSection = document.getElementById('video-section');
@@ -178,3 +211,8 @@ init();
 
 // Debugging
 window.recipeDebug = { supabase, getSlug, escapeHtml, extractYouTubeId, getRecipeThumbnail, renderRecipe };
+
+
+
+
+
