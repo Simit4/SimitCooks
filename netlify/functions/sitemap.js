@@ -14,6 +14,7 @@ export async function handler(event, context) {
       { loc: '/', priority: 1.0 },
       { loc: '/recipes', priority: 0.9 },
       { loc: '/equipment', priority: 0.8 },
+      { loc: '/gallery', priority: 0.8 },
       { loc: '/about', priority: 0.8 },
     ];
 
