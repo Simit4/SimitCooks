@@ -2,11 +2,10 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 // Supabase setup
 const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ'; // Replace with your actual anon key
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-
-
+// DOM Elements
 const gallery = document.getElementById('gallery');
 const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -15,7 +14,9 @@ let filteredImages = [];
 let loadedCount = 0;
 const BATCH = 12;
 
-// Show skeleton loader
+// ---------------------
+// Skeleton loader
+// ---------------------
 function showSkeleton(count = BATCH) {
   if (!gallery) return;
   gallery.innerHTML = '';
@@ -26,55 +27,38 @@ function showSkeleton(count = BATCH) {
   }
 }
 
-// Initialize GLightbox with proper settings
+// ---------------------
+// GLightbox init
+// ---------------------
 function initGLightbox() {
   if (typeof GLightbox !== 'undefined') {
-    // Destroy any existing instance
-    if (window.glightboxInstance) {
-      window.glightboxInstance.destroy();
-    }
-    
-    // Create new instance with enhanced mobile support
+    if (window.glightboxInstance) window.glightboxInstance.destroy();
+
     window.glightboxInstance = GLightbox({
       selector: '.glightbox',
       openEffect: 'fade',
       closeEffect: 'fade',
       slideEffect: 'fade',
+      zoomable: false, // 🔹 remove zoom icon
       loop: true,
       touchNavigation: true,
       keyboardNavigation: true,
-      closeButton: true,  // Ensure close button is enabled
-      draggable: true,  // Enable dragging on mobile
-      width: '90vw',  // Responsive width
+      closeButton: true,
+      draggable: true,
+      width: '90vw',
       height: 'auto',
       preload: true,
       autoplayVideos: false,
-      css: 'https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css',  // Ensure CSS is loaded
-      plyr: {
-        css: '',
-        js: '',
-        config: {}
-      },
-      // Mobile-specific settings
+      css: 'https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css',
       touchMovement: true,
-      closeOnOutsideClick: true,  // Close when clicking outside
-      dragToleranceX: 150,
-      dragToleranceY: 150,
-      beforeOpen: function() {
-        // Ensure close button is visible on mobile
-        setTimeout(() => {
-          const closeBtn = document.querySelector('.glightbox-clean .gclose');
-          if (closeBtn) {
-            closeBtn.style.display = 'flex';
-            closeBtn.style.zIndex = '1000';
-          }
-        }, 50);
-      }
+      closeOnOutsideClick: true
     });
   }
 }
 
+// ---------------------
 // Fetch images from Supabase
+// ---------------------
 async function fetchGallery() {
   showSkeleton();
 
@@ -87,20 +71,17 @@ async function fetchGallery() {
     if (metadataResult.error) throw metadataResult.error;
     if (filesResult.error) throw filesResult.error;
 
-    const metadata = metadataResult.data || [];
-    const files = filesResult.data || [];
-
     const metadataMap = new Map();
-    metadata.forEach(meta => {
+    (metadataResult.data || []).forEach(meta => {
       metadataMap.set(meta.file_name.toLowerCase(), meta);
     });
 
-    allImages = files
+    allImages = (filesResult.data || [])
       .filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
       .map(f => {
         const meta = metadataMap.get(f.name.toLowerCase());
         const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(f.name);
-        
+
         return {
           url: publicUrl,
           name: f.name.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '').replace(/_/g, ' ').trim(),
@@ -111,7 +92,7 @@ async function fetchGallery() {
       })
       .sort((a, b) => a.name.localeCompare(b.name));
 
-    if (allImages.length === 0) {
+    if (!allImages.length) {
       gallery.innerHTML = "<p style='text-align:center;color:red;padding:2rem;'>No images found in the gallery.</p>";
       return;
     }
@@ -127,12 +108,14 @@ async function fetchGallery() {
   }
 }
 
-// Render a batch of images
+// ---------------------
+// Render batch of images
+// ---------------------
 function renderBatch(data) {
   if (!gallery) return;
-  
+
   const batch = data.slice(loadedCount, loadedCount + BATCH);
-  if (batch.length === 0) return;
+  if (!batch.length) return;
 
   batch.forEach((img, i) => {
     const link = document.createElement('a');
@@ -141,7 +124,7 @@ function renderBatch(data) {
     link.setAttribute('data-gallery', 'simit-gallery');
     link.setAttribute('data-title', `${img.emoji} ${img.name}`);
     link.setAttribute('data-description', img.description);
-    
+
     link.innerHTML = `
       <div class="gallery-item fade-in" style="animation-delay:${i * 50}ms">
         <img src="${img.url}" alt="${img.name.replace(/[<>]/g, '')}" loading="lazy">
@@ -155,16 +138,13 @@ function renderBatch(data) {
   });
 
   loadedCount += batch.length;
-  
-  // Re-initialize GLightbox for new images
-  setTimeout(() => {
-    initGLightbox();
-  }, 100);
-  
+  setTimeout(initGLightbox, 100); // re-init lightbox
   observeLastImage();
 }
 
+// ---------------------
 // Infinite scroll observer
+// ---------------------
 function observeLastImage() {
   const items = document.querySelectorAll('.gallery-item');
   const lastItem = items[items.length - 1];
@@ -182,13 +162,17 @@ function observeLastImage() {
   observer.observe(lastItem);
 }
 
-// Filter functionality
+// ---------------------
+// Filter buttons
+// ---------------------
 filterButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelector('.filter-btn.active')?.classList.remove('active');
     btn.classList.add('active');
+
     const category = btn.dataset.category;
     filteredImages = category === 'all' ? [...allImages] : allImages.filter(img => img.category === category);
+
     gallery.innerHTML = '';
     loadedCount = 0;
     renderBatch(filteredImages);
@@ -196,5 +180,7 @@ filterButtons.forEach(btn => {
   });
 });
 
-// Initialize gallery
+// ---------------------
+// Initialize
+// ---------------------
 fetchGallery();
