@@ -180,20 +180,9 @@
    
 }
 
-.recipe-category {
-  display: inline-block;
-  background: #f0f0f0;
-  padding: 0.25rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.7rem;
-  color: var(--primary);
-  font-weight: 600;
-  margin-top: 0.5rem;
 
 
-}
-
-.recipe-card:hover .recipe-category {
+.recipe-card:hover {
   background: var(--primary);
   color: white;
   transform: translateY(-2px);
