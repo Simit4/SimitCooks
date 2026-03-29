@@ -1,7 +1,9 @@
-/recipe/*  /recipe.html  200
+/index.html         /               301!
+/about.html         /about          301!
+/gallery.html       /gallery        301!
+/recipes.html       /recipes        301!
 
-# Clean URL redirects (SEO)
-/index.html     /           301
-/about.html     /about      301
-/gallery.html   /gallery    301
-/recipes.html   /recipes    301
+# Dynamic recipe pages (keep clean URLs)
+# All /recipe/* goes to recipe.html (dynamic content)
+# 200 = rewrite, not redirect
+/recipe/*           /recipe.html    200
