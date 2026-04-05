@@ -425,9 +425,7 @@ font-size: var(--text-sm); /* slightly bigger */
 
 
 
-/* =================================================
-   🔹 Video Section - Cinematic Experience
-================================================= */
+
 /* =================================================
    🔹 Video Section - Instagram/TikTok Reels Style
 ================================================= */
@@ -485,6 +483,8 @@ font-size: var(--text-sm); /* slightly bigger */
   color: rgba(0,0,0,0.6);
   font-size: 1rem;
   margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+
 }
 
 .video-container {
