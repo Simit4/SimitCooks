@@ -534,15 +534,16 @@ font-size: var(--text-sm); /* slightly bigger */
   text-shadow: 0 0 15px rgba(255,140,0,0.8);
 }
 
-/* Mobile tweaks */
-@media (max-width: 768px) {
-  .video-header h3 {
-    font-size: 2rem;
-  }
-  .video-container::after {
-    font-size: 2.5rem;
-  }
+.video-thumbnail {
+  z-index: 1;
 }
+
+.video-container iframe {
+  z-index: 2;
+}
+
+
+
 /* =================================================
    🔹 More Recipes - Centered Category Badges
 ================================================= */
