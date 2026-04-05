@@ -136,12 +136,16 @@ async function renderRecipe(recipe) {
     loadMutedVideo();
 
     // Click → unmute
-    videoContainer.addEventListener("click", () => {
-      if (!isUnmuted) {
-        isUnmuted = true;
-        loadUnmutedVideo();
-      }
-    });
+videoContainer.addEventListener("click", () => {
+  const newIframe = document.createElement("iframe");
+  newIframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&autoplay=1&mute=0&playsinline=1`;
+  newIframe.allow =
+    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+  newIframe.allowFullscreen = true;
+  videoContainer.innerHTML = ""; // remove old iframe
+  videoContainer.appendChild(newIframe);
+  videoContainer.style.pointerEvents = "none"; // prevent repeated clicks
+});
 
     // Scroll autoplay / pause
     if ('IntersectionObserver' in window) {
