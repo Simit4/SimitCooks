@@ -1,6 +1,6 @@
 // =================================================
-// recipe.js - Updated for your existing HTML structure
-// 16:9 Video with Pulse Button + Full Functionality
+// recipe.js - Completely Self-Contained
+// Creates its own 16:9 video with pulse button
 // =================================================
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -49,105 +49,199 @@ function getRecipeThumbnail(recipe) {
 }
 
 // =================================================
-// Render Video Section (16:9 with Pulse Button)
+// Create Video Section (completely self-contained)
 // =================================================
-function renderVideoSection(recipe) {
-  const videoSection = document.getElementById('video-section');
-  const videoContainer = document.getElementById('video-container');
+function createVideoSection(recipe) {
   const videoId = extractYouTubeId(recipe.video_url);
-
-  if (!videoSection || !videoContainer) return;
-
-  if (videoId) {
-    videoSection.style.display = 'block';
-    videoContainer.innerHTML = '';
-
-    // Create 16:9 wrapper with pulse play button
-    const wrapper = document.createElement('div');
-    wrapper.style.position = 'relative';
-    wrapper.style.width = '100%';
-    wrapper.style.paddingTop = '56.25%'; // 16:9 aspect ratio
-    wrapper.style.backgroundColor = '#000';
-    wrapper.style.cursor = 'pointer';
-    wrapper.style.borderRadius = '1rem';
-    wrapper.style.overflow = 'hidden';
-    videoContainer.appendChild(wrapper);
-
-    // Thumbnail image
-    const thumb = document.createElement('img');
-    thumb.src = getRecipeThumbnail(recipe);
-    thumb.alt = 'Video thumbnail';
-    thumb.style.position = 'absolute';
-    thumb.style.top = '0';
-    thumb.style.left = '0';
-    thumb.style.width = '100%';
-    thumb.style.height = '100%';
-    thumb.style.objectFit = 'cover';
-    thumb.style.transition = 'transform 0.3s ease';
-    wrapper.appendChild(thumb);
-
-    // Pulse play button
-    const playBtn = document.createElement('div');
-    playBtn.innerHTML = '▶';
-    playBtn.style.position = 'absolute';
-    playBtn.style.top = '50%';
-    playBtn.style.left = '50%';
-    playBtn.style.transform = 'translate(-50%, -50%)';
-    playBtn.style.width = '70px';
-    playBtn.style.height = '70px';
-    playBtn.style.backgroundColor = 'rgba(0,0,0,0.65)';
-    playBtn.style.backdropFilter = 'blur(8px)';
-    playBtn.style.borderRadius = '50%';
-    playBtn.style.display = 'flex';
-    playBtn.style.alignItems = 'center';
-    playBtn.style.justifyContent = 'center';
-    playBtn.style.fontSize = '2.5rem';
-    playBtn.style.color = '#ffde9c';
-    playBtn.style.fontFamily = 'monospace';
-    playBtn.style.boxShadow = '0 0 0 3px rgba(230,126,34,0.7)';
-    playBtn.style.animation = 'pulsePlay 1.4s infinite ease-in-out';
-    playBtn.style.pointerEvents = 'none';
-    wrapper.appendChild(playBtn);
-
-    // Add pulse animation to document if not exists
-    if (!document.querySelector('#pulse-animation-style')) {
-      const style = document.createElement('style');
-      style.id = 'pulse-animation-style';
-      style.textContent = `
-        @keyframes pulsePlay {
-          0% { transform: translate(-50%, -50%) scale(0.96); opacity: 0.9; box-shadow: 0 0 0 0 rgba(230,126,34,0.7); }
-          70% { transform: translate(-50%, -50%) scale(1.12); opacity: 1; box-shadow: 0 0 0 15px rgba(230,126,34,0); }
-          100% { transform: translate(-50%, -50%) scale(0.96); opacity: 0.9; box-shadow: 0 0 0 0 rgba(230,126,34,0); }
+  
+  if (!videoId) return null;
+  
+  // Create container
+  const videoSection = document.createElement('div');
+  videoSection.id = 'dynamic-video-section';
+  videoSection.style.cssText = `
+    width: 100%;
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 10;
+  `;
+  
+  // Create header
+  const header = document.createElement('div');
+  header.style.cssText = `
+    text-align: center;
+    margin-bottom: 1rem;
+  `;
+  header.innerHTML = `
+    <h3 style="
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #e67e22, #f39c12);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+    ">📹 Watch & Cook Along</h3>
+    <p style="color: #78716c; font-size: 0.9rem;">Follow our step-by-step video tutorial</p>
+  `;
+  videoSection.appendChild(header);
+  
+  // Create video wrapper (16:9)
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = `
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    background: #000;
+    border-radius: 1rem;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  `;
+  
+  // Thumbnail image
+  const thumb = document.createElement('img');
+  thumb.src = getRecipeThumbnail(recipe);
+  thumb.alt = 'Video thumbnail';
+  thumb.style.cssText = `
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  `;
+  wrapper.appendChild(thumb);
+  
+  // Pulse play button
+  const playBtn = document.createElement('div');
+  playBtn.innerHTML = '▶';
+  playBtn.style.cssText = `
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #ffde9c;
+    font-family: monospace;
+    box-shadow: 0 0 0 4px rgba(230,126,34,0.8);
+    animation: pulsePlayDynamic 1.4s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 2;
+  `;
+  wrapper.appendChild(playBtn);
+  
+  // Add animation keyframes
+  if (!document.querySelector('#dynamic-pulse-style')) {
+    const style = document.createElement('style');
+    style.id = 'dynamic-pulse-style';
+    style.textContent = `
+      @keyframes pulsePlayDynamic {
+        0% {
+          transform: translate(-50%, -50%) scale(0.95);
+          opacity: 0.9;
+          box-shadow: 0 0 0 0 rgba(230,126,34,0.7);
         }
-      `;
-      document.head.appendChild(style);
-    }
+        70% {
+          transform: translate(-50%, -50%) scale(1.15);
+          opacity: 1;
+          box-shadow: 0 0 0 20px rgba(230,126,34,0);
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(0.95);
+          opacity: 0.9;
+          box-shadow: 0 0 0 0 rgba(230,126,34,0);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Hover effects
+  wrapper.addEventListener('mouseenter', () => {
+    wrapper.style.transform = 'scale(1.02)';
+    wrapper.style.boxShadow = '0 30px 60px rgba(0,0,0,0.3)';
+    thumb.style.transform = 'scale(1.05)';
+  });
+  
+  wrapper.addEventListener('mouseleave', () => {
+    wrapper.style.transform = 'scale(1)';
+    wrapper.style.boxShadow = '0 20px 40px rgba(0,0,0,0.2)';
+    thumb.style.transform = 'scale(1)';
+  });
+  
+  // Click to play video
+  wrapper.addEventListener('click', () => {
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1`;
+    iframe.style.cssText = `
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    `;
+    iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
+    iframe.setAttribute('allowfullscreen', 'true');
+    
+    // Replace wrapper contents with iframe
+    wrapper.innerHTML = '';
+    wrapper.appendChild(iframe);
+  });
+  
+  videoSection.appendChild(wrapper);
+  
+  return videoSection;
+}
 
-    // Click handler - replace with iframe
-    wrapper.addEventListener('click', () => {
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1`;
-      iframe.style.position = 'absolute';
-      iframe.style.top = '0';
-      iframe.style.left = '0';
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.border = 'none';
-      iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
-      iframe.setAttribute('allowfullscreen', 'true');
-      wrapper.innerHTML = '';
-      wrapper.appendChild(iframe);
-    });
-
-    // Hover effect on thumbnail
-    wrapper.addEventListener('mouseenter', () => {
-      thumb.style.transform = 'scale(1.05)';
-    });
-    wrapper.addEventListener('mouseleave', () => {
-      thumb.style.transform = 'scale(1)';
-    });
+// =================================================
+// Insert Video Section into Page
+// =================================================
+function insertVideoSection(recipe) {
+  // Remove existing dynamic video section if present
+  const existingSection = document.getElementById('dynamic-video-section');
+  if (existingSection) {
+    existingSection.remove();
+  }
+  
+  // Hide the original video section if it exists
+  const originalVideoSection = document.getElementById('video-section');
+  if (originalVideoSection) {
+    originalVideoSection.style.display = 'none';
+  }
+  
+  const videoSection = createVideoSection(recipe);
+  if (!videoSection) return;
+  
+  // Find where to insert the video section
+  // Try to insert after hero section or after recipe-content
+  const heroSection = document.querySelector('.hero');
+  const recipeContent = document.querySelector('.recipe-content');
+  
+  if (heroSection && heroSection.nextSibling) {
+    // Insert after hero section
+    heroSection.parentNode.insertBefore(videoSection, heroSection.nextSibling);
+  } else if (recipeContent) {
+    // Insert before recipe content
+    recipeContent.parentNode.insertBefore(videoSection, recipeContent);
   } else {
-    videoSection.style.display = 'none';
+    // Fallback: insert after body's first child or at beginning of main
+    const main = document.querySelector('main') || document.body;
+    main.insertBefore(videoSection, main.firstChild);
   }
 }
 
@@ -179,7 +273,7 @@ async function renderRecipe(recipe) {
           const title = escapeHtml(section.section || '');
           const items = (section.items || []).map(i => `<li>${escapeHtml(i)}</li>`).join('');
           return `<div class="ingredients-section">
-            ${title ? `<h4 style="margin: 0.5rem 0; color: var(--primary, #e67e22);">${title}</h4>` : ''}
+            ${title ? `<h4 style="margin: 0.5rem 0; color: #e67e22;">${title}</h4>` : ''}
             <ul class="green-bullets">${items}</ul>
           </div>`;
         }).join('');
@@ -226,7 +320,11 @@ async function renderRecipe(recipe) {
   // Share button
   const shareBtn = document.getElementById('universal-share');
   if (shareBtn) {
-    shareBtn.addEventListener('click', async () => {
+    // Remove existing listeners to avoid duplicates
+    const newShareBtn = shareBtn.cloneNode(true);
+    shareBtn.parentNode.replaceChild(newShareBtn, shareBtn);
+    
+    newShareBtn.addEventListener('click', async () => {
       const recipeTitle = document.getElementById('recipe-title')?.textContent || 'Recipe';
       const recipeUrl = window.location.href;
       if (navigator.share) {
@@ -241,8 +339,8 @@ async function renderRecipe(recipe) {
     });
   }
 
-  // Render video section (16:9 with pulse)
-  renderVideoSection(recipe);
+  // Insert video section (creates its own element)
+  insertVideoSection(recipe);
 }
 
 // =================================================
@@ -259,7 +357,7 @@ async function fetchMoreRecipes(slug) {
   if (!grid) return;
 
   if (!recipes?.length) {
-    grid.innerHTML = '<p style="text-align:center; color: var(--neutral-500, #78716c);">More recipes coming soon!</p>';
+    grid.innerHTML = '<p style="text-align:center; color: #78716c;">More recipes coming soon!</p>';
     return;
   }
 
@@ -268,9 +366,9 @@ async function fetchMoreRecipes(slug) {
     const title = r.title || 'Untitled';
     const desc = r.description || 'Delicious recipe';
     return `
-      <div class="recipe-card" onclick="window.location.href='/recipe/${r.slug}'">
+      <div class="recipe-card" onclick="window.location.href='/recipe/${r.slug}'" style="cursor: pointer;">
         <div class="thumbnail-wrapper">
-          <img src="${thumb}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.src='${FALLBACK_IMAGE}'">
+          <img src="${thumb}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.src='${FALLBACK_IMAGE}'" style="width: 100%; height: 100%; object-fit: cover;">
         </div>
         <div class="card-body">
           <h4>${escapeHtml(title)}</h4>
