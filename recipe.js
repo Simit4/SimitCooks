@@ -61,41 +61,74 @@ function renderRecipe(recipe) {
   document.getElementById('facts').innerText = recipe.facts || '';
 
   // =================================================
-  // 🔥 FIXED VIDEO SECTION (WORKING + SOUND)
-  // =================================================
-  const videoSection = document.getElementById("video-section");
-  const videoContainer = document.getElementById("video-container");
+// 🔥 REELS-LEVEL VIDEO SECTION
+// =================================================
+const videoSection = document.getElementById("video-section");
+const videoContainer = document.getElementById("video-container");
 
-  const videoId = extractYouTubeId(recipe.video_url);
+const videoId = extractYouTubeId(recipe.video_url);
 
-  if (videoId && videoContainer) {
-    videoSection.style.display = "block";
+if (videoId && videoContainer) {
+  videoSection.style.display = "block";
 
-    // Load muted preview (autoplay allowed)
+  let isUnmuted = false;
+
+  function loadMutedVideo() {
     videoContainer.innerHTML = `
       <iframe
-        src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&playsinline=1&rel=0"
+        id="recipeVideo"
+        src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&mute=1&controls=0&playsinline=1&rel=0"
         allow="autoplay; encrypted-media"
         allowfullscreen>
       </iframe>
     `;
-
-    // 🔊 CLICK → ENABLE SOUND
-    videoContainer.addEventListener("click", () => {
-      videoContainer.innerHTML = `
-        <iframe
-          src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&playsinline=1&rel=0"
-          allow="autoplay; encrypted-media"
-          allowfullscreen>
-        </iframe>
-      `;
-    });
-
-  } else {
-    videoSection.style.display = "none";
   }
 
-  document.title = `${recipe.title} | Simit Cooks`;
+  function loadUnmutedVideo() {
+    videoContainer.innerHTML = `
+      <iframe
+        id="recipeVideo"
+        src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&playsinline=1&rel=0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen>
+      </iframe>
+    `;
+  }
+
+  // Initial load (muted autoplay)
+  loadMutedVideo();
+
+  // 👉 Click → unmute (TikTok style)
+  videoContainer.addEventListener("click", () => {
+    if (!isUnmuted) {
+      isUnmuted = true;
+      loadUnmutedVideo();
+      videoContainer.classList.add("video-playing");
+    }
+  });
+
+  // 👉 Scroll autoplay / pause
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const iframe = document.getElementById("recipeVideo");
+
+        if (!iframe) return;
+
+        if (entry.isIntersecting) {
+          iframe.src = iframe.src.replace("autoplay=0", "autoplay=1");
+        } else {
+          // Pause by reloading muted preview
+          if (!isUnmuted) loadMutedVideo();
+        }
+      });
+    }, { threshold: 0.6 });
+
+    observer.observe(videoContainer);
+  }
+
+} else {
+  videoSection.style.display = "none";
 }
 
 // =================================================
