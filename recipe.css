@@ -629,8 +629,7 @@ font-size: var(--text-sm); /* slightly bigger */
 }
 
 .recipe-card:hover .thumbnail-wrapper::before {
-  opacity: 1;
-}
+background: linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 100%);}
 
 .thumbnail-wrapper img {
   position: absolute;
