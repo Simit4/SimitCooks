@@ -6,7 +6,6 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
 const supabase = createClient(supabaseUrl, supabaseKey);
-
 const FALLBACK_IMAGE = 'https://i.ibb.co/4p4mR3N/momo-graphic.png';
 
 // =================================================
@@ -51,6 +50,7 @@ function getRecipeThumbnail(recipe) {
 async function renderRecipe(recipe) {
   if (!recipe) return;
 
+  // Basic info
   document.getElementById('recipe-title').innerText = recipe.title || 'Untitled Recipe';
   document.getElementById('recipe-description').innerText = recipe.description || 'Delicious recipe made with love.';
   document.getElementById('prep-time').innerText = recipe.prep_time || 'N/A';
@@ -98,82 +98,77 @@ async function renderRecipe(recipe) {
   });
 
   // =================================================
-  // 🔹 VIDEO SECTION - REELS LEVEL
+  // 🔹 VIDEO SECTION - FULL REELS LEVEL
   // =================================================
- 
-const videoSection = document.getElementById("video-section");
-const videoContainer = document.getElementById("video-container");
-const videoId = extractYouTubeId(recipe.video_url);
+  const videoSection = document.getElementById("video-section");
+  const videoContainer = document.getElementById("video-container");
+  const videoId = extractYouTubeId(recipe.video_url);
 
-if (videoId && videoContainer) {
-  videoSection.style.display = "block";
-  videoContainer.innerHTML = ""; // clear anything inside
+  if (videoId && videoContainer) {
+    videoSection.style.display = "block";
+    videoContainer.innerHTML = "";
 
-  // Create inner div for player
-  const playerDiv = document.createElement("div");
-  playerDiv.id = "recipeVideoPlayer";
-  playerDiv.style.width = "100%";
-  playerDiv.style.height = "100%";
-  videoContainer.appendChild(playerDiv);
+    // Load YouTube API if not loaded
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.body.appendChild(tag);
+    }
 
-  // Load YouTube API
-  if (!window.YT) {
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.body.appendChild(tag);
-  }
+    // Initialize player after API ready
+    window.onYouTubeIframeAPIReady = () => {
+      const player = new YT.Player(videoContainer, {
+        videoId,
+        playerVars: {
+          autoplay: 1,
+          controls: 1,
+          mute: 1,
+          rel: 0,
+          playsinline: 1
+        },
+        events: {
+          onReady: (e) => {
+            const iframe = e.target.getIframe();
 
-  window.onYouTubeIframeAPIReady = () => {
-    const player = new YT.Player("recipeVideoPlayer", {
-      videoId,
-      playerVars: {
-        autoplay: 1,
-        controls: 1,
-        mute: 1,
-        playsinline: 1,
-        rel: 0
-      },
-      events: {
-        onReady: (e) => {
-          const iframe = e.target.getIframe();
-
-          // Add pulse play button
-          const pulseBtn = document.createElement('div');
-          pulseBtn.className = 'video-play-btn';
-          pulseBtn.innerText = '▶';
-          pulseBtn.style.position = 'absolute';
-          pulseBtn.style.top = '50%';
-          pulseBtn.style.left = '50%';
-          pulseBtn.style.transform = 'translate(-50%, -50%)';
-          pulseBtn.style.fontSize = '3rem';
-          pulseBtn.style.color = 'rgba(255,255,255,0.9)';
-          pulseBtn.style.cursor = 'pointer';
-          pulseBtn.style.textShadow = '0 0 10px rgba(0,0,0,0.5)';
-          videoContainer.appendChild(pulseBtn);
-
-          pulseBtn.addEventListener('click', () => {
-            player.unMute();
-            if (player.getPlayerState() === YT.PlayerState.PLAYING) player.pauseVideo();
-            else player.playVideo();
-          });
-
-          // Scroll autoplay/pause
-          const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) player.playVideo();
-              else player.pauseVideo();
+            // Pulse play button
+            const pulseBtn = document.createElement('div');
+            pulseBtn.className = 'video-play-btn';
+            pulseBtn.innerText = '▶';
+            Object.assign(pulseBtn.style, {
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              fontSize: '3rem',
+              color: 'rgba(255,255,255,0.9)',
+              cursor: 'pointer',
+              textShadow: '0 0 10px rgba(0,0,0,0.5)'
             });
-          }, { threshold: 0.6 });
+            videoContainer.appendChild(pulseBtn);
 
-          observer.observe(videoContainer);
+            pulseBtn.addEventListener('click', () => {
+              if (player.isMuted()) player.unMute();
+              const state = player.getPlayerState();
+              if (state === YT.PlayerState.PLAYING) player.pauseVideo();
+              else player.playVideo();
+            });
+
+            // Scroll autoplay/pause
+            const observer = new IntersectionObserver(entries => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) player.playVideo();
+                else player.pauseVideo();
+              });
+            }, { threshold: 0.6 });
+
+            observer.observe(videoContainer);
+          }
         }
-      }
-    });
-  };
-} else videoSection.style.display = "none";
+      });
+    };
+  } else videoSection.style.display = "none";
+}
 
-
-  
 // =================================================
 // 🔹 Fetch More Recipes
 // =================================================
