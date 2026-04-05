@@ -1,6 +1,6 @@
 // =================================================
-// recipe.js - Full Updated Version
-// Works with your existing CSS (pulse animation, video-playing class)
+// recipe.js - Uses your existing recipe.css
+// Works with .video-container::after pulse animation
 // =================================================
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -49,7 +49,7 @@ function getRecipeThumbnail(recipe) {
 }
 
 // =================================================
-// Render Video Section (works with your existing CSS)
+// Render Video Section (uses your existing CSS)
 // =================================================
 async function renderVideoSection(recipe) {
   const videoSection = document.getElementById('video-section');
@@ -65,14 +65,15 @@ async function renderVideoSection(recipe) {
   // Show video section
   videoSection.style.display = 'block';
   
-  // Clear previous content
+  // Clear previous content and remove playing class
   videoContainer.innerHTML = '';
   videoContainer.classList.remove('video-playing');
   
-  // Create thumbnail image
+  // Create thumbnail image (this will sit behind the ::after pseudo-element)
   const thumb = document.createElement('img');
   thumb.src = getRecipeThumbnail(recipe);
   thumb.alt = 'Video thumbnail';
+  thumb.classList.add('video-thumbnail');
   thumb.style.cssText = `
     position: absolute;
     top: 0;
@@ -87,32 +88,25 @@ async function renderVideoSection(recipe) {
   // Store video ID for click handler
   videoContainer.dataset.videoId = videoId;
   
-  // Remove any existing click listener and add new one
-  const clickHandler = () => {
+  // Remove any existing click listeners and add new one (once)
+  const newContainer = videoContainer.cloneNode(true);
+  videoContainer.parentNode.replaceChild(newContainer, videoContainer);
+  
+  // Add click handler to the new container
+  newContainer.addEventListener('click', function playVideo() {
     // Add the playing class to stop pulse animation (your CSS handles this)
-    videoContainer.classList.add('video-playing');
+    this.classList.add('video-playing');
     
     // Create iframe
     const iframe = document.createElement('iframe');
     iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1`;
     iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
     iframe.setAttribute('allowfullscreen', 'true');
-    iframe.style.cssText = `
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-      z-index: 2;
-    `;
     
     // Clear container and add iframe
-    videoContainer.innerHTML = '';
-    videoContainer.appendChild(iframe);
-  };
-  
-  videoContainer.addEventListener('click', clickHandler, { once: true });
+    this.innerHTML = '';
+    this.appendChild(iframe);
+  }, { once: true });
 }
 
 // =================================================
@@ -212,12 +206,15 @@ async function renderRecipe(recipe) {
   // Print button
   const printBtn = document.querySelector('.btn-action[onclick="window.print()"]');
   if (printBtn) {
-    printBtn.addEventListener('click', () => {
+    const newPrintBtn = printBtn.cloneNode(true);
+    printBtn.parentNode.replaceChild(newPrintBtn, printBtn);
+    newPrintBtn.addEventListener('click', (e) => {
+      e.preventDefault();
       window.print();
     });
   }
 
-  // Render video section (works with your CSS)
+  // Render video section (uses your CSS)
   await renderVideoSection(recipe);
 }
 
@@ -258,60 +255,9 @@ async function fetchMoreRecipes(slug) {
 }
 
 // =================================================
-// Ensure CSS animations are applied
-// =================================================
-function ensurePulseAnimation() {
-  // Check if pulse animation style exists, if not add it
-  if (!document.querySelector('#pulse-animation-style')) {
-    const style = document.createElement('style');
-    style.id = 'pulse-animation-style';
-    style.textContent = `
-      @keyframes pulsePlay {
-        0% {
-          transform: translate(-50%, -50%) scale(1);
-          opacity: 0.9;
-        }
-        50% {
-          transform: translate(-50%, -50%) scale(1.25);
-          opacity: 1;
-        }
-        100% {
-          transform: translate(-50%, -50%) scale(1);
-          opacity: 0.9;
-        }
-      }
-      
-      .video-container::after {
-        content: '▶';
-        font-size: 3rem;
-        color: rgba(255, 255, 255, 0.9);
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(1);
-        transition: transform 0.3s ease, color 0.3s ease;
-        text-shadow: 0 0 10px rgba(0,0,0,0.5);
-        pointer-events: none;
-        animation: pulsePlay 1.5s infinite;
-        z-index: 2;
-      }
-      
-      .video-container.video-playing::after {
-        opacity: 0;
-        animation: none;
-      }
-    `;
-    document.head.appendChild(style);
-  }
-}
-
-// =================================================
 // Initialize
 // =================================================
 async function init() {
-  // Ensure pulse animation styles are applied
-  ensurePulseAnimation();
-  
   const slug = getSlug();
   
   if (!slug) {
