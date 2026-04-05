@@ -106,65 +106,52 @@ async function renderRecipe(recipe) {
 
   if (videoId && videoContainer) {
     videoSection.style.display = "block";
-    let isUnmuted = false;
 
-    function loadMutedVideo() {
-      videoContainer.innerHTML = `
-        <iframe
-          id="recipeVideo"
-          src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&mute=1&controls=0&playsinline=1&rel=0"
-          allow="autoplay; encrypted-media"
-          allowfullscreen>
-        </iframe>
-      `;
-      videoContainer.classList.remove("video-playing");
+    // Load YouTube IFrame API dynamically
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.body.appendChild(tag);
     }
 
-    function loadUnmutedVideo() {
-      videoContainer.innerHTML = `
-        <iframe
-          id="recipeVideo"
-          src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&playsinline=1&rel=0"
-          allow="autoplay; encrypted-media"
-          allowfullscreen>
-        </iframe>
-      `;
-      videoContainer.classList.add("video-playing");
-    }
+    window.onYouTubeIframeAPIReady = () => {
+      const player = new YT.Player('video-container', {
+        videoId,
+        playerVars: {
+          autoplay: 1,
+          controls: 1,
+          mute: 1,
+          playsinline: 1,
+          rel: 0
+        },
+        events: {
+          onReady: (e) => {
+            const iframe = e.target.getIframe();
 
-    // Initial load
-    loadMutedVideo();
+            // Pulse play button
+            const pulseBtn = document.createElement('div');
+            pulseBtn.className = 'video-play-btn';
+            pulseBtn.innerText = '▶';
+            videoContainer.appendChild(pulseBtn);
 
-    // Click → unmute
-videoContainer.addEventListener("click", () => {
-  const newIframe = document.createElement("iframe");
-  newIframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&autoplay=1&mute=0&playsinline=1`;
-  newIframe.allow =
-    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-  newIframe.allowFullscreen = true;
-  videoContainer.innerHTML = ""; // remove old iframe
-  videoContainer.appendChild(newIframe);
-  videoContainer.style.pointerEvents = "none"; // prevent repeated clicks
-});
+            pulseBtn.addEventListener('click', () => {
+              player.unMute();
+              if (player.getPlayerState() === YT.PlayerState.PLAYING) player.pauseVideo();
+              else player.playVideo();
+            });
 
-    // Scroll autoplay / pause
-    if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          const iframe = document.getElementById("recipeVideo");
-          if (!iframe) return;
-
-          if (entry.isIntersecting) {
-            iframe.src = iframe.src.replace("autoplay=0", "autoplay=1");
-          } else {
-            if (!isUnmuted) loadMutedVideo();
+            // Scroll autoplay/pause
+            const observer = new IntersectionObserver(entries => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) player.playVideo();
+                else player.pauseVideo();
+              });
+            }, { threshold: 0.6 });
+            observer.observe(videoContainer);
           }
-        });
-      }, { threshold: 0.6 });
-
-      observer.observe(videoContainer);
-    }
-
+        }
+      });
+    };
   } else videoSection.style.display = "none";
 }
 
