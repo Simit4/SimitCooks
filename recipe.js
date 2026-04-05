@@ -1,16 +1,10 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// =================================================
-// 🔹 Supabase Configuration
-// =================================================
 const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
 const supabase = createClient(supabaseUrl, supabaseKey);
 const FALLBACK_IMAGE = 'https://i.ibb.co/4p4mR3N/momo-graphic.png';
 
-// =================================================
-// 🔹 Helpers
-// =================================================
 function getSlug() {
   const path = window.location.pathname.split('/').filter(Boolean);
   return path[1] || new URLSearchParams(window.location.search).get('slug');
@@ -40,13 +34,10 @@ function extractYouTubeId(url) {
 function getRecipeThumbnail(recipe) {
   if (recipe.thumbnail_url?.trim()) return recipe.thumbnail_url;
   const vid = extractYouTubeId(recipe.video_url);
-  if (vid) return `https://img.youtube.com/vi/${vid}/maxresdefault.jpg`;
+  if (vid) return `https://img.youtube.com/vi/${vid}/hqdefault.jpg`;
   return FALLBACK_IMAGE;
 }
 
-// =================================================
-// 🔹 Render Recipe
-// =================================================
 async function renderRecipe(recipe) {
   if (!recipe) return;
 
@@ -67,8 +58,7 @@ async function renderRecipe(recipe) {
         return `<div class="ingredients-section">${title ? `<h4>${title}</h4>` : ''}<ul class="green-bullets">${items}</ul></div>`;
       }).join('');
     } else {
-      const items = recipe.ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('');
-      ingList.innerHTML = `<ul class="green-bullets">${items}</ul>`;
+      ingList.innerHTML = `<ul class="green-bullets">${recipe.ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`;
     }
   } else ingList.innerHTML = '<li>No ingredients listed</li>';
 
@@ -76,29 +66,8 @@ async function renderRecipe(recipe) {
   const methodList = document.getElementById('method-list');
   methodList.innerHTML = recipe.method?.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>No instructions available</li>';
 
-  // Info sections
-  document.getElementById("history-overview").textContent = recipe.history_overview || '';
-  document.getElementById('notes').innerText = recipe.notes || 'No additional notes.';
-  document.getElementById('facts').innerText = recipe.facts || 'Did you know? This recipe is made with love!';
-
-  const catDiv = document.getElementById('category');
-  if (recipe.category) catDiv.innerHTML = Array.isArray(recipe.category) ? recipe.category.map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('') : `<span class="tag">${escapeHtml(recipe.category)}</span>`;
-  
-  const cuisineDiv = document.getElementById('cuisine');
-  if (recipe.cuisine) cuisineDiv.innerHTML = Array.isArray(recipe.cuisine) ? recipe.cuisine.map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('') : `<span class="tag">${escapeHtml(recipe.cuisine)}</span>`;
-
-  // Share button
-  document.getElementById('universal-share')?.addEventListener('click', async () => {
-    const recipeTitle = document.getElementById('recipe-title').textContent;
-    const recipeUrl = window.location.href;
-    if (navigator.share) {
-      try { await navigator.share({ title: recipeTitle, text: `Check out this recipe: ${recipeTitle}`, url: recipeUrl }); } 
-      catch (err) { console.error(err); }
-    } else prompt('Copy this link to share:', recipeUrl);
-  });
-
   // =================================================
-  // 🔹 VIDEO SECTION - FULL REELS LEVEL
+  // 🔹 VIDEO SECTION - WORKING
   // =================================================
   const videoSection = document.getElementById("video-section");
   const videoContainer = document.getElementById("video-container");
@@ -106,66 +75,30 @@ async function renderRecipe(recipe) {
 
   if (videoId && videoContainer) {
     videoSection.style.display = "block";
-    videoContainer.innerHTML = "";
 
-    // Load YouTube API if not loaded
-    if (!window.YT) {
-      const tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      document.body.appendChild(tag);
-    }
+    // Show thumbnail first
+    const thumbUrl = getRecipeThumbnail(recipe);
+    videoContainer.innerHTML = `<div class="video-thumb" style="position:relative;cursor:pointer;">
+      <img src="${thumbUrl}" style="width:100%;display:block;" />
+      <div class="play-btn" style="
+        position:absolute;top:50%;left:50%;
+        transform:translate(-50%, -50%);
+        font-size:3rem;color:white;text-shadow:0 0 10px rgba(0,0,0,0.5);">▶</div>
+    </div>`;
 
-    // Initialize player after API ready
-    window.onYouTubeIframeAPIReady = () => {
-      const player = new YT.Player(videoContainer, {
-        videoId,
-        playerVars: {
-          autoplay: 1,
-          controls: 1,
-          mute: 1,
-          rel: 0,
-          playsinline: 1
-        },
-        events: {
-          onReady: (e) => {
-            const iframe = e.target.getIframe();
+    const thumbDiv = videoContainer.querySelector('.video-thumb');
 
-            // Pulse play button
-            const pulseBtn = document.createElement('div');
-            pulseBtn.className = 'video-play-btn';
-            pulseBtn.innerText = '▶';
-            Object.assign(pulseBtn.style, {
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              fontSize: '3rem',
-              color: 'rgba(255,255,255,0.9)',
-              cursor: 'pointer',
-              textShadow: '0 0 10px rgba(0,0,0,0.5)'
-            });
-            videoContainer.appendChild(pulseBtn);
+    // Click → replace with iframe
+    thumbDiv.addEventListener('click', () => {
+      videoContainer.innerHTML = `<iframe
+        width="100%" height="100%"
+        src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0"
+        frameborder="0"
+        allow="autoplay; fullscreen; encrypted-media"
+        allowfullscreen>
+      </iframe>`;
+    });
 
-            pulseBtn.addEventListener('click', () => {
-              if (player.isMuted()) player.unMute();
-              const state = player.getPlayerState();
-              if (state === YT.PlayerState.PLAYING) player.pauseVideo();
-              else player.playVideo();
-            });
-
-            // Scroll autoplay/pause
-            const observer = new IntersectionObserver(entries => {
-              entries.forEach(entry => {
-                if (entry.isIntersecting) player.playVideo();
-                else player.pauseVideo();
-              });
-            }, { threshold: 0.6 });
-
-            observer.observe(videoContainer);
-          }
-        }
-      });
-    };
   } else videoSection.style.display = "none";
 }
 
@@ -204,5 +137,4 @@ async function init() {
   await supabase.from('recipe_db').update({ views: (recipe.views || 0) + 1 }).eq('slug', slug);
 }
 
-// Start
 init();
