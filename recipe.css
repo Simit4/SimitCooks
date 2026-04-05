@@ -499,20 +499,41 @@ font-size: var(--text-sm); /* slightly bigger */
   overflow: hidden;
   box-shadow: var(--shadow-3xl);
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-.video-container:hover {
-  transform: scale(1.03); /* slightly more zoom */
-}
-
+/* Smooth cinematic feel */
 .video-container iframe {
   position: absolute;
   top: 0;
   left: 0;
-  width: 102%;  /* little zoom */
-  height: 102%;
-  transform: translate(-1%, -1%);
+  width: 110%;
+  height: 110%;
+  transform: scale(1) translate(0, 0);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Hover effect (Instagram-like) */
+.video-container:hover iframe {
+  transform: scale(1.08) translate(-2%, -2%);
+}
+
+/* Optional: subtle dark overlay on hover */
+.video-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0);
+  transition: background 0.4s ease;
+}
+
+.video-container:hover::after {
+  background: rgba(0,0,0,0.15);
+}
+
+
+.video-container:active iframe {
+  transform: scale(1.04) translate(-1%, -1%);
+  transition: transform 0.2s ease;
 }
 
 
