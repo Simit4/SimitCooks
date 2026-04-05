@@ -126,9 +126,6 @@
   transition: transform 0.4s ease;
 }
 
-.recipe-card:hover .thumbnail-wrapper img {
-  transform: scale(1.05);
-}
 
 
 
@@ -182,11 +179,7 @@
 
 
 
-.recipe-card:hover {
-  background: var(--primary);
-  color: white;
-  transform: translateY(-2px);
-}
+
 
 /* =================================================
    🔹 Skeleton Loader Styles
