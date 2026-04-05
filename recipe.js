@@ -99,78 +99,48 @@ async function renderRecipe(recipe) {
   // =================================================
   // 🔹 Video Section - TikTok/Instagram style
   // =================================================
-  const videoSection = document.getElementById('video-section');
-  const videoContainer = document.getElementById('video-container');
-  const videoId = extractYouTubeId(recipe.video_url);
 
-  if (videoId && videoSection && videoContainer) {
+document.addEventListener("DOMContentLoaded", () => {
+  const videoSection = document.getElementById("video-section");
+  const videoContainer = document.getElementById("video-container");
+
+  // Replace with your actual YouTube video ID
+  const videoId = "YOUR_VIDEO_ID_HERE";
+
+  if (videoContainer && videoContainer.children.length === 0) {
+    // Create iframe with muted autoplay
+    const iframe = document.createElement("iframe");
+    iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&autoplay=1&mute=1&playsinline=1`;
+    iframe.allow =
+      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    iframe.allowFullscreen = true;
+
+    videoContainer.appendChild(iframe);
     videoSection.style.display = "block";
-    videoContainer.innerHTML = `
-      <div class="video-player-wrapper" style="position:relative;">
-        <div id="player"></div>
-        <div id="play-overlay" style="
-          position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-          cursor:pointer;">
-          <div class="play-icon" style="
-            width:64px; height:64px; border-radius:50%; background:rgba(255,127,80,0.8);
-            display:flex; align-items:center; justify-content:center; font-size:2rem; color:white;
-            animation: pulse 1.2s infinite;">
-            ▶
-          </div>
-        </div>
-      </div>
-    `;
 
-    // Load YouTube API Player
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.body.appendChild(tag);
+    // Click-to-unmute and play normally
+    videoContainer.addEventListener("click", () => {
+      // Reload iframe with autoplay and unmuted
+      iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&autoplay=1&playsinline=1`;
+      // Hide play icon after click
+      videoContainer.style.pointerEvents = "none";
+    });
 
-    let playerInstance;
-    window.onYouTubeIframeAPIReady = () => {
-      playerInstance = new YT.Player('player', {
-        videoId,
-        playerVars: { autoplay: 1, mute: 1, controls: 0, rel: 0, playsinline: 1 },
-        events: {
-          onReady: (e) => e.target.playVideo(),
-          onStateChange: (e) => {
-            const overlay = document.getElementById('play-overlay');
-            if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) overlay.style.display = 'flex';
-            else overlay.style.display = 'none';
+    // Intersection Observer for auto-play only when visible
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&autoplay=1&mute=1&playsinline=1`;
           }
-        }
-      });
+        });
+      },
+      { threshold: 0.5 } // 50% of the video should be visible
+    );
 
-      // Click overlay → unmute & play with controls
-      document.getElementById('play-overlay').addEventListener('click', () => {
-        playerInstance.unMute();
-        playerInstance.playVideo();
-        playerInstance.setPlaybackQuality('hd1080');
-        playerInstance.getIframe().setAttribute('allow', 'autoplay; encrypted-media');
-        playerInstance.getIframe().setAttribute('controls', '1');
-      });
-
-      // Optional: pause when out of view
-      if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) playerInstance.playVideo();
-            else playerInstance.pauseVideo();
-          });
-        }, { threshold: 0.5 });
-        observer.observe(videoContainer);
-      }
-    };
-
-    // Add pulse animation CSS
-    const styleTag = document.createElement('style');
-    styleTag.textContent = `
-      @keyframes pulse { 0% { transform: scale(1); opacity:1 } 50% { transform: scale(1.15); opacity:0.7 } 100% { transform: scale(1); opacity:1 } }
-    `;
-    document.head.appendChild(styleTag);
-  } else if (videoSection) videoSection.style.display = "none";
-}
-
+    observer.observe(videoContainer);
+  }
+});
 // =================================================
 // 🔹 Fetch More Recipes
 // =================================================
