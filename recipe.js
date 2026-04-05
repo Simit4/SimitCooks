@@ -100,61 +100,80 @@ async function renderRecipe(recipe) {
   // =================================================
   // 🔹 VIDEO SECTION - REELS LEVEL
   // =================================================
-  const videoSection = document.getElementById("video-section");
-  const videoContainer = document.getElementById("video-container");
-  const videoId = extractYouTubeId(recipe.video_url);
+ 
+const videoSection = document.getElementById("video-section");
+const videoContainer = document.getElementById("video-container");
+const videoId = extractYouTubeId(recipe.video_url);
 
-  if (videoId && videoContainer) {
-    videoSection.style.display = "block";
+if (videoId && videoContainer) {
+  videoSection.style.display = "block";
+  videoContainer.innerHTML = ""; // clear anything inside
 
-    // Load YouTube IFrame API dynamically
-    if (!window.YT) {
-      const tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      document.body.appendChild(tag);
-    }
+  // Create inner div for player
+  const playerDiv = document.createElement("div");
+  playerDiv.id = "recipeVideoPlayer";
+  playerDiv.style.width = "100%";
+  playerDiv.style.height = "100%";
+  videoContainer.appendChild(playerDiv);
 
-    window.onYouTubeIframeAPIReady = () => {
-      const player = new YT.Player('video-container', {
-        videoId,
-        playerVars: {
-          autoplay: 1,
-          controls: 1,
-          mute: 1,
-          playsinline: 1,
-          rel: 0
-        },
-        events: {
-          onReady: (e) => {
-            const iframe = e.target.getIframe();
+  // Load YouTube API
+  if (!window.YT) {
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+  }
 
-            // Pulse play button
-            const pulseBtn = document.createElement('div');
-            pulseBtn.className = 'video-play-btn';
-            pulseBtn.innerText = '▶';
-            videoContainer.appendChild(pulseBtn);
+  window.onYouTubeIframeAPIReady = () => {
+    const player = new YT.Player("recipeVideoPlayer", {
+      videoId,
+      playerVars: {
+        autoplay: 1,
+        controls: 1,
+        mute: 1,
+        playsinline: 1,
+        rel: 0
+      },
+      events: {
+        onReady: (e) => {
+          const iframe = e.target.getIframe();
 
-            pulseBtn.addEventListener('click', () => {
-              player.unMute();
-              if (player.getPlayerState() === YT.PlayerState.PLAYING) player.pauseVideo();
-              else player.playVideo();
+          // Add pulse play button
+          const pulseBtn = document.createElement('div');
+          pulseBtn.className = 'video-play-btn';
+          pulseBtn.innerText = '▶';
+          pulseBtn.style.position = 'absolute';
+          pulseBtn.style.top = '50%';
+          pulseBtn.style.left = '50%';
+          pulseBtn.style.transform = 'translate(-50%, -50%)';
+          pulseBtn.style.fontSize = '3rem';
+          pulseBtn.style.color = 'rgba(255,255,255,0.9)';
+          pulseBtn.style.cursor = 'pointer';
+          pulseBtn.style.textShadow = '0 0 10px rgba(0,0,0,0.5)';
+          videoContainer.appendChild(pulseBtn);
+
+          pulseBtn.addEventListener('click', () => {
+            player.unMute();
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) player.pauseVideo();
+            else player.playVideo();
+          });
+
+          // Scroll autoplay/pause
+          const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) player.playVideo();
+              else player.pauseVideo();
             });
+          }, { threshold: 0.6 });
 
-            // Scroll autoplay/pause
-            const observer = new IntersectionObserver(entries => {
-              entries.forEach(entry => {
-                if (entry.isIntersecting) player.playVideo();
-                else player.pauseVideo();
-              });
-            }, { threshold: 0.6 });
-            observer.observe(videoContainer);
-          }
+          observer.observe(videoContainer);
         }
-      });
-    };
-  } else videoSection.style.display = "none";
-}
+      }
+    });
+  };
+} else videoSection.style.display = "none";
 
+
+  
 // =================================================
 // 🔹 Fetch More Recipes
 // =================================================
