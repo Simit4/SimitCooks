@@ -453,7 +453,7 @@ font-size: var(--text-sm); /* slightly bigger */
 }
 
 .video-header h3 {
-  margin-top: 2.5rem;
+  margin-top: 0.5rem;
   font-family: 'Poppins', sans-serif;
   color: var(--primary);
   font-weight: 900;
