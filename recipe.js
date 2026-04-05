@@ -163,7 +163,6 @@ if (videoId && videoContainer) {
     }
   `;
   document.head.appendChild(style);
-}
 
     // Click → replace thumbnail with iframe
     wrapper.addEventListener("click", () => {
