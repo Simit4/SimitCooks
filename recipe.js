@@ -1,5 +1,5 @@
 // =================================================
-// recipe.js - Fixed: Video plays on click with autoplay
+// recipe.js - With Visible Play Icon + Autoplay
 // =================================================
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -48,7 +48,7 @@ function getRecipeThumbnail(recipe) {
 }
 
 // =================================================
-// Render Video Section (Fixed - plays on click)
+// Render Video Section (Visible Play Icon + Autoplay)
 // =================================================
 async function renderVideoSection(recipe) {
   const videoSection = document.getElementById('video-section');
@@ -68,6 +68,9 @@ async function renderVideoSection(recipe) {
   videoContainer.innerHTML = '';
   videoContainer.classList.remove('video-playing');
   
+  // Add a unique class for styling
+  videoContainer.classList.add('custom-video-container');
+  
   // Create thumbnail image
   const thumb = document.createElement('img');
   thumb.src = getRecipeThumbnail(recipe);
@@ -80,13 +83,76 @@ async function renderVideoSection(recipe) {
     height: 100%;
     object-fit: cover;
     z-index: 1;
-    pointer-events: none;
   `;
   videoContainer.appendChild(thumb);
   
-  // Create a play overlay button (visible, clickable)
-  const playOverlay = document.createElement('div');
-  playOverlay.style.cssText = `
+  // Create visible play button in the middle
+  const playButton = document.createElement('div');
+  playButton.innerHTML = '▶';
+  playButton.style.cssText = `
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: rgba(230, 126, 34, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
+    cursor: pointer;
+    z-index: 3;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    font-family: Arial, sans-serif;
+    padding-left: 8px;
+  `;
+  
+  // Add hover effect
+  playButton.addEventListener('mouseenter', () => {
+    playButton.style.transform = 'translate(-50%, -50%) scale(1.1)';
+    playButton.style.background = '#d35400';
+  });
+  playButton.addEventListener('mouseleave', () => {
+    playButton.style.transform = 'translate(-50%, -50%) scale(1)';
+    playButton.style.background = 'rgba(230, 126, 34, 0.9)';
+  });
+  
+  videoContainer.appendChild(playButton);
+  
+  // Add pulse animation to play button
+  const pulseAnimation = `
+    @keyframes pulseOrange {
+      0% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 0 0 rgba(230, 126, 34, 0.7);
+      }
+      70% {
+        transform: translate(-50%, -50%) scale(1.1);
+        box-shadow: 0 0 0 15px rgba(230, 126, 34, 0);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 0 0 rgba(230, 126, 34, 0);
+      }
+    }
+  `;
+  
+  if (!document.querySelector('#pulse-orange-style')) {
+    const style = document.createElement('style');
+    style.id = 'pulse-orange-style';
+    style.textContent = pulseAnimation;
+    document.head.appendChild(style);
+  }
+  
+  playButton.style.animation = 'pulseOrange 1.5s infinite';
+  
+  // Create click overlay (covers entire container)
+  const clickOverlay = document.createElement('div');
+  clickOverlay.style.cssText = `
     position: absolute;
     top: 0;
     left: 0;
@@ -94,20 +160,26 @@ async function renderVideoSection(recipe) {
     height: 100%;
     z-index: 2;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   `;
-  videoContainer.appendChild(playOverlay);
+  videoContainer.appendChild(clickOverlay);
   
-  // Add click handler to the overlay
-  playOverlay.addEventListener('click', function() {
-    // Add the playing class to stop pulse animation
+  // Function to play video
+  function playVideo() {
+    // Remove pulse animation
+    playButton.style.animation = 'none';
+    playButton.style.opacity = '0';
+    playButton.style.pointerEvents = 'none';
+    
+    // Add playing class to stop CSS pulse (if any)
     videoContainer.classList.add('video-playing');
     
-    // Create iframe with autoplay
+    // Remove the click overlay and play button
+    clickOverlay.remove();
+    playButton.remove();
+    
+    // Create and add iframe with autoplay
     const iframe = document.createElement('iframe');
-    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1`;
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1`;
     iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
     iframe.setAttribute('allowfullscreen', 'true');
     iframe.style.cssText = `
@@ -117,13 +189,21 @@ async function renderVideoSection(recipe) {
       width: 100%;
       height: 100%;
       border: none;
-      z-index: 3;
+      z-index: 10;
     `;
     
     // Clear container and add iframe
     videoContainer.innerHTML = '';
     videoContainer.appendChild(iframe);
+  }
+  
+  // Add click event to both play button and overlay
+  playButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    playVideo();
   });
+  
+  clickOverlay.addEventListener('click', playVideo);
 }
 
 // =================================================
