@@ -97,9 +97,8 @@ async function renderRecipe(recipe) {
     } else prompt('Copy this link to share:', recipeUrl);
   });
 
-  // =================================================
-  // 🔹 Video Section
-  // =================================================
+
+  
  // =================================================
 // 🔹 Video Section (Thumbnail + Reels Style)
 // =================================================
