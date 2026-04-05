@@ -4,7 +4,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 // 🔹 Supabase Config
 // =================================================
 const supabaseUrl = 'https://ozdwocrbrojtyogolqxn.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHdvY3Jicm9qdHlvZ29scXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzE5MzMsImV4cCI6MjA2NjE0NzkzM30.-MAiUtrdza-T2q8POxY-ZcZuZr5QYzFYq5yd-bVYzRQ';
+const supabaseKey = 'YOUR_SUPABASE_KEY';
 const supabase = createClient(supabaseUrl, supabaseKey);
 const FALLBACK_IMAGE = 'https://i.ibb.co/4p4mR3N/momo-graphic.png';
 
@@ -44,32 +44,10 @@ function getRecipeThumbnail(recipe) {
   return FALLBACK_IMAGE;
 }
 
-function formatNutrition(nutritionData) {
-  if (!nutritionData) return `<div class="nutrition-item"><div class="nutrition-value">N/A</div><div class="nutrition-label">Coming Soon</div></div>`;
-  let parsed = nutritionData;
-  if (typeof nutritionData === 'string') {
-    try { parsed = JSON.parse(nutritionData); } 
-    catch(e) { console.error('Nutrition parse failed', e); parsed = null; }
-  }
-  if (!parsed) return `<div class="nutrition-item"><div class="nutrition-value">N/A</div><div class="nutrition-label">Coming Soon</div></div>`;
-  const items = [];
-  const mapping = { calories: 'Calories', protein: 'Protein', carbohydrates: 'Carbs', carbs: 'Carbs', fat: 'Fat', fats: 'Fat', fiber: 'Fiber', sugar: 'Sugar', sodium: 'Sodium' };
-  for (const key in mapping) {
-    if (parsed[key] != null) items.push({ label: mapping[key], value: parsed[key] });
-  }
-  if (!items.length) return `<div class="nutrition-item"><div class="nutrition-value">N/A</div><div class="nutrition-label">Coming Soon</div></div>`;
-  return items.map(i => `<div class="nutrition-item"><div class="nutrition-value">${escapeHtml(i.value)}</div><div class="nutrition-label">${escapeHtml(i.label)}</div></div>`).join('');
-}
-
-function formatTags(tags) {
-  if (!tags?.length) return '<span class="tag">No tags</span>';
-  return tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
-}
-
 // =================================================
 // 🔹 Render Recipe
 // =================================================
-function renderRecipe(recipe) {
+async function renderRecipe(recipe) {
   if (!recipe) return;
 
   document.getElementById('recipe-title').innerText = recipe.title || 'Untitled Recipe';
@@ -80,7 +58,7 @@ function renderRecipe(recipe) {
 
   // Ingredients
   const ingList = document.getElementById('ingredients-list');
-  if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
+  if (recipe.ingredients?.length) {
     if (typeof recipe.ingredients[0] === 'object' && recipe.ingredients[0].items) {
       ingList.innerHTML = recipe.ingredients.map(section => {
         const title = escapeHtml(section.section || '');
@@ -91,107 +69,106 @@ function renderRecipe(recipe) {
       const items = recipe.ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('');
       ingList.innerHTML = `<ul class="green-bullets">${items}</ul>`;
     }
-  } else {
-    ingList.innerHTML = '<li>No ingredients listed</li>';
-  }
+  } else ingList.innerHTML = '<li>No ingredients listed</li>';
 
   // Method
   const methodList = document.getElementById('method-list');
-  if (recipe.method?.length) methodList.innerHTML = recipe.method.map(s => `<li>${escapeHtml(s)}</li>`).join('');
-  else methodList.innerHTML = '<li>No instructions available</li>';
+  methodList.innerHTML = recipe.method?.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>No instructions available</li>';
 
-  // History & Overview
+  // Info sections
   document.getElementById("history-overview").textContent = recipe.history_overview || '';
-
-  // Categories & Cuisine
-  const catDiv = document.getElementById('category');
-  if (recipe.category) catDiv.innerHTML = Array.isArray(recipe.category) ? recipe.category.map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('') : `<span class="tag">${escapeHtml(recipe.category)}</span>`;
-
-  const cuisineDiv = document.getElementById('cuisine');
-  if (recipe.cuisine) cuisineDiv.innerHTML = Array.isArray(recipe.cuisine) ? recipe.cuisine.map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('') : `<span class="tag">${escapeHtml(recipe.cuisine)}</span>`;
-
-  // Notes & Facts
   document.getElementById('notes').innerText = recipe.notes || 'No additional notes.';
   document.getElementById('facts').innerText = recipe.facts || 'Did you know? This recipe is made with love!';
 
-  // Print + Share Buttons
-  const shareButton = document.getElementById('universal-share');
-  const printButton = document.querySelector('.btn-action[onclick*="window.print"]');
+  const catDiv = document.getElementById('category');
+  if (recipe.category) catDiv.innerHTML = Array.isArray(recipe.category) ? recipe.category.map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('') : `<span class="tag">${escapeHtml(recipe.category)}</span>`;
+  
+  const cuisineDiv = document.getElementById('cuisine');
+  if (recipe.cuisine) cuisineDiv.innerHTML = Array.isArray(recipe.cuisine) ? recipe.cuisine.map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('') : `<span class="tag">${escapeHtml(recipe.cuisine)}</span>`;
 
-  if (shareButton) {
-    shareButton.addEventListener('click', async () => {
-      const recipeTitle = document.getElementById('recipe-title').textContent;
-      const recipeUrl = window.location.href;
-      if (navigator.share) {
-        try {
-          await navigator.share({ title: recipeTitle, text: `Check out this recipe: ${recipeTitle}`, url: recipeUrl });
-        } catch (err) { console.error('Error sharing:', err); }
-      } else { prompt('Copy this link to share:', recipeUrl); }
-    });
-  }
-  if (printButton) { printButton.addEventListener('click', () => window.print()); }
+  // Share button
+  document.getElementById('universal-share')?.addEventListener('click', async () => {
+    const recipeTitle = document.getElementById('recipe-title').textContent;
+    const recipeUrl = window.location.href;
+    if (navigator.share) {
+      try { await navigator.share({ title: recipeTitle, text: `Check out this recipe: ${recipeTitle}`, url: recipeUrl }); } 
+      catch (err) { console.error(err); }
+    } else prompt('Copy this link to share:', recipeUrl);
+  });
 
   // =================================================
-  // 🔹 Video Section Setup (Instagram Reels + Scroll)
+  // 🔹 Video Section - TikTok/Instagram style
   // =================================================
-  const videoSection = document.getElementById("video-section");
-  const videoContainer = document.getElementById("video-container");
+  const videoSection = document.getElementById('video-section');
+  const videoContainer = document.getElementById('video-container');
   const videoId = extractYouTubeId(recipe.video_url);
 
   if (videoId && videoSection && videoContainer) {
     videoSection.style.display = "block";
-
     videoContainer.innerHTML = `
-      <iframe 
-        id="recipeVideo"
-        src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&mute=1&controls=0&rel=0&playsinline=1"
-        allow="autoplay; encrypted-media"
-        frameborder="0">
-      </iframe>
+      <div class="video-player-wrapper" style="position:relative;">
+        <div id="player"></div>
+        <div id="play-overlay" style="
+          position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+          cursor:pointer;">
+          <div class="play-icon" style="
+            width:64px; height:64px; border-radius:50%; background:rgba(255,127,80,0.8);
+            display:flex; align-items:center; justify-content:center; font-size:2rem; color:white;
+            animation: pulse 1.2s infinite;">
+            ▶
+          </div>
+        </div>
+      </div>
     `;
 
-    const iframe = document.getElementById("recipeVideo");
+    // Load YouTube API Player
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
 
-    function postMessage(action) {
-      if (!iframe || !iframe.contentWindow) return;
-      iframe.contentWindow.postMessage(JSON.stringify({ event:"command", func: action, args: [] }), "*");
-    }
+    let playerInstance;
+    window.onYouTubeIframeAPIReady = () => {
+      playerInstance = new YT.Player('player', {
+        videoId,
+        playerVars: { autoplay: 1, mute: 1, controls: 0, rel: 0, playsinline: 1 },
+        events: {
+          onReady: (e) => e.target.playVideo(),
+          onStateChange: (e) => {
+            const overlay = document.getElementById('play-overlay');
+            if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) overlay.style.display = 'flex';
+            else overlay.style.display = 'none';
+          }
+        }
+      });
 
-    // Hover play/pause
-    videoContainer.addEventListener("mouseenter", () => postMessage("playVideo"));
-    videoContainer.addEventListener("mouseleave", () => postMessage("pauseVideo"));
+      // Click overlay → unmute & play with controls
+      document.getElementById('play-overlay').addEventListener('click', () => {
+        playerInstance.unMute();
+        playerInstance.playVideo();
+        playerInstance.setPlaybackQuality('hd1080');
+        playerInstance.getIframe().setAttribute('allow', 'autoplay; encrypted-media');
+        playerInstance.getIframe().setAttribute('controls', '1');
+      });
 
-    // Scroll-into-view play/pause
-    if ('IntersectionObserver' in window && iframe) {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) postMessage("playVideo");
-          else postMessage("pauseVideo");
-        });
-      }, { threshold: 0.5 });
-      observer.observe(videoContainer);
-    }
+      // Optional: pause when out of view
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) playerInstance.playVideo();
+            else playerInstance.pauseVideo();
+          });
+        }, { threshold: 0.5 });
+        observer.observe(videoContainer);
+      }
+    };
 
-    // Click → full YouTube with controls
-    videoContainer.addEventListener("click", () => {
-      videoContainer.innerHTML = `
-        <iframe 
-          src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1"
-          allow="autoplay; encrypted-media"
-          frameborder="0">
-        </iframe>
-      `;
-    });
-
-    // Pause on tab inactive
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) postMessage("pauseVideo");
-    });
-
+    // Add pulse animation CSS
+    const styleTag = document.createElement('style');
+    styleTag.textContent = `
+      @keyframes pulse { 0% { transform: scale(1); opacity:1 } 50% { transform: scale(1.15); opacity:0.7 } 100% { transform: scale(1); opacity:1 } }
+    `;
+    document.head.appendChild(styleTag);
   } else if (videoSection) videoSection.style.display = "none";
-
-  // Set page title
-  document.title = `${recipe.title} | Simit Cooks`;
 }
 
 // =================================================
@@ -206,7 +183,6 @@ async function fetchMoreRecipes(slug) {
     const thumb = getRecipeThumbnail(r);
     const title = r.title || 'Untitled';
     const desc = r.description || 'Delicious recipe';
-    const cat = Array.isArray(r.category) ? r.category[0] : r.category || '';
     return `<div class="recipe-card" onclick="window.location.href='/recipe/${r.slug}'">
       <div class="thumbnail-wrapper"><img src="${thumb}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.src='${FALLBACK_IMAGE}'"></div>
       <div class="card-body"><h4>${escapeHtml(title)}</h4><p>${escapeHtml(desc.substring(0,80))}${desc.length>80?'...':''}</p></div>
@@ -227,14 +203,8 @@ async function init() {
   renderRecipe(recipe);
   fetchMoreRecipes(slug);
 
-  // Increment views
   await supabase.from('recipe_db').update({ views: (recipe.views || 0) + 1 }).eq('slug', slug);
 }
 
 // Start
 init();
-
-// =================================================
-// 🔹 Debug Helpers
-// =================================================
-window.recipeDebug = { supabase, getSlug, escapeHtml, extractYouTubeId, getRecipeThumbnail, renderRecipe };
