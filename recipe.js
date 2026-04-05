@@ -150,16 +150,61 @@ function renderRecipe(recipe) {
     });
   }
 
-  // Video
-  if (recipe.video_url) {
-    const vidSection = document.getElementById('video-section');
-    const vidContainer = document.getElementById('video-container');
-    const videoId = extractYouTubeId(recipe.video_url);
-    if (videoId) {
-      vidSection.style.display = 'block';
-      vidContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0&modestbranding=1" allowfullscreen></iframe>`;
-    }
+// =================================================
+// 🔹 Video Section Setup (Instagram Reels Style)
+// =================================================
+
+const videoId = "YOUR_VIDEO_ID"; // 👉 replace this
+const videoSection = document.getElementById("video-section");
+const videoContainer = document.getElementById("video-container");
+
+// Show section if video exists
+if (videoId && videoSection && videoContainer) {
+  videoSection.style.display = "block";
+
+  // Inject iframe
+  videoContainer.innerHTML = `
+    <iframe 
+      id="recipeVideo"
+      src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&mute=1&controls=0&rel=0&playsinline=1"
+      allow="autoplay; encrypted-media"
+      frameborder="0">
+    </iframe>
+  `;
+
+  const iframe = document.getElementById("recipeVideo");
+
+  // Function to control video
+  function postMessage(action) {
+    if (!iframe || !iframe.contentWindow) return;
+
+    iframe.contentWindow.postMessage(JSON.stringify({
+      event: "command",
+      func: action,
+      args: []
+    }), "*");
   }
+
+  // Hover play
+  videoContainer.addEventListener("mouseenter", () => {
+    postMessage("playVideo");
+  });
+
+  // Hover pause
+  videoContainer.addEventListener("mouseleave", () => {
+    postMessage("pauseVideo");
+  });
+
+  // Optional: Pause when tab inactive (pro touch)
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      postMessage("pauseVideo");
+    }
+  });
+
+} else {
+  console.warn("Video section not loaded - missing elements or videoId");
+}
 
   // Page title
   document.title = `${recipe.title} | Simit Cooks`;
