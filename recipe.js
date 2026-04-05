@@ -105,51 +105,65 @@ async function renderRecipe(recipe) {
   const videoContainer = document.getElementById("video-container");
   const videoId = extractYouTubeId(recipe.video_url);
 
-  if (videoId && videoContainer) {
-    videoSection.style.display = "block";
-    videoContainer.innerHTML = "";
+// Video wrapper fixed for true 16:9
+if (videoId && videoContainer) {
+  videoSection.style.display = "block";
+  videoContainer.innerHTML = "";
 
-    const wrapper = document.createElement("div");
-    wrapper.style.position = "relative";
-    wrapper.style.width = "100%";
-    wrapper.style.paddingTop = "56.25%"; // 16:9
-    wrapper.style.cursor = "pointer";
-    videoContainer.appendChild(wrapper);
+  const wrapper = document.createElement("div");
+  wrapper.style.position = "relative";
+  wrapper.style.width = "100%";
+  wrapper.style.height = "0";
+  wrapper.style.paddingBottom = "56.25%"; // 16:9
+  wrapper.style.cursor = "pointer";
+  videoContainer.appendChild(wrapper);
 
-    // Thumbnail
-    const thumb = document.createElement("img");
-    thumb.src = getRecipeThumbnail(recipe);
-    thumb.style.position = "absolute";
-    thumb.style.top = "0";
-    thumb.style.left = "0";
-    thumb.style.width = "100%";
-    thumb.style.height = "100%";
-    thumb.style.objectFit = "cover";
-    wrapper.appendChild(thumb);
+  // Thumbnail
+  const thumb = document.createElement("img");
+  thumb.src = getRecipeThumbnail(recipe);
+  thumb.style.position = "absolute";
+  thumb.style.top = "0";
+  thumb.style.left = "0";
+  thumb.style.width = "100%";
+  thumb.style.height = "100%";
+  thumb.style.objectFit = "cover";
+  wrapper.appendChild(thumb);
 
-    // Pulse play button
-    const playBtn = document.createElement("div");
-    playBtn.innerText = "▶";
-    playBtn.style.position = "absolute";
-    playBtn.style.top = "50%";
-    playBtn.style.left = "50%";
-    playBtn.style.transform = "translate(-50%, -50%)";
-    playBtn.style.fontSize = "3rem";
-    playBtn.style.color = "rgba(255,255,255,0.9)";
-    playBtn.style.textShadow = "0 0 10px rgba(0,0,0,0.5)";
-    playBtn.style.animation = "pulse 1.2s infinite";
-    wrapper.appendChild(playBtn);
+  // Pulse play button
+  const playBtn = document.createElement("div");
+  playBtn.innerText = "▶";
+  playBtn.style.position = "absolute";
+  playBtn.style.top = "50%";
+  playBtn.style.left = "50%";
+  playBtn.style.transform = "translate(-50%, -50%)";
+  playBtn.style.fontSize = "3rem";
+  playBtn.style.color = "rgba(255,255,255,0.9)";
+  playBtn.style.textShadow = "0 0 10px rgba(0,0,0,0.5)";
+  playBtn.style.animation = "pulse 1.2s infinite";
+  wrapper.appendChild(playBtn);
 
-    // Pulse keyframes
-    const style = document.createElement("style");
-    style.innerHTML = `
-      @keyframes pulse {
-        0% { transform: translate(-50%, -50%) scale(1); }
-        50% { transform: translate(-50%, -50%) scale(1.2); }
-        100% { transform: translate(-50%, -50%) scale(1); }
-      }
-    `;
-    document.head.appendChild(style);
+  // Click → iframe
+  wrapper.addEventListener("click", () => {
+    wrapper.innerHTML = `<iframe
+      src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0"
+      style="position:absolute;top:0;left:0;width:100%;height:100%;"
+      frameborder="0"
+      allow="autoplay; fullscreen; encrypted-media"
+      allowfullscreen>
+    </iframe>`;
+  });
+
+  // Add pulse animation keyframes
+  const style = document.createElement("style");
+  style.innerHTML = `
+    @keyframes pulse {
+      0% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.2); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+  `;
+  document.head.appendChild(style);
+}
 
     // Click → replace thumbnail with iframe
     wrapper.addEventListener("click", () => {
