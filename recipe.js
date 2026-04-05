@@ -97,63 +97,40 @@ async function renderRecipe(recipe) {
     } else prompt('Copy this link to share:', recipeUrl);
   });
 
+  // =================================================
+  // 🔹 Video Section
+  // =================================================
+  const videoSection = document.getElementById("video-section");
+  const videoContainer = document.getElementById("video-container");
+  const videoId = extractYouTubeId(recipe.video_url); // auto-fetch from recipe
 
-  
- // =================================================
-// 🔹 Video Section (Thumbnail + Reels Style)
-// =================================================
-const videoSection = document.getElementById("video-section");
-const videoContainer = document.getElementById("video-container");
-const videoId = extractYouTubeId(recipe.video_url);
+  if (videoId && videoContainer && videoContainer.children.length === 0) {
+    const iframe = document.createElement("iframe");
+    iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&autoplay=1&mute=1&playsinline=1`;
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    iframe.allowFullscreen = true;
+    videoContainer.appendChild(iframe);
+    videoSection.style.display = "block";
 
-if (videoId && videoContainer) {
-  videoSection.style.display = "block";
-
-  // 🔹 Step 1: Show thumbnail first
-  videoContainer.innerHTML = `
-    <div class="video-thumbnail" style="
-      position:absolute;
-      inset:0;
-      background:url('https://img.youtube.com/vi/${videoId}/maxresdefault.jpg') center/cover no-repeat;
-    "></div>
-  `;
-
-  let isLoaded = false;
-
-  function loadVideo(muted = true) {
-    if (isLoaded) return;
-    isLoaded = true;
-
-    videoContainer.innerHTML = `
-      <iframe 
-        src="https://www.youtube.com/embed/${videoId}?autoplay=1&${muted ? "mute=1&" : ""}playsinline=1&rel=0"
-        allow="autoplay; encrypted-media"
-        frameborder="0">
-      </iframe>
-    `;
-  }
-
-  // 🔹 Scroll → autoplay muted
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        loadVideo(true);
-      }
+    // Click-to-unmute
+    videoContainer.addEventListener("click", () => {
+      iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&autoplay=1&playsinline=1`;
+      videoContainer.style.pointerEvents = "none"; // disable further clicks
     });
-  }, { threshold: 0.5 });
 
-  observer.observe(videoContainer);
-
-  // 🔹 Click → unmute + play
-  videoContainer.addEventListener("click", () => {
-    videoContainer.innerHTML = `
-      <iframe 
-        src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0"
-        allow="autoplay; encrypted-media"
-        frameborder="0">
-      </iframe>
-    `;
-  });
+    // Auto-play only when visible
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&autoplay=1&mute=1&playsinline=1`;
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(videoContainer);
+  }
 }
 
 // =================================================
