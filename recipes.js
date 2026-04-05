@@ -339,7 +339,7 @@ const createRecipeCard = (recipe) => {
       />
     </div>
     <div class="card-body">
-      <h4>${escapeHtml(title)}</h4>
+      <h3>${escapeHtml(title)}</h3>
       <p>${escapeHtml(description)}</p>
       
     </div>
@@ -357,7 +357,7 @@ const showNoResults = () => {
   elements.container.innerHTML = `
     <div class="no-results">
       <i class="fas fa-search"></i>
-      <h4>No Recipes Found</h4>
+      <h3>No Recipes Found</h3>
       <p>We couldn't find any ${escapeHtml(filterName)}${searchTerm}.</p>
       <button onclick="location.reload()" class="retry-btn">
         <i class="fas fa-sync-alt"></i> Show All Recipes
@@ -372,7 +372,7 @@ const showError = (message) => {
   elements.container.innerHTML = `
     <div class="error-message">
       <i class="fas fa-exclamation-triangle"></i>
-      <h4>Something Went Wrong</h4>
+      <h3>Something Went Wrong</h3>
       <p>${escapeHtml(message)}</p>
       <button onclick="location.reload()" class="retry-btn">
         <i class="fas fa-sync-alt"></i> Try Again
