@@ -159,30 +159,31 @@
 
 
 
-.recipe-card h4 {
+.recipe-card h3 {
   font-size: 1.2rem;
-  font-weight: 800;
-  margin-bottom: var(--space-sm);
+  margin-bottom: 0.5rem;
   color: var(--secondary);
+  font-weight: 700;
   transition: color var(--transition-base);
-  text-align: center;
+ 
 }
 
-.recipe-card:hover h4 {
+.recipe-card:hover h3 {
   color: var(--primary);
 }
 
 .recipe-card p {
-  font-size: var(--text-sm);
-  color: var(--neutral-500);
+  font-size: 0.85rem;
+  color: var(--muted);
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  line-height: 1.5;
-  margin-bottom: var(--space-md);
-  text-align: center;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+   
 }
+
 
 /* Category Wrapper - Centers the badge */
 .category-wrapper {
