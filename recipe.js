@@ -1,6 +1,5 @@
 // =================================================
-// recipe.js - Full Updated Version
-// Works with your existing CSS (pulse animation, video-playing class)
+// recipe.js - Fixed: Video plays on click with autoplay
 // =================================================
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -49,7 +48,7 @@ function getRecipeThumbnail(recipe) {
 }
 
 // =================================================
-// Render Video Section (works with your existing CSS)
+// Render Video Section (Fixed - plays on click)
 // =================================================
 async function renderVideoSection(recipe) {
   const videoSection = document.getElementById('video-section');
@@ -81,18 +80,32 @@ async function renderVideoSection(recipe) {
     height: 100%;
     object-fit: cover;
     z-index: 1;
+    pointer-events: none;
   `;
   videoContainer.appendChild(thumb);
   
-  // Store video ID for click handler
-  videoContainer.dataset.videoId = videoId;
+  // Create a play overlay button (visible, clickable)
+  const playOverlay = document.createElement('div');
+  playOverlay.style.cssText = `
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
+  videoContainer.appendChild(playOverlay);
   
-  // Remove any existing click listener and add new one
-  const clickHandler = () => {
-    // Add the playing class to stop pulse animation (your CSS handles this)
+  // Add click handler to the overlay
+  playOverlay.addEventListener('click', function() {
+    // Add the playing class to stop pulse animation
     videoContainer.classList.add('video-playing');
     
-    // Create iframe
+    // Create iframe with autoplay
     const iframe = document.createElement('iframe');
     iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0&modestbranding=1`;
     iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
@@ -104,15 +117,13 @@ async function renderVideoSection(recipe) {
       width: 100%;
       height: 100%;
       border: none;
-      z-index: 2;
+      z-index: 3;
     `;
     
     // Clear container and add iframe
     videoContainer.innerHTML = '';
     videoContainer.appendChild(iframe);
-  };
-  
-  videoContainer.addEventListener('click', clickHandler, { once: true });
+  });
 }
 
 // =================================================
@@ -190,7 +201,6 @@ async function renderRecipe(recipe) {
   // Share button
   const shareBtn = document.getElementById('universal-share');
   if (shareBtn) {
-    // Remove existing listeners to avoid duplicates
     const newShareBtn = shareBtn.cloneNode(true);
     shareBtn.parentNode.replaceChild(newShareBtn, shareBtn);
     
@@ -212,12 +222,15 @@ async function renderRecipe(recipe) {
   // Print button
   const printBtn = document.querySelector('.btn-action[onclick="window.print()"]');
   if (printBtn) {
-    printBtn.addEventListener('click', () => {
+    const newPrintBtn = printBtn.cloneNode(true);
+    printBtn.parentNode.replaceChild(newPrintBtn, printBtn);
+    newPrintBtn.addEventListener('click', (e) => {
+      e.preventDefault();
       window.print();
     });
   }
 
-  // Render video section (works with your CSS)
+  // Render video section
   await renderVideoSection(recipe);
 }
 
@@ -258,60 +271,9 @@ async function fetchMoreRecipes(slug) {
 }
 
 // =================================================
-// Ensure CSS animations are applied
-// =================================================
-function ensurePulseAnimation() {
-  // Check if pulse animation style exists, if not add it
-  if (!document.querySelector('#pulse-animation-style')) {
-    const style = document.createElement('style');
-    style.id = 'pulse-animation-style';
-    style.textContent = `
-      @keyframes pulsePlay {
-        0% {
-          transform: translate(-50%, -50%) scale(1);
-          opacity: 0.9;
-        }
-        50% {
-          transform: translate(-50%, -50%) scale(1.25);
-          opacity: 1;
-        }
-        100% {
-          transform: translate(-50%, -50%) scale(1);
-          opacity: 0.9;
-        }
-      }
-      
-      .video-container::after {
-        content: '▶';
-        font-size: 3rem;
-        color: rgba(255, 255, 255, 0.9);
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(1);
-        transition: transform 0.3s ease, color 0.3s ease;
-        text-shadow: 0 0 10px rgba(0,0,0,0.5);
-        pointer-events: none;
-        animation: pulsePlay 1.5s infinite;
-        z-index: 2;
-      }
-      
-      .video-container.video-playing::after {
-        opacity: 0;
-        animation: none;
-      }
-    `;
-    document.head.appendChild(style);
-  }
-}
-
-// =================================================
 // Initialize
 // =================================================
 async function init() {
-  // Ensure pulse animation styles are applied
-  ensurePulseAnimation();
-  
   const slug = getSlug();
   
   if (!slug) {
@@ -343,7 +305,7 @@ async function init() {
   // Fetch more recipes
   await fetchMoreRecipes(slug);
 
-  // Increment view count (non-blocking)
+  // Increment view count
   supabase
     .from('recipe_db')
     .update({ views: (recipe.views || 0) + 1 })
@@ -352,7 +314,7 @@ async function init() {
     .catch(err => console.error('View update failed:', err));
 }
 
-// Wait for DOM to be fully loaded before initializing
+// Start
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
