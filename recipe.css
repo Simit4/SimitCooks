@@ -620,7 +620,7 @@ font-size: var(--text-sm); /* slightly bigger */
   transform: scale(1.08);
 }
 
-/* Card Body - CENTERED CONTENT */
+
 .card-body {
   padding: var(--space-xl);
   background: white;
@@ -662,11 +662,6 @@ font-size: var(--text-sm); /* slightly bigger */
 
 
 
-.recipe-card:hover {
-  background: var(--primary);
-  color: white;
-  transform: translateY(-2px);
-}
 
 /* =================================================
    🔹 Animations
