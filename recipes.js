@@ -13,17 +13,34 @@ const CONFIG = {
 };
 
 // =================================================
-// 🔹 Category Mapping - Group similar categories
+// 🔹 Category Mapping
 // =================================================
 const CATEGORY_MAP = {
-  'main': 'Main', 'main dish': 'Main', 'entree': 'Main', 'curry': 'Main', 'rice': 'Main', 'noodle': 'Main',
-  'sauce': 'Sauce', 'dip': 'Sauce', 'chutney': 'Sauce', 'condiment': 'Sauce', 'jhol': 'Sauce',
-  'side': 'Side', 'accompaniment': 'Side', 'salad': 'Side',
-  'dessert': 'Dessert', 'sweet': 'Dessert',
-  'snack': 'Snack', 'appetizer': 'Snack', 'starter': 'Snack', 'street food': 'Snack',
+  'main': 'Main',
+  'main dish': 'Main',
+  'entree': 'Main',
+  'curry': 'Main',
+  'rice': 'Main',
+  'noodle': 'Main',
+  'sauce': 'Sauce',
+  'dip': 'Sauce',
+  'chutney': 'Sauce',
+  'condiment': 'Sauce',
+  'jhol': 'Sauce',
+  'side': 'Side',
+  'accompaniment': 'Side',
+  'salad': 'Side',
+  'dessert': 'Dessert',
+  'sweet': 'Dessert',
+  'snack': 'Snack',
+  'appetizer': 'Snack',
+  'starter': 'Snack',
+  'street food': 'Snack',
   'breakfast': 'Breakfast',
-  'beverage': 'Beverage', 'drink': 'Beverage',
-  'festival': 'Festival', 'special': 'Festival'
+  'beverage': 'Beverage',
+  'drink': 'Beverage',
+  'festival': 'Festival',
+  'special': 'Festival'
 };
 
 // =================================================
@@ -64,36 +81,60 @@ const safeText = (value, defaultValue = '') => {
 
 const getMappedCategory = (rawCategory) => {
   const lowerCat = safeText(rawCategory).toLowerCase();
-  return CATEGORY_MAP[lowerCat] || (lowerCat.charAt(0).toUpperCase() + lowerCat.slice(1));
+  const mapped = CATEGORY_MAP[lowerCat];
+  if (mapped) return mapped;
+
+  const capitalized = lowerCat.charAt(0).toUpperCase() + lowerCat.slice(1);
+  if (['Main','Sauce','Side','Dessert','Snack','Breakfast','Beverage','Festival'].includes(capitalized)) {
+    return capitalized;
+  }
+  return null;
 };
 
 const getRecipeCategories = (recipe) => {
   if (!recipe.category) return [];
-  const rawCategories = Array.isArray(recipe.category) ? recipe.category : [recipe.category];
-  const mapped = new Set();
-  rawCategories.forEach(cat => { const m = getMappedCategory(cat); if (m) mapped.add(m); });
-  return Array.from(mapped);
+  let rawCategories = [];
+  if (Array.isArray(recipe.category)) rawCategories = recipe.category;
+  else if (typeof recipe.category === 'string') rawCategories = [recipe.category];
+
+  const mappedCategories = new Set();
+  rawCategories.forEach(cat => {
+    const mapped = getMappedCategory(cat);
+    if (mapped) mappedCategories.add(mapped);
+  });
+  return Array.from(mappedCategories);
 };
 
 const extractExistingCategories = (recipes) => {
   const categorySet = new Set();
-  recipes.forEach(recipe => getRecipeCategories(recipe).forEach(cat => categorySet.add(cat)));
-  const orderPriority = { 'Main':1,'Sauce':2,'Side':3,'Dessert':4,'Snack':5,'Breakfast':6,'Beverage':7,'Festival':8 };
-  return Array.from(categorySet).sort((a,b)=>{
-    const pa = orderPriority[a]||99, pb = orderPriority[b]||99;
-    return pa!==pb ? pa-pb : a.localeCompare(b);
+  recipes.forEach(recipe => {
+    getRecipeCategories(recipe).forEach(cat => {
+      if (cat && cat !== '') categorySet.add(cat);
+    });
+  });
+
+  const orderPriority = {
+    'Main': 1, 'Sauce': 2, 'Side': 3, 'Dessert': 4,
+    'Snack': 5, 'Breakfast': 6, 'Beverage': 7, 'Festival': 8
+  };
+
+  return Array.from(categorySet).sort((a,b) => {
+    const pa = orderPriority[a] || 99;
+    const pb = orderPriority[b] || 99;
+    return pa !== pb ? pa - pb : a.localeCompare(b);
   });
 };
 
 const matchesCategory = (recipe, filterValue) => {
   if (filterValue === 'all') return true;
-  return getRecipeCategories(recipe).includes(filterValue);
+  const categories = getRecipeCategories(recipe);
+  return categories.includes(filterValue);
 };
 
 const escapeHtml = (text) => {
   const safe = safeText(text);
   const map = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'};
-  return safe.replace(/[&<>"'/`=]/g,char => map[char]);
+  return safe.replace(/[&<>"'/`=]/g, char => map[char]);
 };
 
 const extractYouTubeId = (url) => {
@@ -103,30 +144,43 @@ const extractYouTubeId = (url) => {
     /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]{11})/,
     /^([a-zA-Z0-9_-]{11})$/
   ];
-  for (const p of patterns){const m = url.match(p); if(m?.[1]) return m[1];}
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m?.[1]) return m[1];
+  }
   return null;
 };
 
 const getThumbnail = (recipe) => {
   if (recipe.thumbnail_url?.trim()) return recipe.thumbnail_url;
-  const vid = extractYouTubeId(recipe.video_url);
-  return vid ? `https://img.youtube.com/vi/${vid}/maxresdefault.jpg` : CONFIG.fallbackImage;
+  const videoId = extractYouTubeId(recipe.video_url);
+  if (videoId) return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  return CONFIG.fallbackImage;
 };
 
 const isValidRecipe = (recipe) => recipe && typeof recipe === 'object' && (recipe.title || recipe.slug);
 
 // =================================================
-// 🔹 Filter Buttons
+// 🔹 UI Components - Filters
 // =================================================
 const createFilterButtons = () => {
   if (!elements.filterContainer) return;
   elements.filterContainer.innerHTML = '';
-  const allBtn = document.createElement('button'); allBtn.className='filter-btn active'; allBtn.setAttribute('data-filter','all'); allBtn.textContent='All';
+
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-btn active';
+  allBtn.setAttribute('data-filter','all');
+  allBtn.textContent = 'All';
   elements.filterContainer.appendChild(allBtn);
+
   state.categories.forEach(cat => {
-    const btn = document.createElement('button'); btn.className='filter-btn'; btn.setAttribute('data-filter',cat); btn.textContent=cat;
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.setAttribute('data-filter', cat);
+    btn.textContent = cat;
     elements.filterContainer.appendChild(btn);
   });
+
   attachFilterListeners();
 };
 
@@ -139,90 +193,156 @@ const attachFilterListeners = () => {
 
 const handleFilterClick = (e) => {
   const btn = e.currentTarget;
-  state.currentFilter = btn.getAttribute('data-filter');
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
-  if(elements.searchInput){elements.searchInput.value=''; state.currentSearch='';}
+  const filterValue = btn.getAttribute('data-filter');
+  if (!filterValue) return;
+
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  state.currentFilter = filterValue;
+  if (elements.searchInput) {
+    elements.searchInput.value = '';
+    state.currentSearch = '';
+  }
+
   renderRecipes();
 };
 
 // =================================================
-// 🔹 Recipe Cards & Loading
+// 🔹 UI Components - Cards & Skeletons
 // =================================================
 const createSkeleton = () => {
-  const sk = document.createElement('div'); sk.className='recipe-card skeleton-card'; sk.setAttribute('aria-label','Loading...');
-  sk.innerHTML = `<div class="thumbnail-wrapper skeleton-thumbnail"></div><div class="card-body"><div class="skeleton-title"></div><div class="skeleton-text"></div><div class="skeleton-text" style="width:60%"></div></div>`;
-  return sk;
+  const s = document.createElement('div');
+  s.className = 'recipe-card skeleton-card';
+  s.setAttribute('aria-label','Loading recipe...');
+  s.innerHTML = `
+    <div class="thumbnail-wrapper skeleton-thumbnail"></div>
+    <div class="card-body">
+      <div class="skeleton-title"></div>
+      <div class="skeleton-text"></div>
+      <div class="skeleton-text" style="width:60%"></div>
+    </div>
+  `;
+  return s;
 };
 
 const showLoading = () => {
   if (!elements.container || state.isLoading) return;
-  state.isLoading = true; elements.container.innerHTML=''; elements.container.classList.add('loading');
-  for(let i=0;i<CONFIG.skeletonCount;i++){elements.container.appendChild(createSkeleton());}
+  state.isLoading = true;
+  elements.container.innerHTML = '';
+  elements.container.classList.add('loading');
+  for (let i=0;i<CONFIG.skeletonCount;i++) elements.container.appendChild(createSkeleton());
 };
 
-const hideLoading = () => { if(!elements.container) return; state.isLoading=false; elements.container.classList.remove('loading'); };
+const hideLoading = () => {
+  if (!elements.container) return;
+  state.isLoading = false;
+  elements.container.classList.remove('loading');
+};
 
 const createRecipeCard = (recipe) => {
   if (!isValidRecipe(recipe)) return null;
   const title = safeText(recipe.title,'Untitled Recipe');
-  const desc = safeText(recipe.description,'Delicious home-style recipe made with love.');
+  const description = safeText(recipe.description,'Delicious home-style recipe made with love.');
   const categories = getRecipeCategories(recipe);
   const slug = safeText(recipe.slug);
   const thumbnail = getThumbnail(recipe);
 
-  const card = document.createElement('div'); card.className='recipe-card'; card.setAttribute('data-slug',slug); card.setAttribute('data-categories',categories.join(','));
-  card.addEventListener('click',(e)=>{ e.preventDefault(); if(slug) window.location.href=`/recipe/${slug}`; });
-  card.innerHTML=`
-    <div class="thumbnail-wrapper"><img src="${thumbnail}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.src='${CONFIG.fallbackImage}'"/></div>
-    <div class="card-body"><h3>${escapeHtml(title)}</h3><p>${escapeHtml(desc)}</p></div>
+  const card = document.createElement('div');
+  card.className = 'recipe-card';
+  card.setAttribute('data-slug',slug);
+  card.setAttribute('data-categories',categories.join(','));
+
+  card.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (slug) window.location.href = `/recipe/${slug}`;
+  });
+
+  card.innerHTML = `
+    <div class="thumbnail-wrapper">
+      <img src="${thumbnail}" alt="${escapeHtml(title)}" loading="lazy" onerror="this.src='${CONFIG.fallbackImage}'"/>
+    </div>
+    <div class="card-body">
+      <h3>${escapeHtml(title)}</h3>
+      <p>${escapeHtml(description)}</p>
+    </div>
   `;
+
   return card;
 };
 
 const showNoResults = () => {
-  if(!elements.container) return;
+  if (!elements.container) return;
   const filterName = state.currentFilter==='all'?'recipes':state.currentFilter;
-  const searchTerm = state.currentSearch?` matching "${escapeHtml(state.currentSearch)}"`:'';
-  elements.container.innerHTML=`<div class="no-results"><i class="fas fa-search"></i><h3>No Recipes Found</h3><p>We couldn't find any ${escapeHtml(filterName)}${searchTerm}.</p><button onclick="location.reload()" class="retry-btn"><i class="fas fa-sync-alt"></i> Show All Recipes</button></div>`;
+  const searchTerm = state.currentSearch ? ` matching "${escapeHtml(state.currentSearch)}"` : '';
+  elements.container.innerHTML = `
+    <div class="no-results">
+      <i class="fas fa-search"></i>
+      <h3>No Recipes Found</h3>
+      <p>We couldn't find any ${escapeHtml(filterName)}${searchTerm}.</p>
+      <button onclick="location.reload()" class="retry-btn">
+        <i class="fas fa-sync-alt"></i> Show All Recipes
+      </button>
+    </div>
+  `;
 };
 
-const showError = (msg) => {
-  if(!elements.container) return;
-  elements.container.innerHTML=`<div class="error-message"><i class="fas fa-exclamation-triangle"></i><h3>Something Went Wrong</h3><p>${escapeHtml(msg)}</p><button onclick="location.reload()" class="retry-btn"><i class="fas fa-sync-alt"></i> Try Again</button></div>`;
+const showError = (message) => {
+  if (!elements.container) return;
+  elements.container.innerHTML = `
+    <div class="error-message">
+      <i class="fas fa-exclamation-triangle"></i>
+      <h3>Something Went Wrong</h3>
+      <p>${escapeHtml(message)}</p>
+      <button onclick="location.reload()" class="retry-btn">
+        <i class="fas fa-sync-alt"></i> Try Again
+      </button>
+    </div>
+  `;
 };
 
 // =================================================
-// 🔹 Filtering Logic
+// 🔹 Filtering & Rendering
 // =================================================
 const applyFilters = () => {
   let filtered = [...state.recipes];
-  if(state.currentFilter!=='all'){filtered=filtered.filter(r=>matchesCategory(r,state.currentFilter));}
-  if(state.currentSearch.trim()){const term=state.currentSearch.toLowerCase().trim(); filtered=filtered.filter(r=>{
-    const title = safeText(r.title).toLowerCase();
-    const desc = safeText(r.description).toLowerCase();
-    const cats = getRecipeCategories(r).join(' ').toLowerCase();
-    return title.includes(term)||desc.includes(term)||cats.includes(term);
-  });}
-  state.filteredRecipes=filtered;
+  if (state.currentFilter !== 'all') filtered = filtered.filter(r=>matchesCategory(r,state.currentFilter));
+  if (state.currentSearch.trim()) {
+    const term = state.currentSearch.toLowerCase().trim();
+    filtered = filtered.filter(r => {
+      const title = safeText(r.title).toLowerCase();
+      const desc = safeText(r.description).toLowerCase();
+      const cats = getRecipeCategories(r).join(' ').toLowerCase();
+      return title.includes(term) || desc.includes(term) || cats.includes(term);
+    });
+  }
+  state.filteredRecipes = filtered;
   return filtered;
 };
 
 const renderRecipes = () => {
-  if(!elements.container) return;
+  if (!elements.container) return;
   const filtered = applyFilters();
-  if(!filtered.length){showNoResults(); return;}
-  const fragment = document.createDocumentFragment();
-  filtered.forEach(r=>{const card=createRecipeCard(r); if(card) fragment.appendChild(card);});
-  elements.container.innerHTML=''; elements.container.appendChild(fragment);
+  if (filtered.length === 0) { showNoResults(); return; }
 
-  // 🔹 Staggered animations for unlimited cards
-  const cards = document.querySelectorAll('.recipe-card');
-  cards.forEach((card,index)=>{
-    card.style.animation = `fadeInUp 0.6s ease forwards`;
-    card.style.animationDelay = `${0.1*(index+1)}s`;
+  const fragment = document.createDocumentFragment();
+  filtered.forEach(r => {
+    const card = createRecipeCard(r);
+    if (card) fragment.appendChild(card);
   });
 
-  if(window.innerWidth<=768 && (state.currentFilter!=='all' || state.currentSearch)){window.scrollTo({top:0, behavior:'smooth'});}
+  elements.container.innerHTML = '';
+  elements.container.appendChild(fragment);
+
+  // 🔹 Set animation delay dynamically
+  const cards = elements.container.querySelectorAll('.recipe-card');
+  cards.forEach((card, index) => {
+    card.style.setProperty('--delay', `${index * 0.1}s`);
+  });
+
+  if (window.innerWidth <= 768 && (state.currentFilter!=='all' || state.currentSearch)) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 };
 
 // =================================================
@@ -230,45 +350,57 @@ const renderRecipes = () => {
 // =================================================
 const fetchRecipes = async () => {
   showLoading();
-  try{
-    const {data,error,status} = await supabase.from('recipe_db').select('*').order('created_at',{ascending:false});
-    if(error) throw new Error(error.message);
-    if(status!==200) throw new Error(`HTTP ${status}: Failed`);
-    if(!data?.length){showNoResults(); hideLoading(); return;}
+  try {
+    const { data, error, status } = await supabase.from('recipe_db').select('*').order('created_at',{ascending:false});
+    if (error) throw new Error(error.message);
+    if (status !== 200) throw new Error(`HTTP ${status}: Failed to fetch recipes`);
+    if (!data?.length) { showNoResults(); hideLoading(); return; }
+
     state.recipes = data.filter(isValidRecipe);
     state.categories = extractExistingCategories(state.recipes);
+
     createFilterButtons();
     renderRecipes();
     hideLoading();
-  }catch(err){console.error('Fetch error:',err); showError(err.message||'Unable to load recipes.'); hideLoading();}
+
+  } catch (err) {
+    console.error('Fetch error:', err);
+    showError(err.message || 'Unable to load recipes. Please check your connection.');
+    hideLoading();
+  }
 };
 
 // =================================================
 // 🔹 Search Handler
 // =================================================
-const handleSearch = (value) => { state.currentSearch=value; renderRecipes(); };
-const debounce = (func,delay)=>{ let timeoutId; return (...args)=>{clearTimeout(timeoutId); timeoutId=setTimeout(()=>func.apply(this,args),delay);}; };
+const handleSearch = (value) => { state.currentSearch = value; renderRecipes(); };
+const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => { clearTimeout(timeoutId); timeoutId = setTimeout(()=>func.apply(this,args), delay); };
+};
 
 // =================================================
 // 🔹 Event Listeners
 // =================================================
 const initEventListeners = () => {
-  if(elements.searchInput){
-    const debouncedSearch = debounce(handleSearch,CONFIG.debounceDelay);
-    elements.searchInput.addEventListener('input',(e)=>{ debouncedSearch(e.target.value); });
+  if (elements.searchInput) {
+    const debouncedSearch = debounce(handleSearch, CONFIG.debounceDelay);
+    elements.searchInput.addEventListener('input', e => debouncedSearch(e.target.value));
   }
 };
 
 // =================================================
-// 🔹 Initialize Application
+// 🔹 Initialize App
 // =================================================
 const init = () => {
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{ initEventListeners(); fetchRecipes(); });}
-  else {initEventListeners(); fetchRecipes();}
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => { initEventListeners(); fetchRecipes(); });
+  } else { initEventListeners(); fetchRecipes(); }
 };
 
-// Start the app
 init();
 
-// Debugging
-window.recipesDebug = {state, CONFIG, getRecipeCategories, extractExistingCategories};
+// =================================================
+// 🔹 Debug Export
+// =================================================
+window.recipesDebug = { state, CONFIG, getRecipeCategories, extractExistingCategories };
