@@ -85,13 +85,14 @@
 }
 
 .recipe-card {
-  background: #fff;
-  border-radius: 20px;
+  background: white;
+  border-radius: var(--radius-3xl);
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-base);
   box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border);
+  border: 1px solid var(--neutral-200);
+  animation: fadeInUp 0.6s var(--transition-base) backwards;
 
 }
 
@@ -127,7 +128,9 @@
 }
 
 
-
+.recipe-card:hover .thumbnail-wrapper img {
+  transform: scale(1.08);
+}
 
 
 
