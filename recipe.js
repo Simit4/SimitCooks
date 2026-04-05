@@ -50,6 +50,7 @@ function getRecipeThumbnail(recipe) {
 async function renderRecipe(recipe) {
   if (!recipe) return;
 
+  // Basic Info
   document.getElementById('recipe-title').innerText = recipe.title || 'Untitled Recipe';
   document.getElementById('recipe-description').innerText = recipe.description || 'Delicious recipe made with love.';
   document.getElementById('prep-time').innerText = recipe.prep_time || 'N/A';
@@ -75,18 +76,18 @@ async function renderRecipe(recipe) {
   const methodList = document.getElementById('method-list');
   methodList.innerHTML = recipe.method?.map(s => `<li>${escapeHtml(s)}</li>`).join('') || '<li>No instructions available</li>';
 
-  // Info sections
+  // Info Sections
   document.getElementById("history-overview").textContent = recipe.history_overview || '';
   document.getElementById('notes').innerText = recipe.notes || 'No additional notes.';
   document.getElementById('facts').innerText = recipe.facts || 'Did you know? This recipe is made with love!';
 
+  // Category & Cuisine Tags
   const catDiv = document.getElementById('category');
   if (recipe.category) catDiv.innerHTML = Array.isArray(recipe.category) ? recipe.category.map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('') : `<span class="tag">${escapeHtml(recipe.category)}</span>`;
-  
   const cuisineDiv = document.getElementById('cuisine');
   if (recipe.cuisine) cuisineDiv.innerHTML = Array.isArray(recipe.cuisine) ? recipe.cuisine.map(c => `<span class="tag">${escapeHtml(c)}</span>`).join('') : `<span class="tag">${escapeHtml(recipe.cuisine)}</span>`;
 
-  // Share button
+  // Share Button
   document.getElementById('universal-share')?.addEventListener('click', async () => {
     const recipeTitle = document.getElementById('recipe-title').textContent;
     const recipeUrl = window.location.href;
@@ -97,50 +98,41 @@ async function renderRecipe(recipe) {
   });
 
   // =================================================
-  // 🔹 Video Section - TikTok/Instagram style
+  // 🔹 Video Section
   // =================================================
-
-document.addEventListener("DOMContentLoaded", () => {
   const videoSection = document.getElementById("video-section");
   const videoContainer = document.getElementById("video-container");
+  const videoId = extractYouTubeId(recipe.video_url); // auto-fetch from recipe
 
-  // Replace with your actual YouTube video ID
-  const videoId = "YOUR_VIDEO_ID_HERE";
-
-  if (videoContainer && videoContainer.children.length === 0) {
-    // Create iframe with muted autoplay
+  if (videoId && videoContainer && videoContainer.children.length === 0) {
     const iframe = document.createElement("iframe");
     iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&autoplay=1&mute=1&playsinline=1`;
-    iframe.allow =
-      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
     iframe.allowFullscreen = true;
-
     videoContainer.appendChild(iframe);
     videoSection.style.display = "block";
 
-    // Click-to-unmute and play normally
+    // Click-to-unmute
     videoContainer.addEventListener("click", () => {
-      // Reload iframe with autoplay and unmuted
       iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&autoplay=1&playsinline=1`;
-      // Hide play icon after click
-      videoContainer.style.pointerEvents = "none";
+      videoContainer.style.pointerEvents = "none"; // disable further clicks
     });
 
-    // Intersection Observer for auto-play only when visible
+    // Auto-play only when visible
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&autoplay=1&mute=1&playsinline=1`;
           }
         });
       },
-      { threshold: 0.5 } // 50% of the video should be visible
+      { threshold: 0.5 }
     );
-
     observer.observe(videoContainer);
   }
-});
+}
+
 // =================================================
 // 🔹 Fetch More Recipes
 // =================================================
