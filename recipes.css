@@ -160,7 +160,7 @@
 
 
 .recipe-card h4 {
-  font-size: var(--text-xxl);
+  font-size: 1.2rem;
   font-weight: 800;
   margin-bottom: var(--space-sm);
   color: var(--secondary);
