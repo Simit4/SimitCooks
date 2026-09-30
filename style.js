@@ -10,7 +10,7 @@ export function renderHeader() {
   
   header.innerHTML = `
     <div class="container header-wrapper">
-      <a href="index.html">
+      <a href="/index.html">
         <div class="logo" aria-label="Simit Cooks">
           <span class="logo-modern">Simit</span>
           <span class="logo-traditional">Cooks</span>
