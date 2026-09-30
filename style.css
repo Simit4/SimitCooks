@@ -700,10 +700,10 @@
         align-items: center;
       }
       .footer-nav {
-        grid-template-columns: repeat(2, 1fr);
+       grid-template-columns: repeat(2, 1fr);
         justify-content: center;
-        gap: 0.5rem 3.0rem;
-        text-align: left;
+        gap: 0.5rem 7.0rem;
+        text-align: left; 
       }
       .footer-nav a {
         justify-content: center;
