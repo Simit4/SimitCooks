@@ -702,7 +702,7 @@
       .footer-nav {
         grid-template-columns: repeat(2, 1fr);
         justify-content: center;
-        gap: 0.5rem 2.5rem;
+        gap: 0.5rem 3.0rem;
         text-align: left;
       }
       .footer-nav a {
